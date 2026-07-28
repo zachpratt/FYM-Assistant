@@ -1,0 +1,11 @@
+.DS_Store
+__pycache__/
+*.pyc
+
+# The game's roster files are not ours to redistribute. They live here locally
+# as the drop-in folder for updates, but are never committed.
+TSARs/
+
+# docs/ and locations.csv are deliberately committed: GitHub Pages serves the
+# built page from docs/, and the location name store has to persist across
+# TSAR updates or hand-entered names would be lost.

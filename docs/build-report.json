@@ -1,0 +1,69 @@
+{
+ "built": "2026-07-28T15:33:18",
+ "interchange": {
+  "linked": 561,
+  "markers": 612
+ },
+ "locations": {
+  "manual": 0,
+  "named": 1036,
+  "total": 2829
+ },
+ "railroads": {
+  "BNSF": {
+   "bytes": 1975944,
+   "file": "TSAR_BNSF.ini",
+   "trains": 3752,
+   "types": 20
+  },
+  "CN": {
+   "bytes": 291910,
+   "file": "TSAR_CN.ini",
+   "trains": 924,
+   "types": 17
+  },
+  "CPKC": {
+   "bytes": 204590,
+   "file": "TSAR_CPKC.ini",
+   "trains": 739,
+   "types": 26
+  },
+  "CSX": {
+   "bytes": 857249,
+   "file": "TSAR_CSX.ini",
+   "trains": 3060,
+   "types": 23
+  },
+  "KCS": {
+   "bytes": 147,
+   "file": "TSAR_KCS.ini",
+   "trains": 1,
+   "types": 1
+  },
+  "NS": {
+   "bytes": 773006,
+   "file": "TSAR_NS.ini",
+   "trains": 2642,
+   "types": 22
+  },
+  "PASSENGER": {
+   "bytes": 126558,
+   "file": "TSAR_Passenger.ini",
+   "trains": 323,
+   "types": 20
+  },
+  "SHORTLINE": {
+   "bytes": 522444,
+   "file": "TSAR_Shortline.ini",
+   "trains": 2230,
+   "types": 254
+  },
+  "UP": {
+   "bytes": 787281,
+   "file": "TSAR_UP.ini",
+   "trains": 2224,
+   "types": 22
+  }
+ },
+ "trains": 15895
+}

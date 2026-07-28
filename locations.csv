@@ -1,0 +1,1037 @@
+id,name,source
+1001,Los Angeles Dolores Yard/ICTF,scraped
+1002,W. Springfield,scraped
+1005,West Stockton,scraped
+1006,Worcester CSX,scraped
+1007,Los Angeles Hobart Yard,scraped
+1008,Portland,scraped
+1009,Salt Lake City Roper Yard,scraped
+1010,Mojave,scraped
+1013,Bakersfield Kern Jct.,scraped
+1015,Bakersfield BNSF Yard,scraped
+1016,Los Nietos,scraped
+1020,Torrance,scraped
+1021,Fresno UP Yard,scraped
+1025,Washington Union Station,scraped
+1026,Louisville Youngtown Yard,scraped
+1027,Ayer Hill Yard,scraped
+1028,Willard,scraped
+1029,Barstow,scraped
+1030,W. Albany Yard,scraped
+1031,Albany CPKC,scraped
+1032,Albuquerque Abajo Yard,scraped
+1035,Guadalupe,scraped
+1040,Clovis,scraped
+1041,Searsport,scraped
+1042,Rome Forrestville Yard,scraped
+1043,Chattanooga Debutts Yard,scraped
+1044,Longview UP,scraped
+1045,Raleigh CSX Yard,scraped
+1046,Des Moines Shortline Yard,scraped
+1048,Cleveland Rockport Yard,scraped
+1051,Gillette Yard,scraped
+1055,Chicago Calumet Yard,scraped
+1056,Danville,scraped
+1057,Jacksonville Simpson Yard,scraped
+1061,Etowah,scraped
+1062,Russell,scraped
+1064,Allentown,scraped
+1066,Chicago Barr Yard,scraped
+1069,Sheridan,scraped
+1071,Bend,scraped
+1072,Chicago Corwith Yard,scraped
+1076,Tampa,scraped
+1078,New Castle CSX,scraped
+1079,Perryville Jct.,scraped
+1080,Jay,scraped
+1081,Pine Bluff,scraped
+1082,Atlanta Inman Yard,scraped
+1083,Richmond Acca Yard,scraped
+1085,Terre Haute Duane Yard,scraped
+1087,Terre Haute Baker Yard,scraped
+1088,Chicago Kenton Line,scraped
+1090,Los Angeles Harbor Jct.,scraped
+1091,Fostoria Blair Yard,scraped
+1094,Chicago Canal Street,scraped
+1095,City of Industry,scraped
+1096,Joliet,scraped
+1097,Gardner,scraped
+1098,Chicago Argo,scraped
+1099,East Binghamton,scraped
+1101,Chesapeake South Branch,scraped
+1102,San Bernardino,scraped
+1103,Los Angeles Harbor,scraped
+1105,Jersey City South Kearny Yard,scraped
+1108,Jersey City Croxton Yard,scraped
+1109,Jersey City N Bergen Intermodal Terminal,scraped
+1111,Selkirk Yard,scraped
+1113,Detroit Warren,scraped
+1115,Council Bluffs IAIS Yard,scraped
+1116,Rotterdam Jct.,scraped
+1117,Schenectady Mohawk Yard,scraped
+1118,Jacksonville NS Auto Facility,scraped
+1119,Raleigh Glenwood Yard,scraped
+1120,E. St. Louis Rose Lake Yard,scraped
+1121,South Schenectady,scraped
+1122,Jacksonville Westlake Auto Facility,scraped
+1123,Brownville Jct,scraped
+1125,Mitchell,scraped
+1127,Hamlet,scraped
+1129,Colorado Springs,scraped
+1130,North Charleston Port PR,scraped
+1132,Georgetown Delaplain Yard,scraped
+1135,Belen,scraped
+1136,Apex,scraped
+1137,East Durham NS,scraped
+1139,Taylor,scraped
+1140,Greensboro Pomona Yard,scraped
+1141,Sparks UP,scraped
+1143,Salisbury,scraped
+1145,Walkertown,scraped
+1147,Linwood Spencer Yard,scraped
+1148,Rocky Mount,scraped
+1151,Fremont UP,scraped
+1153,Shreveport Deramus Yard,scraped
+1155,Everett Delta Yard,scraped
+1157,Richmond South Yard,scraped
+1159,Evansville Howell Yard,scraped
+1161,Chicago Yard Center,scraped
+1162,Somerset,scraped
+1167,Cleveland Whiskey Island,scraped
+1173,Roanoke,scraped
+1176,St. Paul Hoffman Yard,scraped
+1177,Manassas,scraped
+1178,Shenandoah,scraped
+1181,Detroit River Rouge Yard,scraped
+1183,St. Paul Dayton's Bluff Yard,scraped
+1184,Bridgeport,scraped
+1185,Cayce CSX,scraped
+1187,Aberdeen,scraped
+1189,Hiawatha Yard,scraped
+1192,Los Angeles Redondo Jct.,scraped
+1194,Becker,scraped
+1195,Palestine,scraped
+1197,Philadelphia Girard Point,scraped
+1200,Kansas City Santa Fe Jct,scraped
+1201,Fresno Calwa BNSF,scraped
+1202,Jeffery Energy,scraped
+1203,Los Angeles LATC,scraped
+1205,Voltz,scraped
+1208,Charleston Bennett Yard,scraped
+1210,Indianapolis Transfer Yard,scraped
+1212,E. St. Louis KCS Yard,scraped
+1214,Kansas City Sheffield Interlocking,scraped
+1215,La Crosse BNSF Yard,scraped
+1217,La Crosse CPKC Yard,scraped
+1218,Kansas City Gooseneck,scraped
+1220,Metropolis,scraped
+1222,Chicago 97th Street Yard,scraped
+1224,Atlanta Howell Yard,scraped
+1225,Jesup,scraped
+1227,Kansas City Knoche Yard CPKC,scraped
+1229,Kansas City 18th St. Yard,scraped
+1230,Pryor,scraped
+1231,Muskogee UP,scraped
+1232,Denison,scraped
+1233,Waycross Rice Yard,scraped
+1236,Buckskin Mine,scraped
+1237,Caballo Jct.,scraped
+1244,Austell,scraped
+1248,Gentry Flint Creek Power Plant,scraped
+1250,Heavener,scraped
+1251,Texarkana,scraped
+1252,Gallup,scraped
+1255,West Colton,scraped
+1257,Selma NS,scraped
+1259,East Point Industry Yard,scraped
+1260,Effingham CSX,scraped
+1261,Fairburn,scraped
+1267,Marion BNSF,scraped
+1268,Shelbyville,scraped
+1269,Johnson City High Line Yard,scraped
+1274,Charlotte NS,scraped
+1275,Emporia,scraped
+1276,Wentzville,scraped
+1277,St. Louis Luther Yard,scraped
+1278,Chicago Landers Yard,scraped
+1279,Chicago Hegewisch,scraped
+1280,Jackson High Oak Yard,scraped
+1282,Shreveport Hollywood Yard,scraped
+1285,Port Laredo Yard,scraped
+1286,Meridian North Yard,scraped
+1287,Marshalltown,scraped
+1289,Mt. Holly,scraped
+1290,Los Angeles Union Station,scraped
+1291,Sterling,scraped
+1292,Lincoln Grain Terminals,scraped
+1293,Lincoln Hobson Yard,scraped
+1294,Black Thunder Mine,scraped
+1295,Gainesville NS,scraped
+1297,Hagerstown Vardo Yard,scraped
+1298,Lynchburg,scraped
+1300,E. St. Louis Gateway Yard,scraped
+1301,Kansas City Neff Yard,scraped
+1302,Portland Albina Yard,scraped
+1303,Oxnard/Pt. Hueneme,scraped
+1305,Chicago Fordham,scraped
+1306,Red Rock Power Plant,scraped
+1310,St. Joseph BNSF,scraped
+1311,Toronto Rexdale,scraped
+1313,Mariposa,scraped
+1320,Radford,scraped
+1321,Hahn,scraped
+1322,Bernalillo,scraped
+1323,Jefferson City,scraped
+1324,E. St. Louis Coapman Yard,scraped
+1325,Salt Lake City Centennial Park,scraped
+1327,Rawhide Mine,scraped
+1328,Eagle Butte Mine,scraped
+1330,Dry Fork Mine,scraped
+1332,Grand Junction,scraped
+1338,North Boston,scraped
+1339,Newton,scraped
+1341,Eddyville Ottumwa,scraped
+1342,Granite City Smith Yard,scraped
+1346,Bethlehem,scraped
+1347,Newark Oak Island Yard,scraped
+1351,Sioux City BNSF,scraped
+1353,Stockton Mormon Yard,scraped
+1354,Stockton UP,scraped
+1355,West Cressona,scraped
+1356,Alliance,scraped
+1357,Saratoga Springs,scraped
+1358,Pearland,scraped
+1361,Orlando Taft Yard,scraped
+1364,E. St. Louis Madison Yard,scraped
+1367,Buffalo Bison Yard,scraped
+1368,Hamilton Aberdeen Yard,scraped
+1369,Toronto Obico Yard,scraped
+1370,Toronto Lambton Yard,scraped
+1372,Houston Englewood Yard,scraped
+1375,Spring/Westfield,scraped
+1376,Toronto Brampton,scraped
+1379,Fort Wayne East Yard,scraped
+1380,Fort Wayne Piqua Yard,scraped
+1381,Roanoke GM Yard,scraped
+1383,Houston Tower 86,scraped
+1384,Detroit Oakwood Yard,scraped
+1385,Rutherford Yard,scraped
+1386,Portsmouth,scraped
+1388,Savannah CSX Yard,scraped
+1389,Terminal Island PHL,scraped
+1390,Port of Davisville,scraped
+1391,St. Paul Midway Yard,scraped
+1393,Green River,scraped
+1394,Amarillo North Yard BNSF,scraped
+1395,Toronto Vaughan Intermodal Terminal,scraped
+1396,Chicago Blue Island Yard,scraped
+1398,Keyser Yard,scraped
+1400,Las Vegas Arden Yard,scraped
+1401,Shreveport Riverfront Yard,scraped
+1403,Santa Teresa,scraped
+1407,Kaiser UP Yard,scraped
+1408,Toronto Macmillan Yard,scraped
+1409,Chicago Global 1,scraped
+1410,Chicago Willow Springs,scraped
+1414,Medina,scraped
+1415,Fort Steele,scraped
+1417,Baltimore Bay View NS Yard,scraped
+1419,North Bay,scraped
+1420,Pittsburg BNSF,scraped
+1422,New Orleans Mays Yard,scraped
+1423,New Orleans Avondale Yard,scraped
+1424,New Orleans Shrewsbury Yard,scraped
+1426,New Orleans Oliver Yard,scraped
+1431,Jacksonville Talleyrand Docks,scraped
+1434,Fort Towson,scraped
+1435,Memphis Harris Yard,scraped
+1436,Pittsburgh Pitcairn Yard,scraped
+1437,Decatur Oakworth Yard,scraped
+1443,Amarillo Zita,scraped
+1445,Memphis Central Station,scraped
+1446,Memphis Sargent Yard,scraped
+1447,Columbus,scraped
+1448,Marion,scraped
+1449,Memphis Leewood CSX Yard,scraped
+1450,Memphis Tennessee Yard,scraped
+1451,Cleveland Maple Heights,scraped
+1452,Brush,scraped
+1453,Columbus Watkins Yard,scraped
+1454,Toledo Airline/Detroit Yard,scraped
+1455,Cincinnati Queensgate Yard,scraped
+1456,Connellsville,scraped
+1457,Eckman Siding,scraped
+1462,Louisville Buechel IM Terminal,scraped
+1463,Cottage Grove,scraped
+1467,Fairfield Works,scraped
+1470,Chicago Cicero Yard,scraped
+1471,Chicago Blue Island Jct,scraped
+1472,Chicago 47th Street Yard,scraped
+1473,Chicago Clearing Yard,scraped
+1474,Philadelphia Greenwich Yard,scraped
+1475,Reading Spring St. Yard,scraped
+1476,Harrisburg,scraped
+1477,Tucson,scraped
+1478,Roberts Bank CPKC,scraped
+1479,McDonough,scraped
+1480,North Vancouver,scraped
+1481,Seattle Argo Yard,scraped
+1482,Lordstown CSX,scraped
+1484,Roseville Davis Yard,scraped
+1485,Jessup,scraped
+1486,Bostwick,scraped
+1489,Bowling Green CSX,scraped
+1490,New Boston,scraped
+1491,St. Paul Intermodal Facility,scraped
+1492,Las Vegas Valley Yard,scraped
+1495,Wallula UP,scraped
+1496,Thunder Bay CPKC Yard,scraped
+1498,St. Johns,scraped
+1499,North Valley,scraped
+1500,Elkhart Yard,scraped
+1501,Hereford,scraped
+1502,Tacoma Fife Yard,scraped
+1503,Tacoma BNSF Yard,scraped
+1504,Cambridge Hagey Yard,scraped
+1505,Logistics Park Chicago,scraped
+1509,Pekin IMRR,scraped
+1510,Edmonton Walker Yard,scraped
+1511,Vancouver Fraser Surrey IMPEX,scraped
+1512,Kamloops Junction,scraped
+1513,Edmonton McBain/Bissell Yard,scraped
+1515,Chicago Commercial Ave Yard,scraped
+1516,Toronto Yard CPKC,scraped
+1518,Clavet CPKC,scraped
+1520,Chicago CSS Burnham Yard,scraped
+1522,Butler Steel Works CN,scraped
+1523,Newport News,scraped
+1525,Crewe,scraped
+1526,Smyrna,scraped
+1527,Richmond BNSF,scraped
+1528,East Thunder Mine,scraped
+1530,North Antelope Mine,scraped
+1531,Antelope Mine,scraped
+1532,Lafayette South Yard,scraped
+1533,Calgary Shepard IM,scraped
+1534,Lafayette CSX Yard,scraped
+1535,Lafayette East Yard,scraped
+1538,Seattle Harbor Island,scraped
+1539,Auburn,scraped
+1540,St. Paul Pig's Eye Yard,scraped
+1543,Buffalo Frontier Yard,scraped
+1544,Buffalo Hamburg St. Yard,scraped
+1546,Fontana Kaiser BNSF Yard,scraped
+1548,Eugene UP,scraped
+1549,Niagara Falls,scraped
+1552,Mexico NS,scraped
+1554,Tacoma Port Yard,scraped
+1556,Alliance,scraped
+1558,Newark Airport,scraped
+1560,New Haven,scraped
+1562,St. Louis North Market,scraped
+1563,Westlake UP,scraped
+1564,Enola Yard,scraped
+1565,Phoenix Mobest Yard,scraped
+1566,Oakland,scraped
+1567,Benson,scraped
+1568,Fergus Falls,scraped
+1569,Litchfield,scraped
+1570,Willmar,scraped
+1571,Aldershot,scraped
+1573,Pasco,scraped
+1578,Dupo,scraped
+1579,Selma CSX,scraped
+1580,West Seattle BNSF,scraped
+1582,Minot Gavin Yard,scraped
+1584,Mandan,scraped
+1585,Fargo,scraped
+1586,Dilworth,scraped
+1587,Vancouver Thornton Yard,scraped
+1588,East Los Angeles Yard,scraped
+1590,Greybull,scraped
+1592,Jersey City Little Ferry Yard,scraped
+1593,Minneapolis Northtown Yard,scraped
+1594,Butler Steel Dynamics NS,scraped
+1595,Chicago Proviso Yard,scraped
+1596,Melville,scraped
+1598,Regina CPKC Yard,scraped
+1599,Swift Current,scraped
+1600,Calgary Alyth Yard,scraped
+1602,Moorhead BNSF,scraped
+1603,Casselton,scraped
+1604,West Fargo,scraped
+1605,Breckenridge,scraped
+1606,Chicago Bensenville Yard,scraped
+1608,Eagle Pass,scraped
+1610,Winnipeg Symington Yard,scraped
+1611,Avon,scraped
+1612,Halifax Port,scraped
+1613,Vancouver Pacific Central,scraped
+1614,Chicago Ashland Ave. Yard,scraped
+1615,East Deerfield,scraped
+1616,Vancouver Coquitlam Yard,scraped
+1617,Port Arthur UP,scraped
+1618,Kamloops Okanagan Connector,scraped
+1619,Kamloops Benledi,scraped
+1620,Kansas City Argentine Yard,scraped
+1622,Vancouver South Shore Terminals CPKC,scraped
+1625,Syracuse DeWitt Yard,scraped
+1626,W.Syracuse,scraped
+1628,South Seattle Yard,scraped
+1629,Mandan Montana-Dakota Utility Spur,scraped
+1630,Chicago Union Station,scraped
+1631,Chicago Ogilvie Transportation Center,scraped
+1632,Chicago Glenn Yard,scraped
+1633,Carr,scraped
+1637,Franklin,scraped
+1643,Carseland,scraped
+1644,North Battleford,scraped
+1645,Yorkton CPKC,scraped
+1646,Saskatoon Chappell Yard,scraped
+1647,Bellevue Moorman Yard,scraped
+1648,Ceredo,scraped
+1650,Moose Jaw,scraped
+1657,Hardisty,scraped
+1658,South St. Paul,scraped
+1661,St. Paul Western Avenue Yard,scraped
+1662,Edmonton CN Cloverbar Yard,scraped
+1663,Vancouver Intermodal Terminal CN,scraped
+1665,Salem Bush Yard,scraped
+1667,Clarkfield,scraped
+1669,Toronto Union Station,scraped
+1670,Loudon,scraped
+1671,Minneapolis Shoreham Yard,scraped
+1678,Port Allen,scraped
+1679,Jacksonville Duval Yard,scraped
+1680,Meridian NS Yard,scraped
+1681,Milwaukee Muskego Yard,scraped
+1682,Milwaukee Mitchell Yard,scraped
+1683,North Platte,scraped
+1686,El Mirage,scraped
+1688,Elizabeth Marine Terminal,scraped
+1689,Port Newark,scraped
+1691,Chicago Hawthorne Yard,scraped
+1693,Clairton Coke Works,scraped
+1695,Geismar Yard,scraped
+1696,Old Geismar Yard,scraped
+1697,Detroit Livernois Yard,scraped
+1701,Quesnel,scraped
+1702,Vancouver BNSF,scraped
+1703,Mitchell BNSF,scraped
+1704,Aberdeen BNSF,scraped
+1705,Marion,scraped
+1706,Sioux Falls BNSF,scraped
+1707,Ackerville,scraped
+1709,Edmonton CPKC Intermodal,scraped
+1711,Waterloo CN Yard,scraped
+1712,Port of Vancouver BNSF,scraped
+1713,Suisun Fairfield,scraped
+1716,Amarillo South Yard BNSF,scraped
+1718,Denver Belt Line,scraped
+1720,Birmingham East Thomas Yard,scraped
+1721,Chicago Markham Yard,scraped
+1725,Durand,scraped
+1727,Birmingham 37th St. Yard,scraped
+1728,Poplar Bluff,scraped
+1729,Texarkana UP Yard,scraped
+1731,Battle Creek CN Yard,scraped
+1733,Detroit Oak Yard,scraped
+1734,Detroit Moterm,scraped
+1735,Fitchburg,scraped
+1736,St. Louis Lindenwood Yard,scraped
+1738,Michigan City,scraped
+1739,Plymouth North Yard,scraped
+1740,Lancaster H. Craig Lewis Yard,scraped
+1741,Spokane Erie St. Yard,scraped
+1742,Spokane Yardley Yard,scraped
+1743,Spokane East Spokane Yard,scraped
+1747,Prince George North Yard,scraped
+1750,Prince Rupert,scraped
+1751,Golden,scraped
+1753,Cedar Rapids Beverly Yard,scraped
+1755,Loomis,scraped
+1760,Rochelle Global 3,scraped
+1761,Neenah,scraped
+1764,Walbridge,scraped
+1765,Detroit Rougemere Yard,scraped
+1766,Flat Rock Yard,scraped
+1767,Council Bluffs UP,scraped
+1768,Council Bluffs Island Park BNSF,scraped
+1770,Denver North Yard,scraped
+1772,Martinez Ozol Yard,scraped
+1773,Mooresboro,scraped
+1775,Rochester Goodman St. Yard,scraped
+1777,The Dalles,scraped
+1779,El Paso Dallas St. Yard,scraped
+1780,Montreal Lachine Yard,scraped
+1781,Montreal St. Luc Yard,scraped
+1782,Montreal Taschereau Yard,scraped
+1786,Birmingham ACIPCO,scraped
+1787,Birmingham Sloss Coke,scraped
+1788,Philadelphia Eastside Yard,scraped
+1789,Warm Springs,scraped
+1791,Institute,scraped
+1794,Tolenas,scraped
+1795,Dallas CPKC Yard,scraped
+1798,Irving BNSF,scraped
+1799,El Paso Alfalfa Yard,scraped
+1800,Denver 38th St. Yard,scraped
+1801,Virginia Inland Port,scraped
+1803,Seattle Interbay,scraped
+1805,Birmingham Boyles Yard,scraped
+1806,Birmingham Norris Yard,scraped
+1808,Emory Gap,scraped
+1809,Fort Madison,scraped
+1810,Eola,scraped
+1811,Cleveland Collinwood Yard,scraped
+1814,Ioco,scraped
+1815,Sudbury CPKC,scraped
+1816,Edmonton Lambton Park Yard,scraped
+1817,Kansas City Hawthorn Power Plant CPKC,scraped
+1818,Knoxville City Yard,scraped
+1819,Greenwood Maxwell Yard,scraped
+1820,Salem Pringle Yard UP,scraped
+1821,Salem Labish Siding,scraped
+1822,Millersburg,scraped
+1823,Albany,scraped
+1826,Salaberry-de-Valleyfield CN,scraped
+1830,Baltimore Locust Point,scraped
+1833,Davis,scraped
+1834,Chattanooga Wauhatchie CSX,scraped
+1835,Wilmington Edgemoor Yard,scraped
+1837,Calhoun NS,scraped
+1840,Cartersville,scraped
+1842,Ogden UP,scraped
+1843,Pocatello,scraped
+1845,Mesquite,scraped
+1846,Dallas Miller Yard,scraped
+1847,Ft. Worth Tower 55,scraped
+1850,Philadelphia 30th Street Station,scraped
+1853,Kalama BNSF,scraped
+1854,Vancouver Intermodal Facility CPKC,scraped
+1855,Port of Superior BNSF,scraped
+1857,Lathrop,scraped
+1858,New Orleans Union Passenger Terminal,scraped
+1860,Buffalo Seneca Yard,scraped
+1863,Hammond Gibson Yard,scraped
+1864,Hamilton CN Yard,scraped
+1865,Nashville Radnor Yard,scraped
+1866,Portland Brooklyn Yard,scraped
+1871,Port of Providence,scraped
+1873,Boston South Station,scraped
+1874,Cheyenne UP,scraped
+1876,Spokane Velox,scraped
+1877,Portland Terminal 6 BNSF,scraped
+1878,Houston Galena Park,scraped
+1879,Houston PTRA North Yard,scraped
+1880,Houston New South Yard,scraped
+1882,Toledo Evans Yard,scraped
+1883,Palos,scraped
+1884,Camden Pavonia Yard,scraped
+1886,Paulsboro,scraped
+1887,Decatur NS Yard,scraped
+1888,Ft. Worth Davidson Yard,scraped
+1889,Kansas City Fairfax,scraped
+1890,Baton Rouge CPKC Yard,scraped
+1891,Jeffersonville,scraped
+1892,Salem,scraped
+1894,Laurel,scraped
+1895,Hinkle,scraped
+1900,Grafton,scraped
+1901,West Quincy,scraped
+1902,Reserve CPKC,scraped
+1903,Convent,scraped
+1904,Ft. Worth North Yard,scraped
+1905,Augusta CSX Yard,scraped
+1909,Monroe,scraped
+1912,Macon Brosnan Yard,scraped
+1913,Conway,scraped
+1914,Sheffield,scraped
+1917,Rolla,scraped
+1918,Arlington Garrett Yard,scraped
+1920,North Little Rock,scraped
+1921,Memphis Harrison Yard,scraped
+1922,Cumberland,scraped
+1924,West Ashtabula,scraped
+1927,Lawrenceville,scraped
+1928,Port of Montreal,scraped
+1929,Doraville Yard,scraped
+1932,Augusta NS Yard,scraped
+1933,Nixon,scraped
+1937,Houston Manchester Yard,scraped
+1938,Dallas Intermodal Terminal,scraped
+1939,Louisville Oak St Yard,scraped
+1940,Louisville Magnolia Yard,scraped
+1945,Louisville Kosmosdale,scraped
+1946,Cecilia,scraped
+1948,Princeton,scraped
+1951,Hopkinsville Casky Yard,scraped
+1954,Paducah,scraped
+1956,TVA Shawnee Power Plant,scraped
+1958,Milner,scraped
+1959,Livonia,scraped
+1963,Burns Harbor,scraped
+1964,Charleston South Yard,scraped
+1965,Greer,scraped
+1966,Mansfield Oak Street Yard,scraped
+1970,Jackson North Yard,scraped
+1972,Vicksburg,scraped
+1973,Glendale,scraped
+1975,Clinton Warwick Yard,scraped
+1976,Denver Sand Creek Yard,scraped
+1977,Denver Silver Yard,scraped
+1979,Denver North Washington,scraped
+1980,Denver Stock Yards,scraped
+1981,Denver Rennicks Yard,scraped
+1982,Houston La Porte Strang Yard UP,scraped
+1983,Memphis Pigeon Park,scraped
+1986,Decatur North-Runaround Yard,scraped
+1987,Westlake CPKC,scraped
+1989,Missoula,scraped
+1996,Spencer,scraped
+1997,Pleasant Prairie CPKC,scraped
+1998,Chicago 63rd Street Yard,scraped
+2001,Smithers Lake,scraped
+2005,Bridgeport,scraped
+2008,Seattle Stacy St. Yard,scraped
+2012,Reserve CN,scraped
+2015,Mobile Sibert Yard,scraped
+2023,Riverbank,scraped
+2024,Oakdale,scraped
+2025,Miami CSX Hialeah Yard,scraped
+2026,Effingham CN,scraped
+2028,West Chicago UP,scraped
+2031,Midlothian,scraped
+2033,Hearne,scraped
+2034,Jacksonville Moncrief Yard,scraped
+2037,Ennis,scraped
+2040,Knoxville CSX,scraped
+2041,Sauget Fox Terminal,scraped
+2042,Sauget KCS,scraped
+2047,Northwest Ohio ICTF,scraped
+2048,Cincinnati Gest St. Yard,scraped
+2050,Laredo CPKC Yard,scraped
+2057,Mechanicville,scraped
+2060,Elizabeth Erail Intermodal Terminal,scraped
+2063,Chicago Kensington CSS,scraped
+2066,Ridgefield Park Auto Facility,scraped
+2074,Sidney BNSF,scraped
+2075,Springerville,scraped
+2081,Valdosta Langdale Yard,scraped
+2084,Valdosta West CSX,scraped
+2085,Valdosta,scraped
+2088,Williamson,scraped
+2090,Gurley,scraped
+2093,Pekin TZPR,scraped
+2099,El Paso BNSF Yard,scraped
+2100,Galesburg,scraped
+2102,Winnipeg St. Boniface Yard,scraped
+2104,Springfield,scraped
+2107,Farnham,scraped
+2108,Montgomery,scraped
+2109,St. Joseph UP,scraped
+2113,Decatur Old Yard,scraped
+2115,Venice KCS,scraped
+2122,Axial,scraped
+2124,Mason City UP,scraped
+2126,Chicago Burr Oak Yard,scraped
+2127,Yorkton CN,scraped
+2128,Davenport Nahant Yard CPKC,scraped
+2129,Silvis,scraped
+2130,Indiana Harbor Works,scraped
+2135,Tigard,scraped
+2137,Portland Barnes Yard,scraped
+2142,Winnipeg CPKC Yard,scraped
+2143,St. Cloud BNSF,scraped
+2144,Sarnia Yard,scraped
+2145,San Diego,scraped
+2147,Teague,scraped
+2149,Limestone Generating Station,scraped
+2152,Slater,scraped
+2153,Iowa City IAIS,scraped
+2154,Modesto,scraped
+2157,Artesia,scraped
+2164,Baltimore Bay View CSX Yard,scraped
+2169,Fostoria C&O Yard,scraped
+2173,North St. Louis Yard BNSF,scraped
+2177,Sewaren,scraped
+2180,Bruderheim CPKC,scraped
+2183,Joliet Global 4,scraped
+2184,Tulsa Cherokee Yard,scraped
+2187,Winnebago,scraped
+2188,Louisville Osborne Yard,scraped
+2189,Old Town,scraped
+2193,Kansas City Gooseneck,scraped
+2196,Kansas City State Line Yard,scraped
+2198,Kansas City Rosedale,scraped
+2200,Oklahoma City Flynn Yard,scraped
+2201,Chalmette,scraped
+2203,Omaha Gibson Yard,scraped
+2204,North Omaha,scraped
+2210,Valliant KRR,scraped
+2214,Chicago NS Burnham Yard,scraped
+2215,Lansing Snow Yard,scraped
+2219,McKeesport Demmler Yard,scraped
+2220,Port Perry,scraped
+2222,Moncton,scraped
+2226,Hankinson CPKC,scraped
+2227,Enderlin CPKC,scraped
+2228,New Town,scraped
+2234,St. James,scraped
+2237,Oakland BNSF,scraped
+2239,San Antonio Kirby Yard,scraped
+2241,South San Antonio Yard,scraped
+2244,Baltimore Curtis Bay,scraped
+2245,Edmundston,scraped
+2249,Keysville Transload,scraped
+2251,Petersburg Collier Yard,scraped
+2252,Petersburg Jack,scraped
+2253,Petersburg Belt Line Ameristeel,scraped
+2254,Petersburg Broadway Yard,scraped
+2255,Petersburg Poe Auto Terminal,scraped
+2261,Grand Island,scraped
+2263,North Loup,scraped
+2268,Sherbrooke,scraped
+2269,Lennoxville,scraped
+2272,Danville Jct,scraped
+2273,White River Junction,scraped
+2274,Bellows Falls,scraped
+2280,Mulberry,scraped
+2281,Dodge City,scraped
+2294,Casey,scraped
+2298,Battle Creek Center CN,scraped
+2300,Salaberry-de-Valleyfield CSX,scraped
+2301,Baton Rouge D Line,scraped
+2305,Birmingham Alice Yard,scraped
+2307,Crestline,scraped
+2312,Kansas City Muncie,scraped
+2321,Fresno Calwa UP,scraped
+2326,Ross,scraped
+2330,Temple,scraped
+2331,Conshohocken,scraped
+2336,Kansas City International Freight Gateway,scraped
+2341,Chattanooga Tyner,scraped
+2342,Kingsport CSX,scraped
+2343,Kingsport NS,scraped
+2348,McCalla,scraped
+2353,Parma,scraped
+2356,Shakopee Valley Park Yard,scraped
+2370,Cleveland Clark Ave. Yard,scraped
+2375,Rock Island IAIS,scraped
+2378,Mina,scraped
+2380,Hager City,scraped
+2388,Chicago Hawthorne Crossing,scraped
+2390,Thomas Hill Energy Center,scraped
+2392,Bossier City,scraped
+2393,Tenaha BNSF,scraped
+2394,Tenaha UP,scraped
+2395,Mansfield Paper Mill CPKC,scraped
+2396,Mansfield Paper Mill UP,scraped
+2397,Port of Caddo-Bossier,scraped
+2398,Shreveport Reisor Yard,scraped
+2402,South Amana,scraped
+2404,Chicago State Line Jct.,scraped
+2407,Denver Big Lift,scraped
+2408,Chicago Pullman Branch,scraped
+2411,Alliston,scraped
+2414,Butner,scraped
+2418,Turkey,scraped
+2420,Milwaukee Butler Yard,scraped
+2429,Windsor Walkerville,scraped
+2431,Maysville,scraped
+2432,Saskatoon Viterra CPKC,scraped
+2433,Columbus Rickenbacker Intermodal Terminal,scraped
+2436,Marysville,scraped
+2438,Chester CSX,scraped
+2439,Chester LC,scraped
+2442,West Point,scraped
+2444,Catlettsburg,scraped
+2446,Mexico Eagle Pass Interchange BNSF,scraped
+2448,Aurora RTC,scraped
+2453,Wallula BNSF,scraped
+2454,Logistics Park Kansas City,scraped
+2465,Superior Stinson Yard,scraped
+2474,Pokegama,scraped
+2475,Superior Itasca Yard,scraped
+2481,Gardendale,scraped
+2485,Halsted,scraped
+2492,Trona,scraped
+2500,Bluefield,scraped
+2511,Los Angeles Manuel Yard,scraped
+2512,Los Angeles Wilmington Wye,scraped
+2513,Los Angeles Phillips 66 Carson Refinery,scraped
+2520,Sudbury CN,scraped
+2525,Altona,scraped
+2530,Houston Bayport UP,scraped
+2531,Spring,scraped
+2536,San Jose,scraped
+2540,Joliet BNSF,scraped
+2552,Terre Haute Youngs Spur,scraped
+2556,Valley Jct.,scraped
+2557,Kendleton,scraped
+2565,Fowlerville,scraped
+2566,Webberville,scraped
+2583,Council Bluffs Island Park IAIS,scraped
+2585,Louisville O'Bannon Yard,scraped
+2589,Winnipeg Ft. Whyte,scraped
+2590,Kansas City Avondale Yard,scraped
+2606,Riviera Beach,scraped
+2613,Sioux City UP,scraped
+2617,Kalama UP,scraped
+2618,Centralia PSAP,scraped
+2631,Roosevelt,scraped
+2680,Victorville,scraped
+2685,East Edmonton,scraped
+2689,Tolk Generating Station,scraped
+2707,Phoenix Campo Yard,scraped
+2713,Kamloops CPKC Yard,scraped
+2719,Des Moines IAIS,scraped
+2723,Avon,scraped
+2730,Spofford,scraped
+2741,Fayetteville CSX,scraped
+2764,Copley,scraped
+2768,North Vernon,scraped
+2770,Dundee,scraped
+2774,Columbia Andrews Yard,scraped
+2775,Columbia Devine Jct.,scraped
+2785,Westfield CSX,scraped
+2789,Holyoke PAS,scraped
+2792,Lloydminster Husky Upgrader CPKC,scraped
+2793,Vermilion,scraped
+2808,Brattleboro,scraped
+2809,Pittsburg,scraped
+2811,Villa Grove,scraped
+2816,Janesville UP,scraped
+2818,Janesville CPKC,scraped
+2824,Wichita BNSF Yard,scraped
+2825,Wichita UP Yard,scraped
+2831,Coffeyville UP,scraped
+2833,Parsons,scraped
+2839,Boone UP,scraped
+2844,Cheyenne BNSF,scraped
+2845,Speer,scraped
+2854,Vancouver Port Moody,scraped
+2861,Springfield Yard,scraped
+2863,John Twitty Energy Center,scraped
+2869,Aurora BNSF,scraped
+2870,Aurora MNA,scraped
+2871,Nevada,scraped
+2876,Tupelo BNSF,scraped
+2877,Blue Springs,scraped
+2884,Shelby,scraped
+2886,Collins,scraped
+2888,Pottersburg,scraped
+2889,Sidney,scraped
+2890,Ansonia,scraped
+2893,Fort Dodge UP,scraped
+2894,Fort Dodge CN,scraped
+2895,Tara CN,scraped
+2896,Tara UP,scraped
+2897,Knierim,scraped
+2902,Granite City America's Central Port,scraped
+2903,Granite City AA Siding,scraped
+2904,Knoxville Sevier Yard,scraped
+2918,Portage,scraped
+2920,Gary Kirk Yard,scraped
+2922,Chicago Calumet River Industrial Track NS,scraped
+2927,East Chicago Calumet Branch,scraped
+2928,East Chicago Calumet Tower,scraped
+2929,East Chicago Peiguss Yard,scraped
+2943,Toledo Sumner Street Yard,scraped
+2946,Rock Hill,scraped
+2947,East Chester NS,scraped
+2949,Garrett,scraped
+2950,Milford Junction CSX,scraped
+2952,St Joe,scraped
+2954,Defiance FC Tower,scraped
+2962,Woodville,scraped
+2966,Regina CPKC Intermodal,scraped
+2977,Chicago LaSalle St Station,scraped
+2978,Chicago Millennium Station,scraped
+2986,Callender,scraped
+2989,Roelyn,scraped
+2990,Butler,scraped
+3001,Hammond Colehour Yard,scraped
+3002,Mt. Vernon UP,scraped
+3005,Woodlawn,scraped
+3021,Fremont,scraped
+3022,Marion NS,scraped
+3054,Savanna,scraped
+3059,Port of Vancouver UP,scraped
+3075,Rossville,scraped
+3077,Sandusky,scraped
+3078,Parkertown NS,scraped
+3090,Long Beach UP,scraped
+3107,Conneaut NS,scraped
+3118,San Antonio Intermodal Terminal,scraped
+3119,San Antonio Cadet Yard,scraped
+3143,Florence,scraped
+3144,Dillon,scraped
+3162,Plymouth,scraped
+3170,Herrington,scraped
+3174,Detroit Delray NS,scraped
+3175,Waterford,scraped
+3176,Eagle Bridge/Hoosick Jct,scraped
+3178,Albany Kenwood Yard,scraped
+3188,Grand Forks,scraped
+3189,East Grand Forks,scraped
+3233,Hamilton Port,scraped
+3236,Hamilton Kinnear Yard,scraped
+3239,Palmer CSX/MCER,scraped
+3248,Ft. Worth Hodge Yard,scraped
+3262,Watts,scraped
+3263,Siloam Springs,scraped
+3294,Jersey City South Kearny Intermodal Terminal,scraped
+3300,Kent Orillia Yard,scraped
+3303,Wolsey,scraped
+3310,Crawford,scraped
+3312,Helvetia,scraped
+3313,Burnside,scraped
+3318,Colorado Springs Kelker UP,scraped
+3322,Fountain BNSF,scraped
+3323,Pueblo BNSF,scraped
+3328,Pueblo Minnequa BNSF,scraped
+3334,Houston Pasadena UP,scraped
+3335,Centralia BNSF,scraped
+3349,Alma,scraped
+3352,Carey CSX,scraped
+3358,Kansas City Hawthorn Power Plant BNSF,scraped
+3359,Savannah Southover Yard,scraped
+3371,Palmyra,scraped
+3393,Moberly,scraped
+3398,Mexico CPKC,scraped
+3404,Twin Oaks,scraped
+3409,Eddyville,scraped
+3412,Baltimore 5th Ave. Yard,scraped
+3413,Baltimore Penn-Mary Yard,scraped
+3423,College Park,scraped
+3434,East Brookfield,scraped
+3438,Calgary Logistics,scraped
+3440,Stevens Point,scraped
+3455,West Paducah CN,scraped
+3456,Fulton,scraped
+3465,Don,scraped
+3467,Rupert,scraped
+3469,Burley,scraped
+3475,Whitehall,scraped
+3478,Rutland,scraped
+3480,Houston Settegast Yard,scraped
+3482,Marion CSX,scraped
+3486,Linwood,scraped
+3490,Newport,scraped
+3498,King of Prussia Abrams Yard,scraped
+3508,New Westminster CPKC Dock Yard,scraped
+3511,Muscatine Luke Yard,scraped
+3516,North Fond Du Lac Shops Yard,scraped
+3523,Flint CN Yard,scraped
+3526,Sharonville,scraped
+3530,Saginaw BNSF,scraped
+3542,Belleville CN,scraped
+3545,Brazos Yard,scraped
+3563,Norwood,scraped
+3567,Montpelier,scraped
+3569,Edon,scraped
+3592,Philadelphia West Falls Yard,scraped
+3608,Alton UP,scraped
+3616,Clyde,scraped
+3622,Wilkie,scraped
+3627,Lloydminster Aberfeldy Yard,scraped
+3628,Champaign,scraped
+3631,Rising NS,scraped
+3633,Morrisville Morris Tower,scraped
+3636,Woodbourne,scraped
+3645,Longview Junction,scraped
+3647,Kankakee CN,scraped
+3649,Kankakee Hobbie Yard NS,scraped
+3658,East Peoria TZPR,scraped
+3663,Bartonville,scraped
+3676,Frankfort NS,scraped
+3678,Lebanon,scraped
+3679,Scircleville,scraped
+3680,Tipton,scraped
+3682,Gilman CN,scraped
+3683,Gilman TPW,scraped
+3684,Sheldon,scraped
+3685,Effner,scraped
+3686,Wolcott,scraped
+3687,Watseka,scraped
+3691,North Charleston Port CSX,scraped
+3700,Barnesville,scraped
+3701,Forsyth,scraped
+3702,Amory BNSF,scraped
+3707,Talladega CSX,scraped
+3709,Artesia,scraped
+3710,Columbus Steel Dynamics CPKC,scraped
+3715,Dalhart UP,scraped
+3716,Dalhart BNSF,scraped
+3717,Santa Rosa,scraped
+3719,Kansas City Murray Yard BNSF,scraped
+3724,Iatan,scraped
+3741,Temple UP,scraped
+3750,Brada,scraped
+3761,Ayr Wolverton Yard,scraped
+3762,Woodstock Toyota Spur,scraped
+3763,Guelph CN,scraped
+3773,Houston Seabrook UP,scraped
+3774,Houston Seabrook BNSF,scraped
+3780,Houston Barbours Cut PTRA,scraped
+3785,Greenbrier,scraped
+3786,Milford,scraped
+3787,Bloom,scraped
+3788,Delta,scraped
+3789,Iron Springs,scraped
+3790,Cedar City,scraped
+3791,Elko UP,scraped
+3793,Osino,scraped
+3794,Battle Mountain UP,scraped
+3795,Battle Mountain BNSF,scraped
+3796,Winnemucca,scraped
+3797,Colado,scraped
+3798,Empire,scraped
+3804,Wurno,scraped
+3806,Montclair,scraped
+3807,Pomona,scraped
+3808,Chino,scraped
+3809,Lima Robb Ave. Yard CSX,scraped
+3832,Wayne CSX,scraped
+3835,Massillon,scraped
+3836,Massillon Energy & Tech Park,scraped
+3839,Picayune,scraped
+3840,Fort Morgan,scraped
+3841,Pawnee,scraped
+3848,Michigan City AMTK,scraped
+3854,Burlington,scraped
+3855,Wever,scraped
+3869,Canton Yard,scraped
+3874,Oshawa CN,scraped
+3875,Oshawa South Yard,scraped
+3878,Oshawa GO,scraped
+3879,Lafayette,scraped
+3880,New Iberia,scraped
+3887,Les Coteaux,scraped
+3890,Ottawa Station,scraped
+3896,Calgary Foothills Industrial Park,scraped
+3898,Diann,scraped
+3901,Auburn CSX,scraped
+3906,Windsor,scraped
+3907,Bromptonville,scraped
+3915,Winnipeg Transcona Yard,scraped
+3916,Winnipeg North Transcona Yard,scraped
+3917,Winnipeg North Transcona,scraped
+3938,Welland PCHR,scraped
+3943,Saint-Lambert Southwark Yard,scraped
+3945,Saint-Hyacinthe,scraped
+3952,Pittsburgh Island Ave. Yard,scraped
+3954,McKees Rocks,scraped
+3957,Coalhurst Kipp Yard,scraped
+3958,Lethbridge,scraped
+3959,Wilson Siding,scraped
+3973,Brownsville,scraped
+3975,Griffith,scraped
+3993,West Irving,scraped
+3995,Sherman BNSF,scraped
+3999,Loring,scraped
+4002,North Topeka,scraped
+4003,Lawrence,scraped
+4004,South Topeka,scraped
+4005,Junction City,scraped
