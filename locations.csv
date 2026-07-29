@@ -1,297 +1,507 @@
 id,name,source
-1001,Los Angeles Dolores Yard/ICTF,scraped
-1002,W. Springfield,scraped
-1005,West Stockton,scraped
-1006,Worcester CSX,scraped
-1007,Los Angeles Hobart Yard,scraped
-1008,Portland,scraped
-1009,Salt Lake City Roper Yard,scraped
-1010,Mojave,scraped
-1013,Bakersfield Kern Jct.,scraped
-1015,Bakersfield BNSF Yard,scraped
-1016,Los Nietos,scraped
-1020,Torrance,scraped
-1021,Fresno UP Yard,scraped
-1025,Washington Union Station,scraped
-1026,Louisville Youngtown Yard,scraped
-1027,Ayer Hill Yard,scraped
-1028,Willard,scraped
-1029,Barstow,scraped
-1030,W. Albany Yard,scraped
-1031,Albany CPKC,scraped
-1032,Albuquerque Abajo Yard,scraped
-1035,Guadalupe,scraped
-1040,Clovis,scraped
-1041,Searsport,scraped
-1042,Rome Forrestville Yard,scraped
-1043,Chattanooga Debutts Yard,scraped
-1044,Longview UP,scraped
-1045,Raleigh CSX Yard,scraped
-1046,Des Moines Shortline Yard,scraped
-1048,Cleveland Rockport Yard,scraped
-1051,Gillette Yard,scraped
-1055,Chicago Calumet Yard,scraped
-1056,Danville,scraped
-1057,Jacksonville Simpson Yard,scraped
-1061,Etowah,scraped
-1062,Russell,scraped
-1064,Allentown,scraped
-1066,Chicago Barr Yard,scraped
-1069,Sheridan,scraped
-1071,Bend,scraped
-1072,Chicago Corwith Yard,scraped
-1076,Tampa,scraped
-1078,New Castle CSX,scraped
-1079,Perryville Jct.,scraped
-1080,Jay,scraped
-1081,Pine Bluff,scraped
-1082,Atlanta Inman Yard,scraped
-1083,Richmond Acca Yard,scraped
-1085,Terre Haute Duane Yard,scraped
-1087,Terre Haute Baker Yard,scraped
-1088,Chicago Kenton Line,scraped
-1090,Los Angeles Harbor Jct.,scraped
-1091,Fostoria Blair Yard,scraped
-1094,Chicago Canal Street,scraped
-1095,City of Industry,scraped
-1096,Joliet,scraped
-1097,Gardner,scraped
-1098,Chicago Argo,scraped
-1099,East Binghamton,scraped
-1101,Chesapeake South Branch,scraped
-1102,San Bernardino,scraped
-1103,Los Angeles Harbor,scraped
-1105,Jersey City South Kearny Yard,scraped
-1108,Jersey City Croxton Yard,scraped
-1109,Jersey City N Bergen Intermodal Terminal,scraped
-1111,Selkirk Yard,scraped
-1113,Detroit Warren,scraped
-1115,Council Bluffs IAIS Yard,scraped
-1116,Rotterdam Jct.,scraped
-1117,Schenectady Mohawk Yard,scraped
-1118,Jacksonville NS Auto Facility,scraped
-1119,Raleigh Glenwood Yard,scraped
-1120,E. St. Louis Rose Lake Yard,scraped
-1121,South Schenectady,scraped
-1122,Jacksonville Westlake Auto Facility,scraped
-1123,Brownville Jct,scraped
-1125,Mitchell,scraped
-1127,Hamlet,scraped
-1129,Colorado Springs,scraped
-1130,North Charleston Port PR,scraped
-1132,Georgetown Delaplain Yard,scraped
-1135,Belen,scraped
-1136,Apex,scraped
-1137,East Durham NS,scraped
-1139,Taylor,scraped
-1140,Greensboro Pomona Yard,scraped
-1141,Sparks UP,scraped
-1143,Salisbury,scraped
-1145,Walkertown,scraped
-1147,Linwood Spencer Yard,scraped
-1148,Rocky Mount,scraped
-1151,Fremont UP,scraped
-1153,Shreveport Deramus Yard,scraped
-1155,Everett Delta Yard,scraped
-1157,Richmond South Yard,scraped
-1159,Evansville Howell Yard,scraped
-1161,Chicago Yard Center,scraped
-1162,Somerset,scraped
-1167,Cleveland Whiskey Island,scraped
-1173,Roanoke,scraped
-1176,St. Paul Hoffman Yard,scraped
-1177,Manassas,scraped
-1178,Shenandoah,scraped
-1181,Detroit River Rouge Yard,scraped
-1183,St. Paul Dayton's Bluff Yard,scraped
-1184,Bridgeport,scraped
-1185,Cayce CSX,scraped
-1187,Aberdeen,scraped
-1189,Hiawatha Yard,scraped
-1192,Los Angeles Redondo Jct.,scraped
-1194,Becker,scraped
-1195,Palestine,scraped
-1197,Philadelphia Girard Point,scraped
-1200,Kansas City Santa Fe Jct,scraped
-1201,Fresno Calwa BNSF,scraped
-1202,Jeffery Energy,scraped
-1203,Los Angeles LATC,scraped
-1205,Voltz,scraped
-1208,Charleston Bennett Yard,scraped
-1210,Indianapolis Transfer Yard,scraped
-1212,E. St. Louis KCS Yard,scraped
-1214,Kansas City Sheffield Interlocking,scraped
+1001,"Los Angeles Dolores Yard/ICTF, CA",map
+1002,"W. Springfield, MA",map
+1003,"Palmer NECR, MA",map
+1004,"St. Louis Pilsbury Siding, MO",map
+1005,"West Stockton, CA",map
+1006,"Worcester CSX, MA",map
+1007,"Los Angeles Hobart Yard, CA",map
+1008,"South Portland Rigby Yard, ME",map
+1009,"Salt Lake City Roper Yard, UT",map
+1010,"Mojave, CA",map
+1011,"Los Angeles Watson Yard, CA",map
+1012,"Vernon LAJ A Yard, CA",map
+1013,"Bakersfield Kern Jct., CA",map
+1014,"Long Beach PHL, CA",map
+1015,"Bakersfield BNSF Yard, CA",map
+1016,"Los Nietos, CA",map
+1017,"Lakeville, MN",map
+1018,"Tuscola CN, IL",map
+1019,"Sarnia CSX, ON",map
+1020,"Torrance, CA",map
+1021,"Fresno UP Yard, CA",map
+1022,"West Point, VA",map
+1023,"Ft. Worth Tower 55 BNSF, TX",map
+1024,"Eugene Bethel Yard, OR",map
+1025,"Washington Union Station, MD",map
+1026,"Louisville Youngtown Yard, KY",map
+1027,"Ayer Hill Yard, MA",map
+1028,"Willard, OH",map
+1029,"Barstow, CA",map
+1030,"W. Albany Yard, NY",map
+1031,"Albany CPKC, NY",map
+1032,"Albuquerque Abajo Yard, NM",map
+1033,"Northern Maine Jct. CSX, ME",map
+1034,"Port Clinton, PA",map
+1035,"Guadalupe, CA",map
+1036,"Leeds Junction, ME",map
+1037,"Masardis, ME",map
+1038,"El Segundo, CA",map
+1039,"Skowhegan, ME",map
+1040,"Clovis, NM",map
+1041,"Searsport, ME",map
+1042,"Rome Forrestville Yard, GA",map
+1043,"Chattanooga Debutts Yard NS, TN",map
+1044,"Longview UP, TX",map
+1045,"Raleigh CSX Yard, NC",map
+1046,"Des Moines Shortline Yard, IA",map
+1047,"Krannert, GA",map
+1048,"Cleveland Rockport Yard, OH",map
+1049,"Taylor NS, PA",map
+1050,"Troy, NY",map
+1051,"Gillette Yard, WY",map
+1052,"Charlotte IMF, NC",map
+1053,"Belle Ayr Mine, WY",map
+1054,"Port of Brunswick NS, GA",map
+1055,"Chicago Calumet Yard, IL",map
+1056,"Danville, KY",map
+1057,"Jacksonville Simpson Yard, FL",map
+1058,"Chattanooga Citico Wye NS, TN",map
+1059,"Kansas City Bedford Yard, MO",map
+1060,"Port of Albany, NY",map
+1061,"Etowah, TN",map
+1062,"Russell, KY",map
+1063,"Baltimore Hawkins Point, MD",map
+1064,"Allentown, PA",map
+1065,"Pittston, PA",map
+1066,"Chicago Barr Yard, IL",map
+1067,"Commerce, GA",map
+1068,"Westmoreland Freight Terminal, PA",map
+1069,"Diaz MNA, AR",map
+1070,"Spring Creek Mine, MT",map
+1071,"Bend, OR",map
+1072,"Chicago Corwith Yard, IL",map
+1073,"Mt. Pocono, PA",map
+1074,"Port Reading, NJ",map
+1075,"Port of Tampa, FL",map
+1076,"Tampa, FL",map
+1077,"Miami FEC Hialeah Yard, FL",map
+1078,"New Castle CSX, PA",map
+1079,"Perryville Jct., MD",map
+1080,"Jay, ME",map
+1081,"Pine Bluff UP, AR",map
+1082,"Atlanta Inman Yard, GA",map
+1083,"Richmond Acca Yard, VA",map
+1084,"Canton, MS",map
+1085,"Terre Haute Duane Yard, IN",map
+1086,"Terre Haute Van Yard, IN",map
+1087,"Terre Haute Baker Yard, IN",map
+1088,"Chicago Kenton Line, IL",map
+1089,"Cayuga, IN",map
+1090,"Los Angeles Harbor Jct., CA",map
+1091,"Fostoria Blair Yard, OH",map
+1092,"Chicago Calumet City Yard, IL",map
+1093,"Hampton Wythe, VA",map
+1094,"Chicago Canal Street, IL",map
+1095,"City of Industry, CA",map
+1096,"Joliet CN, IL",map
+1097,"Gardner, MA",map
+1098,"Chicago Argo, IL",map
+1099,"East Binghamton, NY",map
+1100,"Kirkwood NYSW, NY",map
+1101,"Chesapeake South Branch, VA",map
+1102,"San Bernardino, CA",map
+1103,"Los Angeles Harbor, CA",map
+1104,"Juliette Plant Scherer, GA",map
+1105,"Jersey City Meadows Yard, NJ",map
+1106,"Jersey City Greenville Yard, NJ",map
+1107,"Council Bluffs BNSF, IA",map
+1108,"Jersey City Croxton Yard, NJ",map
+1109,"Jersey City N Bergen Yard CSX, NJ",map
+1110,"Arlington Great Southwest Lead, TX",map
+1111,"Selkirk Yard, NY",map
+1112,"Charlotte Tryon Yard, NC",map
+1113,"Warren Mound Road Yard, MI",map
+1114,"Fort Nelson, BC",map
+1115,"Council Bluffs IAIS, IA",map
+1116,"Rotterdam Jct., NY",map
+1117,"Schenectady Mohawk Yard, NY",map
+1118,"Jacksonville NS Auto Facility, FL",map
+1119,"Raleigh Glenwood Yard, NC",map
+1120,"E. St. Louis Rose Lake Yard, IL",map
+1121,"South Schenectady, NY",map
+1122,"Jacksonville Westlake Auto Facility, FL",map
+1123,"Brownville Jct, ME",map
+1124,"Oakfield, ME",map
+1125,"Wood River UP, IL",map
+1126,"Clewiston, FL",map
+1127,"Hamlet, NC",map
+1128,"New York City Fresh Pond Yard, NY",map
+1129,"Colorado Springs, CO",map
+1130,"North Charleston Port PR, SC",map
+1131,"Fernley UP, NV",map
+1132,"Georgetown Delaplain Yard, KY",map
+1133,"Bakersfield Oildale, CA",map
+1134,"Cedar Rapids ADM Plant, IA",map
+1135,"Belen, NM",map
+1136,"Apex, NC",map
+1137,"East Durham NS, NC",map
+1138,"Milan, MI",map
+1139,"Taylor, BC",map
+1140,"Greensboro Pomona Yard, NC",map
+1141,"Sparks UP, NV",map
+1142,"Belews Creek Power Station, NC",map
+1143,"Burnside, KY",map
+1144,"Medford, OR",map
+1145,"Walkertown, NC",map
+1146,"LA TICTF BNSF, CA",map
+1147,"Linwood, NC",map
+1148,"Rocky Mount, NC",map
+1149,"Long Beach Pier T BNSF, CA",map
+1150,"Fayetteville AR, NC",map
+1151,"Fremont UP, NE",map
+1152,"LA Pier 400 BNSF, CA",map
+1153,"Shreveport Deramus Yard, LA",map
+1154,"Venice TRRA, IL",map
+1155,"Everett Delta Yard, WA",map
+1156,"Northern Maine Jct. CPKC, ME",map
+1157,"Richmond South Yard, VA",map
+1158,"Butler BPRR, PA",map
+1159,"Evansville Howell Yard, IN",map
+1160,"Gonzales, TX",map
+1161,"Chicago Yard Center, IL",map
+1162,"Somerset, CO",map
+1163,"LA Global South BNSF, CA",map
+1164,"Mt. Vernon Southwest Marine Center, IN",map
+1165,"Memphis Hollywood Yard, TN",map
+1166,"Mt. Vernon, IN",map
+1167,"Cleveland Whiskey Island, OH",map
+1168,"Tulare, CA",map
+1169,"Kansas City Mill Street Yard, KS",map
+1170,"West Decker Mine, MT",map
+1171,"McLeansboro, IL",map
+1172,"Memphis Leewood UP Yard, TN",map
+1173,"Roanoke North Yard, VA",map
+1174,"Windsor CPKC, ON",map
+1175,"Winston-Salem North Winston Yard, NC",map
+1176,"St. Paul Hoffman Yard UP, MN",map
+1177,"Manassas, VA",map
+1178,"Shenandoah, VA",map
+1179,"Albany OE Yard, OR",map
+1180,"Marion, IL",map
+1181,"Detroit River Rouge Yard, MI",map
+1182,"Ficklin, IL",map
+1183,"St. Paul Dayton's Bluff Yard, MN",map
+1184,"Bridgeport, NE",map
+1185,"Cayce CSX, SC",map
+1186,"Brice, NC",map
+1187,"Aberdeen CSX, NC",map
+1188,"Commerce E Yard, CA",map
+1189,"Hiawatha Yard, IN",map
+1190,"Los Angeles J Yard, CA",map
+1191,"Sullivan, IN",map
+1192,"Los Angeles Redondo Jct., CA",map
+1193,"Merom Generating Station, IN",map
+1194,"Becker, MN",map
+1195,"Palestine, IL",map
+1196,"Newton Power Plant, IL",map
+1197,"Philadelphia Girard Point, PA",map
+1198,"Wheatfield, IN",map
+1199,"Sidney UP, NE",map
+1200,"Kansas City Santa Fe Jct, KS",map
+1201,"Fresno Calwa BNSF, CA",map
+1202,"Jeffrey Energy Center, KS",map
+1203,"Los Angeles LATC, CA",map
+1204,"Alaska RR Ferry, WA",map
+1205,"Voltz, MO",map
+1206,"Newark, OH",map
+1207,"Heath, OH",map
+1208,"North Charleston Bennett Yard, SC",map
+1209,"Candor, NC",map
+1210,"Indianapolis Transfer Yard, IN",map
+1211,"Birmingham Finley Yard, AL",map
+1212,"E. St. Louis CPKC Yard, IL",map
+1213,"Milpitas, CA",map
+1214,"Kansas City Sheffield Interlocking, MO",map
 1215,La Crosse BNSF Yard,scraped
-1217,La Crosse CPKC Yard,scraped
-1218,Kansas City Gooseneck,scraped
-1220,Metropolis,scraped
-1222,Chicago 97th Street Yard,scraped
-1224,Atlanta Howell Yard,scraped
-1225,Jesup,scraped
-1227,Kansas City Knoche Yard CPKC,scraped
-1229,Kansas City 18th St. Yard,scraped
-1230,Pryor,scraped
-1231,Muskogee UP,scraped
-1232,Denison,scraped
-1233,Waycross Rice Yard,scraped
-1236,Buckskin Mine,scraped
-1237,Caballo Jct.,scraped
-1244,Austell,scraped
-1248,Gentry Flint Creek Power Plant,scraped
-1250,Heavener,scraped
-1251,Texarkana,scraped
-1252,Gallup,scraped
-1255,West Colton,scraped
-1257,Selma NS,scraped
-1259,East Point Industry Yard,scraped
-1260,Effingham CSX,scraped
-1261,Fairburn,scraped
-1267,Marion BNSF,scraped
-1268,Shelbyville,scraped
-1269,Johnson City High Line Yard,scraped
-1274,Charlotte NS,scraped
-1275,Emporia,scraped
-1276,Wentzville,scraped
-1277,St. Louis Luther Yard,scraped
-1278,Chicago Landers Yard,scraped
-1279,Chicago Hegewisch,scraped
-1280,Jackson High Oak Yard,scraped
-1282,Shreveport Hollywood Yard,scraped
-1285,Port Laredo Yard,scraped
-1286,Meridian North Yard,scraped
-1287,Marshalltown,scraped
-1289,Mt. Holly,scraped
-1290,Los Angeles Union Station,scraped
-1291,Sterling,scraped
-1292,Lincoln Grain Terminals,scraped
-1293,Lincoln Hobson Yard,scraped
-1294,Black Thunder Mine,scraped
-1295,Gainesville NS,scraped
-1297,Hagerstown Vardo Yard,scraped
-1298,Lynchburg,scraped
-1300,E. St. Louis Gateway Yard,scraped
-1301,Kansas City Neff Yard,scraped
-1302,Portland Albina Yard,scraped
-1303,Oxnard/Pt. Hueneme,scraped
-1305,Chicago Fordham,scraped
-1306,Red Rock Power Plant,scraped
-1310,St. Joseph BNSF,scraped
-1311,Toronto Rexdale,scraped
-1313,Mariposa,scraped
-1320,Radford,scraped
-1321,Hahn,scraped
-1322,Bernalillo,scraped
-1323,Jefferson City,scraped
-1324,E. St. Louis Coapman Yard,scraped
-1325,Salt Lake City Centennial Park,scraped
-1327,Rawhide Mine,scraped
-1328,Eagle Butte Mine,scraped
-1330,Dry Fork Mine,scraped
-1332,Grand Junction,scraped
-1338,North Boston,scraped
-1339,Newton,scraped
-1341,Eddyville Ottumwa,scraped
-1342,Granite City Smith Yard,scraped
-1346,Bethlehem,scraped
-1347,Newark Oak Island Yard,scraped
-1351,Sioux City BNSF,scraped
-1353,Stockton Mormon Yard,scraped
-1354,Stockton UP,scraped
-1355,West Cressona,scraped
-1356,Alliance,scraped
-1357,Saratoga Springs,scraped
-1358,Pearland,scraped
-1361,Orlando Taft Yard,scraped
-1364,E. St. Louis Madison Yard,scraped
-1367,Buffalo Bison Yard,scraped
-1368,Hamilton Aberdeen Yard,scraped
-1369,Toronto Obico Yard,scraped
-1370,Toronto Lambton Yard,scraped
-1372,Houston Englewood Yard,scraped
-1375,Spring/Westfield,scraped
-1376,Toronto Brampton,scraped
-1379,Fort Wayne East Yard,scraped
-1380,Fort Wayne Piqua Yard,scraped
-1381,Roanoke GM Yard,scraped
-1383,Houston Tower 86,scraped
-1384,Detroit Oakwood Yard,scraped
-1385,Rutherford Yard,scraped
-1386,Portsmouth,scraped
-1388,Savannah CSX Yard,scraped
-1389,Terminal Island PHL,scraped
-1390,Port of Davisville,scraped
-1391,St. Paul Midway Yard,scraped
-1393,Green River,scraped
-1394,Amarillo North Yard BNSF,scraped
-1395,Toronto Vaughan Intermodal Terminal,scraped
-1396,Chicago Blue Island Yard,scraped
-1398,Keyser Yard,scraped
-1400,Las Vegas Arden Yard,scraped
-1401,Shreveport Riverfront Yard,scraped
-1403,Santa Teresa,scraped
-1407,Kaiser UP Yard,scraped
-1408,Toronto Macmillan Yard,scraped
-1409,Chicago Global 1,scraped
-1410,Chicago Willow Springs,scraped
-1414,Medina,scraped
-1415,Fort Steele,scraped
-1417,Baltimore Bay View NS Yard,scraped
-1419,North Bay,scraped
-1420,Pittsburg BNSF,scraped
-1422,New Orleans Mays Yard,scraped
-1423,New Orleans Avondale Yard,scraped
-1424,New Orleans Shrewsbury Yard,scraped
-1426,New Orleans Oliver Yard,scraped
-1431,Jacksonville Talleyrand Docks,scraped
-1434,Fort Towson,scraped
-1435,Memphis Harris Yard,scraped
-1436,Pittsburgh Pitcairn Yard,scraped
-1437,Decatur Oakworth Yard,scraped
-1443,Amarillo Zita,scraped
-1445,Memphis Central Station,scraped
-1446,Memphis Sargent Yard,scraped
-1447,Columbus,scraped
-1448,Marion,scraped
-1449,Memphis Leewood CSX Yard,scraped
-1450,Memphis Tennessee Yard,scraped
-1451,Cleveland Maple Heights,scraped
-1452,Brush,scraped
-1453,Columbus Watkins Yard,scraped
-1454,Toledo Airline/Detroit Yard,scraped
-1455,Cincinnati Queensgate Yard,scraped
-1456,Connellsville,scraped
-1457,Eckman Siding,scraped
-1462,Louisville Buechel IM Terminal,scraped
-1463,Cottage Grove,scraped
-1467,Fairfield Works,scraped
-1470,Chicago Cicero Yard,scraped
-1471,Chicago Blue Island Jct,scraped
-1472,Chicago 47th Street Yard,scraped
-1473,Chicago Clearing Yard,scraped
-1474,Philadelphia Greenwich Yard,scraped
-1475,Reading Spring St. Yard,scraped
-1476,Harrisburg,scraped
-1477,Tucson,scraped
-1478,Roberts Bank CPKC,scraped
-1479,McDonough,scraped
-1480,North Vancouver,scraped
-1481,Seattle Argo Yard,scraped
-1482,Lordstown CSX,scraped
-1484,Roseville Davis Yard,scraped
-1485,Jessup,scraped
-1486,Bostwick,scraped
-1489,Bowling Green CSX,scraped
-1490,New Boston,scraped
-1491,St. Paul Intermodal Facility,scraped
-1492,Las Vegas Valley Yard,scraped
-1495,Wallula UP,scraped
-1496,Thunder Bay CPKC Yard,scraped
-1498,St. Johns,scraped
-1499,North Valley,scraped
-1500,Elkhart Yard,scraped
-1501,Hereford,scraped
-1502,Tacoma Fife Yard,scraped
-1503,Tacoma BNSF Yard,scraped
+1216,"Good Spring, PA",map
+1217,"La Crosse CPKC Yard, WI",map
+1218,"Kansas City Gooseneck, MO",map
+1219,"La Cygne Generating Station, KS",map
+1220,"Metropolis, IL",map
+1221,"Asbury Power Plant, MO",map
+1222,"Chicago 97th Street Yard, IL",map
+1223,"Port of Charleston CSX, SC",map
+1224,"Atlanta Howells Transfer Yard, GA",map
+1225,"Jesup, GA",map
+1226,"Savannah Port Wentworth, GA",map
+1227,"Kansas City Knoche Yard CPKC, MO",map
+1228,"Spring Hill, KS",map
+1229,"Kansas City 18th St. Yard UP, KS",map
+1230,"Pryor, OK",map
+1231,"Muskogee UP, OK",map
+1232,"Denison Ray Yard, TX",map
+1233,"Waycross Rice Yard, GA",map
+1234,"Huber, GA",map
+1235,"Rosser, GA",map
+1236,"Buckskin Mine, WY",map
+1237,"Caballo Jct., WY",map
+1238,"Caballo Mine, WY",map
+1239,"Detroit Wyandotte, MI",map
+1240,"Doctortown NS, GA",map
+1241,"Port Arthur CPKC, TX",map
+1242,"Hazleton, PA",map
+1243,"Sauget Cahokia Marine Terminal, IL",map
+1244,"Austell, GA",map
+1245,"Hapeville, GA",map
+1246,"Doctortown CSX, GA",map
+1247,"Pleasant Prairie UP, WI",map
+1248,"Gentry Flint Creek Power Plant, AR",map
+1249,"Shady Pt., OK",map
+1250,"Heavener, OK",map
+1251,"Texarkana, TX",map
+1252,"Gallup, NM",map
+1253,"Congress Park, IL",map
+1254,"Santa Fe Springs, CA",map
+1255,"West Colton, CA",map
+1256,"Towanda, PA",map
+1257,"Selma NS, NC",map
+1258,"Gill, NC",map
+1259,"East Point Industry Yard, GA",map
+1260,"Effingham CSX, IL",map
+1261,"Fairburn, GA",map
+1262,"Atlanta Jacmac, GA",map
+1263,"East Durham CSX, NC",map
+1264,"Plaines, IL",map
+1265,"Port of Tucson, AZ",map
+1266,"Minersville, PA",map
+1267,"Marion BNSF, IL",map
+1268,"Shelbyville, KY",map
+1269,"Johnson City High Line Yard, TN",map
+1270,"Johnson City ETRY, TN",map
+1271,"Mount Pleasant, TN",map
+1272,"Ragland Complex, WV",map
+1273,"Peach Creek, WV",map
+1274,"Charlotte NS, NC",map
+1275,"Emporia, KS",map
+1276,"Wentzville, MO",map
+1277,"St. Louis Luther Yard, MO",map
+1278,"Chicago Landers Yard, IL",map
+1279,"Chicago Hegewisch, IL",map
+1280,"Jackson High Oak Yard, MS",map
+1281,"Brunswick Dock Jct., GA",map
+1282,"Shreveport Hollywood Yard, LA",map
+1283,"Union, MO",map
+1284,"Lorenzo, IL",map
+1285,"Port Laredo Yard, TX",map
+1286,"Meridian CPKC Yard, MS",map
+1287,"Marshalltown, IA",map
+1288,"Brunswick CSX Yard, GA",map
+1289,"Mt. Holly, NC",map
+1290,"Los Angeles Union Station, CA",map
+1291,"Sterling, GA",map
+1292,"Lincoln Grain Terminals, NE",map
+1293,"Lincoln Hobson Yard, NE",map
+1294,"Black Thunder Mine, WY",map
+1295,"Gainesville NS, GA",map
+1296,"Kenova, WV",map
+1297,"Hagerstown Vardo Yard, MD",map
+1298,"Lynchburg, VA",map
+1299,"Lamberts Point, VA",map
+1300,"E. St. Louis Gateway Yard, IL",map
+1301,"Kansas City Neff Yard, MO",map
+1302,"Portland Albina Yard, OR",map
+1303,"Oxnard/Pt. Hueneme, CA",map
+1304,"Brunswick Colonel's Island Terminal, GA",map
+1305,"Chicago Fordham, IL",map
+1306,"Red Rock Power Plant, OK",map
+1307,"Caballo Rojo Mine, WY",map
+1308,"Dickinson, WV",map
+1309,"Dana, IA",map
+1310,"St. Joseph BNSF, MO",map
+1311,"Toronto Rexdale, ON",map
+1312,"Sarnia Farm Track, ON",map
+1313,"Mariposa, CA",map
+1314,"Apex Mine, KY",map
+1315,"Seabrook, NJ",map
+1316,"Belvidere, NJ",map
+1317,"Fogelsville Chapman Yard, PA",map
+1318,"Sarnia St. Clair Industrial, ON",map
+1319,"Savannah Ocean Terminal NS, GA",map
+1320,"Radford, VA",map
+1321,"Hahn, NM",map
+1322,"Bernalillo, NM",map
+1323,"Jefferson City, MO",map
+1324,"E. St. Louis Coapman Yard NS, IL",map
+1325,"Salt Lake City Centennial Park, UT",map
+1326,"Savannah Ocean Terminal CSX, GA",map
+1327,"Rawhide Mine, WY",map
+1328,"Eagle Butte Mine, WY",map
+1329,"Savannah Dillard Yard, GA",map
+1330,"Dry Fork Mine, WY",map
+1331,"Dividing Creek, NJ",map
+1332,"Grand Junction, CO",map
+1333,"Birmingham North Belt, AL",map
+1334,"Madras, OR",map
+1335,"Detroit Junction Yard Secondary, MI",map
+1336,"Sayreville Browns Yard, NJ",map
+1337,"Stanton Energy Center, FL",map
+1338,"North Boston, MA",map
+1339,"Newton, IA",map
+1340,"Rock Springs, WY",map
+1341,"Eddyville Ottumwa, IA",map
+1342,"Granite City Smith Yard, IL",map
+1343,"City Point, FL",map
+1344,"Ruby Energy Mine, WV",map
+1345,"Phoenix Union Station BNSF, AZ",map
+1346,"Bethlehem, PA",map
+1347,"Newark Oak Island Yard, NJ",map
+1348,"Redmond, OR",map
+1349,"Green Tree Rook Yard, PA",map
+1350,"Beaumont, CA",map
+1351,"Sioux City BNSF, IA",map
+1352,"Newark, CA",map
+1353,"Stockton Mormon Yard, CA",map
+1354,"Stockton UP, CA",map
+1355,"West Cressona, PA",map
+1356,"Alliance, NE",map
+1357,"Saratoga Springs, NY",map
+1358,"Pearland, TX",map
+1359,"Sayreville CMC Steel, NJ",map
+1360,"Dayton, NJ",map
+1361,"Orlando Taft Yard, FL",map
+1362,"Orlando Sexton Branch, FL",map
+1363,"Richmond Fanshaw Yard, VA",map
+1364,"E. St. Louis Madison Yard, IL",map
+1365,"Detroit Delray CSX, MI",map
+1366,"Sterling Heights Sterling Yard, MI",map
+1367,"Buffalo Bison Yard, NY",map
+1368,"Hamilton Aberdeen Yard, ON",map
+1369,"Toronto Obico Yard, ON",map
+1370,"Toronto Lambton Yard, ON",map
+1371,"Oakville, ON",map
+1372,"Houston Englewood Yard UP, TX",map
+1373,"Grande Prairie, AB",map
+1374,"Houston Basin Yard UP, TX",map
+1375,"Westfield, TX",map
+1376,"Toronto Brampton, ON",map
+1377,"Dartmouth, NS",map
+1378,"Houston Market St. Yards UP, TX",map
+1379,"Fort Wayne East Yard, IN",map
+1380,"Fort Wayne Piqua Yard, IN",map
+1381,"Roanoke GM Yard, IN",map
+1382,"Addis, LA",map
+1383,"Houston Tower 86, TX",map
+1384,"Detroit Oakwood Yard, MI",map
+1385,"Rutherford Yard, PA",map
+1386,"Portsmouth, OH",map
+1387,"West Occidental, FL",map
+1388,"Savannah CSX Yard, GA",map
+1389,"Terminal Island PHL, CA",map
+1390,"Port of Davisville, RI",map
+1391,"St. Paul Midway Yard, MN",map
+1392,"Kenaston, SK",map
+1393,"Green River, WY",map
+1394,"Amarillo North Yard BNSF, TX",map
+1395,"Toronto Vaughan Intermodal Terminal, ON",map
+1396,"Chicago Blue Island Yard, IL",map
+1397,"Commerce River Yard, CA",map
+1398,"Keyser Yard, WV",map
+1399,"Vernon LAJ, CA",map
+1400,"Las Vegas Arden Yard, NV",map
+1401,"Shreveport Riverfront Yard, LA",map
+1402,"Henderson, NV",map
+1403,"Santa Teresa, NM",map
+1404,"Mt Storm Power Plant, WV",map
+1405,"Fort Pierce, FL",map
+1406,"Mira Loma, CA",map
+1407,"Fontana Kaiser UP Yard, CA",map
+1408,"Toronto Macmillan Yard, ON",map
+1409,"Chicago Western Ave. Yard, IL",map
+1410,"Chicago Willow Springs, IL",map
+1411,"Havre de Grace, MD",map
+1412,"Mettiki Mountain View Mine, MD",map
+1413,"Huntington, IN",map
+1414,"Medina, OH",map
+1415,"Fort Steele, BC",map
+1416,"Butler Steel Dynamics CSX, IN",map
+1417,"Baltimore Bay View NS Yard, MD",map
+1418,"Baltimore Canton Yard, MD",map
+1419,"North Bay, CA",map
+1420,"Pittsburg BNSF, CA",map
+1421,"Benicia, CA",map
+1422,"New Orleans Mays Yard, LA",map
+1423,"New Orleans Avondale Yard, LA",map
+1424,"New Orleans Shrewsbury Yard, LA",map
+1425,"New Orleans Gentilly Yard, LA",map
+1426,"New Orleans Oliver Yard, LA",map
+1427,"Port of New Orleans, LA",map
+1428,"Loveridge Mine, WV",map
+1429,"Fairmont, WV",map
+1430,"Haywood, WV",map
+1431,"Jacksonville Talleyrand Docks, FL",map
+1432,"Huntsville, AL",map
+1433,"Port of Chicago, IL",map
+1434,"Fort Towson, OK",map
+1435,"Memphis Harris Yard, TN",map
+1436,"Pittsburgh Pitcairn Intermodal Terminal, PA",map
+1437,"Decatur Oakworth Yard, AL",map
+1438,"Owensboro Riverport, KY",map
+1439,"Vernon UP, CA",map
+1440,"Shirley, MA",map
+1441,"Affinity Mine, WV",map
+1442,"Theodore, AL",map
+1443,"Amarillo Zita, TX",map
+1444,"Elizabethport Yard, NJ",map
+1445,"Memphis Central Station, TN",map
+1446,"Memphis Sargent Yard, TN",map
+1447,"Columbus, GA",map
+1448,"Marion, AR",map
+1449,"Memphis Leewood CSX Yard, TN",map
+1450,"Memphis Tennessee Yard, TN",map
+1451,"Cleveland Maple Heights, OH",map
+1452,"Brush, CO",map
+1453,"Columbus Watkins Yard, OH",map
+1454,"Toledo Airline/Detroit Yard, OH",map
+1455,"Cincinnati Queensgate Yard, OH",map
+1456,"Connellsville, PA",map
+1457,"Eckman Siding, WV",map
+1458,"Holden 22 Mine, WV",map
+1459,"Lick Mine, WV",map
+1460,"Houston Eureka Yard, TX",map
+1461,"Leetsdale, PA",map
+1462,"Louisville Appliance Park, KY",map
+1463,"Cottage Grove, MN",map
+1464,"Baltimore Dundalk Marine Terminal NS, MD",map
+1465,"Schatulga, GA",map
+1466,"South Amarillo BNSF, TX",map
+1467,"Fairfield Works, AL",map
+1468,"Chicago 59th Street Yard, IL",map
+1469,"Detroit Zug Island, MI",map
+1470,"Chicago Cicero Yard, IL",map
+1471,"Chicago Blue Island Jct., IL",map
+1472,"Chicago 47th Street Yard, IL",map
+1473,"Chicago Clearing Yard, IL",map
+1474,"Philadelphia Greenwich Yard, PA",map
+1475,"Reading Spring St. Yard, PA",map
+1476,"Harrisburg, PA",map
+1477,"Tucson, AZ",map
+1478,"Roberts Bank CPKC, BC",map
+1479,"McDonough, GA",map
+1480,"North Vancouver, BC",map
+1481,"Seattle Argo Yard, WA",map
+1482,"Lordstown CSX, OH",map
+1483,"Catawba CSX, SC",map
+1484,"Roseville Davis Yard, CA",map
+1485,"Jessup, MD",map
+1486,"Bostwick, FL",map
+1487,"Greenwood Industrial Park, GA",map
+1488,"Waterville, ME",map
+1489,"Bowling Green CSX, KY",map
+1490,"New Boston, MI",map
+1491,"St. Paul Intermodal Facility, MN",map
+1492,"Las Vegas Valley Yard, NV",map
+1493,"Granite City WR Tower, IL",map
+1494,"Marcus Hook, PA",map
+1495,"Wallula UP, WA",map
+1496,"Thunder Bay CPKC Yard, ON",map
+1497,"Postell Ruby Quarry, GA",map
+1498,"St. Johns, AZ",map
+1499,"North Valley, NM",map
+1500,"Elkhart, IN",map
+1501,"Hereford, TX",map
+1502,"Tacoma Fife Yard, WA",map
+1503,"Tacoma BNSF Yard, WA",map
 1504,Cambridge Hagey Yard,scraped
 1505,Logistics Park Chicago,scraped
 1509,Pekin IMRR,scraped

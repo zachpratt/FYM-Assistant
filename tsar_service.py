@@ -322,10 +322,16 @@ def scrape_location_names(railroads):
 # Yard - ..." markers in whatever roster happens to mention a stop. That makes
 # them fragile across updates: if next month's files stop mentioning a yard, its
 # name would vanish and the page would show "#1450" again. So names are kept in
-# locations.csv and merged forward, never dropped. The file is also where you can
-# hand-name the ~1,800 stops the notes never mention; those are marked "manual"
-# and always win over a scrape.
+# locations.csv and merged forward, never dropped.
+#
+# Sources, in order of authority:
+#   manual  - hand-entered, never overwritten by anything
+#   map     - transcribed from the game's own map-ID screen (authoritative,
+#             only replaced by a manual row or a fresh map import)
+#   scraped - majority vote from the @@ note markers; weakest, refreshed
+#             whenever the current rosters still name the stop
 
+LOC_SOURCES = ('scraped', 'map', 'manual')
 LOC_HEADER = ['id', 'name', 'source']
 
 
@@ -342,7 +348,7 @@ def load_location_store(path):
             src = row[2].strip().lower() if len(row) > 2 else 'manual'
             if not lid.isdigit() or not nm or lid.lower() == 'id':
                 continue
-            store[lid] = (nm, 'manual' if src not in ('scraped', 'manual') else src)
+            store[lid] = (nm, src if src in LOC_SOURCES else 'manual')
     return store
 
 
@@ -488,7 +494,8 @@ def collect_report(payload, railroads, ic_total, ic_linked, store):
         'built':  datetime.now().replace(microsecond=0).isoformat(),
         'trains': len(payload['trains']),
         'locations': {'total': len(payload['locs']), 'named': named,
-                      'manual': sum(1 for v in store.values() if v[1] == 'manual')},
+                      'manual': sum(1 for v in store.values() if v[1] == 'manual'),
+                      'map':    sum(1 for v in store.values() if v[1] == 'map')},
         'interchange': {'markers': ic_total, 'linked': ic_linked},
         'railroads': {
             rr['code']: {
@@ -571,6 +578,7 @@ def build(files, out, title, loc_path, use_cache=True):
           f"{', '.join(r['code'] for r in railroads)}")
     print(f"  {new['locations']['total']:,} locations, {named:,} named "
           f"({len(scraped):,} from this build's notes, "
+          f"{new['locations']['map']:,} from the map-ID screen, "
           f"{new['locations']['manual']:,} hand-named)")
     if use_cache and (added or changed):
         print(f"  {os.path.basename(loc_path)}: {added:,} new name(s), "
