@@ -843,26 +843,29 @@ DATA.rrs.forEach(r=>{
   pillOf[r.c]=p; paintPill(r.c);
   p.onclick=()=>{
     if(state.rrs.has(r.c)) state.rrs.delete(r.c); else state.rrs.add(r.c);
-    paintPill(r.c); syncTypes(); render();
+    paintPill(r.c); render();
   };
   rrpills.appendChild(p);
 });
 if(DATA.rrs.length<2) document.getElementById("rrfield").style.display="none";
 
-// The type list is scoped to the selected railroads: pooling all nine rosters
-// would otherwise put 380-odd entries (including 254 shortline operators) into a
-// single dropdown. On the multi-operator rosters the list is operators, so the
-// label follows suit.
+// The type list is scoped to the trains matching every OTHER filter (pooling
+// all nine rosters' declared types would put 380-odd entries, including 254
+// shortline operators, into a single dropdown). A selected type that falls out
+// of the set stays listed at (0) — filters never change themselves silently.
+// On the multi-operator rosters the list is operators, so the label follows suit.
 const typesel=document.getElementById("typesel");
 const typelabel=document.getElementById("typelabel");
-function syncTypes(){
+function syncTypes(base){
+  const counts={};
+  base.forEach(t=>{ counts[t.ty]=(counts[t.ty]||0)+1; });
+  if(state.type && !(state.type in counts)) counts[state.type]=0;
+  const all=Object.keys(counts).sort();
   const picked=DATA.rrs.filter(r=>state.rrs.has(r.c));
-  const all=[...new Set(picked.flatMap(r=>r.ty))].sort();
   const multiOnly = picked.length>0 && picked.every(r=>r.m);
   typelabel.textContent = multiOnly ? "Operator" : "Type";
-  if(state.type && !all.includes(state.type)) state.type="";
   typesel.innerHTML='<option value="">'+(multiOnly?"All operators":"All types")+'</option>'+
-    all.map(t=>`<option${t===state.type?" selected":""}>${esc(t)}</option>`).join("");
+    all.map(t=>`<option value="${esc(t)}"${t===state.type?" selected":""}>${esc(t)} (${counts[t]})</option>`).join("");
 }
 typesel.onchange=()=>{state.type=typesel.value;render();};
 
@@ -935,10 +938,9 @@ function instrAt(t,locId){
 }
 
 // ---- filtering ----
-function filtered(){
+function filteredBase(){
   return DATA.trains.filter(t=>{
     if(!state.rrs.has(t.rr)) return false;
-    if(state.type && t.ty!==state.type) return false;
     if(state.sym){
       // match "NPSS", "M-NPSS", "MNPSS" and the train's name alike
       const hay=(t.fs+" "+t.fs.replace(/[^A-Za-z0-9]/g,"")+" "+t.s+" "+t.nm).toUpperCase();
@@ -952,6 +954,10 @@ function filtered(){
     return true;
   });
 }
+function filtered(){
+  const base=filteredBase();
+  return state.type ? base.filter(t=>t.ty===state.type) : base;
+}
 
 // ---- render ----
 const wrap=document.getElementById("wrap");
@@ -959,7 +965,9 @@ const countEl=document.getElementById("count");
 const locbar=document.getElementById("locbar");
 
 function render(reset=true){
-  const list=filtered();
+  const base=filteredBase();
+  if(reset) syncTypes(base);
+  const list = state.type ? base.filter(t=>t.ty===state.type) : base;
   if(reset) state.shown=0;
 
   countEl.innerHTML=`<b>${list.length.toLocaleString()}</b> of ${DATA.trains.length.toLocaleString()} trains`;
@@ -1074,7 +1082,7 @@ function buildBody(el,t){
 function jumpTo(uid){
   const t=DATA.trains[uid]; if(!t) return;
   if(!state.rrs.has(t.rr)){ state.rrs.add(t.rr); paintPill(t.rr); }
-  state.type=""; syncTypes();
+  state.type="";
   state.loc=""; locin.value=""; locclear.style.display="none";
   state.sym=t.fs.replace(/[^A-Za-z0-9]/g,"").toUpperCase(); symin.value=t.fs;
   setStat("all");
@@ -1097,7 +1105,6 @@ function gotoLoc(id){
 
 function debounce(fn,ms){let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>fn(...a),ms);};}
 
-syncTypes();
 render();
 </script>
 </body>
