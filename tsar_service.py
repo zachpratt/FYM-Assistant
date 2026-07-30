@@ -708,7 +708,8 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .dates{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:14px}
 .route{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
 .node{font-family:var(--mono);font-size:12px;padding:3px 8px;border-radius:5px;background:var(--chip);
-  border:1px solid var(--line);color:var(--muted)}
+  border:1px solid var(--line);color:var(--muted);cursor:pointer}
+.node:hover{border-color:var(--accent)}
 .node.hit{border-color:var(--accent);color:var(--accent)}
 .node.end{color:var(--ink)}
 .node .id{color:var(--dim)}
@@ -725,6 +726,9 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .jump{color:var(--future);background:none;border:0;padding:0;font:inherit;cursor:pointer;
   text-decoration:underline dotted;text-underline-offset:2px}
 .jump:hover{color:var(--ink)}
+.odlink{background:none;border:0;padding:0;font:inherit;font-weight:600;color:inherit;cursor:pointer;
+  text-decoration:underline dotted;text-underline-offset:2px}
+.odlink:hover{color:var(--accent)}
 .morebtn{display:block;margin:22px auto;background:var(--panel);border:1px solid var(--line);
   color:var(--ink);padding:10px 22px;border-radius:8px;cursor:pointer}
 .morebtn:hover{border-color:var(--accent)}
@@ -1000,11 +1004,15 @@ function card(t){
     `<span class="sym">${esc(t.fs)}</span>`+
     (t.nm?`<span class="tnm" title="${esc(t.nm)}">${esc(t.nm)}</span>`:"")+
     `<span class="ty">${esc(t.ty)}</span>`+
-    `<span class="od"><b>${esc(locLabel(t.o))}</b><span class="arr">→</span><b>${esc(locLabel(t.d))}</b></span>`+
+    `<span class="od"><button class="odlink" data-loc="${t.o}">${esc(locLabel(t.o))}</button>`+
+    `<span class="arr">→</span><button class="odlink" data-loc="${t.d}">${esc(locLabel(t.d))}</button></span>`+
     `<span class="spacer"></span>`+
     (here?`<span class="here" title="what this train does here">@ ${esc(here.length>44?here.slice(0,42)+'…':here)}</span>`:"")+
     `<span class="status ${st}">${st}</span>`+
     `<span class="chev">▸</span>`;
+  head.querySelectorAll("[data-loc]").forEach(b=>{
+    b.onclick=e=>{e.stopPropagation(); gotoLoc(b.dataset.loc);};
+  });
   head.onclick=()=>openCard(el,t);
   el.appendChild(head);
   const body=document.createElement("div"); body.className="body";
@@ -1026,8 +1034,8 @@ function buildBody(el,t){
     const end=i===0||i===t.r.length-1;
     const hit=state.loc&&id===state.loc;
     const nm=LOC[id];
-    return `<span class="node ${hit?'hit':''} ${end?'end':''}">`+
-      (nm?esc(nm):"")+`<span class="id">${nm?" ":""}#${id}</span></span>`;
+    return `<button class="node ${hit?'hit':''} ${end?'end':''}" data-loc="${id}">`+
+      (nm?esc(nm):"")+`<span class="id">${nm?" ":""}#${id}</span></button>`;
   }).join("");
 
   const instr=t.g.map(g=>{
@@ -1056,6 +1064,9 @@ function buildBody(el,t){
   body.querySelectorAll("[data-jump]").forEach(b=>{
     b.onclick=e=>{e.stopPropagation(); jumpTo(+b.dataset.jump);};
   });
+  body.querySelectorAll("[data-loc]").forEach(b=>{
+    b.onclick=e=>{e.stopPropagation(); gotoLoc(b.dataset.loc);};
+  });
 }
 
 // Follow an interchange link: widen the filters just enough to reveal the
@@ -1076,6 +1087,12 @@ function jumpTo(uid){
     el.scrollIntoView({block:"center",behavior:"smooth"});
     el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600);
   });
+}
+
+// Click on a route stop / O-D endpoint: focus the location filter on it.
+function gotoLoc(id){
+  choose({id, nm: LOC[id] || ""});
+  window.scrollTo({top: 0, behavior: "smooth"});
 }
 
 function debounce(fn,ms){let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>fn(...a),ms);};}
