@@ -679,6 +679,30 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .locbar.show{display:flex}
 .locbar .seg button{padding:5px 10px;font-size:12px}
 
+/* ---- car routing ---- */
+.routebar{margin:0 20px 6px;padding:10px 14px;border:1px solid var(--line);border-left:3px solid var(--future);
+  border-radius:8px;background:var(--panel);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.routebar .rtitle{font-weight:600}
+.routebar .beta{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--future);
+  border:1px solid var(--future);border-radius:4px;padding:1px 5px;margin-left:8px}
+.routebar .rchk{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+.gobtn{background:var(--accent);color:#0e1116;border:0;border-radius:7px;padding:8px 12px;
+  cursor:pointer;font-weight:600}
+.rhead{max-width:1180px;margin:10px auto;color:var(--muted);font-size:13px;line-height:1.5}
+.rhead b{color:var(--ink)}
+.warn{color:#f0b429}
+.corr{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin:10px auto;
+  max-width:1180px;padding:10px 14px}
+.chead{font-size:12px;color:var(--muted);margin-bottom:6px}
+.chead b{color:var(--ink)}
+.leg{display:flex;gap:10px;align-items:baseline;padding:6px 4px;cursor:pointer;border-radius:6px}
+.leg:hover{background:var(--panel2)}
+.leg .chev{color:var(--dim);font-size:10px}
+.leg .lty{font-size:11px;color:var(--dim)}
+.leg .lod{font-size:12px;color:var(--muted)}
+.legnote{margin:0 0 4px 46px;font-size:12px;color:var(--muted)}
+.legnote .txt{color:var(--ink)}
+
 /* ---- yard sheet ---- */
 .srow{display:grid;grid-template-columns:44px 88px 170px minmax(200px,1fr) 2fr;gap:12px;
   align-items:baseline;padding:8px 14px;border-bottom:1px solid var(--line);cursor:pointer;
@@ -795,6 +819,22 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
   </div>
 </header>
 
+<div class="routebar" id="routebar">
+  <span class="rtitle">Route a car<span class="beta">beta</span></span>
+  <div class="combo">
+    <input class="inp" id="rfin" placeholder="from yard…" autocomplete="off">
+    <div class="menu" id="rfmenu"></div>
+  </div>
+  <span style="color:var(--dim)">→</span>
+  <div class="combo">
+    <input class="inp" id="rtin" placeholder="to yard…" autocomplete="off">
+    <div class="menu" id="rtmenu"></div>
+  </div>
+  <label class="rchk"><input type="checkbox" id="rcarload" checked> carload trains only</label>
+  <button class="gobtn" id="rgo" style="display:none">find routes</button>
+  <button class="clearbtn" id="rclear" style="display:none">clear ✕</button>
+</div>
+
 <div class="locbar" id="locbar"></div>
 <main class="wrap" id="wrap"></main>
 
@@ -828,10 +868,21 @@ function fullSym(t){
 // t.w = yards this train "works": every @@ yard tagged in its instructions.
 // Not a subset of the route — some trains are told to work a yard they do not
 // list as a stop, so it counts toward "touches this location" in its own right.
+// t.ww narrows that to yards with real CAR work for the routing graph: a tag
+// whose text only says the TRAIN is serviced there (fuel, crew) is where the
+// graph would otherwise board cars onto unit trains at fuel stops.
+const SERVICE_RE=/^\s*(train\s+)?(service|fuel|crew)( ?(point|stop|change|check))?s?\W*$/i;
 DATA.trains.forEach((t,i) => {
   t.i = i; t.fs = fullSym(t);
-  t.w = [];
-  t.g.forEach(g=>{ if(g[0]===SEG_YARD && !t.w.includes(g[1])) t.w.push(g[1]); });
+  t.w = []; t.wn = {};
+  t.g.forEach(g=>{
+    if(g[0]===SEG_YARD){
+      if(!t.w.includes(g[1])) t.w.push(g[1]);
+      if(g[2]) (t.wn[g[1]]=t.wn[g[1]]||[]).push(g[2]);
+    }
+  });
+  t.ww = t.w.filter(y=>{ const n=t.wn[y]; return !(n && n.every(x=>SERVICE_RE.test(x))); });
+  t.icl = t.g.filter(g=>g[0]===SEG_IC && g[2]!==undefined).map(g=>g[2]);
 });
 
 // how many trains touch each location (for the picker)
@@ -930,6 +981,7 @@ function openMenu(q){
 }
 function choose(o){
   if(!o) return;
+  rstate.res=null;      // picking a location always leaves the route view
   state.loc=o.id; locin.value = o.id+(o.nm?"  "+o.nm:"");
   locmenu.classList.remove("open"); locclear.style.display="";
   render();
@@ -1004,6 +1056,7 @@ const countEl=document.getElementById("count");
 const locbar=document.getElementById("locbar");
 
 function render(reset=true){
+  if(rstate.res){ renderRoutes(); return; }
   const base=filteredBase();
   if(reset) syncTypes(base);
   const list = state.type ? base.filter(t=>t.ty===state.type) : base;
@@ -1199,6 +1252,7 @@ function reveal(uid){
 // partner train, then scroll to it and open it.
 function jumpTo(uid){
   const t=DATA.trains[uid]; if(!t) return;
+  rstate.res=null;      // interchange links leave the route view too
   if(!state.rrs.has(t.rr)){ state.rrs.add(t.rr); paintPill(t.rr); }
   state.type="";
   state.loc=""; state.locmode=""; state.view="cards"; locin.value=""; locclear.style.display="none";
@@ -1215,6 +1269,189 @@ function gotoLoc(id){
 }
 
 function debounce(fn,ms){let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>fn(...a),ms);};}
+
+// ---- car routing (beta) ----
+// Structure only, no text interpretation: a car boards where a train
+// originates or does real work (t.ww), rides forward in route order, alights
+// where it works or terminates; trains hand off at shared yards and resolved
+// *IC* links. Chains rank by (starts on the origin yard's home road, fewest
+// interchanges, fewest trains) and collapse into corridors — one entry per
+// distinct railroad + transfer-yard sequence. The TSAR text at each hand-off
+// is quoted verbatim: the graph proposes, the player judges.
+const CARLOAD_RE=/manifest|local|yard|road switcher|mixed|transfer/i;
+const rstate={from:null,to:null,res:null};
+const rfin=document.getElementById("rfin"), rtin=document.getElementById("rtin");
+const rgo=document.getElementById("rgo"), rclear=document.getElementById("rclear");
+const rcarload=document.getElementById("rcarload");
+
+function wirePicker(inp,menu,key){
+  let ropts=[];
+  function open(q){
+    q=q.trim().toLowerCase();
+    ropts=pickList.filter(o=>!q||o.id.includes(q)||o.nm.toLowerCase().includes(q)).slice(0,60);
+    menu.innerHTML=ropts.map((o,i)=>
+      `<div class="opt" data-i="${i}"><span class="lid">${o.id}</span>`+
+      `<span class="lnm ${o.nm?'':'unk'}">${o.nm?esc(o.nm):'unnamed'}</span>`+
+      `<span class="cnt">${o.c} trains</span></div>`).join("")
+      || `<div class="opt"><span class="lnm unk">no match</span></div>`;
+    menu.classList.add("open");
+    menu.querySelectorAll(".opt").forEach(el=>{ el.onclick=()=>{
+      const o=ropts[+el.dataset.i]; if(!o) return;
+      rstate[key]=o; inp.value=o.id+(o.nm?"  "+o.nm:"");
+      menu.classList.remove("open"); routeNow();
+    };});
+  }
+  inp.onfocus=()=>open(inp.value);
+  inp.oninput=()=>{ rstate[key]=null; open(inp.value); syncRouteBtns(); };
+  document.addEventListener("click",e=>{ if(!inp.parentElement.contains(e.target)) menu.classList.remove("open"); });
+}
+wirePicker(rfin,document.getElementById("rfmenu"),"from");
+wirePicker(rtin,document.getElementById("rtmenu"),"to");
+rcarload.onchange=()=>{ if(rstate.res) routeNow(); };
+rgo.onclick=()=>routeNow();
+rclear.onclick=()=>{ rstate.from=rstate.to=rstate.res=null; rfin.value=""; rtin.value="";
+  syncRouteBtns(); render(); };
+function syncRouteBtns(){
+  rgo.style.display=(rstate.from&&rstate.to)?"":"none";
+  rclear.style.display=(rfin.value||rtin.value)?"":"none";
+}
+function routeNow(){
+  syncRouteBtns();
+  if(!(rstate.from&&rstate.to)||rstate.from.id===rstate.to.id) return;
+  rstate.res=findRoutes(rstate.from.id,rstate.to.id,rcarload.checked);
+  render();
+}
+
+function findRoutes(src,dst,carload){
+  const pool=DATA.trains.filter(t=>status(t)==="active"&&(!carload||CARLOAD_RE.test(t.ty)));
+  const inPool=new Set(pool.map(t=>t.i));
+  const boardAt={};
+  pool.forEach(t=>{
+    const seen=new Set(t.ww); seen.add(t.o);
+    seen.forEach(y=>{ if(y)(boardAt[y]=boardAt[y]||[]).push(t); });
+  });
+  const homeCnt={};
+  pool.forEach(t=>{ if(t.o){ const c=homeCnt[t.o]=homeCnt[t.o]||{}; c[t.rr]=(c[t.rr]||0)+1; } });
+  const homeRR=homeCnt[src]?Object.entries(homeCnt[src]).sort((a,b)=>b[1]-a[1])[0][0]:null;
+
+  const alightOk=(t,y)=>y===t.d||t.ww.includes(y);
+  const orderOk=(t,y1,y2)=>{
+    const i1=t.r.indexOf(y1), i2=t.r.indexOf(y2);
+    return (i1<0||i2<0)?true:i2>i1;
+  };
+  // Many different prefixes reach the same (train, boarding yard); exploring
+  // each one re-walks an identical suffix. A few per state keeps corridor
+  // variety without the exponential blowup.
+  const MAXH=5, CAP_RES=400, CAP_Q=400000, PER_STATE=4;
+  const chains=[], seenChain=new Set(), visits={};
+  let truncated=false;
+  const push=(q,path,t,y)=>{
+    const k=t.i+"@"+y, v=visits[k]||0;
+    if(v>=PER_STATE) return;
+    visits[k]=v+1; q.push(path.concat([[t,y]]));
+  };
+  const q=[];
+  (boardAt[src]||[]).forEach(t=>push(q,[],t,src));
+  for(let qi=0;qi<q.length;qi++){
+    if(chains.length>=CAP_RES||q.length>CAP_Q){ truncated=true; break; }
+    const path=q[qi], last=path[path.length-1], t=last[0], by=last[1];
+    if(alightOk(t,dst)&&dst!==by&&orderOk(t,by,dst)){
+      const key=path.map(p=>p[0].i).join(">");
+      if(!seenChain.has(key)){ seenChain.add(key); chains.push(path); }
+      continue;
+    }
+    if(path.length>=MAXH) continue;
+    const used=new Set(path.map(p=>p[0].i));
+    const drops=t.d?[t.d]:[];
+    t.ww.forEach(y=>{ if(!drops.includes(y)) drops.push(y); });
+    for(const y of drops){
+      if(y===by||!orderOk(t,by,y)) continue;
+      for(const u of (boardAt[y]||[])) if(!used.has(u.i)) push(q,path,u,y);
+    }
+    for(const uid of t.icl){
+      const u=DATA.trains[uid];
+      if(u&&inPool.has(u.i)&&!used.has(u.i)) push(q,path,u,u.o);
+    }
+  }
+
+  const score=res=>{
+    const rrs=res.map(p=>p[0].rr);
+    let ic=0; for(let i=1;i<rrs.length;i++) if(rrs[i]!==rrs[i-1]) ic++;
+    const foreign=(homeRR&&rrs[0]!==homeRR)?1:0;
+    return foreign*10000+ic*100+res.length;
+  };
+  const corr={};
+  chains.forEach(res=>{
+    const key=res.map(p=>p[0].rr).join(",")+"|"+res.map(p=>p[1]).join(",");
+    const cur=corr[key];
+    if(!cur) corr[key]={best:res,n:1};
+    else { cur.n++; if(score(res)<score(cur.best)) cur.best=res; }
+  });
+  const corridors=Object.values(corr).sort((a,b)=>score(a.best)-score(b.best));
+  return {src,dst,homeRR,corridors,total:chains.length,truncated,score};
+}
+
+function renderRoutes(){
+  const R=rstate.res;
+  locbar.className="locbar";
+  countEl.innerHTML=`<b>${R.corridors.length}</b> corridor(s), ${R.total} chain(s)`;
+  wrap.innerHTML="";
+  const hd=document.createElement("div"); hd.className="rhead";
+  hd.innerHTML=`<b>${esc(locLabel(R.src))}</b> → <b>${esc(locLabel(R.dst))}</b> · `+
+    `candidate routings built only from where active trains originate, terminate and work. `+
+    `The TSARs' own instructions are quoted at each hand-off — judge them before trusting a chain.`+
+    (R.homeRR?` Home road at the origin looks like <b>${esc(R.homeRR)}</b>.`:"")+
+    (R.truncated?` <span class="warn">Search hit its size cap; distant results may be incomplete.</span>`:"");
+  wrap.appendChild(hd);
+  if(!R.corridors.length){
+    const d=document.createElement("div"); d.className="empty";
+    d.innerHTML=`No chain found within 5 trains.`+
+      (rcarload.checked?`<br>Try unchecking “carload trains only”.`:``);
+    wrap.appendChild(d); return;
+  }
+  R.corridors.slice(0,30).forEach(c=>wrap.appendChild(corridorCard(c)));
+  if(R.corridors.length>30){
+    const d=document.createElement("div"); d.className="rhead";
+    d.textContent=`…and ${R.corridors.length-30} more corridor(s) not shown.`;
+    wrap.appendChild(d);
+  }
+}
+
+function corridorCard(c){
+  const R=rstate.res, res=c.best, rrs=res.map(p=>p[0].rr);
+  let ic=0; for(let i=1;i<rrs.length;i++) if(rrs[i]!==rrs[i-1]) ic++;
+  const el=document.createElement("div"); el.className="corr";
+  const h=document.createElement("div"); h.className="chead";
+  h.innerHTML=`<b>${res.length} train${res.length>1?"s":""}</b> · ${ic} interchange${ic===1?"":"s"}`+
+    (c.n>1?` · ${c.n} variants`:"")+
+    ((R.homeRR&&rrs[0]!==R.homeRR)?` · <span class="warn">starts on a foreign road</span>`:"");
+  el.appendChild(h);
+  res.forEach((p,i)=>{
+    const t=p[0], by=p[1];
+    const ay=i===res.length-1?R.dst:res[i+1][1];
+    const leg=document.createElement("div"); leg.className="leg";
+    leg.innerHTML=
+      `<span class="chev">▸</span>`+
+      `<span class="rr" style="background:${rrColor(t.rr)}">${esc(t.rr)}</span>`+
+      `<span class="ssym">${esc(t.fs)}</span>`+
+      `<span class="lty">${esc(t.ty)}</span>`+
+      `<span class="lod">${esc(locLabel(by))} → ${esc(locLabel(ay))}</span>`;
+    el.appendChild(leg);
+    const notes=[];
+    [by,ay].forEach(y=>(t.wn[y]||[]).forEach(n=>notes.push([y,n])));
+    notes.forEach(([y,n])=>{
+      const nl=document.createElement("div"); nl.className="legnote";
+      nl.innerHTML=`@ ${esc(locLabel(y))}: <span class="txt">${esc(n)}</span>`;
+      el.appendChild(nl);
+    });
+    let cardEl=null;
+    leg.onclick=()=>{
+      if(cardEl){ cardEl.remove(); cardEl=null; return; }
+      cardEl=card(t); openCard(cardEl,t,true); leg.after(cardEl);
+    };
+  });
+  return el;
+}
 
 render();
 </script>
