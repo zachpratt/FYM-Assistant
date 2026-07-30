@@ -112,13 +112,19 @@ DEFAULT_COLOR = '#2dd4a7'
 # their "types" are operators (shortlines = carload, passenger = passenger).
 #
 #   carload    - can carry general carload freight (manifests, locals, yard
-#                jobs, transfers, and mixed types that include manifest)
-#   intermodal - containers/trailers only
-#   auto       - autoracks only
+#                jobs, transfers)
+#   intermodal - containers/trailers
+#   auto       - autoracks
 #   unit       - single-commodity unit service, no general freight
 #   engines    - light power / helpers, no cars
 #   nonrev     - specials, company moves, placeholders; never route a car
+#
+# A value is one class or a tuple of classes: mixed service like "Manifest/IM"
+# carries both carload and intermodal, and the car-type selector needs the
+# full capability set, not a primary class.
 # ---------------------------------------------------------------------------
+
+FREIGHT_CLASSES = ('carload', 'intermodal', 'auto', 'unit', 'engines', 'nonrev')
 
 FREIGHT_CLASS = {
     'BNSF': {
@@ -171,7 +177,7 @@ FREIGHT_CLASS = {
         'Foreign Haulage/Non-Revenue':            'nonrev',      # AMBIGUOUS: name says non-revenue, but "foreign haulage" may carry freight
         'Mexico North Division':                  'carload',
         'Overflow and Detours':                   'nonrev',      # AMBIGUOUS: overflow sections may carry revenue freight; zero trains today
-        'Priority IM/Autos/Manifest':             'carload',     # AMBIGUOUS: mixed type; carries manifest per its name
+        'Priority IM/Autos/Manifest':             ('carload', 'intermodal', 'auto'),
         'Regional Freight':                       'carload',
         'US Central Division':                    'carload',
         'US East Division':                       'carload',
@@ -191,7 +197,7 @@ FREIGHT_CLASS = {
         'Unit Sulphur':                           'unit',
     },
     'CSX': {
-        'Auto/IM':                                'auto',
+        'Auto/IM':                                ('auto', 'intermodal'),
         'Automotive':                             'auto',
         'Coal':                                   'unit',
         'Coal DPU':                               'unit',
@@ -207,7 +213,7 @@ FREIGHT_CLASS = {
         'Intermodal':                             'intermodal',
         'Local':                                  'carload',
         'Manifest':                               'carload',
-        'Manifest/IM':                            'carload',
+        'Manifest/IM':                            ('carload', 'intermodal'),
         'Misc. Priority':                         'carload',     # AMBIGUOUS: unclear what it carries; zero trains today
         'Misc. Unit':                             'unit',
         'Oil':                                    'unit',
@@ -220,17 +226,17 @@ FREIGHT_CLASS = {
     },
     'NS': {
         'Aggregates/Sand':                        'unit',
-        'Auto / Manifest Mix':                    'carload',
+        'Auto / Manifest Mix':                    ('carload', 'auto'),
         'Autos':                                  'auto',
         'Baretable Intermodal':                   'intermodal',
         'DPU Manifest':                           'carload',
         'Ethanol/Oil ':                           'unit',        # trailing space is in the game's own TypeInfo
         'Intermodal':                             'intermodal',
-        'Intermodal/Auto Mix':                    'intermodal',
+        'Intermodal/Auto Mix':                    ('intermodal', 'auto'),
         'Light Engines':                          'engines',
         'Local':                                  'carload',
         'Manifest':                               'carload',
-        'Manifest/IM Mix':                        'carload',
+        'Manifest/IM Mix':                        ('carload', 'intermodal'),
         'Priority Intermodal':                    'intermodal',
         'Roadrailer':                             'intermodal',  # AMBIGUOUS: trailer trains; no conventional cars, closest fit
         'Specials/Company Trains':                'nonrev',
@@ -723,7 +729,10 @@ def build_payload(railroads, names):
         'pax': 1 if rr['meta']['pax'] else 0,
         'ty': sorted(rr['types']),
         'px': {t: p for t, p in rr['prefixes'].items() if p},
-        'fc': {} if rr['meta']['multi'] else FREIGHT_CLASS.get(rr['code'], {}),
+        # capability set per type, '+'-joined ("carload+intermodal")
+        'fc': {} if rr['meta']['multi'] else
+              {ty: cls if isinstance(cls, str) else '+'.join(cls)
+               for ty, cls in FREIGHT_CLASS.get(rr['code'], {}).items()},
     } for rr in railroads]
 
     payload = {'gen': date.today().isoformat(), 'rrs': roads,
@@ -810,7 +819,8 @@ def build(files, out, title, loc_path, use_cache=True):
               f"({os.path.basename(f)})")
 
     # Every declared type on a single-railroad roster must have a freight
-    # classification, and the table must not go stale — both directions loud.
+    # classification, the table must not go stale, and every class named in
+    # it must be a real class — all three directions loud.
     for rr in railroads:
         if rr['meta']['multi']:
             continue
@@ -819,10 +829,14 @@ def build(files, out, title, loc_path, use_cache=True):
             if ty not in table:
                 anom.add("train type has no freight classification "
                          "(add to FREIGHT_CLASS)", f"{ty!r} in {rr['code']}")
-        for ty in table:
+        for ty, cls in table.items():
             if ty not in rr['types']:
                 anom.add("FREIGHT_CLASS lists a type the roster no longer "
                          "declares", f"{ty!r} in {rr['code']}")
+            for c in ((cls,) if isinstance(cls, str) else cls):
+                if c not in FREIGHT_CLASSES:
+                    anom.add("FREIGHT_CLASS names an unknown class",
+                             f"{c!r} for {ty!r} in {rr['code']}")
 
     scraped = scrape_location_names(railroads)
     store = load_location_store(loc_path) if use_cache else {}
@@ -1113,7 +1127,14 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
     <input class="inp" id="rtin" placeholder="to yard…" autocomplete="off">
     <div class="menu" id="rtmenu"></div>
   </div>
-  <label class="rchk"><input type="checkbox" id="rcarload" checked> carload trains only</label>
+  <label class="rchk">car type
+    <select class="inp" id="rcartype" style="min-width:0;padding:6px 8px">
+      <option value="carload">Manifest car</option>
+      <option value="intermodal">Container / trailer</option>
+      <option value="auto">Autorack</option>
+      <option value="any">Any freight</option>
+    </select>
+  </label>
   <button class="gobtn" id="rgo" style="display:none">find routes</button>
   <button class="clearbtn" id="rclear" style="display:none">clear ✕</button>
 </div>
@@ -1588,17 +1609,18 @@ function debounce(fn,ms){let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>f
 // interchanges, fewest trains) and collapse into corridors — one entry per
 // distinct railroad + transfer-yard sequence. The TSAR text at each hand-off
 // is quoted verbatim: the graph proposes, the player judges.
-// freight class of a train, from the per-roster classification table.
-// Multi rosters: shortline operators haul carload, passenger is passenger.
-function fclass(t){
-  const r=RR[t.rr]; if(!r) return "carload";
-  if(r.m) return r.pax ? "passenger" : "carload";
-  return r.fc[t.ty] || "nonrev";
+// freight capability set of a train, from the per-roster classification
+// table ("carload+intermodal" for mixed service). Multi rosters: shortline
+// operators haul carload, passenger is passenger.
+function fclasses(t){
+  const r=RR[t.rr]; if(!r) return ["carload"];
+  if(r.m) return r.pax ? ["passenger"] : ["carload"];
+  return (r.fc[t.ty] || "nonrev").split("+");
 }
 const rstate={from:null,to:null,res:null};
 const rfin=document.getElementById("rfin"), rtin=document.getElementById("rtin");
 const rgo=document.getElementById("rgo"), rclear=document.getElementById("rclear");
-const rcarload=document.getElementById("rcarload");
+const rcartype=document.getElementById("rcartype");
 
 function wirePicker(inp,menu,key){
   let ropts=[];
@@ -1623,7 +1645,7 @@ function wirePicker(inp,menu,key){
 }
 wirePicker(rfin,document.getElementById("rfmenu"),"from");
 wirePicker(rtin,document.getElementById("rtmenu"),"to");
-rcarload.onchange=()=>{ if(rstate.res) routeNow(); };
+rcartype.onchange=()=>{ if(rstate.res) routeNow(); };
 rgo.onclick=()=>routeNow();
 rclear.onclick=()=>{ rstate.from=rstate.to=rstate.res=null; rfin.value=""; rtin.value="";
   syncRouteBtns(); render(); };
@@ -1634,19 +1656,20 @@ function syncRouteBtns(){
 function routeNow(){
   syncRouteBtns();
   if(!(rstate.from&&rstate.to)||rstate.from.id===rstate.to.id) return;
-  rstate.res=findRoutes(rstate.from.id,rstate.to.id,rcarload.checked);
+  rstate.res=findRoutes(rstate.from.id,rstate.to.id,rcartype.value);
   render();
 }
 
-function findRoutes(src,dst,carload){
-  // pool by freight class: passenger, light power and non-revenue types never
-  // carry a routed car; the carload toggle narrows to carload-capable service
-  const carloadOk=t=>{
-    const c=fclass(t);
-    if(c==="passenger"||c==="engines"||c==="nonrev") return false;
-    return !carload || c==="carload";
+function findRoutes(src,dst,carType){
+  // pool by capability: passenger, light power and non-revenue types never
+  // carry a routed car; otherwise a train qualifies when its capability set
+  // includes the selected car type ("any" = any revenue freight service)
+  const canCarry=t=>{
+    const cs=fclasses(t);
+    if(cs.includes("passenger")||cs.includes("engines")||cs.includes("nonrev")) return false;
+    return carType==="any" || cs.includes(carType);
   };
-  const pool=DATA.trains.filter(t=>status(t)==="active"&&carloadOk(t));
+  const pool=DATA.trains.filter(t=>status(t)==="active"&&canCarry(t));
   const inPool=new Set(pool.map(t=>t.i));
   const boardAt={};
   pool.forEach(t=>{
@@ -1736,7 +1759,8 @@ function renderRoutes(){
   countEl.innerHTML=`<b>${R.corridors.length}</b> corridor(s), ${R.total} chain(s)`;
   wrap.innerHTML="";
   const hd=document.createElement("div"); hd.className="rhead";
-  hd.innerHTML=`<b>${esc(locLabel(R.src))}</b> → <b>${esc(locLabel(R.dst))}</b> · `+
+  hd.innerHTML=`<b>${esc(locLabel(R.src))}</b> → <b>${esc(locLabel(R.dst))}</b>`+
+    ` · <b>${esc(rcartype.options[rcartype.selectedIndex].text)}</b> · `+
     `candidate routings built only from where active trains originate, terminate and work. `+
     `The TSARs' own instructions are quoted at each hand-off — judge them before trusting a chain.`+
     (R.homeRR?` Home road at the origin looks like <b>${esc(R.homeRR)}</b>.`:"")+
@@ -1745,7 +1769,7 @@ function renderRoutes(){
   if(!R.corridors.length){
     const d=document.createElement("div"); d.className="empty";
     d.innerHTML=`No chain found within 5 trains.`+
-      (rcarload.checked?`<br>Try unchecking “carload trains only”.`:``);
+      (rcartype.value!=="any"?`<br>Try car type “Any freight”.`:``);
     wrap.appendChild(d); return;
   }
   R.corridors.slice(0,30).forEach(c=>wrap.appendChild(corridorCard(c)));
