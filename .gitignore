@@ -13,3 +13,7 @@ map_id_screenshots/
 # docs/ and locations.csv are deliberately committed: GitHub Pages serves the
 # built page from docs/, and the location name store has to persist across
 # TSAR updates or hand-entered names would be lost.
+
+# Per-yard game file bundles (map, sorts, live cars) shared for format
+# exploration. Game data plus personal player state; never committed.
+sample_yard_data/
