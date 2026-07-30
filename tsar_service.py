@@ -90,7 +90,7 @@ SEG_YARD, SEG_IC, SEG_TEXT, SEG_BREAK = 0, 1, 2, 3
 # against the reporting mark it names. Unlisted railroads still parse fine; their
 # interchange markers simply render as plain text instead of clickable links.
 RR_REGISTRY = {
-    'PASSENGER': {'name': 'Passenger',  'color': '#7c93a8', 'idx': 0, 'multi': True},
+    'PASSENGER': {'name': 'Passenger',  'color': '#7c93a8', 'idx': 0, 'multi': True, 'pax': True},
     'BNSF':      {'name': 'BNSF',       'color': '#f26a21', 'idx': 1},
     'CN':        {'name': 'CN',         'color': '#e23b3b', 'idx': 2},
     'CPKC':      {'name': 'CPKC',       'color': '#e6484f', 'idx': 3},
@@ -142,6 +142,8 @@ def rr_meta(code):
         # A "multi" file lists one operator per type rather than one train type
         # per type: TSAR_Shortline.ini and TSAR_Passenger.ini.
         'multi': bool(m.get('multi')),
+        # Passenger operators are excluded from freight-routing pools.
+        'pax':   bool(m.get('pax')),
     }
 
 
@@ -463,6 +465,7 @@ def build_payload(railroads, names):
         'n':  rr['meta']['name'],
         'k':  rr['meta']['color'],
         'm':  1 if rr['meta']['multi'] else 0,
+        'pax': 1 if rr['meta']['pax'] else 0,
         'ty': sorted(rr['types']),
         'px': {t: p for t, p in rr['prefixes'].items() if p},
     } for rr in railroads]
@@ -871,9 +874,15 @@ function fullSym(t){
 // t.ww narrows that to yards with real CAR work for the routing graph: a tag
 // whose text only says the TRAIN is serviced there (fuel, crew) is where the
 // graph would otherwise board cars onto unit trains at fuel stops.
+// t.op = operator identity. Same as the roster code except on the two
+// multi-operator rosters, where the real railroad is the type's reporting
+// mark (IHB, AMTK, …). The UI keeps one SHORTLINE/PASSENGER pill; routing
+// semantics (interchanges, home road, carload pool) speak operator.
 const SERVICE_RE=/^\s*(train\s+)?(service|fuel|crew)( ?(point|stop|change|check))?s?\W*$/i;
 DATA.trains.forEach((t,i) => {
   t.i = i; t.fs = fullSym(t);
+  const rrm = RR[t.rr];
+  t.op = (rrm && rrm.m) ? (rrm.px[t.ty] || t.ty) : t.rr;
   t.w = []; t.wn = {};
   t.g.forEach(g=>{
     if(g[0]===SEG_YARD){
@@ -1323,7 +1332,14 @@ function routeNow(){
 }
 
 function findRoutes(src,dst,carload){
-  const pool=DATA.trains.filter(t=>status(t)==="active"&&(!carload||CARLOAD_RE.test(t.ty)));
+  // shortline trains carry carload freight even though their "type" is an
+  // operator name; passenger operators never join a freight pool
+  const carloadOk=t=>{
+    const r=RR[t.rr];
+    if(r&&r.pax) return false;
+    return !carload || CARLOAD_RE.test(t.ty) || (r&&r.m);
+  };
+  const pool=DATA.trains.filter(t=>status(t)==="active"&&carloadOk(t));
   const inPool=new Set(pool.map(t=>t.i));
   const boardAt={};
   pool.forEach(t=>{
@@ -1331,7 +1347,7 @@ function findRoutes(src,dst,carload){
     seen.forEach(y=>{ if(y)(boardAt[y]=boardAt[y]||[]).push(t); });
   });
   const homeCnt={};
-  pool.forEach(t=>{ if(t.o){ const c=homeCnt[t.o]=homeCnt[t.o]||{}; c[t.rr]=(c[t.rr]||0)+1; } });
+  pool.forEach(t=>{ if(t.o){ const c=homeCnt[t.o]=homeCnt[t.o]||{}; c[t.op]=(c[t.op]||0)+1; } });
   const homeRR=homeCnt[src]?Object.entries(homeCnt[src]).sort((a,b)=>b[1]-a[1])[0][0]:null;
 
   const alightOk=(t,y)=>y===t.d||t.ww.includes(y);
@@ -1375,14 +1391,14 @@ function findRoutes(src,dst,carload){
   }
 
   const score=res=>{
-    const rrs=res.map(p=>p[0].rr);
-    let ic=0; for(let i=1;i<rrs.length;i++) if(rrs[i]!==rrs[i-1]) ic++;
-    const foreign=(homeRR&&rrs[0]!==homeRR)?1:0;
+    const ops=res.map(p=>p[0].op);
+    let ic=0; for(let i=1;i<ops.length;i++) if(ops[i]!==ops[i-1]) ic++;
+    const foreign=(homeRR&&ops[0]!==homeRR)?1:0;
     return foreign*10000+ic*100+res.length;
   };
   const corr={};
   chains.forEach(res=>{
-    const key=res.map(p=>p[0].rr).join(",")+"|"+res.map(p=>p[1]).join(",");
+    const key=res.map(p=>p[0].op).join(",")+"|"+res.map(p=>p[1]).join(",");
     const cur=corr[key];
     if(!cur) corr[key]={best:res,n:1};
     else { cur.n++; if(score(res)<score(cur.best)) cur.best=res; }
@@ -1418,13 +1434,13 @@ function renderRoutes(){
 }
 
 function corridorCard(c){
-  const R=rstate.res, res=c.best, rrs=res.map(p=>p[0].rr);
-  let ic=0; for(let i=1;i<rrs.length;i++) if(rrs[i]!==rrs[i-1]) ic++;
+  const R=rstate.res, res=c.best, ops=res.map(p=>p[0].op);
+  let ic=0; for(let i=1;i<ops.length;i++) if(ops[i]!==ops[i-1]) ic++;
   const el=document.createElement("div"); el.className="corr";
   const h=document.createElement("div"); h.className="chead";
   h.innerHTML=`<b>${res.length} train${res.length>1?"s":""}</b> · ${ic} interchange${ic===1?"":"s"}`+
     (c.n>1?` · ${c.n} variants`:"")+
-    ((R.homeRR&&rrs[0]!==R.homeRR)?` · <span class="warn">starts on a foreign road</span>`:"");
+    ((R.homeRR&&ops[0]!==R.homeRR)?` · <span class="warn">starts on a foreign road</span>`:"");
   el.appendChild(h);
   res.forEach((p,i)=>{
     const t=p[0], by=p[1];
@@ -1432,7 +1448,7 @@ function corridorCard(c){
     const leg=document.createElement("div"); leg.className="leg";
     leg.innerHTML=
       `<span class="chev">▸</span>`+
-      `<span class="rr" style="background:${rrColor(t.rr)}">${esc(t.rr)}</span>`+
+      `<span class="rr" style="background:${rrColor(t.rr)}">${esc(t.op)}</span>`+
       `<span class="ssym">${esc(t.fs)}</span>`+
       `<span class="lty">${esc(t.ty)}</span>`+
       `<span class="lod">${esc(locLabel(by))} → ${esc(locLabel(ay))}</span>`;
