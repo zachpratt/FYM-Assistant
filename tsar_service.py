@@ -678,6 +678,20 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
   border-radius:8px;background:var(--panel);display:none;align-items:center;gap:12px;flex-wrap:wrap}
 .locbar.show{display:flex}
 .locbar .seg button{padding:5px 10px;font-size:12px}
+
+/* ---- yard sheet ---- */
+.srow{display:grid;grid-template-columns:44px 88px 170px minmax(200px,1fr) 2fr;gap:12px;
+  align-items:baseline;padding:8px 14px;border-bottom:1px solid var(--line);cursor:pointer;
+  max-width:1180px;margin:0 auto}
+.srow:hover{background:var(--panel)}
+.srow.shead{cursor:default;font-size:10px;text-transform:uppercase;letter-spacing:.7px;
+  color:var(--dim);padding-top:2px}
+.srow.shead:hover{background:none}
+.srow .role{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.srow .ssym{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.5px}
+.srow .sod{font-size:12px;color:var(--muted)}
+.srow .stxt{font-size:13px}
+.srow .stxt.none{color:var(--dim)}
 .locbar .lid{font-family:var(--mono);color:var(--accent)}
 .locbar .big{font-size:15px;font-weight:600}
 
@@ -834,7 +848,7 @@ function status(t){
 }
 
 // ---- state ----
-const state = {loc:"", locmode:"", rrs:new Set(DATA.rrs.map(r=>r.c)), type:"", sym:"", stat:"active", shown:0};
+const state = {loc:"", locmode:"", view:"cards", rrs:new Set(DATA.rrs.map(r=>r.c)), type:"", sym:"", stat:"active", shown:0};
 const PAGE = 300;
 
 // ---- build controls ----
@@ -921,7 +935,7 @@ function choose(o){
   render();
 }
 locin.onfocus=()=>openMenu(locin.value);
-locin.oninput=()=>{state.loc="";state.locmode="";locclear.style.display=locin.value?"":"none";openMenu(locin.value);};
+locin.oninput=()=>{state.loc="";state.locmode="";state.view="cards";locclear.style.display=locin.value?"":"none";openMenu(locin.value);};
 locin.onkeydown=e=>{
   const els=locmenu.querySelectorAll(".opt");
   if(e.key==="ArrowDown"){hi=Math.min(hi+1,opts.length-1);e.preventDefault();}
@@ -931,7 +945,7 @@ locin.onkeydown=e=>{
   els.forEach((el,i)=>el.classList.toggle("hi",i===hi));
   if(els[hi])els[hi].scrollIntoView({block:"nearest"});
 };
-locclear.onclick=()=>{state.loc="";state.locmode="";locin.value="";locclear.style.display="none";render();};
+locclear.onclick=()=>{state.loc="";state.locmode="";state.view="cards";locin.value="";locclear.style.display="none";render();};
 document.addEventListener("click",e=>{
   if(!document.getElementById("loccombo").contains(e.target))locmenu.classList.remove("open");
 });
@@ -945,6 +959,13 @@ function instrAt(t,locId){
       return g[2] || "(stops here — no special instruction)";
   }
   return "";
+}
+
+// every instruction line tagged at a location (a train can have several)
+function allInstrAt(t,locId){
+  const out=[];
+  t.g.forEach(g=>{ if(g[0]===SEG_YARD && g[1]===locId && g[2]) out.push(g[2]); });
+  return out;
 }
 
 // ---- filtering ----
@@ -1007,11 +1028,24 @@ function render(reset=true){
         [["","All",pool.length],["o","Originates",n.o],["d","Terminates",n.d],["w","Works",n.w]]
           .map(([v,lb,c])=>`<button data-m="${v}"${v===state.locmode?' class="on"':''}>${lb} (${c})</button>`).join("")+
       `</span>`+
+      `<span class="seg" id="viewseg">`+
+        [["cards","Cards"],["sheet","Yard sheet"]]
+          .map(([v,lb])=>`<button data-v="${v}"${v===state.view?' class="on"':''}>${lb}</button>`).join("")+
+      `</span>`+
       `<span style="color:var(--muted)">${list.length} train(s) ${verb}</span>`;
     locbar.querySelectorAll("#locmodeseg button").forEach(b=>{
       b.onclick=()=>{ state.locmode=b.dataset.m; render(); };
     });
+    locbar.querySelectorAll("#viewseg button").forEach(b=>{
+      b.onclick=()=>{ state.view=b.dataset.v; render(); };
+    });
   } else locbar.className="locbar";
+
+  // yard sheet: a compact switchlist of the same filtered set, one row per
+  // train with its full instruction text at this yard. Only meaningful with a
+  // location selected; role order (originate, terminate, work, pass) then symbol.
+  const sheet = state.loc && state.view==="sheet";
+  if(sheet) list.sort((a,b)=>roleRank(a)-roleRank(b) || (a.fs<b.fs?-1:a.fs>b.fs?1:0));
 
   if(reset) wrap.innerHTML="";
   const slice=list.slice(state.shown, state.shown+PAGE);
@@ -1022,7 +1056,13 @@ function render(reset=true){
     return;
   }
   const frag=document.createDocumentFragment();
-  slice.forEach(t=>frag.appendChild(card(t)));
+  if(sheet && reset){
+    const h=document.createElement("div"); h.className="srow shead";
+    h.innerHTML=`<span>Role</span><span>RR</span><span>Symbol</span>`+
+      `<span>Origin → Destination</span><span>Work at this yard</span>`;
+    frag.appendChild(h);
+  }
+  slice.forEach(t=>frag.appendChild(sheet?sheetRow(t):card(t)));
   const old=document.getElementById("moreWrap"); if(old) old.remove();
   wrap.appendChild(frag);
   state.shown+=slice.length;
@@ -1034,6 +1074,36 @@ function render(reset=true){
     b.onclick=()=>render(false);
     mw.appendChild(b); wrap.appendChild(mw);
   }
+}
+
+// role of a train relative to the selected location
+function roleRank(t){
+  const L=state.loc;
+  if(t.o===L) return 0;
+  if(t.d===L) return 1;
+  if(t.w.includes(L)) return 2;
+  return 3;
+}
+function roleTag(t){
+  const L=state.loc, r=[];
+  if(t.o===L) r.push("O");
+  if(t.d===L) r.push("T");
+  if(t.w.includes(L)) r.push("W");
+  return r.join("·") || "–";
+}
+
+function sheetRow(t){
+  const el=document.createElement("div");
+  el.className="srow"; el.dataset.uid=t.i;
+  const work=allInstrAt(t,state.loc);
+  el.innerHTML=
+    `<span class="role" title="O originates · T terminates · W works">${roleTag(t)}</span>`+
+    `<span><span class="rr" style="background:${rrColor(t.rr)}">${esc(t.rr)}</span></span>`+
+    `<span class="ssym">${esc(t.fs)}</span>`+
+    `<span class="sod">${esc(locLabel(t.o))} → ${esc(locLabel(t.d))}</span>`+
+    `<span class="stxt${work.length?'':' none'}">${work.length?work.map(esc).join("<br>"):"—"}</span>`;
+  el.onclick=()=>{ state.view="cards"; render(); reveal(t.i); };
+  return el;
 }
 
 function card(t){
@@ -1111,16 +1181,10 @@ function buildBody(el,t){
   });
 }
 
-// Follow an interchange link: widen the filters just enough to reveal the
-// partner train, then scroll to it and open it.
-function jumpTo(uid){
-  const t=DATA.trains[uid]; if(!t) return;
-  if(!state.rrs.has(t.rr)){ state.rrs.add(t.rr); paintPill(t.rr); }
-  state.type="";
-  state.loc=""; state.locmode=""; locin.value=""; locclear.style.display="none";
-  state.sym=t.fs.replace(/[^A-Za-z0-9]/g,"").toUpperCase(); symin.value=t.fs;
-  setStat("all");
-  render();
+// Page through the current card list until the train's card exists, then
+// open it, scroll to it and flash it. Assumes the filters already admit it.
+function reveal(uid){
+  const t=DATA.trains[uid];
   requestAnimationFrame(()=>{
     let el=wrap.querySelector(`.card[data-uid="${uid}"]`);
     while(!el && state.shown<filtered().length){ render(false); el=wrap.querySelector(`.card[data-uid="${uid}"]`); }
@@ -1129,6 +1193,19 @@ function jumpTo(uid){
     el.scrollIntoView({block:"center",behavior:"smooth"});
     el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600);
   });
+}
+
+// Follow an interchange link: widen the filters just enough to reveal the
+// partner train, then scroll to it and open it.
+function jumpTo(uid){
+  const t=DATA.trains[uid]; if(!t) return;
+  if(!state.rrs.has(t.rr)){ state.rrs.add(t.rr); paintPill(t.rr); }
+  state.type="";
+  state.loc=""; state.locmode=""; state.view="cards"; locin.value=""; locclear.style.display="none";
+  state.sym=t.fs.replace(/[^A-Za-z0-9]/g,"").toUpperCase(); symin.value=t.fs;
+  setStat("all");
+  render();
+  reveal(uid);
 }
 
 // Click on a route stop / O-D endpoint: focus the location filter on it.
