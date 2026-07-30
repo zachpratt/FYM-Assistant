@@ -102,6 +102,172 @@ RR_REGISTRY = {
 }
 DEFAULT_COLOR = '#2dd4a7'
 
+# ---------------------------------------------------------------------------
+# Freight classification of every declared train type on the single-railroad
+# rosters. The route finder needs to know what a train can carry, and the
+# type NAMES are each road's own vocabulary ("US Central Division" is CPKC's
+# carload local network), so a keyword match cannot be trusted. Every type a
+# roster declares must appear here; a new type in a TSAR update is an anomaly
+# until it is classified deliberately. Multi-operator rosters are not listed:
+# their "types" are operators (shortlines = carload, passenger = passenger).
+#
+#   carload    - can carry general carload freight (manifests, locals, yard
+#                jobs, transfers, and mixed types that include manifest)
+#   intermodal - containers/trailers only
+#   auto       - autoracks only
+#   unit       - single-commodity unit service, no general freight
+#   engines    - light power / helpers, no cars
+#   nonrev     - specials, company moves, placeholders; never route a car
+# ---------------------------------------------------------------------------
+
+FREIGHT_CLASS = {
+    'BNSF': {
+        'Baretable Intermodal (B)':               'intermodal',
+        'Dimensional Special (J)':                'nonrev',      # AMBIGUOUS: high/wide specials do carry revenue loads
+        'Domestic Intermodal (Q)':                'intermodal',
+        'Helpers (K)':                            'engines',
+        'High Priority Domestic Intermodal (Z)':  'intermodal',
+        'High Priority High HPT Manifest (HH)':   'carload',
+        'High Priority Low HPT Manifest (HL)':    'carload',
+        'International Intermodal (S)':           'intermodal',
+        'Light Engines (D)':                      'engines',
+        'Local (L)':                              'carload',
+        'Low Priority Manifest (M)':              'carload',
+        'Road Switcher (R)':                      'carload',
+        'Transfer (T)':                           'carload',
+        'Unit Ag. Empty (X)':                     'unit',
+        'Unit Ag. Loaded (G)':                    'unit',
+        'Unit Coal Empty (E)':                    'unit',
+        'Unit Coal Loaded (C)':                   'unit',
+        'Unit Train (U)':                         'unit',
+        'Vehicle (V)':                            'auto',
+        'Yard Job (Y)':                           'carload',
+    },
+    'CN': {
+        'Actual Blocked Manifest':                'carload',
+        'CPR Origin/Shared Running':              'carload',     # AMBIGUOUS: run-through with CPKC; assumed to carry CN carload
+        'Express Automotive':                     'auto',
+        'Extra Trains':                           'nonrev',      # AMBIGUOUS: extras could be anything
+        'Work Trains':                            'nonrev',
+        'High Priority IM':                       'intermodal',
+        'Locals':                                 'carload',
+        'Manifest':                               'carload',
+        'Quality Intermodal':                     'intermodal',
+        'Roadswitchers':                          'carload',
+        'Transfer Moves':                         'carload',
+        'Uniform Bulk':                           'unit',
+        'Unit Bulk':                              'unit',
+        'Unit Coal':                              'unit',
+        'Unit Grain':                             'unit',
+        'Unit Sand/Sulphur':                      'unit',
+        'Yard Jobs':                              'carload',
+    },
+    'CPKC': {
+        'Canada Central Division':                'carload',
+        'Canada East Division':                   'carload',
+        'Canada Pacific Division':                'carload',
+        'Canada Prairies Division':               'carload',
+        'Expedited Merchandise':                  'carload',
+        'Foreign Haulage/Non-Revenue':            'nonrev',      # AMBIGUOUS: name says non-revenue, but "foreign haulage" may carry freight
+        'Mexico North Division':                  'carload',
+        'Overflow and Detours':                   'nonrev',      # AMBIGUOUS: overflow sections may carry revenue freight; zero trains today
+        'Priority IM/Autos/Manifest':             'carload',     # AMBIGUOUS: mixed type; carries manifest per its name
+        'Regional Freight':                       'carload',
+        'US Central Division':                    'carload',
+        'US East Division':                       'carload',
+        'US Northeastern Division':               'carload',
+        'US South Division':                      'carload',
+        'US West Division':                       'carload',
+        'Unit Autorack':                          'auto',
+        'Unit Bulk':                              'unit',
+        'Unit Coal/Petcoke':                      'unit',
+        'Unit Crude Oil':                         'unit',
+        'Unit Ethanol':                           'unit',
+        'Unit Frac Sand':                         'unit',
+        'Unit Grain':                             'unit',
+        'Unit Molten Sulfur':                     'unit',
+        'Unit Phosphate':                         'unit',
+        'Unit Potash':                            'unit',
+        'Unit Sulphur':                           'unit',
+    },
+    'CSX': {
+        'Auto/IM':                                'auto',
+        'Automotive':                             'auto',
+        'Coal':                                   'unit',
+        'Coal DPU':                               'unit',
+        'DPU Autorack':                           'auto',
+        'DPU IM Priority':                        'intermodal',
+        'DPU Intermodal':                         'intermodal',
+        'DPU Manifest':                           'carload',
+        'E. Coal DPU':                            'unit',
+        'Empty Coal':                             'unit',
+        'Ethanol':                                'unit',
+        'Foreign Movements':                      'nonrev',      # AMBIGUOUS: foreign-road run-throughs; unclear if they take CSX cars
+        'Grain':                                  'unit',
+        'Intermodal':                             'intermodal',
+        'Local':                                  'carload',
+        'Manifest':                               'carload',
+        'Manifest/IM':                            'carload',
+        'Misc. Priority':                         'carload',     # AMBIGUOUS: unclear what it carries; zero trains today
+        'Misc. Unit':                             'unit',
+        'Oil':                                    'unit',
+        'Priority Intermodal':                    'intermodal',
+        'Priorty IM Peak':                        'intermodal',
+        'Yard Job/Local':                         'carload',
+    },
+    'KCS': {
+        'N/A':                                    'nonrev',      # placeholder roster, one dummy train
+    },
+    'NS': {
+        'Aggregates/Sand':                        'unit',
+        'Auto / Manifest Mix':                    'carload',
+        'Autos':                                  'auto',
+        'Baretable Intermodal':                   'intermodal',
+        'DPU Manifest':                           'carload',
+        'Ethanol/Oil ':                           'unit',        # trailing space is in the game's own TypeInfo
+        'Intermodal':                             'intermodal',
+        'Intermodal/Auto Mix':                    'intermodal',
+        'Light Engines':                          'engines',
+        'Local':                                  'carload',
+        'Manifest':                               'carload',
+        'Manifest/IM Mix':                        'carload',
+        'Priority Intermodal':                    'intermodal',
+        'Roadrailer':                             'intermodal',  # AMBIGUOUS: trailer trains; no conventional cars, closest fit
+        'Specials/Company Trains':                'nonrev',
+        'Suspended trains':                       'nonrev',
+        'Unit':                                   'unit',
+        'Unit Coal Empty':                        'unit',
+        'Unit Coal Loaded':                       'unit',
+        'Unit Grain Empty':                       'unit',
+        'Unit Grain Loaded':                      'unit',
+        'Yard Job':                               'carload',
+    },
+    'UP': {
+        'Auto':                                   'auto',
+        'Bulk Unit':                              'unit',
+        'Coal':                                   'unit',
+        'Expedited Z':                            'intermodal',
+        'Grain Byproducts':                       'unit',
+        'Grain Empties':                          'unit',
+        'Grain Loads':                            'unit',
+        'Grain Meal':                             'unit',
+        'Grain Reposition':                       'unit',
+        'Grain Shuttle':                          'unit',
+        'Intermodal I':                           'intermodal',
+        'Light Engines':                          'engines',
+        'Local':                                  'carload',
+        'Manifest':                               'carload',
+        'Quality Intermodal':                     'intermodal',
+        'Quality Manifest':                       'carload',
+        'Rock':                                   'unit',
+        'Special':                                'nonrev',
+        'Unit':                                   'unit',
+        'Unit Ethanol':                           'unit',
+        'Work, MofW':                             'nonrev',
+        'Yard':                                   'carload',
+    },
+}
+
 
 class Anomalies:
     """Everything about the input that the interpreter did not expect.
@@ -557,6 +723,7 @@ def build_payload(railroads, names):
         'pax': 1 if rr['meta']['pax'] else 0,
         'ty': sorted(rr['types']),
         'px': {t: p for t, p in rr['prefixes'].items() if p},
+        'fc': {} if rr['meta']['multi'] else FREIGHT_CLASS.get(rr['code'], {}),
     } for rr in railroads]
 
     payload = {'gen': date.today().isoformat(), 'rrs': roads,
@@ -641,6 +808,21 @@ def build(files, out, title, loc_path, use_cache=True):
         print(f"  {rr['code']:10s} {len(rr['trains']):5d} trains  "
               f"{len(rr['types']):3d} {'operators' if rr['meta']['multi'] else 'types':9s} "
               f"({os.path.basename(f)})")
+
+    # Every declared type on a single-railroad roster must have a freight
+    # classification, and the table must not go stale — both directions loud.
+    for rr in railroads:
+        if rr['meta']['multi']:
+            continue
+        table = FREIGHT_CLASS.get(rr['code'], {})
+        for ty in rr['types']:
+            if ty not in table:
+                anom.add("train type has no freight classification "
+                         "(add to FREIGHT_CLASS)", f"{ty!r} in {rr['code']}")
+        for ty in table:
+            if ty not in rr['types']:
+                anom.add("FREIGHT_CLASS lists a type the roster no longer "
+                         "declares", f"{ty!r} in {rr['code']}")
 
     scraped = scrape_location_names(railroads)
     store = load_location_store(loc_path) if use_cache else {}
@@ -1406,7 +1588,13 @@ function debounce(fn,ms){let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>f
 // interchanges, fewest trains) and collapse into corridors — one entry per
 // distinct railroad + transfer-yard sequence. The TSAR text at each hand-off
 // is quoted verbatim: the graph proposes, the player judges.
-const CARLOAD_RE=/manifest|local|yard|road switcher|mixed|transfer/i;
+// freight class of a train, from the per-roster classification table.
+// Multi rosters: shortline operators haul carload, passenger is passenger.
+function fclass(t){
+  const r=RR[t.rr]; if(!r) return "carload";
+  if(r.m) return r.pax ? "passenger" : "carload";
+  return r.fc[t.ty] || "nonrev";
+}
 const rstate={from:null,to:null,res:null};
 const rfin=document.getElementById("rfin"), rtin=document.getElementById("rtin");
 const rgo=document.getElementById("rgo"), rclear=document.getElementById("rclear");
@@ -1451,12 +1639,12 @@ function routeNow(){
 }
 
 function findRoutes(src,dst,carload){
-  // shortline trains carry carload freight even though their "type" is an
-  // operator name; passenger operators never join a freight pool
+  // pool by freight class: passenger, light power and non-revenue types never
+  // carry a routed car; the carload toggle narrows to carload-capable service
   const carloadOk=t=>{
-    const r=RR[t.rr];
-    if(r&&r.pax) return false;
-    return !carload || CARLOAD_RE.test(t.ty) || (r&&r.m);
+    const c=fclass(t);
+    if(c==="passenger"||c==="engines"||c==="nonrev") return false;
+    return !carload || c==="carload";
   };
   const pool=DATA.trains.filter(t=>status(t)==="active"&&carloadOk(t));
   const inPool=new Set(pool.map(t=>t.i));
