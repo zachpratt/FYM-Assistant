@@ -380,6 +380,95 @@ def save_location_store(path, store):
 
 
 # ---------------------------------------------------------------------------
+# interchange agreements (interchange_data/)
+#
+# Shortline_interchange.txt is a hand-maintained table of each shortline's
+# reporting mark, connecting partners and preferred partner(s).
+# derived_exchange_points.csv maps (shortline, partner) pairs to the map ids
+# where both do work — machine-derived, then hand-curated, like locations.csv.
+# The file legitimately lists railroads the game does not model, so rows
+# naming operators absent from the rosters are skipped and counted, not
+# flagged; a yard id that exists nowhere in the data IS an anomaly (ids are
+# ground truth), as is a structurally unreadable CSV row.
+# ---------------------------------------------------------------------------
+
+IX_FOLDER = 'interchange_data'
+IX_TABLE = 'Shortline_interchange.txt'
+IX_POINTS = 'derived_exchange_points.csv'
+IX_ALIASES = {'CP': 'CPKC'}          # file spellings -> roster spellings
+IX_MARK_RE = re.compile(r'[A-Z0-9]{2,6}')
+
+
+def load_interchange_data(folder, railroads, loc_ids, anom):
+    """Returns (pairs, points) for the payload:
+    pairs  {mark: {'p': [partner marks], 'f': [preferred marks]}}
+    points [[shortline, partner, yard_id], ...]
+    Both restricted to operators that exist in the parsed rosters."""
+    ops = set()
+    for rr in railroads:
+        if rr['meta']['multi']:
+            if not rr['meta']['pax']:
+                ops.update(p for p in rr['prefixes'].values() if p)
+        else:
+            ops.add(rr['code'])
+
+    pairs, unknown_marks = {}, set()
+    table = os.path.join(folder, IX_TABLE)
+    if os.path.isfile(table):
+        with open(table, encoding='utf-8', errors='replace') as fh:
+            for line in fh:
+                cells = [c.strip() for c in line.strip().strip('|').split('|')]
+                if len(cells) < 3 or cells[0] in ('Shortline', '') \
+                        or set(cells[0]) <= set('- '):
+                    continue
+                mark = cells[0].split()[0]        # "RJCK (TN MS)" -> RJCK
+                if mark not in ops:
+                    unknown_marks.add(mark)
+                    continue
+                conn = [IX_ALIASES.get(p, p) for p in IX_MARK_RE.findall(cells[2])]
+                pref = [IX_ALIASES.get(p, p)
+                        for p in (cells[3].split() if len(cells) > 3 else [])]
+                cur = pairs.setdefault(mark, {'p': [], 'f': []})
+                for p in conn:
+                    if p != mark and p not in cur['p']:
+                        cur['p'].append(p)
+                for p in pref:
+                    if p != mark and p not in cur['f']:
+                        cur['f'].append(p)
+
+    points, skipped_rows = [], 0
+    csv_path = os.path.join(folder, IX_POINTS)
+    if os.path.isfile(csv_path):
+        with open(csv_path, encoding='utf-8', errors='replace', newline='') as fh:
+            for row in csv.reader(fh):
+                if not row or row[0].strip() in ('shortline', ''):
+                    continue
+                if len(row) < 3:
+                    anom.add("interchange CSV row with fewer than 3 columns",
+                             repr(row)[:70])
+                    continue
+                sl = IX_ALIASES.get(row[0].strip(), row[0].strip())
+                pt = IX_ALIASES.get(row[1].strip(), row[1].strip())
+                yid = row[2].strip()
+                if sl not in ops or pt not in ops:
+                    skipped_rows += 1
+                    continue
+                if yid not in loc_ids:
+                    anom.add("interchange CSV yard id not present in any roster",
+                             f"{yid} ({sl}-{pt})")
+                    continue
+                if [sl, pt, yid] not in points:
+                    points.append([sl, pt, yid])
+
+    if pairs or points:
+        print(f"  interchange data: {len(pairs)} shortline(s) matched, "
+              f"{len(points)} exchange point rows kept "
+              f"({len(unknown_marks)} mark(s) and {skipped_rows} row(s) name "
+              f"operators the game does not model)")
+    return pairs, points
+
+
+# ---------------------------------------------------------------------------
 # build
 # ---------------------------------------------------------------------------
 
@@ -486,6 +575,8 @@ def dump_payload(payload):
     out = ['{"gen":' + j(payload['gen']) + ',',
            '"rrs":[', ',\n'.join(j(r) for r in payload['rrs']), '],',
            '"locs":[', ',\n'.join(j(l) for l in payload['locs']), '],',
+           '"ixp":' + j(payload.get('ixp', {})) + ',',
+           '"ix":[', ',\n'.join(j(r) for r in payload.get('ix', [])), '],',
            '"trains":[', ',\n'.join(j(t) for t in payload['trains']), ']}']
     # '/' only ever occurs inside a JSON string, so this cannot corrupt the
     # structure — it just stops a note containing "</script>" from ending the
@@ -557,6 +648,11 @@ def build(files, out, title, loc_path, use_cache=True):
     names = {lid: nm for lid, (nm, _) in store.items()}
 
     payload, ic_total, ic_linked = build_payload(railroads, names)
+
+    loc_ids = {l['id'] for l in payload['locs']}
+    pairs, points = load_interchange_data(IX_FOLDER, railroads, loc_ids, anom)
+    payload['ixp'] = pairs
+    payload['ix'] = points
 
     outdir = os.path.dirname(os.path.abspath(out))
     if outdir and not os.path.isdir(outdir):
@@ -705,6 +801,8 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .leg .lod{font-size:12px;color:var(--muted)}
 .legnote{margin:0 0 4px 46px;font-size:12px;color:var(--muted)}
 .legnote .txt{color:var(--ink)}
+.legnote.ok{color:var(--accent)}
+.legnote.bad{color:#f0b429}
 
 /* ---- yard sheet ---- */
 .srow{display:grid;grid-template-columns:44px 88px 170px minmax(200px,1fr) 2fr;gap:12px;
@@ -893,6 +991,27 @@ DATA.trains.forEach((t,i) => {
   t.ww = t.w.filter(y=>{ const n=t.wn[y]; return !(n && n.every(x=>SERVICE_RE.test(x))); });
   t.icl = t.g.filter(g=>g[0]===SEG_IC && g[2]!==undefined).map(g=>g[2]);
 });
+
+// interchange agreements (interchange_data/): partner table + exchange points
+const IXP = DATA.ixp || {};
+const IXY = {};        // "A|B" -> Set of agreed exchange yard ids (both ways)
+const IXOPYARD = new Set();   // "op|yard": op has an agreed exchange point here
+(DATA.ix||[]).forEach(([a,b,y])=>{
+  (IXY[a+"|"+b]=IXY[a+"|"+b]||new Set()).add(y);
+  (IXY[b+"|"+a]=IXY[b+"|"+a]||new Set()).add(y);
+  IXOPYARD.add(a+"|"+y); IXOPYARD.add(b+"|"+y);
+});
+const ixPartners =(a,b)=>(IXP[a]&&IXP[a].p.includes(b))||(IXP[b]&&IXP[b].p.includes(a));
+const ixPreferred=(a,b)=>(IXP[a]&&IXP[a].f.includes(b))||(IXP[b]&&IXP[b].f.includes(a));
+// Shortline-only marks. A mark that is also a Class I roster code is not
+// shortline-only: the game lists "Iowa Northern (CN)" under CN's mark, and
+// those trains interchange as CN itself.
+const SLOPS=new Set();
+{
+  const classI=new Set(DATA.rrs.filter(r=>!r.m).map(r=>r.c));
+  DATA.trains.forEach(t=>{ const r=RR[t.rr];
+    if(r&&r.m&&!r.pax&&!classI.has(t.op)) SLOPS.add(t.op); });
+}
 
 // how many trains touch each location (for the picker)
 const locCount = {};
@@ -1390,11 +1509,27 @@ function findRoutes(src,dst,carload){
     }
   }
 
+  // Agreement-aware ranking: a hand-off at a known exchange point for that
+  // pair is blessed (more so for a preferred partner); an op-change involving
+  // a shortline that the agreement table says has no such partner is heavily
+  // demoted; Class I <-> Class I hand-offs have no agreement data and stay
+  // neutral. A "foreign" first leg is fine when the origin yard is an agreed
+  // exchange point for that operator (a car AT an interchange yard is exactly
+  // where a partner picks it up).
   const score=res=>{
     const ops=res.map(p=>p[0].op);
-    let ic=0; for(let i=1;i<ops.length;i++) if(ops[i]!==ops[i-1]) ic++;
-    const foreign=(homeRR&&ops[0]!==homeRR)?1:0;
-    return foreign*10000+ic*100+res.length;
+    let ic=0, adj=0;
+    for(let i=1;i<res.length;i++){
+      const a=ops[i-1], b=ops[i];
+      if(a===b) continue;
+      ic++;
+      const yset=IXY[a+"|"+b], y=res[i][1];
+      if(yset&&yset.has(y)) adj += ixPreferred(a,b)?-30:-15;
+      else if(yset) adj += 10;
+      else if(!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))) adj += 2000;
+    }
+    const foreign=(homeRR&&ops[0]!==homeRR&&!IXOPYARD.has(ops[0]+"|"+src))?1:0;
+    return foreign*10000+ic*100+res.length+adj;
   };
   const corr={};
   chains.forEach(res=>{
@@ -1440,11 +1575,25 @@ function corridorCard(c){
   const h=document.createElement("div"); h.className="chead";
   h.innerHTML=`<b>${res.length} train${res.length>1?"s":""}</b> · ${ic} interchange${ic===1?"":"s"}`+
     (c.n>1?` · ${c.n} variants`:"")+
-    ((R.homeRR&&ops[0]!==R.homeRR)?` · <span class="warn">starts on a foreign road</span>`:"");
+    ((R.homeRR&&ops[0]!==R.homeRR&&!IXOPYARD.has(ops[0]+"|"+R.src))
+      ?` · <span class="warn">starts on a foreign road</span>`:"");
   el.appendChild(h);
   res.forEach((p,i)=>{
     const t=p[0], by=p[1];
     const ay=i===res.length-1?R.dst:res[i+1][1];
+    if(i>0&&t.op!==res[i-1][0].op){
+      const a=res[i-1][0].op, b=t.op, yset=IXY[a+"|"+b];
+      const nl=document.createElement("div");
+      if(yset&&yset.has(by)){
+        nl.className="legnote ok";
+        nl.textContent=`✓ ${a}–${b} exchange point`+(ixPreferred(a,b)?" (preferred partner)":"");
+        el.appendChild(nl);
+      } else if(!yset&&!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))){
+        nl.className="legnote bad";
+        nl.textContent=`⚠ no agreement between ${a} and ${b} in the interchange data`;
+        el.appendChild(nl);
+      }
+    }
     const leg=document.createElement("div"); leg.className="leg";
     leg.innerHTML=
       `<span class="chev">▸</span>`+
