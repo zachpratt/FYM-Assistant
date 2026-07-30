@@ -1,0 +1,247 @@
+| ----- |
+| Shortline | Name | Connecting | Preferred | 
+| AA | Ann Arbor | CN CSX NS IORY WE | CSX NS | 
+| AB | Akron Barberton Cluster Railway | WE |  | 
+| ABCX | ABC Coke (Alabama) | BNSF CSX NS |  | 
+| ABWR | Alabama Warrior | BNSF CSX NS |  | 
+| ACWR | Aberdeen Carolina & Western | CSX NS |  | 
+| AERC | Albany & Eastern | PNWR |  | 
+| AGR | Alabama & Gulf Coast | BNSF CN CPKC CSX NS | BNSF | 
+| AKMD | Arkansas Midland Railroad | BNSF UP |  | 
+| ALS | Alton & Southern | CSX CPKC NS UP TRRA | UP | 
+| AO | Appalachian & Ohio | CSX |  | 
+| APD | Albany Port Railroad | CPKC CSX |  | 
+| AR | Aberdeen & Rockfish | CSX NS |  | 
+| ARC | Alexander Railroad Company | NS |  | 
+| ARR | Alaska Railroad | BNSF UP |  | 
+| ASRY | Ashland Railway | CSX NS |  | 
+| AVR | Allegheny Valley Railroad | CSX NS BPRR WE |  | 
+| BB | Buckingham Branch | NS |  | 
+| BERX | Berkshire and Eastern Railroad | CSX NS CP NECR VTR |  | 
+| BHRR | Birmingham Terminal Railway | BNSF CSX NS |  | 
+| BHS | Burns Harbor Shortline Railroad | NS IHB |  | 
+| BJRY | Burlington Junction Rwy, Montgomery, IL | BNSF |  | 
+| BKRR | Batten Kill Railroad | BERX |  | 
+| BPRR | Buffalo & Pittsburg Railroad | CN CPKC CSX NS WE |  | 
+| BRC | Belt Railway of Chicago | BNSF CN CPKC CSX NS UP |  | 
+| BSVY | Boone Scenic Valley Railway | UP |  | 
+| CA | Chesapeake & Albemarle Railroad | NS |  | 
+| CAGY | Columbus and Greenville Railway | CPKC AGR(BNSF and NS) ABS(CSX) |  | 
+| CBRL | Coos Bay Rail Line | UP |  | 
+| CCGX | Cando Rail Services | CN CPKC |  | 
+| CCET | Cincinnati Eastern Railroad | NS |  | 
+| CCH | Columbus & Chattahoochee | NS |  | 
+| CCT | Central California Traction Co. | BNSF UP |  | 
+| CEMR | Central Manitoba Railway | CN |  | 
+| CFE | Chicago, Ft. Wayne & Eastern Railroad | CSX NS IHB IORY |  | 
+| CFNR | California Northern | UP |  | 
+| CGR | CG Railway (Mobile, AL) | CN CSX NS AGR |  | 
+| CHB | Cleveland Harbor Belt Railroad | CSX NS |  | 
+| CIC | Cedar Rapids & Iowa City | CN UP IAIS |  | 
+| CIND | Central Railroad of Indiana | CSX NS IORY |  | 
+| CJR | Chicago Junction Railway | UP |  | 
+| CLC | Columbia & Cowlitz Railroad | LVSW |  | 
+| CLNA | Carolina Coast | CSX |  | 
+| CMPA | Madison Railroad | CSX |  | 
+| COER | Crab Orchard & Egyptian Railroad | BNSF UP |  | 
+| CORP | Central Oregon & Pacific | UP |  | 
+| CPR | CaterParrott Railnet | NS |  | 
+| CRL | Chicago Rail Link | NS BRC IAIS IHB | IHB | 
+| CRMI | Conrail - Detroit | CSX NS |  | 
+| CRNJ | Conrail - Jersey North | CSX NS |  | 
+| CRSJ | Conrail - Jersey South | CSX NS |  | 
+| CSI | California Steel Industries (Kaiser Steel) | BNSF UP |  | 
+| CSP | Chicago, St. Paul & Pacific | CPKC |  | 
+| CSS | Chicago South Shore | CN BRC CSX IHB | BRC | 
+| CTN | Canton Railroad (Baltimore, MD) | CSX NS |  | 
+| CTRW | Carlton Trail Railway | CPKC CN | CN | 
+| CUOH | Columbus & Ohio River Railroad | CSX NS OHCR |  | 
+| CVR | Cimarron Valley Railroad | BNSF |  | 
+| CWRO | Cleveland Works Rail | CSX NS WE |  | 
+| CWRY | Commonwealth Railway (Suffolk, VA) | CSX NS |  | 
+| CWW | Columbia-Walla Walla Railway | UP BNSF | UP |  | 
+| DAIR | Dakota & Iowa | BNSF CN UP |  |  |
+| DC | Delray Connecting (Detroit) | CN CSX NS |  | 
+| DGNO | Dallas, Garland & Northeastern Railroad | BNSF CPKC UP |  | 
+| DL | Delaware-Lackawanna | NS |  | 
+| DMVW | Dakota, Missouri Valley & Western | BNSF CPKC | CPKC | 
+| DQE | DeQueen & Eastern Railroad | BNSF CPKC UP |  | 
+| DREI | Decatur & Eastern Illinois | CN CSX NS UP | CSX | 
+| DRIR | Denver Rock Island | BNSF UP | UP | 
+| DRR | Delaware and Raritan River Railroad | Conrail south NJ |  | 
+| DT | Decatur Junction Railway | CN |  | 
+| EE | Ellis & Eastern (Sioux Falls, SD) | BNSF |  | 
+| EIRR | Eastern Idaho Railroad | UP |  | 
+| ETL | Essex Terminal (Windsor, ON) | CN CPKC |  | 
+| ESPN | East Penn Railroad | NS |  | 
+| ETRY | East Tennessee Railway | CSX NS |  | 
+| EVWR | Evansville Western | BNSF CSX NS UP |  | 
+| FCEN | Florida Central Railroad | CSX |  | 
+| FEC | Florida East Coast | CSX NS |  | 
+| FGLK | Finger Lakes Railway (NY) | CSX NS NYSW |  | 
+| FIMX | Franklin Industrial Minerals (Crab Orchard, TN) | NS |  | 
+| FMID | Florida Midland Railroad | CSX |  | 
+| FOXY | Fox Valley & Lake Superior Rail System | CN |  | 
+| FVRR | Fredonia Valley Railroad | PAL |  | 
+| FWWR | Fort Worth & Western Railroad | BNSF CPKC UP | BNSF UP | 
+| GC | Georgia Central | CSX NS |  | 
+| GDLK | Grand Elk Railroad | CN CSX NS |  | 
+| GFRR | Georgia & Florida Railroad | CSX NS |  | 
+| GITM | Golden Isles Terminal (Brunswick, GA) | CSX NS |  | 
+| GJR | Guelph Jct. Railway | CPKC CN |  | 
+| GLC | Great Lakes Central (MI) | AA CN | AA | 
+| GOGR | Geaux Geaux Railroad (Baton Rouge, LA) | CN |  | 
+| GPA | Georgia Ports Authority | CSX NS |  | 
+| GRRY | Grand River Railway (Cleveland, OH) | CSX |  | 
+| GRW | Gary Railway (IN) | CN CSX NS IHB UP |  | 
+| GS | Georgia Southern Railway | NS |  | 
+| GTRA | Golden Triangle Railroad | CPKC AGR(BNSF and NS) ABS(CSX) |  | 
+| GWRS | Great Western Railway | CPKC |  | 
+| GWWD | Greater Winnipeg Water District Railway | CN |  | 
+| HAL | Hilton & Albany Railroad | NS |  | 
+| HCRY | Huron Central Railway | CPKC |  | 
+| HESR | Huron & Eastern | CN CSX |  | 
+| IAIS | Iowa Interstate | BNSF CN CPKC UP IHB |  | 
+| IATR | Iowa Traction (Mason City, IA) | CPKC UP |  | 
+| IHB | Indiana Harbor Belt | BNSF CN CPKC CSX NS UP |  | 
+| IMRR | Illinois & Midland | BNSF CN UP IAIS TZPR |  | 
+| IN | Indiana Northeastern | NS |  | 
+| INRD | Indiana Rail Road | CN CSX BRC |  | 
+| IORY | Indiana & Ohio Railway | CN CSX NS CFE CIND WE |  | 
+| IR | Illinois Railway | BNSF CSX | BNSF | 
+| ISRR | Indiana Southern | CSX |  | 
+| ISW | Indiana Southwestern Railway | CSX |  | 
+| ITHR | Ithaca Central Railroad | NS |  | 
+| JAIL | Jackson & Lansing Railroad (MI) | CN CSX NS | NS | 
+| JXPT | Jacksonville Port Terminal Railroad | CSX NS |  | 
+| KAW | Kaw River Railroad (Kansas City) | BNSF CPKC NS UP KCTL | BNSF | 
+| KBSR | Kankakee, Beaverville & Southern Railroad | CSX CN NS UP |  | 
+| KCTL | Kansas City Terminal | BNSF CPKC NS UP |  | 
+| KJRY | Keokuk Junction Railway | BNSF CN NS UP |  | 
+| KNWA | Kanawha River Railroad (WV) | NS |  | 
+| KO | Kansas & Oklahoma Railroad | BNSF UP SKOL |  | 
+| KRR | Kiamichi Railroad | BNSF CPKC UP |  | 
+| KXHR | Knoxville & Holston River | CSX NS | NS | 
+| LAJ | Los Angeles Junction (Vernon, CA) | BNSF UP | BNSF | 
+| LC | Lancaster & Chester Railroad (SC) | CSX NS |  | 
+| LDRR | Louisiana & Delta Railroad | BNSF UP |  | 
+| LIRC | Louisville & Indiana | CSX NS | CSX | 
+| LMIC | Lake Michigan & Indiana | NS CSS |  | 
+| LMR | Last Mountain Railway (Regina, SK) | CN |  | 
+| LRPA | Little Rock Port Authority | BNSF UP |  | 
+| LRWN | Little Rock & Western Railway | BNSF UP |  | 
+| LRWY | Lehigh Railway | NS |  | 
+| LSRC | Lake State Railway (MI) | CSX |  | 
+| LVSW | Longview Switching Company (WA) | BNSF UP |  | 
+| MCER | Massachusetts Central Railroad | CSX NECR |  | 
+| MDS | Meridian Southern Railway | CPKC NS |  | 
+| MER | Missouri Eastern Railroad | TRRA |  | 
+| MET | Modesto Empire Traction | BNSF UP |  | 
+| METX | Metra | CRL |  | 
+| MGRI | MG Rail | LIRC |  | 
+| MNA | Missouri & Northern Arkansas | BNSF CPKC UP | Springfield cars must go via BNSF | 
+| MNBR | Meridian & Bigbee Railroad | CPKC CSX NS |  | 
+| MNNR | Minnesota Commercial | UP BNSF CN CPKC |  | 
+| MPLI | Minnesota Prairie Line | BNSF CN (via TCWR) CPKC UP |  | 
+| MSRW | Mississippian Railway | BNSF |  | 
+| MSTR | Massena Terminal Railway (NY) | CSX |  | 
+| NBSR | New Brunswick Southern | CN CPKC CSX |  | 
+| NCIR | New Castle Industrial Railroad (PA) | CSX NS |  | 
+| NCRC | Nebraska Central Railroad | BNSF UP | UP | 
+| NDW | Napoleon, Defiance & Western | CSX NS |  | 
+| NECR | New England Central | CN CPKC CSX PW PAS |  | 
+| NLR | Northern Lines Railway | BNSF |  | 
+| NOGC | New Orleans & Gulf Coast | UP |  | 
+| NOPB | New Orleans Public Belt | BNSF CN CPKC CSX NS UP |  | 
+| NPBL | Norfolk & Portsmouth Belt | CSX NS |  | 
+| NYA | New York & Atlantic | CSX NS PW |  | 
+| NYNJ | New York New Jersey Rail | CSNJ NYA |  | 
+| NYOG | New York and Ogdensburg Railway | CSX |  | 
+| NYSW | New York, Susquehanna & Western | CSX NS |  | 
+| OHCR | Ohio Central Railroad System | CSX CUOH NS WE |  | 
+| OLB | Omaha, Lincoln & Beatrice | BNSF UP |  | 
+| OPR | Oregon Pacific Railroad | UP |  | 
+| OSRR | Ohio Southern Railroad | CSX CUOH NS OHCR |  | 
+| OTVR | Otter Tail Valley | BNSF |  | 
+| OVR | Ottawa Valley Railway (Sudbury, ON) | CPKC |  | 
+| OVRR | Ozark Valley | CPKC |  | 
+| PAL | Paducah & Louisville | BNSF CN CSX NS |  | 
+| PAS | Pan Am Southern | CSX NS NECR | NS | 
+| PHL | Pacific Harbor Line | BNSF UP |  | 
+| PCHR | Port Colborn Harbour Railway | CN CP |  | 
+| PHRR | Port Harbor Railroad | TRRA NS |  | 
+| PNWR | Portland & Western | BNSF UP |  | 
+| POHC | Pittsburgh and Ohio Central Railroad | CSX NS |  | 
+| POM | Port of Montreal | CN CPKC |  | 
+| PR | Palmetto Railways | CSX NS |  | 
+| PSAP | Puget Sound & Pacific | BNSF UP | Autoracks go via UP | 
+| PT | Peninsula Terminal | UP BNSF |  | 
+| PTRA | Port Terminal Railroad (Houston) | BNSF CPKC UP | BNSF UP | 
+| PTRC | Portland Terminal Railroad | BNSF UP |  | 
+| PVJR | Portland Vancouver Junction | BNSF |  | 
+| PVRR | Pioneer Valley Railroad (MA) | CSX NECR |  | 
+| PW | Providence & Worcester | CSX NECR PAS |  | 
+| RBMN | Reading & Northern | NS |  | 
+| RCPE | Rapid City, Pierre & Eastern | BNSF CPKC UP | CPKC | 
+| RFCC | Raleigh & Fayetteville Railroad | CSX NS | NS |  | 
+| RJCK (TN MS) | RJ Corman Tennessee Terminal | BNSF |  |  |
+| RJCL (OH) | RJ Corman Cleveland Line | CSX NS |  | 
+| RJCM (KY TN) | RJ Corman Memphis Line | CSX |  | 
+| RJCW (OH) | RJ Corman Western Ohio | CSX NS | CSX only for Greenville | 
+| RLK | Ottawa Valley Railway | CN CPKC |  | 
+| RNIR | Rainier Rail | BNSF UP |  | 
+| RPRC | Richmond Pacific (CA) | BNSF UP |  | 
+| RRRR | Rock and Rail | BNSF UP |  | 
+| RRVW | Red River Valley & Western | BNSF CPKC |  | 
+| RSL | Republic Short Line | NS CSX (via RJCL) |  | 
+| RSOR | Riceboro Southern | CSX |  | 
+| RSR | Rochester & Southern | CSX NS |  | 
+| RWRR | Ringneck & Western Railroad | BNSF CN UP | BNSF | 
+| SAC | San Antonio Central | BNSF UP |  | 
+| SAPT | Savannah Port Terminal | CSX NS |  | 
+| SCIH | South Chicago & Indiana Harbor | NS BRC |  | 
+| SCRF | South Carolina Central Railroad | CSX |  | 
+| SCXF | South Central Florida Express | CSX FEC |  | 
+| SDIY | San Diego & Imperial Valley | BNSF |  | 
+| SERA | Sierra Northern | BNSF UP |  | 
+| SGLR | Seminole Gulf Railway | CSX |  | 
+| SJVR | San Joaquin Valley | BNSF UP |  | 
+| SKOL | South Kansas & Oklahoma | BNSF CPKC UP |  | 
+| SL | Salt Lake City Southern (operates as UTAH) | UP BNSF |  | 
+| SLQ | St. Lawrence & Atlantic | CN CPKC |  | 
+| SLR | St. Lawrence & Atlantic | CN CPKC CSX | CN | 
+| SLRS | SMS Rail Lines | CRSJ |  | 
+| SLWC | Stillwater Central Railroad | BNSF |  | 
+| SMV | Santa Maria Valley | UP |  | 
+| SORA | Southern Rails Cooperative (SK) | CN CPKC | CN | 
+| SPP | St. Paul & Pacific Railroad (Watsonville, CA) | UP |  | 
+| SRRR | Swan Ranch Railroad (Speer, WY) | BNSF UP |  | 
+| SRY | Southern Railway of BC | BNSF CN CPKC |  | 
+| SS | Sand Springs Railway | BNSF UP SKOL | BNSF | 
+| STE | Stockton Terminal & Eastern | BNSF UP |  | 
+| STMA | St. Maries River Railroad (Plummer, ID) | UP |  | 
+| SVGX | Savage Alberta Railroad | BNSF UP |  | 
+| SVHO | Savannah & Old Fort Railroad | CSX |  | 
+| SWP | Southwest Pennsylvania | CSX NS WE |  | 
+| TASD | Terminal Railway Alabama State Docks | CN CSX NS AGR |  | 
+| TCB | Texas Central Business Line (Midlothian) | BNSF UP |  | 
+| TCWR | Twin Cities & Western | BNSF CN CPKC UP |  | 
+| TMBL | Tacoma Rail | BNSF UP |  | 
+| TNER | Texas Northeastern Railroad | UP |  | 
+| TPW | Toledo, Peoria & Western | BNSF CN CSX IAIS NS UP |  | 
+| TRRA | Terminal Railroad of St. Louis | BNSF CN CPKC CSX NS UP |  | 
+| TSRR | Tennessee Southern | CSX |  | 
+| TSU | Tulsa-Sapulpa Union Railway | UP |  | 
+| TVRM | Tennessee Valley Railroad | CSX NS | NS | 
+| TZPR | Tazewell & Peoria (IL) | BNSF CN CSX UP IAIS |  | 
+| UCRY | Utah Central | BNSF UP | BNSF | 
+| URR | Union Railroad (PA) | CSX NS WE |  | 
+| USCX | United States Sugar Corporation (Clewiston, FL) | FEC |  | 
+| VR | Valdosta Railway | CSX NS |  | 
+| VSOR | Vicksburg Southern Railroad | CPKC |  | 
+| VTR | Vermont Railway | CPKC NECR |  | 
+| WE | Wheeling & Lake Erie | CN CSX NS |  | 
+| WSOR | Wisconsin & Southern | CN CPKC BNSF UP BRC |  | 
+| WSS | Winston-Salem Southbound | CSX NS |  | 
+| WTA | Wichita Terminal Association | BNSF UP |  | 
+| WW | Winchester & Western (NJ) | CSX NS |  |
