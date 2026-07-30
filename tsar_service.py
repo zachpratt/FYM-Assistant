@@ -452,6 +452,8 @@ def build_payload(railroads, names):
         loc_ids.update(t['r'])
         loc_ids.add(t['o'])
         loc_ids.add(t['d'])
+        # a train can be told to work a yard that is not one of its stops
+        loc_ids.update(g[1] for g in t['g'] if g[0] == SEG_YARD)
     loc_ids.discard('')
     locations = [{'id': i, 'nm': names.get(i, '')}
                  for i in sorted(loc_ids, key=lambda x: int(x) if x.isdigit() else 0)]
@@ -673,8 +675,9 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 
 /* ---- location banner ---- */
 .locbar{margin:0 20px 6px;padding:10px 14px;border:1px solid var(--line);border-left:3px solid var(--accent);
-  border-radius:8px;background:var(--panel);display:none;align-items:center;gap:12px}
+  border-radius:8px;background:var(--panel);display:none;align-items:center;gap:12px;flex-wrap:wrap}
 .locbar.show{display:flex}
+.locbar .seg button{padding:5px 10px;font-size:12px}
 .locbar .lid{font-family:var(--mono);color:var(--accent)}
 .locbar .big{font-size:15px;font-weight:600}
 
@@ -808,12 +811,19 @@ function fullSym(t){
   const p = rr.px[t.ty] || "";
   return p ? (rr.m ? p+" "+t.s : p+t.s) : t.s;
 }
-DATA.trains.forEach((t,i) => { t.i = i; t.fs = fullSym(t); });
+// t.w = yards this train "works": every @@ yard tagged in its instructions.
+// Not a subset of the route — some trains are told to work a yard they do not
+// list as a stop, so it counts toward "touches this location" in its own right.
+DATA.trains.forEach((t,i) => {
+  t.i = i; t.fs = fullSym(t);
+  t.w = [];
+  t.g.forEach(g=>{ if(g[0]===SEG_YARD && !t.w.includes(g[1])) t.w.push(g[1]); });
+});
 
 // how many trains touch each location (for the picker)
 const locCount = {};
 DATA.trains.forEach(t=>{
-  const seen=new Set(t.r); seen.add(t.o); seen.add(t.d);
+  const seen=new Set(t.r); seen.add(t.o); seen.add(t.d); t.w.forEach(id=>seen.add(id));
   seen.forEach(id=>{ if(id) locCount[id]=(locCount[id]||0)+1; });
 });
 
@@ -824,7 +834,7 @@ function status(t){
 }
 
 // ---- state ----
-const state = {loc:"", rrs:new Set(DATA.rrs.map(r=>r.c)), type:"", sym:"", stat:"active", shown:0};
+const state = {loc:"", locmode:"", rrs:new Set(DATA.rrs.map(r=>r.c)), type:"", sym:"", stat:"active", shown:0};
 const PAGE = 300;
 
 // ---- build controls ----
@@ -911,7 +921,7 @@ function choose(o){
   render();
 }
 locin.onfocus=()=>openMenu(locin.value);
-locin.oninput=()=>{state.loc="";locclear.style.display=locin.value?"":"none";openMenu(locin.value);};
+locin.oninput=()=>{state.loc="";state.locmode="";locclear.style.display=locin.value?"":"none";openMenu(locin.value);};
 locin.onkeydown=e=>{
   const els=locmenu.querySelectorAll(".opt");
   if(e.key==="ArrowDown"){hi=Math.min(hi+1,opts.length-1);e.preventDefault();}
@@ -921,7 +931,7 @@ locin.onkeydown=e=>{
   els.forEach((el,i)=>el.classList.toggle("hi",i===hi));
   if(els[hi])els[hi].scrollIntoView({block:"nearest"});
 };
-locclear.onclick=()=>{state.loc="";locin.value="";locclear.style.display="none";render();};
+locclear.onclick=()=>{state.loc="";state.locmode="";locin.value="";locclear.style.display="none";render();};
 document.addEventListener("click",e=>{
   if(!document.getElementById("loccombo").contains(e.target))locmenu.classList.remove("open");
 });
@@ -938,7 +948,11 @@ function instrAt(t,locId){
 }
 
 // ---- filtering ----
-function filteredBase(){
+// locmode narrows the location match: "o" originates there, "d" terminates
+// there, "w" works it (@@ tag in the instructions), "" any of those or a
+// route stop. Pass a mode to override state (used for the locbar counts).
+function filteredBase(locmode){
+  if(locmode===undefined) locmode=state.locmode;
   return DATA.trains.filter(t=>{
     if(!state.rrs.has(t.rr)) return false;
     if(state.sym){
@@ -948,7 +962,11 @@ function filteredBase(){
          !hay.includes(state.sym.replace(/[^A-Z0-9]/g,""))) return false;
     }
     if(state.loc){
-      if(t.o!==state.loc && t.d!==state.loc && !t.r.includes(state.loc)) return false;
+      const L=state.loc;
+      if(locmode==="o"){ if(t.o!==L) return false; }
+      else if(locmode==="d"){ if(t.d!==L) return false; }
+      else if(locmode==="w"){ if(!t.w.includes(L)) return false; }
+      else if(t.o!==L && t.d!==L && !t.r.includes(L) && !t.w.includes(L)) return false;
     }
     if(state.stat!=="all" && status(t)!==state.stat) return false;
     return true;
@@ -973,10 +991,26 @@ function render(reset=true){
   countEl.innerHTML=`<b>${list.length.toLocaleString()}</b> of ${DATA.trains.length.toLocaleString()} trains`;
 
   if(state.loc){
+    const L=state.loc;
+    // counts for each mode come from the trains matching every OTHER filter,
+    // so an inactive mode's count is what you would get by clicking it
+    const poolBase = state.locmode ? filteredBase("") : base;
+    const pool = state.type ? poolBase.filter(t=>t.ty===state.type) : poolBase;
+    const n={o:0,d:0,w:0};
+    pool.forEach(t=>{ if(t.o===L)n.o++; if(t.d===L)n.d++; if(t.w.includes(L))n.w++; });
+    const verb={o:"originate here",d:"terminate here",w:"work this yard",
+                "":"touch this location"}[state.locmode];
     locbar.className="locbar show";
-    locbar.innerHTML=`<span class="lid">#${state.loc}</span>`+
-      `<span class="big">${LOC[state.loc]?esc(LOC[state.loc]):"Unnamed location"}</span>`+
-      `<span style="color:var(--muted)">${list.length} train(s) pass through here</span>`;
+    locbar.innerHTML=`<span class="lid">#${L}</span>`+
+      `<span class="big">${LOC[L]?esc(LOC[L]):"Unnamed location"}</span>`+
+      `<span class="seg" id="locmodeseg">`+
+        [["","All",pool.length],["o","Originates",n.o],["d","Terminates",n.d],["w","Works",n.w]]
+          .map(([v,lb,c])=>`<button data-m="${v}"${v===state.locmode?' class="on"':''}>${lb} (${c})</button>`).join("")+
+      `</span>`+
+      `<span style="color:var(--muted)">${list.length} train(s) ${verb}</span>`;
+    locbar.querySelectorAll("#locmodeseg button").forEach(b=>{
+      b.onclick=()=>{ state.locmode=b.dataset.m; render(); };
+    });
   } else locbar.className="locbar";
 
   if(reset) wrap.innerHTML="";
@@ -1083,7 +1117,7 @@ function jumpTo(uid){
   const t=DATA.trains[uid]; if(!t) return;
   if(!state.rrs.has(t.rr)){ state.rrs.add(t.rr); paintPill(t.rr); }
   state.type="";
-  state.loc=""; locin.value=""; locclear.style.display="none";
+  state.loc=""; state.locmode=""; locin.value=""; locclear.style.display="none";
   state.sym=t.fs.replace(/[^A-Za-z0-9]/g,"").toUpperCase(); symin.value=t.fs;
   setStat("all");
   render();
