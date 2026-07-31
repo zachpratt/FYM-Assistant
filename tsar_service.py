@@ -2062,8 +2062,12 @@ const TERMINAL=(()=>{
   return s;
 })();
 
-// maps where a can hand a car to b, strongest evidence first, capped
-function exchangeMaps(a,b){
+// maps where a can hand a car to b. Every evidenced exchange (agreement or
+// *IC* link) qualifies; presence-only maps qualify when they sit near the
+// query's corridor — Birmingham's 37th St has zero recorded evidence but
+// zero detour for Birmingham traffic — and cap at 12 when geometry is
+// unknown so ties don't win on iteration order.
+function exchangeMaps(a,b,gS,gD,direct){
   const A=OPGRAPH.alight[a], B=OPGRAPH.board[b], out=[];
   if(!A||!B) return out;
   const yset=IXY[a+"|"+b];
@@ -2073,7 +2077,16 @@ function exchangeMaps(a,b){
     out.push([m, ic*10+agr*5]);
   });
   out.sort((x,y)=>y[1]-x[1]);
-  return out.slice(0,12).map(x=>x[0]);
+  const goals=[];
+  out.forEach(([m,ev])=>{
+    if(ev>0){ goals.push(m); return; }
+    if(direct!=null){
+      const g=geoOf(m);
+      if(g){ if(distMi(gS,g)+distMi(g,gD)<=direct*1.35+80) goals.push(m); return; }
+    }
+    if(goals.length<12) goals.push(m);
+  });
+  return goals;
 }
 
 // cheapest operator sequences from any origin operator to any destination
@@ -2092,7 +2105,10 @@ function planPaths(srcOps,dstOps,K){
   const edgeCost=(a,b)=>{
     const k=a+">"+b;
     if(k in edgeMemo) return edgeMemo[k];
-    if(TERMINAL.has(a)||TERMINAL.has(b)) return edgeMemo[k]=25;
+    // 60 each way keeps a terminal bridge (120) close to but never cheaper
+    // than the direct road exchange (100) — at 25 the bridge variants
+    // crowded every direct plan out of the K slots
+    if(TERMINAL.has(a)||TERMINAL.has(b)) return edgeMemo[k]=60;
     let c=100;
     if(!ixPartners(a,b)&&!OPGRAPH.icPair.has(a+">"+b)&&!OPGRAPH.icPair.has(b+">"+a)) c+=50;
     if(!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))) c+=2000;
@@ -2104,7 +2120,10 @@ function planPaths(srcOps,dstOps,K){
     pq.sort((x,y)=>x.cost-y.cost);
     const cur=pq.shift(), op=cur.path[cur.path.length-1];
     if(dstSet.has(op)){
-      const key=cur.path.join(">");
+      // dedupe by ROAD sequence: CSX->BHRR->BNSF and CSX->IHB->BNSF are the
+      // same railroad strategy; K slots should hold K distinct strategies,
+      // and the cheapest variant (popped first) represents each
+      const key=cur.path.filter(o=>!TERMINAL.has(o)).join(">");
       if(!seenPath.has(key)){ seenPath.add(key); results.push(cur.path); }
     }
     if(cur.path.length>=MAXOPS) continue;
@@ -2122,10 +2141,12 @@ function planPaths(srcOps,dstOps,K){
 // maps of the next hand-off (or the destination map on the last stage).
 function materialize(plan,src,dst,canCarry,seenChain,chains){
   const dstMap=mapOf(dst), LEG_H=4, PER_MAP=3, CAP=250;
+  const gS=geoOf(src), gD=geoOf(dst);
+  const direct=(gS&&gD)?distMi(gS,gD):null;
   let frontier=new Map([[mapOf(src),[[]]]]);
   for(let s=0;s<plan.length;s++){
     const op=plan[s], last=s===plan.length-1;
-    const goals=last?new Set([dstMap]):new Set(exchangeMaps(op,plan[s+1]));
+    const goals=last?new Set([dstMap]):new Set(exchangeMaps(op,plan[s+1],gS,gD,direct));
     if(!goals.size) return;
     const ix={};
     DATA.trains.forEach(t=>{
