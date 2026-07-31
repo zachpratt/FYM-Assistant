@@ -2036,12 +2036,14 @@ const OPGRAPH=(()=>{
   return {alight,board,mapsA,mapsB,icEv,icPair};
 })();
 
-// Terminal/switching roads (BRC, IHB, KCT, PHL...): carriers whose whole
-// located network sits inside one metro (>=3 located maps, <=35 mi across).
-// A hand-off to or from one is the metro's internal plumbing — the Belt
-// existing is HOW Chicago's railroads interchange — so it pays a token, not
-// a road-interchange price. A road with sparse coordinates stays
-// unclassified (full price), so added geo data only ever improves this.
+// Terminal/switching roads (BRC, IHB, KCT, PHL, NOPB...): carriers whose
+// whole located network sits inside one metro (>=3 located maps, <=60 mi
+// across — Chicagoland runs 50: IHB legitimately spans Bensenville to Burns
+// Harbor) AND whose business is connecting other railroads (>=3 distinct
+// partner operators). The partner floor keeps a 40-mile line-haul shortline
+// a road carrier, so its hand-offs still face agreement scrutiny. A road
+// with sparse coordinates stays unclassified (full price), so added geo
+// data only ever improves this.
 const TERMINAL=(()=>{
   const pts={};
   DATA.trains.forEach(t=>{
@@ -2051,13 +2053,19 @@ const TERMINAL=(()=>{
       if(g)(pts[t.op]=pts[t.op]||new Map()).set(mapOf(y),g);
     });
   });
+  const partners=op=>{
+    const s=new Set();
+    (OPGRAPH.alight[op]||new Set()).forEach(m=>(OPGRAPH.mapsB[m]||new Set()).forEach(b=>{ if(b!==op) s.add(b); }));
+    (OPGRAPH.board[op]||new Set()).forEach(m=>(OPGRAPH.mapsA[m]||new Set()).forEach(a=>{ if(a!==op) s.add(a); }));
+    return s.size;
+  };
   const s=new Set();
   Object.entries(pts).forEach(([op,m])=>{
     const ps=[...m.values()];
     if(ps.length<3) return;
     let d=0;
     for(let i=0;i<ps.length;i++)for(let j=i+1;j<ps.length;j++) d=Math.max(d,distMi(ps[i],ps[j]));
-    if(d<=35) s.add(op);
+    if(d<=60&&partners(op)>=3) s.add(op);
   });
   return s;
 })();
