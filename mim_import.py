@@ -36,6 +36,13 @@ EXCLUDED = {
     ('2385', '2386'),   # Winchester, OR primary zone labeled Parkesburg, PA
 }
 
+# Ownership rulings for claims the largest-zone rule cannot decide.
+# member id -> mother id, per Zach's in-game knowledge.
+OWNER_OVERRIDES = {
+    '1333': '1805',     # Birmingham North Belt is a child of Boyles Yard
+                        # (tied 200k px^2 with 1787's claim)
+}
+
 YARD_MIN_PX2 = 50000
 
 
@@ -101,7 +108,7 @@ def main():
         if m in mothers:
             rows.extend((mo, m, 'ref', area) for mo, area in cl)
             continue
-        owner = max(cl, key=lambda x: x[1])[0]
+        owner = OWNER_OVERRIDES.get(m) or max(cl, key=lambda x: x[1])[0]
         for mo, area in cl:
             kind = ('yard' if area >= YARD_MIN_PX2 else 'vid') if mo == owner else 'ref'
             rows.append((mo, m, kind, area))
