@@ -1313,8 +1313,10 @@ function detailsPanel(L){
     `<b>${esc(locLabel(L))}</b></div>`;
   if(g){
     h+=`<div class="drow dim">${g[0].toFixed(4)}, ${g[1].toFixed(4)} · `+
+      `<a class="ext" href="https://www.openrailwaymap.org/?style=standard&lat=${g[0]}&lon=${g[1]}&zoom=13" `+
+      `target="_blank" rel="noopener">OpenRailwayMap ↗</a> · `+
       `<a class="ext" href="https://www.openstreetmap.org/?mlat=${g[0]}&mlon=${g[1]}#map=12/${g[0]}/${g[1]}" `+
-      `target="_blank" rel="noopener">view on OpenStreetMap ↗</a></div>`;
+      `target="_blank" rel="noopener">OpenStreetMap ↗</a></div>`;
     if(g[2]) h+=`<div class="drow">Railroads: <b>${esc(g[2])}</b></div>`;
   } else {
     h+=`<div class="drow dim">No coordinates recorded for this map.</div>`;
