@@ -1700,6 +1700,13 @@ const MI=3959, RAD=Math.PI/180;
 // never visits. A work yard is routable only if it is on the route, or
 // coordinates prove it lies along the train's corridor; unprovable off-route
 // tags stay display-only. Added coordinates promote real ones automatically.
+// Work has direction (Zach's rule): an explicit "pick up"/"add"/"lift" is a
+// door ONTO the train, an explicit "set out"/"drop"/"deliver" is a door OFF
+// it, and nothing else counts — MSSNP only picks up at Mason City, so a car
+// cannot alight there; the Mason City block is built at Boone by MNPSS and
+// set out on arrival. Origin (board) and destination (alight) stay implicit.
+const PICKUP_RE=/\b(pi+cks?[\s-]?up|lift|add)\b/i,          // "picks up", "Piick Up" typo
+      SETOUT_RE=/\b(set[\s-]?(?:out|off)|drop|deliver)\b/i; // "Set Off" is NS house style
 DATA.trains.forEach(t=>{
   t.wr=t.ww.filter(y=>{
     if(y===t.o||y===t.d||t.r.includes(y)) return true;
@@ -1707,6 +1714,8 @@ DATA.trains.forEach(t=>{
     if(!go||!gd||!gy) return false;
     return distMi(go,gy)+distMi(gy,gd) <= Math.max(distMi(go,gd),50)*1.2;
   });
+  t.wb=t.wr.filter(y=>(t.wn[y]||[]).some(n=>PICKUP_RE.test(n)));   // boardable
+  t.wa=t.wr.filter(y=>(t.wn[y]||[]).some(n=>SETOUT_RE.test(n)));   // alightable
 });
 function distMi(a,b){
   const s=Math.sin((b[0]-a[0])*RAD/2)**2 +
@@ -1878,7 +1887,8 @@ function debounce(fn,ms){let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>f
 
 // ---- car routing (beta) ----
 // Structure only, no text interpretation: a car boards where a train
-// originates or does real work (t.wr), rides forward in route order, alights
+// boards where a train originates or explicitly picks up, rides forward in
+// route order, alights where it explicitly sets out or terminates,
 // where it works or terminates; trains hand off wherever drop and pickup
 // share a physical map (same MIM family — the yardmaster classifies across
 // yard identities) and at resolved *IC* links. Chains rank by (starts on the
@@ -1953,7 +1963,7 @@ function findRoutes(src,dst,carType){
   // boarding index by physical map; entries keep the train's own yard id
   const boardAt={};
   pool.forEach(t=>{
-    const seen=new Set(t.wr); seen.add(t.o);
+    const seen=new Set(t.wb); seen.add(t.o);
     seen.forEach(y=>{ if(y){const k=mapOf(y);(boardAt[k]=boardAt[k]||[]).push([t,y]);} });
   });
   const homeCnt={};
@@ -1962,7 +1972,7 @@ function findRoutes(src,dst,carType){
 
   const arriveAt=t=>{
     if(t.d&&mapOf(t.d)===dstMap) return t.d;
-    return t.wr.find(y=>mapOf(y)===dstMap);
+    return t.wa.find(y=>mapOf(y)===dstMap);
   };
   const orderOk=(t,y1,y2)=>{
     const i1=t.r.indexOf(y1), i2=t.r.indexOf(y2);
@@ -1993,7 +2003,7 @@ function findRoutes(src,dst,carType){
     if(path.length>=MAXH) continue;
     const used=new Set(path.map(p=>p[0].i));
     const drops=t.d?[t.d]:[];
-    t.wr.forEach(y=>{ if(!drops.includes(y)) drops.push(y); });
+    t.wa.forEach(y=>{ if(!drops.includes(y)) drops.push(y); });
     const dmaps=new Set();
     for(const y of drops){
       const m=mapOf(y);
@@ -2026,7 +2036,7 @@ function findRoutes(src,dst,carType){
     let ic=0, adj=0;
     for(let i=1;i<res.length;i++){
       const prev=res[i-1][0], y=res[i][1];
-      if(!(prev.d===y||prev.wr.includes(y))) adj+=3;
+      if(!(prev.d===y||prev.wa.includes(y))) adj+=3;
       const a=ops[i-1], b=ops[i];
       if(a===b) continue;
       ic++;
@@ -2104,7 +2114,7 @@ function corridorCard(c){
   res.forEach((p,i)=>{
     const t=p[0], by=p[1];
     const ay=i===res.length-1
-      ?((t.d&&mapOf(t.d)===dstMap)?t.d:(t.wr.find(y=>mapOf(y)===dstMap)||R.dst))
+      ?((t.d&&mapOf(t.d)===dstMap)?t.d:(t.wa.find(y=>mapOf(y)===dstMap)||R.dst))
       :res[i+1][1];
     if(i>0&&t.op!==res[i-1][0].op){
       const a=res[i-1][0].op, b=t.op, yset=IXY[a+"|"+b];
@@ -2121,7 +2131,7 @@ function corridorCard(c){
     }
     if(i>0){
       const prev=res[i-1][0];
-      const pd=(prev.d?[prev.d]:[]).concat(prev.wr);
+      const pd=(prev.d?[prev.d]:[]).concat(prev.wa);
       if(!pd.includes(by)&&pd.some(y=>mapOf(y)===mapOf(by))&&FAM[by]){
         const nl=document.createElement("div"); nl.className="legnote";
         nl.textContent=`⇄ same-map hand-off — drop and pickup are different `+
