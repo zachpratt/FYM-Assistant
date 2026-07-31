@@ -840,6 +840,8 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .node.hit{border-color:var(--accent);color:var(--accent)}
 .node.end{color:var(--ink)}
 .node .id{color:var(--dim)}
+.node .wr{width:11px;height:11px;margin-right:5px;vertical-align:-1px;
+  fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .instr{display:flex;flex-direction:column;gap:8px}
 .line{display:flex;gap:10px;align-items:flex-start}
 .line .tag{font-family:var(--mono);font-size:10px;padding:2px 6px;border-radius:4px;margin-top:1px;white-space:nowrap}
@@ -1382,6 +1384,9 @@ function openCard(el,t,force){
   if(willOpen && !el.dataset.built){ buildBody(el,t); el.dataset.built="1"; }
 }
 
+// Wrench glyph marking route stops where the train does work (@@-tagged yards).
+const WRENCH='<svg class="wr" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>';
+
 function buildBody(el,t){
   const body=el.querySelector(".body");
   const exp = t.x==="2099-12-31" ? "no expiry" : (t.x||"—");
@@ -1389,8 +1394,10 @@ function buildBody(el,t){
   const nodes=t.r.map((id,i)=>{
     const end=i===0||i===t.r.length-1;
     const hit=state.loc&&id===state.loc;
+    const wk=t.w.includes(id);
     const nm=LOC[id];
-    return `<button class="node ${hit?'hit':''} ${end?'end':''}" data-loc="${id}">`+
+    return `<button class="node ${hit?'hit':''} ${end?'end':''}" data-loc="${id}"`+
+      (wk?' title="Train works this yard"':'')+`>`+(wk?WRENCH:"")+
       (nm?esc(nm):"")+`<span class="id">${nm?" ":""}#${id}</span></button>`;
   }).join("");
 
