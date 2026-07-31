@@ -1180,8 +1180,38 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .morebtn{display:block;margin:22px auto;background:var(--panel);border:1px solid var(--line);
   color:var(--ink);padding:10px 22px;border-radius:8px;cursor:pointer}
 .morebtn:hover{border-color:var(--accent)}
-@media(max-width:640px){
-  .od{display:none}.brand span.sub{display:none}.tnm{display:none}
+/* ---- small screens ---- */
+.fbtn{display:none;background:var(--chip);border:1px solid var(--line);border-radius:7px;
+  color:var(--ink);padding:8px 12px;cursor:pointer;font-size:13px}
+@media(max-width:700px){
+  .od{display:none}.brand span.sub{display:none}.tnm{display:none}.here{display:none}
+  .mast .row{padding:10px 12px;gap:10px}
+  /* filters collapse behind a toggle so results are above the fold */
+  .fbtn{display:inline-block}
+  .mast.open .fbtn{border-color:var(--accent);color:var(--accent)}
+  .controls{display:none}
+  .mast.open .controls{display:flex;gap:10px;padding:0 12px 12px}
+  .controls .field{width:100%}
+  .controls .inp,.controls select.inp{width:100%;box-sizing:border-box;min-width:0}
+  .combo .menu{max-height:45vh}
+  /* comfortable touch targets */
+  .seg button{padding:10px 12px}
+  .pill{padding:8px 13px;font-size:13px}
+  .node{padding:8px 10px;font-size:13px}
+  .sib{padding:7px 12px;font-size:13px}
+  .locbar{margin:0 8px 6px;padding:8px 10px;gap:8px}
+  .locbar .seg button{padding:8px 10px}
+  .locnote{display:none}
+  .wrap{padding:8px 8px 60px}
+  .card>.head{flex-wrap:wrap;row-gap:4px;padding:10px 10px}
+  .ty{max-width:44vw;overflow:hidden;text-overflow:ellipsis}
+  .body{padding:12px 10px}
+  /* yard sheet: each row stacks into train line / route line / work line */
+  .srow{display:flex;flex-wrap:wrap;gap:6px 10px;padding:10px 8px}
+  .srow.shead{display:none}
+  .srow .sod{flex-basis:100%}
+  .srow .stxt{flex-basis:100%}
+  .dpanel{margin:9px 0;padding:12px}
 }
 </style>
 </head>
@@ -1192,6 +1222,7 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
       <span class="tk">TSAR</span><b>__TITLE__</b>
       <span class="sub">find a train by location, type &amp; railroad</span>
     </div>
+    <button class="fbtn" id="fbtn">Filters</button>
     <div class="count" id="count"></div>
   </div>
   <div class="controls">
@@ -1398,6 +1429,13 @@ function syncTypes(base){
 }
 typesel.onchange=()=>{state.type=typesel.value;render();};
 
+// On small screens the filter block collapses behind this toggle; picking a
+// location closes it again so the results come straight back into view.
+const NARROW=window.matchMedia("(max-width:700px)");
+const mastEl=document.querySelector(".mast");
+document.getElementById("fbtn").onclick=()=>mastEl.classList.toggle("open");
+NARROW.addEventListener("change",()=>render());
+
 const symin=document.getElementById("syminput");
 symin.oninput=debounce(()=>{state.sym=symin.value.trim().toUpperCase();render();},120);
 
@@ -1438,6 +1476,7 @@ function choose(o){
   rstate.res=null;      // picking a location always leaves the route view
   state.loc=o.id; locin.value = o.id+(o.nm?"  "+o.nm:"");
   locmenu.classList.remove("open"); locclear.style.display="";
+  mastEl.classList.remove("open");
   render();
 }
 locin.onfocus=()=>openMenu(locin.value);
@@ -1529,17 +1568,20 @@ function render(reset=true){
     const verb={o:"originate here",d:"terminate here",w:"work this yard",
                 "":"touch this location"}[state.locmode];
     locbar.className="locbar show";
+    const modeLabels=NARROW.matches
+      ? [["","All"],["o","Orig"],["d","Term"],["w","Works"]]
+      : [["","All"],["o","Originates"],["d","Terminates"],["w","Works"]];
+    const counts={"":pool.length,o:n.o,d:n.d,w:n.w};
     locbar.innerHTML=`<span class="lid">#${L}</span>`+
       `<span class="big">${LOC[L]?esc(LOC[L]):"Unnamed location"}</span>`+
       `<span class="seg" id="locmodeseg">`+
-        [["","All",pool.length],["o","Originates",n.o],["d","Terminates",n.d],["w","Works",n.w]]
-          .map(([v,lb,c])=>`<button data-m="${v}"${v===state.locmode?' class="on"':''}>${lb} (${c})</button>`).join("")+
+        modeLabels.map(([v,lb])=>`<button data-m="${v}"${v===state.locmode?' class="on"':''}>${lb} (${counts[v]})</button>`).join("")+
       `</span>`+
       `<span class="seg" id="viewseg">`+
-        [["cards","Cards"],["sheet","Yard sheet"],["details","Details"]]
+        [["cards","Cards"],["sheet",NARROW.matches?"Sheet":"Yard sheet"],["details","Details"]]
           .map(([v,lb])=>`<button data-v="${v}"${v===state.view?' class="on"':''}>${lb}</button>`).join("")+
       `</span>`+
-      `<span style="color:var(--muted)">${list.length} train(s) ${verb}</span>`;
+      `<span class="locnote" style="color:var(--muted)">${list.length} train(s) ${verb}</span>`;
     // sibling identities on the same interface map, mother yard first
     const fam=FAM[L];
     if(fam){
