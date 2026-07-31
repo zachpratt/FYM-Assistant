@@ -762,9 +762,44 @@ def dump_payload(payload):
     return '\n'.join(out).replace('</', '<\\/')
 
 
+# The route finder boards cars only where a note explicitly picks up and
+# alights only where one explicitly sets out (HTML_TEMPLATE mirrors these
+# regexes — keep both copies in sync). This audit is the drift alarm for that
+# vocabulary: unclassified work-looking notes are stored in the build report
+# and diffed on the next build, so a TSAR update that phrases car work in a
+# new way is caught by `make site`, not by a silently missing route.
+PICKUP_RE = re.compile(r'\b(pi+cks?[\s-]?up|lift|add)\b', re.I)
+SETOUT_RE = re.compile(r'\b(set[\s-]?(?:out|off)|drop|deliver)\b', re.I)
+SERVICE_NOTE_RE = re.compile(
+    r'^\s*(train\s+)?(service|fuel|crew)( ?(point|stop|change|check))?s?\W*$', re.I)
+WORKISH_RE = re.compile(r'\b(block|cars?|traffic|loads?|empties|interchange)\b', re.I)
+
+
+def audit_directions(payload):
+    """-> ({'pickup': n, 'setout': n, 'unclassified_work': n}, sorted texts)."""
+    pick = seto = 0
+    unclassified = set()
+    for t in payload['trains']:
+        for g in t['g']:
+            if g[0] != SEG_YARD or len(g) < 3 or not g[2]:
+                continue
+            p = bool(PICKUP_RE.search(g[2]))
+            s = bool(SETOUT_RE.search(g[2]))
+            pick += p
+            seto += s
+            if not p and not s and not SERVICE_NOTE_RE.match(g[2]) \
+                    and WORKISH_RE.search(g[2]):
+                unclassified.add(g[2].strip())
+    counts = {'pickup': pick, 'setout': seto, 'unclassified_work': len(unclassified)}
+    return counts, sorted(unclassified)
+
+
 def collect_report(payload, railroads, ic_total, ic_linked, store):
     named = sum(1 for L in payload['locs'] if L['nm'])
+    dir_counts, dir_notes = audit_directions(payload)
+    dir_counts['notes'] = dir_notes
     return {
+        'directions': dir_counts,
         'built':  datetime.now().replace(microsecond=0).isoformat(),
         'trains': len(payload['trains']),
         'locations': {'total': len(payload['locs']), 'named': named,
@@ -808,6 +843,20 @@ def diff_report(old, new):
     ow, nw = old.get('locations', {}).get('named'), new['locations']['named']
     if ow is not None and ow != nw:
         print(f"    {'locations':10s} {ow:6,} -> {nw:6,} named  ({nw - ow:+,})")
+
+    # Direction-vocabulary drift: work-looking notes the router's verb grammar
+    # cannot classify. New ones mean an author phrased car work a new way —
+    # each is a yard the route finder silently cannot use until the grammar
+    # (PICKUP_RE/SETOUT_RE here and in HTML_TEMPLATE) learns the phrasing.
+    seen = set(old.get('directions', {}).get('notes', []))
+    fresh = [n for n in new['directions']['notes'] if n not in seen]
+    if fresh:
+        print(f"    {len(fresh)} NEW unclassified work note(s) — extend the "
+              f"direction grammar or confirm they are not car work:")
+        for n in fresh[:15]:
+            print(f"      | {n[:100]}")
+        if len(fresh) > 15:
+            print(f"      ... and {len(fresh) - 15} more (see {REPORT_NAME})")
 
 
 # ---------------------------------------------------------------------------
@@ -976,6 +1025,9 @@ def build(files, out, title, loc_path, use_cache=True):
     rate = ic_linked / ic_total if ic_total else 1.0
     print(f"  {ic_linked:,}/{ic_total:,} interchange markers linked "
           f"({rate:.0%}) to a train")
+    d = new['directions']
+    print(f"  work-note directions: {d['pickup']:,} pickup / {d['setout']:,} "
+          f"setout / {d['unclassified_work']:,} work-looking unclassified")
     if ic_total and rate < IC_LINK_FLOOR:
         anom.add(f"only {rate:.0%} of interchange markers resolve — the game may "
                  f"have renumbered its rosters (RR_REGISTRY 'idx' values)")
@@ -1705,6 +1757,8 @@ const MI=3959, RAD=Math.PI/180;
 // it, and nothing else counts — MSSNP only picks up at Mason City, so a car
 // cannot alight there; the Mason City block is built at Boone by MNPSS and
 // set out on arrival. Origin (board) and destination (alight) stay implicit.
+// Keep in sync with PICKUP_RE/SETOUT_RE in the Python build, whose report
+// audit is the drift alarm for this vocabulary.
 const PICKUP_RE=/\b(pi+cks?[\s-]?up|lift|add)\b/i,          // "picks up", "Piick Up" typo
       SETOUT_RE=/\b(set[\s-]?(?:out|off)|drop|deliver)\b/i; // "Set Off" is NS house style
 DATA.trains.forEach(t=>{
