@@ -754,6 +754,7 @@ def dump_payload(payload):
            '"ixp":' + j(payload.get('ixp', {})) + ',',
            '"ix":[', ',\n'.join(j(r) for r in payload.get('ix', [])), '],',
            '"mims":[', ',\n'.join(j(f) for f in payload.get('mims', [])), '],',
+           '"geo":[', ',\n'.join(j(g) for g in payload.get('geo', [])), '],',
            '"trains":[', ',\n'.join(j(t) for t in payload['trains']), ']}']
     # '/' only ever occurs inside a JSON string, so this cannot corrupt the
     # structure — it just stops a note containing "</script>" from ending the
@@ -849,6 +850,47 @@ def load_mims(path, names, anom):
             sorted(fams.items(), key=lambda kv: int(kv[0]))]
 
 
+# ---------------------------------------------------------------------------
+# location geography (geo.csv)
+#
+# Derived from the game's .his map files by his_import.py: per-identity
+# latitude/longitude and the railroads present, where the map author recorded
+# them (~64% of maps; older .his files predate the fields). Structural facts
+# only — descriptions and author/yardmaster names are deliberately not
+# extracted (republication is on hold).
+# ---------------------------------------------------------------------------
+
+GEO_PATH = 'geo.csv'
+
+
+def load_geo(path, names, anom):
+    """geo.csv -> payload rows [id, lat, lon, rr]."""
+    rows = []
+    if not path or not os.path.isfile(path):
+        return rows
+    with open(path, encoding='utf-8', errors='replace', newline='') as fh:
+        for row in csv.reader(fh):
+            if not row or row[0] == 'id':
+                continue
+            if len(row) < 3:
+                anom.add("geo.csv row is not id,lat,lon[,...]", repr(row)[:70])
+                continue
+            lid, lat, lon = row[0].strip(), row[1], row[2]
+            try:
+                lat, lon = float(lat), float(lon)
+            except ValueError:
+                anom.add("geo.csv coordinate is not a number", repr(row)[:70])
+                continue
+            if lid not in names:
+                anom.add("geo.csv id is not a known location", lid)
+            if not (14 < lat < 72 and -170 < lon < -50):
+                anom.add("geo.csv coordinate outside North America", repr(row)[:70])
+                continue
+            rr = row[3].strip() if len(row) > 3 else ''
+            rows.append([lid, lat, lon, rr])
+    return rows
+
+
 def build(files, out, title, loc_path, use_cache=True):
     anom = Anomalies()
     railroads = []
@@ -896,6 +938,10 @@ def build(files, out, title, loc_path, use_cache=True):
         nmem = sum(len(f) - 1 for f in payload['mims'])
         print(f"  MIM families: {len(payload['mims'])} maps with "
               f"{nmem} co-located yards / virtual destinations")
+
+    payload['geo'] = load_geo(GEO_PATH, names, anom)
+    if payload['geo']:
+        print(f"  geography: {len(payload['geo'])} located identities")
 
     outdir = os.path.dirname(os.path.abspath(out))
     if outdir and not os.path.isdir(outdir):
@@ -1027,6 +1073,16 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .sib:hover{border-color:var(--accent)}
 .sib.vid{color:var(--muted);font-style:italic}
 .sib.vid::after{content:"ᵛ";margin-left:3px;color:var(--dim);font-style:normal}
+.sib.cur{border-color:var(--accent);cursor:default}
+
+/* ---- location details ---- */
+.dpanel{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  max-width:1180px;margin:9px auto;padding:14px 18px}
+.dpanel h4{margin:14px 0 7px;font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:var(--dim)}
+.dpanel h4:first-child{margin-top:0}
+.dpanel .drow{padding:3px 0;font-size:13px}
+.dpanel .dim{color:var(--muted)}
+.dpanel .ext{color:var(--future)}
 
 /* ---- car routing ---- */
 .routebar{margin:0 20px 6px;padding:10px 14px;border:1px solid var(--line);border-left:3px solid var(--future);
@@ -1279,6 +1335,10 @@ const FAM = {};
   fam.ms.forEach(m=>{ FAM[m[0]] = fam; });
 });
 
+// geography: id -> [lat, lon, railroads-text], where the map author recorded it
+const GEO = {};
+(DATA.geo||[]).forEach(g=>{ GEO[g[0]] = [g[1], g[2], g[3]]; });
+
 // how many trains touch each location (for the picker)
 const locCount = {};
 DATA.trains.forEach(t=>{
@@ -1476,7 +1536,7 @@ function render(reset=true){
           .map(([v,lb,c])=>`<button data-m="${v}"${v===state.locmode?' class="on"':''}>${lb} (${c})</button>`).join("")+
       `</span>`+
       `<span class="seg" id="viewseg">`+
-        [["cards","Cards"],["sheet","Yard sheet"]]
+        [["cards","Cards"],["sheet","Yard sheet"],["details","Details"]]
           .map(([v,lb])=>`<button data-v="${v}"${v===state.view?' class="on"':''}>${lb}</button>`).join("")+
       `</span>`+
       `<span style="color:var(--muted)">${list.length} train(s) ${verb}</span>`;
@@ -1500,6 +1560,13 @@ function render(reset=true){
       b.onclick=()=>{ state.view=b.dataset.v; render(); };
     });
   } else locbar.className="locbar";
+
+  // details view: facts about the place instead of a train list
+  if(state.loc && state.view==="details"){
+    wrap.innerHTML="";
+    wrap.appendChild(detailsPanel(state.loc));
+    return;
+  }
 
   // yard sheet: a compact switchlist of the same filtered set, one row per
   // train with its full instruction text at this yard. Only meaningful with a
@@ -1563,6 +1630,63 @@ function sheetRow(t){
     `<span class="sod">${esc(locLabel(t.o))} → ${esc(locLabel(t.d))}</span>`+
     `<span class="stxt${work.length?'':' none'}">${work.length?work.map(esc).join("<br>"):"—"}</span>`;
   el.onclick=()=>{ state.view="cards"; render(); reveal(t.i); };
+  return el;
+}
+
+// ---- location details ----
+const MI=3959, RAD=Math.PI/180;
+function distMi(a,b){
+  const s=Math.sin((b[0]-a[0])*RAD/2)**2 +
+          Math.cos(a[0]*RAD)*Math.cos(b[0]*RAD)*Math.sin((b[1]-a[1])*RAD/2)**2;
+  return 2*MI*Math.asin(Math.sqrt(s));
+}
+function compass(a,b){
+  const y=Math.sin((b[1]-a[1])*RAD)*Math.cos(b[0]*RAD);
+  const x=Math.cos(a[0]*RAD)*Math.sin(b[0]*RAD) -
+          Math.sin(a[0]*RAD)*Math.cos(b[0]*RAD)*Math.cos((b[1]-a[1])*RAD);
+  const deg=(Math.atan2(y,x)/RAD+360)%360;
+  return ["N","NE","E","SE","S","SW","W","NW"][Math.round(deg/45)%8];
+}
+
+function detailsPanel(L){
+  const el=document.createElement("div"); el.className="dpanel";
+  const g=GEO[L], fam=FAM[L];
+  let h=`<h4>Location</h4><div class="drow"><span class="lid">#${L}</span> `+
+    `<b>${esc(locLabel(L))}</b></div>`;
+  if(g){
+    h+=`<div class="drow dim">${g[0].toFixed(4)}, ${g[1].toFixed(4)} · `+
+      `<a class="ext" href="https://www.openstreetmap.org/?mlat=${g[0]}&mlon=${g[1]}#map=12/${g[0]}/${g[1]}" `+
+      `target="_blank" rel="noopener">view on OpenStreetMap ↗</a></div>`;
+    if(g[2]) h+=`<div class="drow">Railroads: <b>${esc(g[2])}</b></div>`;
+  } else {
+    h+=`<div class="drow dim">No coordinates recorded for this map.</div>`;
+  }
+  if(fam){
+    h+=`<h4>Same interface map</h4>`;
+    const rows=[[fam.mo,0,1]].concat(fam.ms.map(m=>[m[0],m[1],0]));
+    h+=rows.map(([id,vid,mo])=>{
+      const gg=GEO[id];
+      return `<div class="drow">`+
+        `<button class="sib${vid?' vid':''}${id===L?' cur':''}" data-loc="${id}">${esc(locLabel(id))}</button>`+
+        `<span class="dim"> ${mo?"interface map":vid?"virtual destination (off-map)":"co-located yard"}`+
+        (gg&&gg[2]?` · ${esc(gg[2])}`:"")+`</span></div>`;
+    }).join("");
+  }
+  if(g){
+    const near=Object.keys(GEO)
+      .filter(id=>id!==L && !(fam&&(id===fam.mo||fam.ms.some(m=>m[0]===id))))
+      .map(id=>[id, distMi(g, GEO[id])])
+      .sort((a,b)=>a[1]-b[1]).slice(0,8);
+    if(near.length){
+      h+=`<h4>Nearby</h4>`+near.map(([id,d])=>
+        `<div class="drow"><button class="sib" data-loc="${id}">${esc(locLabel(id))}</button>`+
+        `<span class="dim"> ${d<10?d.toFixed(1):Math.round(d)} mi ${compass(g,GEO[id])}</span></div>`).join("");
+    }
+  }
+  el.innerHTML=h;
+  el.querySelectorAll(".sib").forEach(b=>{
+    if(!b.classList.contains("cur")) b.onclick=()=>gotoLoc(b.dataset.loc);
+  });
   return el;
 }
 
