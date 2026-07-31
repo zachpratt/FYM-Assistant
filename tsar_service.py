@@ -1370,6 +1370,22 @@ const FAM = {};
 const GEO = {};
 (DATA.geo||[]).forEach(g=>{ GEO[g[0]] = [g[1], g[2], g[3]]; });
 
+// One interface map is one physical place, so every family member aliases to
+// its mother map for routing. Vids included: vid traffic round-trips through
+// the mother map with the same consist, so cars at vid zones sit in the same
+// classification pool as everything else on the map (Zach's ruling).
+const mapOf = id => FAM[id] ? FAM[id].mo : id;
+const famIds = id => FAM[id] ? [FAM[id].mo, ...FAM[id].ms.map(m=>m[0])] : [id];
+const geoOf = id => {
+  if(GEO[id]) return GEO[id];
+  const f=FAM[id];
+  if(f){ if(GEO[f.mo]) return GEO[f.mo];
+         for(const m of f.ms) if(GEO[m[0]]) return GEO[m[0]]; }
+  return null;
+};
+const opIxAt =(op,id)=>famIds(id).some(fy=>IXOPYARD.has(op+"|"+fy));
+const ixHasAt=(yset,id)=>famIds(id).some(fy=>yset.has(fy));
+
 // how many trains touch each location (for the picker)
 const locCount = {};
 DATA.trains.forEach(t=>{
@@ -1848,11 +1864,13 @@ function debounce(fn,ms){let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>f
 // ---- car routing (beta) ----
 // Structure only, no text interpretation: a car boards where a train
 // originates or does real work (t.ww), rides forward in route order, alights
-// where it works or terminates; trains hand off at shared yards and resolved
-// *IC* links. Chains rank by (starts on the origin yard's home road, fewest
-// interchanges, fewest trains) and collapse into corridors — one entry per
-// distinct railroad + transfer-yard sequence. The TSAR text at each hand-off
-// is quoted verbatim: the graph proposes, the player judges.
+// where it works or terminates; trains hand off wherever drop and pickup
+// share a physical map (same MIM family — the yardmaster classifies across
+// yard identities) and at resolved *IC* links. Chains rank by (starts on the
+// origin's home road, fewest interchanges, fewest trains, least geographic
+// wandering) and collapse into corridors — one entry per distinct railroad +
+// transfer-map sequence. The TSAR text at each hand-off is quoted verbatim:
+// the graph proposes, the player judges.
 // freight capability set of a train, from the per-roster classification
 // table ("carload+intermodal" for mixed service). Multi rosters: shortline
 // operators haul carload, passenger is passenger.
@@ -1913,18 +1931,24 @@ function findRoutes(src,dst,carType){
     if(cs.includes("passenger")||cs.includes("engines")||cs.includes("nonrev")) return false;
     return carType==="any" || cs.includes(carType);
   };
+  const srcMap=mapOf(src), dstMap=mapOf(dst);
+  if(srcMap===dstMap) return {src,dst,homeRR:null,corridors:[],total:0,truncated:false};
   const pool=DATA.trains.filter(t=>status(t)==="active"&&canCarry(t));
   const inPool=new Set(pool.map(t=>t.i));
+  // boarding index by physical map; entries keep the train's own yard id
   const boardAt={};
   pool.forEach(t=>{
     const seen=new Set(t.ww); seen.add(t.o);
-    seen.forEach(y=>{ if(y)(boardAt[y]=boardAt[y]||[]).push(t); });
+    seen.forEach(y=>{ if(y){const k=mapOf(y);(boardAt[k]=boardAt[k]||[]).push([t,y]);} });
   });
   const homeCnt={};
-  pool.forEach(t=>{ if(t.o){ const c=homeCnt[t.o]=homeCnt[t.o]||{}; c[t.op]=(c[t.op]||0)+1; } });
-  const homeRR=homeCnt[src]?Object.entries(homeCnt[src]).sort((a,b)=>b[1]-a[1])[0][0]:null;
+  pool.forEach(t=>{ if(t.o){ const k=mapOf(t.o), c=homeCnt[k]=homeCnt[k]||{}; c[t.op]=(c[t.op]||0)+1; } });
+  const homeRR=homeCnt[srcMap]?Object.entries(homeCnt[srcMap]).sort((a,b)=>b[1]-a[1])[0][0]:null;
 
-  const alightOk=(t,y)=>y===t.d||t.ww.includes(y);
+  const arriveAt=t=>{
+    if(t.d&&mapOf(t.d)===dstMap) return t.d;
+    return t.ww.find(y=>mapOf(y)===dstMap);
+  };
   const orderOk=(t,y1,y2)=>{
     const i1=t.r.indexOf(y1), i2=t.r.indexOf(y2);
     return (i1<0||i2<0)?true:i2>i1;
@@ -1941,11 +1965,12 @@ function findRoutes(src,dst,carType){
     visits[k]=v+1; q.push(path.concat([[t,y]]));
   };
   const q=[];
-  (boardAt[src]||[]).forEach(t=>push(q,[],t,src));
+  (boardAt[srcMap]||[]).forEach(([t,y])=>push(q,[],t,y));
   for(let qi=0;qi<q.length;qi++){
     if(chains.length>=CAP_RES||q.length>CAP_Q){ truncated=true; break; }
     const path=q[qi], last=path[path.length-1], t=last[0], by=last[1];
-    if(alightOk(t,dst)&&dst!==by&&orderOk(t,by,dst)){
+    const ay=arriveAt(t);
+    if(ay!==undefined&&mapOf(by)!==dstMap&&orderOk(t,by,ay)){
       const key=path.map(p=>p[0].i).join(">");
       if(!seenChain.has(key)){ seenChain.add(key); chains.push(path); }
       continue;
@@ -1954,9 +1979,12 @@ function findRoutes(src,dst,carType){
     const used=new Set(path.map(p=>p[0].i));
     const drops=t.d?[t.d]:[];
     t.ww.forEach(y=>{ if(!drops.includes(y)) drops.push(y); });
+    const dmaps=new Set();
     for(const y of drops){
-      if(y===by||!orderOk(t,by,y)) continue;
-      for(const u of (boardAt[y]||[])) if(!used.has(u.i)) push(q,path,u,y);
+      const m=mapOf(y);
+      if(m===mapOf(by)||dmaps.has(m)||!orderOk(t,by,y)) continue;
+      dmaps.add(m);
+      for(const [u,yu] of (boardAt[m]||[])) if(!used.has(u.i)) push(q,path,u,yu);
     }
     for(const uid of t.icl){
       const u=DATA.trains[uid];
@@ -1970,25 +1998,45 @@ function findRoutes(src,dst,carType){
   // demoted; Class I <-> Class I hand-offs have no agreement data and stay
   // neutral. A "foreign" first leg is fine when the origin yard is an agreed
   // exchange point for that operator (a car AT an interchange yard is exactly
-  // where a partner picks it up).
+  // where a partner picks it up). Hand-offs riding a family alias (drop and
+  // pickup are different identities on one map) pay a token +3 so exact-yard
+  // chains keep their edge, and where coordinates are known a corridor pays
+  // 1pt per 25 miles it wanders beyond the direct origin->destination line.
+  // A hand-off with no coordinates is bridged over (its detour is invisible),
+  // so it pays +1: on otherwise-equal scores, verifiable geometry wins.
+  const gS=geoOf(src), gD=geoOf(dst);
+  const direct=(gS&&gD)?distMi(gS,gD):null;
   const score=res=>{
     const ops=res.map(p=>p[0].op);
     let ic=0, adj=0;
     for(let i=1;i<res.length;i++){
+      const prev=res[i-1][0], y=res[i][1];
+      if(!(prev.d===y||prev.ww.includes(y))) adj+=3;
       const a=ops[i-1], b=ops[i];
       if(a===b) continue;
       ic++;
-      const yset=IXY[a+"|"+b], y=res[i][1];
-      if(yset&&yset.has(y)) adj += ixPreferred(a,b)?-30:-15;
+      const yset=IXY[a+"|"+b];
+      if(yset&&ixHasAt(yset,y)) adj += ixPreferred(a,b)?-30:-15;
       else if(yset) adj += 10;
       else if(!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))) adj += 2000;
     }
-    const foreign=(homeRR&&ops[0]!==homeRR&&!IXOPYARD.has(ops[0]+"|"+src))?1:0;
-    return foreign*10000+ic*100+res.length+adj;
+    let geo=0;
+    if(direct!=null){
+      const pts=[gS];
+      for(let i=1;i<res.length;i++){
+        const g=geoOf(res[i][1]);
+        if(g) pts.push(g); else geo+=1;
+      }
+      pts.push(gD);
+      let d=0; for(let i=1;i<pts.length;i++) d+=distMi(pts[i-1],pts[i]);
+      geo+=Math.round(Math.max(0,d-direct)/25);
+    }
+    const foreign=(homeRR&&ops[0]!==homeRR&&!opIxAt(ops[0],src))?1:0;
+    return foreign*10000+ic*100+res.length+adj+geo;
   };
   const corr={};
   chains.forEach(res=>{
-    const key=res.map(p=>p[0].op).join(",")+"|"+res.map(p=>p[1]).join(",");
+    const key=res.map(p=>p[0].op).join(",")+"|"+res.map(p=>mapOf(p[1])).join(",");
     const cur=corr[key];
     if(!cur) corr[key]={best:res,n:1};
     else { cur.n++; if(score(res)<score(cur.best)) cur.best=res; }
@@ -2012,8 +2060,11 @@ function renderRoutes(){
   wrap.appendChild(hd);
   if(!R.corridors.length){
     const d=document.createElement("div"); d.className="empty";
-    d.innerHTML=`No chain found within 5 trains.`+
-      (rcartype.value!=="any"?`<br>Try car type “Any freight”.`:``);
+    d.innerHTML = mapOf(R.src)===mapOf(R.dst)
+      ? `Origin and destination are identities on the same interface map — `+
+        `no road train needed; the yardmaster classifies the car across.`
+      : `No chain found within 5 trains.`+
+        (rcartype.value!=="any"?`<br>Try car type “Any freight”.`:``);
     wrap.appendChild(d); return;
   }
   R.corridors.slice(0,30).forEach(c=>wrap.appendChild(corridorCard(c)));
@@ -2026,27 +2077,40 @@ function renderRoutes(){
 
 function corridorCard(c){
   const R=rstate.res, res=c.best, ops=res.map(p=>p[0].op);
+  const dstMap=mapOf(R.dst);
   let ic=0; for(let i=1;i<ops.length;i++) if(ops[i]!==ops[i-1]) ic++;
   const el=document.createElement("div"); el.className="corr";
   const h=document.createElement("div"); h.className="chead";
   h.innerHTML=`<b>${res.length} train${res.length>1?"s":""}</b> · ${ic} interchange${ic===1?"":"s"}`+
     (c.n>1?` · ${c.n} variants`:"")+
-    ((R.homeRR&&ops[0]!==R.homeRR&&!IXOPYARD.has(ops[0]+"|"+R.src))
+    ((R.homeRR&&ops[0]!==R.homeRR&&!opIxAt(ops[0],R.src))
       ?` · <span class="warn">starts on a foreign road</span>`:"");
   el.appendChild(h);
   res.forEach((p,i)=>{
     const t=p[0], by=p[1];
-    const ay=i===res.length-1?R.dst:res[i+1][1];
+    const ay=i===res.length-1
+      ?((t.d&&mapOf(t.d)===dstMap)?t.d:(t.ww.find(y=>mapOf(y)===dstMap)||R.dst))
+      :res[i+1][1];
     if(i>0&&t.op!==res[i-1][0].op){
       const a=res[i-1][0].op, b=t.op, yset=IXY[a+"|"+b];
       const nl=document.createElement("div");
-      if(yset&&yset.has(by)){
+      if(yset&&ixHasAt(yset,by)){
         nl.className="legnote ok";
         nl.textContent=`✓ ${a}–${b} exchange point`+(ixPreferred(a,b)?" (preferred partner)":"");
         el.appendChild(nl);
       } else if(!yset&&!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))){
         nl.className="legnote bad";
         nl.textContent=`⚠ no agreement between ${a} and ${b} in the interchange data`;
+        el.appendChild(nl);
+      }
+    }
+    if(i>0){
+      const prev=res[i-1][0];
+      const pd=(prev.d?[prev.d]:[]).concat(prev.ww);
+      if(!pd.includes(by)&&pd.some(y=>mapOf(y)===mapOf(by))&&FAM[by]){
+        const nl=document.createElement("div"); nl.className="legnote";
+        nl.textContent=`⇄ same-map hand-off — drop and pickup are different `+
+          `identities on the ${locLabel(FAM[by].mo)} map`;
         el.appendChild(nl);
       }
     }
@@ -2058,8 +2122,13 @@ function corridorCard(c){
       `<span class="lty">${esc(t.ty)}</span>`+
       `<span class="lod">${esc(locLabel(by))} → ${esc(locLabel(ay))}</span>`;
     el.appendChild(leg);
+    if(i===res.length-1&&ay!==R.dst&&mapOf(ay)===dstMap){
+      const nl=document.createElement("div"); nl.className="legnote ok";
+      nl.textContent=`✓ ${locLabel(ay)} shares its map with ${locLabel(R.dst)}`;
+      el.appendChild(nl);
+    }
     const notes=[];
-    [by,ay].forEach(y=>(t.wn[y]||[]).forEach(n=>notes.push([y,n])));
+    [by,ay].forEach(y=>famIds(y).forEach(fy=>(t.wn[fy]||[]).forEach(n=>notes.push([fy,n]))));
     notes.forEach(([y,n])=>{
       const nl=document.createElement("div"); nl.className="legnote";
       nl.innerHTML=`@ ${esc(locLabel(y))}: <span class="txt">${esc(n)}</span>`;
