@@ -17,3 +17,7 @@ map_id_screenshots/
 # Per-yard game file bundles (map, sorts, live cars) shared for format
 # exploration. Game data plus personal player state; never committed.
 sample_yard_data/
+
+# Community-made state connection diagrams (Robert Verheus). Reference
+# material for transcription, not ours to redistribute.
+connections/

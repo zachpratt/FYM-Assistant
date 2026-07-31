@@ -111,8 +111,8 @@ mother_id,member_id,kind,zone_px2,source
 1499,1322,yard,5694408,derived
 1319,1326,yard,11018606,derived
 2004,1331,vid,7632,derived
-1787,1333,yard,200000,derived
-1805,1333,ref,200000,derived
+1787,1333,ref,200000,derived
+1805,1333,yard,200000,derived
 1071,1334,yard,2937500,derived
 1765,1335,yard,3190616,derived
 1536,1345,yard,1134762,derived
