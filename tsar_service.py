@@ -2036,6 +2036,32 @@ const OPGRAPH=(()=>{
   return {alight,board,mapsA,mapsB,icEv,icPair};
 })();
 
+// Terminal/switching roads (BRC, IHB, KCT, PHL...): carriers whose whole
+// located network sits inside one metro (>=3 located maps, <=35 mi across).
+// A hand-off to or from one is the metro's internal plumbing — the Belt
+// existing is HOW Chicago's railroads interchange — so it pays a token, not
+// a road-interchange price. A road with sparse coordinates stays
+// unclassified (full price), so added geo data only ever improves this.
+const TERMINAL=(()=>{
+  const pts={};
+  DATA.trains.forEach(t=>{
+    if(status(t)!=="active") return;
+    new Set([t.o,t.d,...t.r]).forEach(y=>{
+      const g=y&&geoOf(y);
+      if(g)(pts[t.op]=pts[t.op]||new Map()).set(mapOf(y),g);
+    });
+  });
+  const s=new Set();
+  Object.entries(pts).forEach(([op,m])=>{
+    const ps=[...m.values()];
+    if(ps.length<3) return;
+    let d=0;
+    for(let i=0;i<ps.length;i++)for(let j=i+1;j<ps.length;j++) d=Math.max(d,distMi(ps[i],ps[j]));
+    if(d<=35) s.add(op);
+  });
+  return s;
+})();
+
 // maps where a can hand a car to b, strongest evidence first, capped
 function exchangeMaps(a,b){
   const A=OPGRAPH.alight[a], B=OPGRAPH.board[b], out=[];
@@ -2066,6 +2092,7 @@ function planPaths(srcOps,dstOps,K){
   const edgeCost=(a,b)=>{
     const k=a+">"+b;
     if(k in edgeMemo) return edgeMemo[k];
+    if(TERMINAL.has(a)||TERMINAL.has(b)) return edgeMemo[k]=25;
     let c=100;
     if(!ixPartners(a,b)&&!OPGRAPH.icPair.has(a+">"+b)&&!OPGRAPH.icPair.has(b+">"+a)) c+=50;
     if(!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))) c+=2000;
@@ -2247,10 +2274,16 @@ function findRoutes(src,dst,carType){
     for(let i=1;i<res.length;i++){
       const prev=res[i-1][0], y=res[i][1];
       if(!(prev.d===y||prev.wa.includes(y))) adj+=3;
-      const a=ops[i-1], b=ops[i];
+    }
+    // terminal roads drop out of interchange counting: NS -> BRC -> UP is
+    // ONE road interchange, judged where the car rejoins a road carrier
+    const road=res.filter(p=>!TERMINAL.has(p[0].op));
+    adj += (res.length-road.length)*10;
+    for(let i=1;i<road.length;i++){
+      const a=road[i-1][0].op, b=road[i][0].op;
       if(a===b) continue;
       ic++;
-      const yset=IXY[a+"|"+b];
+      const yset=IXY[a+"|"+b], y=road[i][1];
       if(yset&&ixHasAt(yset,y)) adj += ixPreferred(a,b)?-30:-15;
       else if(yset) adj += 10;
       else if(!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))) adj += 2000;
@@ -2266,7 +2299,8 @@ function findRoutes(src,dst,carType){
       let d=0; for(let i=1;i<pts.length;i++) d+=distMi(pts[i-1],pts[i]);
       geo+=Math.round(Math.max(0,d-direct)/25);
     }
-    const foreign=(homeRR&&ops[0]!==homeRR&&!opIxAt(ops[0],src))?1:0;
+    const first=road.length?road[0][0].op:ops[0];
+    const foreign=(homeRR&&first!==homeRR&&!opIxAt(first,src))?1:0;
     return foreign*10000+ic*100+res.length+adj+geo;
   };
   const corr={};
@@ -2315,32 +2349,45 @@ function renderRoutes(){
 function corridorCard(c){
   const R=rstate.res, res=c.best, ops=res.map(p=>p[0].op);
   const dstMap=mapOf(R.dst);
-  let ic=0; for(let i=1;i<ops.length;i++) if(ops[i]!==ops[i-1]) ic++;
+  const roadOps=res.filter(p=>!TERMINAL.has(p[0].op)).map(p=>p[0].op);
+  let ic=0; for(let i=1;i<roadOps.length;i++) if(roadOps[i]!==roadOps[i-1]) ic++;
+  const firstRoad=roadOps[0]||ops[0];
   const el=document.createElement("div"); el.className="corr";
   const h=document.createElement("div"); h.className="chead";
   h.innerHTML=`<b>${res.length} train${res.length>1?"s":""}</b> · ${ic} interchange${ic===1?"":"s"}`+
     (c.n>1?` · ${c.n} variants`:"")+
-    ((R.homeRR&&ops[0]!==R.homeRR&&!opIxAt(ops[0],R.src))
+    ((R.homeRR&&firstRoad!==R.homeRR&&!opIxAt(firstRoad,R.src))
       ?` · <span class="warn">starts on a foreign road</span>`:"");
   el.appendChild(h);
+  let lastRoad=null;
   res.forEach((p,i)=>{
     const t=p[0], by=p[1];
     const ay=i===res.length-1
       ?((t.d&&mapOf(t.d)===dstMap)?t.d:(t.wa.find(y=>mapOf(y)===dstMap)||R.dst))
       :res[i+1][1];
     if(i>0&&t.op!==res[i-1][0].op){
-      const a=res[i-1][0].op, b=t.op, yset=IXY[a+"|"+b];
       const nl=document.createElement("div");
-      if(yset&&ixHasAt(yset,by)){
-        nl.className="legnote ok";
-        nl.textContent=`✓ ${a}–${b} exchange point`+(ixPreferred(a,b)?" (preferred partner)":"");
+      if(TERMINAL.has(t.op)){
+        nl.className="legnote";
+        nl.textContent=`⇄ ${t.op} terminal transfer — metro switching, not a road interchange`;
         el.appendChild(nl);
-      } else if(!yset&&!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))){
-        nl.className="legnote bad";
-        nl.textContent=`⚠ no agreement between ${a} and ${b} in the interchange data`;
-        el.appendChild(nl);
+      } else {
+        // judge the road-to-road exchange, looking across any terminal legs
+        const a=lastRoad, b=t.op, yset=a?IXY[a+"|"+b]:null;
+        if(a&&a!==b){
+          if(yset&&ixHasAt(yset,by)){
+            nl.className="legnote ok";
+            nl.textContent=`✓ ${a}–${b} exchange point`+(ixPreferred(a,b)?" (preferred partner)":"");
+            el.appendChild(nl);
+          } else if(!yset&&!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))){
+            nl.className="legnote bad";
+            nl.textContent=`⚠ no agreement between ${a} and ${b} in the interchange data`;
+            el.appendChild(nl);
+          }
+        }
       }
     }
+    if(!TERMINAL.has(t.op)) lastRoad=t.op;
     if(i>0){
       const prev=res[i-1][0];
       const pd=(prev.d?[prev.d]:[]).concat(prev.wa);
