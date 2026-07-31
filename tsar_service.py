@@ -753,6 +753,7 @@ def dump_payload(payload):
            '"locs":[', ',\n'.join(j(l) for l in payload['locs']), '],',
            '"ixp":' + j(payload.get('ixp', {})) + ',',
            '"ix":[', ',\n'.join(j(r) for r in payload.get('ix', [])), '],',
+           '"mims":[', ',\n'.join(j(f) for f in payload.get('mims', [])), '],',
            '"trains":[', ',\n'.join(j(t) for t in payload['trains']), ']}']
     # '/' only ever occurs inside a JSON string, so this cannot corrupt the
     # structure — it just stops a note containing "</script>" from ending the
@@ -808,6 +809,46 @@ def diff_report(old, new):
         print(f"    {'locations':10s} {ow:6,} -> {nw:6,} named  ({nw - ow:+,})")
 
 
+# ---------------------------------------------------------------------------
+# MIM families (mims.csv)
+#
+# One interface map hosts several controllable yard identities plus its
+# virtual off-map destinations. mims.csv is derived from the game's .yrd map
+# files by mim_import.py (the .yrd inputs are game data and stay uncommitted;
+# the derived table is committed, same split as TSARs/ vs locations.csv).
+# ---------------------------------------------------------------------------
+
+MIMS_PATH = 'mims.csv'
+MIM_KINDS = ('yard', 'vid', 'ref')
+
+
+def load_mims(path, names, anom):
+    """mims.csv -> payload families [[mother, [member, is_vid], ...], ...].
+    'ref' rows are cross-references to a neighbouring map, not membership,
+    so they are skipped. Ids are validated against the location name store
+    (not this build's subset) so --only builds do not false-alarm."""
+    fams = {}
+    if not path or not os.path.isfile(path):
+        return []
+    with open(path, encoding='utf-8', errors='replace', newline='') as fh:
+        for row in csv.reader(fh):
+            if not row or row[0] == 'mother_id':
+                continue
+            if len(row) < 3 or row[2] not in MIM_KINDS:
+                anom.add("mims.csv row is not mother,member,kind[,...]",
+                         repr(row)[:70])
+                continue
+            mo, m, kind = row[0].strip(), row[1].strip(), row[2]
+            for i in (mo, m):
+                if i not in names:
+                    anom.add("mims.csv id is not a known location",
+                             f"{i} in {row[:3]}")
+            if kind != 'ref':
+                fams.setdefault(mo, []).append([m, 1 if kind == 'vid' else 0])
+    return [[mo] + ms for mo, ms in
+            sorted(fams.items(), key=lambda kv: int(kv[0]))]
+
+
 def build(files, out, title, loc_path, use_cache=True):
     anom = Anomalies()
     railroads = []
@@ -849,6 +890,12 @@ def build(files, out, title, loc_path, use_cache=True):
     pairs, points = load_interchange_data(IX_FOLDER, railroads, loc_ids, anom)
     payload['ixp'] = pairs
     payload['ix'] = points
+
+    payload['mims'] = load_mims(MIMS_PATH, names, anom)
+    if payload['mims']:
+        nmem = sum(len(f) - 1 for f in payload['mims'])
+        print(f"  MIM families: {len(payload['mims'])} maps with "
+              f"{nmem} co-located yards / virtual destinations")
 
     outdir = os.path.dirname(os.path.abspath(out))
     if outdir and not os.path.isdir(outdir):
@@ -973,6 +1020,13 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
   border-radius:8px;background:var(--panel);display:none;align-items:center;gap:12px;flex-wrap:wrap}
 .locbar.show{display:flex}
 .locbar .seg button{padding:5px 10px;font-size:12px}
+.locbar .sibs{flex-basis:100%;display:flex;gap:6px;align-items:baseline;flex-wrap:wrap;margin-top:2px}
+.locbar .siblbl{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim)}
+.sib{background:var(--chip);border:1px solid var(--line);border-radius:14px;padding:3px 10px;
+  font-size:12px;color:var(--ink);cursor:pointer}
+.sib:hover{border-color:var(--accent)}
+.sib.vid{color:var(--muted);font-style:italic}
+.sib.vid::after{content:"ᵛ";margin-left:3px;color:var(--dim);font-style:normal}
 
 /* ---- car routing ---- */
 .routebar{margin:0 20px 6px;padding:10px 14px;border:1px solid var(--line);border-left:3px solid var(--future);
@@ -1216,6 +1270,15 @@ const SLOPS=new Set();
     if(r&&r.m&&!r.pax&&!classI.has(t.op)) SLOPS.add(t.op); });
 }
 
+// MIM families: one interface map hosts several yard identities plus its
+// virtual off-map destinations. FAM maps every id in a family to the family.
+const FAM = {};
+(DATA.mims||[]).forEach(f=>{
+  const fam = {mo: f[0], ms: f.slice(1)};   // ms entries: [id, isVid]
+  FAM[fam.mo] = fam;
+  fam.ms.forEach(m=>{ FAM[m[0]] = fam; });
+});
+
 // how many trains touch each location (for the picker)
 const locCount = {};
 DATA.trains.forEach(t=>{
@@ -1417,6 +1480,19 @@ function render(reset=true){
           .map(([v,lb])=>`<button data-v="${v}"${v===state.view?' class="on"':''}>${lb}</button>`).join("")+
       `</span>`+
       `<span style="color:var(--muted)">${list.length} train(s) ${verb}</span>`;
+    // sibling identities on the same interface map, mother yard first
+    const fam=FAM[L];
+    if(fam){
+      locbar.innerHTML+=`<span class="sibs"><span class="siblbl">same map</span>`+
+        [[fam.mo,0]].concat(fam.ms).filter(m=>m[0]!==L)
+          .map(m=>`<button class="sib${m[1]?' vid':''}" data-loc="${m[0]}" `+
+            `title="${m[1]?'virtual destination (off-map)':'yard on the same interface map'}">`+
+            `${esc(locLabel(m[0]))}</button>`).join("")+
+        `</span>`;
+      locbar.querySelectorAll(".sib").forEach(b=>{
+        b.onclick=()=>gotoLoc(b.dataset.loc);
+      });
+    }
     locbar.querySelectorAll("#locmodeseg button").forEach(b=>{
       b.onclick=()=>{ state.locmode=b.dataset.m; render(); };
     });
