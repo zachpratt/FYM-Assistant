@@ -1940,16 +1940,16 @@ function gotoLoc(id){
 function debounce(fn,ms){let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>fn(...a),ms);};}
 
 // ---- car routing (beta) ----
-// Structure only, no text interpretation: a car boards where a train
-// boards where a train originates or explicitly picks up, rides forward in
-// route order, alights where it explicitly sets out or terminates,
-// where it works or terminates; trains hand off wherever drop and pickup
-// share a physical map (same MIM family — the yardmaster classifies across
-// yard identities) and at resolved *IC* links. Chains rank by (starts on the
-// origin's home road, fewest interchanges, fewest trains, least geographic
-// wandering) and collapse into corridors — one entry per distinct railroad +
-// transfer-map sequence. The TSAR text at each hand-off is quoted verbatim:
-// the graph proposes, the player judges.
+// A car boards where a train originates or explicitly picks up, rides
+// forward in route order, alights where it explicitly sets out or
+// terminates; trains hand off wherever drop and pickup share a physical map
+// (same MIM family — the yardmaster classifies across yard identities) and
+// at resolved *IC* links. A flat 5-train search runs first; an operator-level
+// planner then covers what it cannot afford (see OPGRAPH below). Chains rank
+// by (starts on the origin's home road, fewest interchanges, fewest trains,
+// least geographic wandering) and collapse into corridors — one entry per
+// distinct railroad + transfer-map sequence. The TSAR text at each hand-off
+// is quoted verbatim: the graph proposes, the player judges.
 // freight capability set of a train, from the per-roster classification
 // table ("carload+intermodal" for mixed service). Multi rosters: shortline
 // operators haul carload, passenger is passenger.
@@ -2001,6 +2001,152 @@ function routeNow(){
   render();
 }
 
+// a car may ride a train between two of its yards only in route order
+const orderOk=(t,y1,y2)=>{
+  const i1=t.r.indexOf(y1), i2=t.r.indexOf(y2);
+  return (i1<0||i2<0)?true:i2>i1;
+};
+
+// ---- operator-level planner ----
+// The flat search caps at 5 trains, but realistic routings often need 6-8:
+// intermodal moves ramp-to-ramp with a shuttle at every hub, shortlines
+// relay through their families. Searching that deep unconstrained explodes,
+// so: plan railroad-to-railroad first over a small operator graph, then give
+// each operator its own leg search with a generous budget. An edge exists
+// where operator A can explicitly set out on a map where operator B
+// explicitly boards; *IC*-linked or agreement-backed edges beat mere shared
+// presence. The planner only ADDS chains — ranking treats them like any
+// others, so a planned Memphis relay simply outscores a flat-search detour.
+const OPGRAPH=(()=>{
+  const alight={}, board={}, mapsB={}, mapsA={}, icEv={};
+  const revenue=t=>{const cs=fclasses(t);
+    return status(t)==="active"&&!cs.includes("passenger")&&!cs.includes("engines")&&!cs.includes("nonrev");};
+  DATA.trains.forEach(t=>{
+    if(!revenue(t)) return;
+    const bs=new Set(t.wb.map(mapOf)); bs.add(mapOf(t.o));
+    const as=new Set(t.wa.map(mapOf)); if(t.d) as.add(mapOf(t.d));
+    bs.forEach(m=>{ (mapsB[m]=mapsB[m]||new Set()).add(t.op); (board[t.op]=board[t.op]||new Set()).add(m); });
+    as.forEach(m=>{ (mapsA[m]=mapsA[m]||new Set()).add(t.op); (alight[t.op]=alight[t.op]||new Set()).add(m); });
+  });
+  DATA.trains.forEach(t=>t.icl.forEach(uid=>{
+    const u=DATA.trains[uid];
+    if(u&&u.op!==t.op) icEv[t.op+">"+u.op+"@"+mapOf(u.o)]=(icEv[t.op+">"+u.op+"@"+mapOf(u.o)]||0)+1;
+  }));
+  const icPair=new Set(Object.keys(icEv).map(k=>k.split("@")[0]));
+  return {alight,board,mapsA,mapsB,icEv,icPair};
+})();
+
+// maps where a can hand a car to b, strongest evidence first, capped
+function exchangeMaps(a,b){
+  const A=OPGRAPH.alight[a], B=OPGRAPH.board[b], out=[];
+  if(!A||!B) return out;
+  const yset=IXY[a+"|"+b];
+  A.forEach(m=>{ if(!B.has(m)) return;
+    const ic=OPGRAPH.icEv[a+">"+b+"@"+m]||0;
+    const agr=(yset&&famIds(m).some(y=>yset.has(y)))?1:0;
+    out.push([m, ic*10+agr*5]);
+  });
+  out.sort((x,y)=>y[1]-x[1]);
+  return out.slice(0,12).map(x=>x[0]);
+}
+
+// cheapest operator sequences from any origin operator to any destination
+// operator. One interchange costs 100, +50 without agreement or *IC*
+// evidence, prohibitive for shortline pairs the agreement table disowns.
+function planPaths(srcOps,dstOps,K){
+  const dstSet=new Set(dstOps), MAXOPS=4;
+  const results=[], seenPath=new Set(), popped={};
+  const nbr={}, edgeMemo={};
+  const neighbors=a=>{
+    if(nbr[a]) return nbr[a];
+    const s=new Set();
+    (OPGRAPH.alight[a]||new Set()).forEach(m=>(OPGRAPH.mapsB[m]||new Set()).forEach(b=>{ if(b!==a) s.add(b); }));
+    return nbr[a]=[...s];
+  };
+  const edgeCost=(a,b)=>{
+    const k=a+">"+b;
+    if(k in edgeMemo) return edgeMemo[k];
+    let c=100;
+    if(!ixPartners(a,b)&&!OPGRAPH.icPair.has(a+">"+b)&&!OPGRAPH.icPair.has(b+">"+a)) c+=50;
+    if(!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))) c+=2000;
+    return edgeMemo[k]=c;
+  };
+  const pq=srcOps.map(o=>({cost:0,path:[o]}));
+  let guard=0;
+  while(pq.length&&results.length<K&&guard++<20000){
+    pq.sort((x,y)=>x.cost-y.cost);
+    const cur=pq.shift(), op=cur.path[cur.path.length-1];
+    if(dstSet.has(op)){
+      const key=cur.path.join(">");
+      if(!seenPath.has(key)){ seenPath.add(key); results.push(cur.path); }
+    }
+    if(cur.path.length>=MAXOPS) continue;
+    if((popped[op]=(popped[op]||0)+1)>K) continue;
+    neighbors(op).forEach(b=>{
+      if(cur.path.includes(b)) return;
+      pq.push({cost:cur.cost+edgeCost(op,b),path:cur.path.concat([b])});
+    });
+  }
+  return results;
+}
+
+// walk one plan: a staged search where stage s explores only trains of
+// plan[s], from the maps the previous stage delivered to, into the exchange
+// maps of the next hand-off (or the destination map on the last stage).
+function materialize(plan,src,dst,canCarry,seenChain,chains){
+  const dstMap=mapOf(dst), LEG_H=4, PER_MAP=3, CAP=250;
+  let frontier=new Map([[mapOf(src),[[]]]]);
+  for(let s=0;s<plan.length;s++){
+    const op=plan[s], last=s===plan.length-1;
+    const goals=last?new Set([dstMap]):new Set(exchangeMaps(op,plan[s+1]));
+    if(!goals.size) return;
+    const ix={};
+    DATA.trains.forEach(t=>{
+      if(t.op!==op||status(t)!=="active"||!canCarry(t)) return;
+      const seen=new Set(t.wb); seen.add(t.o);
+      seen.forEach(y=>{ if(y){const m=mapOf(y);(ix[m]=ix[m]||[]).push([t,y]);} });
+    });
+    const next=new Map();
+    const addNext=(m,path)=>{ const a=next.get(m)||[]; if(a.length<PER_MAP){ a.push(path); next.set(m,a); } };
+    // one sub-search per frontier map, each with its own visit budget —
+    // a shared budget lets the busiest hand-off (usually Chicago) starve
+    // quieter gateways like Memphis of the very trains they need
+    frontier.forEach((paths,fm)=>{
+      const q=[], visits={};
+      const push=(path,depth,t,y)=>{
+        const k=t.i+"@"+y, v=visits[k]||0;
+        if(v>=3) return; visits[k]=v+1; q.push([path.concat([[t,y]]),depth]);
+      };
+      (ix[fm]||[]).forEach(([t,y])=>paths.forEach(p=>{
+        if(!p.some(e=>e[0].i===t.i)) push(p,1,t,y);
+      }));
+      for(let qi=0;qi<q.length&&qi<8000;qi++){
+        const [path,depth]=q[qi], [t,by]=path[path.length-1];
+        const drops=t.d?[t.d]:[];
+        t.wa.forEach(y=>{ if(!drops.includes(y)) drops.push(y); });
+        for(const y of drops){
+          const m=mapOf(y);
+          if(m===mapOf(by)||!orderOk(t,by,y)) continue;
+          if(goals.has(m)){
+            if(last){
+              const key=path.map(p=>p[0].i).join(">");
+              if(!seenChain.has(key)&&chains.length<CAP){ seenChain.add(key); chains.push(path); }
+            } else addNext(m,path);
+          }
+        }
+        if(depth>=LEG_H) continue;
+        for(const y of drops){
+          const m=mapOf(y);
+          if(m===mapOf(by)||!orderOk(t,by,y)) continue;
+          for(const [u,yu] of (ix[m]||[])) if(!path.some(e=>e[0].i===u.i)) push(path,depth+1,u,yu);
+        }
+      }
+    });
+    frontier=next;
+    if(!last&&!frontier.size) return;
+  }
+}
+
 function findRoutes(src,dst,carType){
   // pool by capability: passenger, light power and non-revenue types never
   // carry a routed car; otherwise a train qualifies when its capability set
@@ -2008,7 +2154,11 @@ function findRoutes(src,dst,carType){
   const canCarry=t=>{
     const cs=fclasses(t);
     if(cs.includes("passenger")||cs.includes("engines")||cs.includes("nonrev")) return false;
-    return carType==="any" || cs.includes(carType);
+    if(carType==="any" || cs.includes(carType)) return true;
+    // locals, yard jobs and transfers are drayage, not line-haul service:
+    // they shuttle whatever the yardmaster hands them (a container reaches
+    // its ramp BECAUSE the transfer job exists), whatever their class says
+    return /\b(local|yard ?job|transfer|switch)\b/i.test(t.ty);
   };
   const srcMap=mapOf(src), dstMap=mapOf(dst);
   if(srcMap===dstMap) return {src,dst,homeRR:null,corridors:[],total:0,truncated:false};
@@ -2027,10 +2177,6 @@ function findRoutes(src,dst,carType){
   const arriveAt=t=>{
     if(t.d&&mapOf(t.d)===dstMap) return t.d;
     return t.wa.find(y=>mapOf(y)===dstMap);
-  };
-  const orderOk=(t,y1,y2)=>{
-    const i1=t.r.indexOf(y1), i2=t.r.indexOf(y2);
-    return (i1<0||i2<0)?true:i2>i1;
   };
   // Many different prefixes reach the same (train, boarding yard); exploring
   // each one re-walks an identical suffix. A few per state keeps corridor
@@ -2070,6 +2216,16 @@ function findRoutes(src,dst,carType){
       if(u&&inPool.has(u.i)&&!used.has(u.i)) push(q,path,u,u.o);
     }
   }
+
+  // operator-level pass: plan cheap operator sequences (origin operators ->
+  // operators that can deliver at the destination), then materialize each
+  // with per-operator leg budgets. Adds what the flat search couldn't reach.
+  const before=chains.length;
+  const srcOps=[...(OPGRAPH.mapsB[srcMap]||[])];
+  const dstOps=[...(OPGRAPH.mapsA[dstMap]||[])];
+  const plans=planPaths(srcOps,dstOps,6);
+  plans.forEach(p=>materialize(p,src,dst,canCarry,seenChain,chains));
+  const planned=chains.length-before;
 
   // Agreement-aware ranking: a hand-off at a known exchange point for that
   // pair is blessed (more so for a preferred partner); an op-change involving
@@ -2121,7 +2277,8 @@ function findRoutes(src,dst,carType){
     else { cur.n++; if(score(res)<score(cur.best)) cur.best=res; }
   });
   const corridors=Object.values(corr).sort((a,b)=>score(a.best)-score(b.best));
-  return {src,dst,homeRR,corridors,total:chains.length,truncated,score};
+  return {src,dst,homeRR,corridors,total:chains.length,truncated,score,
+          planned,plans:plans.map(p=>p.join("→"))};
 }
 
 function renderRoutes(){
@@ -2135,6 +2292,7 @@ function renderRoutes(){
     `candidate routings built only from where active trains originate, terminate and work. `+
     `The TSARs' own instructions are quoted at each hand-off — judge them before trusting a chain.`+
     (R.homeRR?` Home road at the origin looks like <b>${esc(R.homeRR)}</b>.`:"")+
+    (R.planned?` Operator-level planning (${R.plans.slice(0,4).map(esc).join(", ")}) added ${R.planned} deep chain(s).`:"")+
     (R.truncated?` <span class="warn">Search hit its size cap; distant results may be incomplete.</span>`:"");
   wrap.appendChild(hd);
   if(!R.corridors.length){
