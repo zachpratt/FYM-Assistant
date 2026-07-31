@@ -80,11 +80,14 @@ build diffs against it.
 
 ## Repo boundaries
 
-- `TSARs/` is **gitignored deliberately** — the game's data, not ours to
-  redistribute. It must exist locally to build. Never commit it or work around
-  the ignore.
-- `docs/` and `locations.csv` are **committed deliberately** (Pages serves
-  `docs/`; the name store must persist across updates). Don't gitignore them.
+- `TSARs/` and `sample_yard_data/` are **gitignored deliberately** — the
+  game's data, not ours to redistribute. TSARs/ must exist locally to build.
+  Never commit them or work around the ignore.
+- `docs/`, `locations.csv` and `mims.csv` are **committed deliberately**
+  (Pages serves `docs/`; the name store and the MIM-family table must persist
+  across updates). Don't gitignore them. `mims.csv` is derived from the
+  game's `.yrd` map files by `mim_import.py` — rerun only when maps change
+  (rare); the build merely reads it.
 - Game screenshots for the future map-ID extraction effort should also stay
   uncommitted.
 
