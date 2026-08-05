@@ -66,7 +66,7 @@ Both rules were confirmed against the *IC* cross-references, which spell out the
 target's full symbol.
 """
 
-import argparse, csv, glob, json, os, re, sys
+import argparse, csv, glob, hashlib, json, os, re, sys
 from collections import Counter, defaultdict
 from datetime import date, datetime
 
@@ -481,6 +481,7 @@ def dump_payload(payload):
     builds delta-compress instead of storing a whole new copy each time."""
     j = lambda o: json.dumps(o, separators=(',', ':'), ensure_ascii=False)
     out = ['{"gen":' + j(payload['gen']) + ',',
+           '"upd":' + j(payload.get('upd')) + ',',
            '"rrs":[', ',\n'.join(j(r) for r in payload['rrs']), '],',
            '"locs":[', ',\n'.join(j(l) for l in payload['locs']), '],',
            '"mims":[', ',\n'.join(j(f) for f in payload.get('mims', [])), '],',
@@ -492,9 +493,61 @@ def dump_payload(payload):
     return '\n'.join(out).replace('</', '<\\/')
 
 
+# Per-train fingerprints let the next build say WHICH trains a TSAR update
+# touched, not just how the counts moved. The key is the train's content, not
+# its position: section indexes shift when the game inserts a train (that is
+# why a third of the *IC* pointers are stale), and symbols alone are not
+# unique (BNSF alone reuses ~2,600 of them for day-variants), so the diff is
+# a multiset match on "<content-hash> <symbol>" strings.
+FP_LIST_CAP = 500   # symbols kept per added/removed/changed list; counts stay exact
+
+
+def roster_fingerprints(railroads):
+    fps = {}
+    for rr in railroads:
+        fps[rr['code']] = sorted(
+            hashlib.sha1(json.dumps(
+                [t['ty'], t['s'], t['nm'], t['o'], t['d'], t['r'],
+                 t['f'], t['x'], t['raw']],
+                ensure_ascii=False).encode('utf-8')).hexdigest()[:10]
+            + ' ' + full_symbol(rr, t)
+            for t in rr['trains'])
+    return fps
+
+
+def train_changes(old, new):
+    """Per-railroad added/removed/changed symbol lists vs the previous build's
+    fingerprints. A vanished+appeared pair sharing a symbol is reported as one
+    'changed' train. Returns None when the previous report predates
+    fingerprints (the diff starts working one build later)."""
+    oldfp = (old or {}).get('fingerprints')
+    if oldfp is None:
+        return None
+    out = []
+    for code in sorted(new['fingerprints']):
+        newlist = new['fingerprints'][code]
+        if code not in oldfp:
+            out.append({'code': code, 'new_roster': len(newlist)})
+            continue
+        o, n = Counter(oldfp[code]), Counter(newlist)
+        gone = Counter(s.split(' ', 1)[1] for s in (o - n).elements())
+        came = Counter(s.split(' ', 1)[1] for s in (n - o).elements())
+        changed = sorted((gone & came).elements())
+        added = sorted((came - gone).elements())
+        removed = sorted((gone - came).elements())
+        if added or removed or changed:
+            out.append({'code': code,
+                        'counts': [len(added), len(removed), len(changed)],
+                        'added': added[:FP_LIST_CAP],
+                        'removed': removed[:FP_LIST_CAP],
+                        'changed': changed[:FP_LIST_CAP]})
+    return out
+
+
 def collect_report(payload, railroads, ic_total, ic_linked, store):
     named = sum(1 for L in payload['locs'] if L['nm'])
     return {
+        'fingerprints': roster_fingerprints(railroads),
         'built':  datetime.now().replace(microsecond=0).isoformat(),
         'trains': len(payload['trains']),
         'locations': {'total': len(payload['locs']), 'named': named,
@@ -511,7 +564,7 @@ def collect_report(payload, railroads, ic_total, ic_linked, store):
     }
 
 
-def diff_report(old, new):
+def diff_report(old, new, changes=None):
     """Print what changed since the previous build. This is the line that catches
     a half-downloaded .ini: the roster count falls off a cliff and says so."""
     if not old:
@@ -534,6 +587,26 @@ def diff_report(old, new):
             warn = "   <-- check the source file" if was and now / was < 0.5 else ""
             rows.append(f"    {code:10s} {was:6,} -> {now:6,}  ({d:+,}){warn}")
     print('\n'.join(rows) if rows else "    no change to any roster's train count")
+
+    # Train-level detail: which trains, not just how many. Content-only edits
+    # (~) are invisible to the count rows above, so this is not redundant.
+    if changes is None:
+        print("    (per-train diff starts with the next build — fingerprints "
+              "recorded now)")
+    else:
+        for ch in changes:
+            if 'new_roster' in ch:
+                continue  # the count rows already announce a new roster
+            a, r, c = ch['counts']
+            tally = ' '.join(p for p, k in
+                             ((f"+{a}", a), (f"-{r}", r), (f"~{c}", c)) if k)
+            line = f"    {ch['code']:10s} trains {tally}"
+            syms = ([f"+{s}" for s in ch['added']]
+                    + [f"-{s}" for s in ch['removed']]
+                    + [f"~{s}" for s in ch['changed']])
+            if len(syms) <= 12:
+                line += ':  ' + ', '.join(syms)
+            print(line)
 
     ow, nw = old.get('locations', {}).get('named'), new['locations']['named']
     if ow is not None and ow != nw:
@@ -621,7 +694,7 @@ def load_geo(path, names, anom):
     return rows
 
 
-def build(files, out, title, loc_path, use_cache=True):
+def build(files, out, title, loc_path, use_cache=True, subset=False):
     anom = Anomalies()
     railroads = []
     for f in files:
@@ -648,14 +721,7 @@ def build(files, out, title, loc_path, use_cache=True):
     if payload['geo']:
         print(f"  geography: {len(payload['geo'])} located identities")
 
-    outdir = os.path.dirname(os.path.abspath(out))
-    if outdir and not os.path.isdir(outdir):
-        os.makedirs(outdir, exist_ok=True)
-    with open(out, 'w', encoding='utf-8') as fh:
-        fh.write(HTML_TEMPLATE.replace('__TITLE__', title)
-                              .replace('__DATA__', dump_payload(payload)))
-
-    report_path = os.path.join(os.path.dirname(out) or '.', REPORT_NAME)
+    report_path = os.path.join(os.path.dirname(os.path.abspath(out)), REPORT_NAME)
     old = None
     if os.path.isfile(report_path):
         try:
@@ -664,6 +730,28 @@ def build(files, out, title, loc_path, use_cache=True):
         except (OSError, ValueError):
             pass  # unreadable previous report is not worth failing a build over
     new = collect_report(payload, railroads, ic_total, ic_linked, store)
+    if old and subset:
+        # An --only build must not erase the fingerprints of rosters it did
+        # not rebuild, or the next full build would report them all as new.
+        # A full build does no such merge, so a roster whose file is really
+        # gone drops out of the store instead of lingering.
+        for code, fp in (old.get('fingerprints') or {}).items():
+            new['fingerprints'].setdefault(code, fp)
+    changes = train_changes(old, new)
+    if changes:
+        new['last_change'] = {'date': date.today().isoformat(),
+                              'railroads': changes}
+    elif old and old.get('last_change'):
+        # no data change this build — the page keeps showing the last real one
+        new['last_change'] = old['last_change']
+    payload['upd'] = new.get('last_change')
+
+    outdir = os.path.dirname(os.path.abspath(out))
+    if outdir and not os.path.isdir(outdir):
+        os.makedirs(outdir, exist_ok=True)
+    with open(out, 'w', encoding='utf-8') as fh:
+        fh.write(HTML_TEMPLATE.replace('__TITLE__', title)
+                              .replace('__DATA__', dump_payload(payload)))
 
     if use_cache:
         save_location_store(loc_path, store)
@@ -685,7 +773,7 @@ def build(files, out, title, loc_path, use_cache=True):
         anom.add(f"only {rate:.0%} of interchange markers resolve — the game may "
                  f"have renumbered its rosters (RR_REGISTRY 'idx' values)")
 
-    diff_report(old, new)
+    diff_report(old, new, changes)
     with open(report_path, 'w', encoding='utf-8') as fh:
         json.dump(new, fh, indent=1, sort_keys=True)
         fh.write('\n')
@@ -767,6 +855,16 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .clearbtn:hover{color:var(--ink)}
 
 /* ---- location banner ---- */
+/* ---- last-update banner ---- */
+.updbar{margin:6px 20px;font-size:12px;color:var(--muted)}
+.updbar .rrcode{color:var(--ink);font-weight:600}
+.updpanel{display:none;margin-top:6px;padding:10px 14px;border:1px solid var(--line);
+  border-radius:8px;background:var(--panel)}
+.updpanel.open{display:block}
+.updpanel h5{margin:6px 0 3px;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim)}
+.updpanel .syms{display:flex;flex-wrap:wrap;gap:4px 12px;font-family:var(--mono);font-size:12px}
+.updpanel .gone{color:var(--dim);text-decoration:line-through}
+
 .locbar{margin:0 20px 6px;padding:10px 14px;border:1px solid var(--line);border-left:3px solid var(--accent);
   border-radius:8px;background:var(--panel);display:none;align-items:center;gap:12px;flex-wrap:wrap}
 .locbar.show{display:flex}
@@ -937,6 +1035,12 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
     </div>
   </div>
 </header>
+
+<div class="updbar" id="updbar" style="display:none">
+  <span id="updline"></span>
+  <button class="jump" id="updmore" style="display:none">details ▸</button>
+  <div class="updpanel" id="updpanel"></div>
+</div>
 
 <div class="locbar" id="locbar"></div>
 <main class="wrap" id="wrap"></main>
@@ -1467,6 +1571,56 @@ function gotoLoc(id){
 
 function debounce(fn,ms){let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>fn(...a),ms);};}
 
+// ---- last-update banner ----
+// DATA.upd is stamped by the build only when a TSAR update actually changed
+// trains, and carried forward unchanged across data-identical rebuilds, so
+// its date reads "rosters last changed", not "page last regenerated".
+(function(){
+  const bar=document.getElementById("updbar"), line=document.getElementById("updline"),
+        more=document.getElementById("updmore"), panel=document.getElementById("updpanel");
+  bar.style.display="";
+  const u=DATA.upd;
+  if(!u){ line.textContent="Site built "+DATA.gen+"."; return; }
+  const tally=ch=>"new_roster" in ch ? "new roster ("+ch.new_roster+" trains)"
+    : [["+",ch.counts[0]],["−",ch.counts[1]],["~",ch.counts[2]]]
+      .filter(p=>p[1]).map(p=>p[0]+p[1]).join(" ");
+  line.innerHTML="Rosters updated <b>"+esc(u.date)+"</b> — "+
+    u.railroads.map(ch=>`<span class="rrcode">${esc(ch.code)}</span> ${tally(ch)}`).join(" · ");
+  more.style.display="";
+  more.onclick=()=>{
+    const open=panel.classList.toggle("open");
+    more.textContent=open?"details ▾":"details ▸";
+    if(open && !panel.dataset.built){ panel.dataset.built="1"; buildUpdPanel(); }
+  };
+  function buildUpdPanel(){
+    // symbol -> first matching train, per railroad, so list entries can jump
+    // to their card. Duplicate symbols (day-variants) land on the first one.
+    const byRRSym={};
+    DATA.trains.forEach(t=>{ const k=t.rr+"|"+t.fs; if(!(k in byRRSym)) byRRSym[k]=t.i; });
+    const symEl=(rr,sym,mark,cls)=>{
+      const uid=byRRSym[rr+"|"+sym];
+      return uid===undefined
+        ? `<span class="${cls||""}">${mark}${esc(sym)}</span>`
+        : `<button class="jump" data-jump="${uid}">${mark}${esc(sym)}</button>`;
+    };
+    panel.innerHTML=u.railroads.map(ch=>{
+      if("new_roster" in ch)
+        return `<h5>${esc(ch.code)} — new roster, ${ch.new_roster} trains</h5>`;
+      const parts=ch.added.map(s=>symEl(ch.code,s,"+"))
+        .concat(ch.removed.map(s=>`<span class="gone">${esc(s)}</span>`))
+        .concat(ch.changed.map(s=>symEl(ch.code,s,"~")));
+      const shown=ch.added.length+ch.removed.length+ch.changed.length,
+            total=ch.counts[0]+ch.counts[1]+ch.counts[2];
+      if(total>shown) parts.push(`<span>…and ${total-shown} more</span>`);
+      return `<h5>${esc(ch.code)} — ${tally(ch)} (added / <span class="gone">removed</span> / ~changed)</h5>`+
+             `<div class="syms">${parts.join("")}</div>`;
+    }).join("");
+    panel.querySelectorAll("[data-jump]").forEach(b=>{
+      b.onclick=e=>{ e.stopPropagation(); jumpTo(+b.dataset.jump); };
+    });
+  }
+})();
+
 render();
 </script>
 </body>
@@ -1494,7 +1648,11 @@ def main():
     if not files:
         if not os.path.isdir(a.folder):
             sys.exit(f"no files given and folder not found: {a.folder}")
-        files = sorted(glob.glob(os.path.join(a.folder, '*.ini')))
+        # The game ships a TSAR_Tutorial.ini with dummy trains; it is not a
+        # real roster, so folder discovery skips it (naming it explicitly on
+        # the command line still builds it).
+        files = sorted(f for f in glob.glob(os.path.join(a.folder, '*.ini'))
+                       if railroad_from_filename(f) != 'TUTORIAL')
         if not files:
             sys.exit(f"no .ini files in {a.folder}")
     for f in files:
@@ -1508,7 +1666,8 @@ def main():
             sys.exit(f"--only {a.only} matched none of the available files")
 
     print(f"Building train site from {len(files)} file(s)…")
-    n = build(files, a.out, a.title, a.locations, use_cache=not a.no_location_cache)
+    n = build(files, a.out, a.title, a.locations,
+              use_cache=not a.no_location_cache, subset=bool(a.only))
     if n and a.strict:
         sys.exit(f"\n{n} unrecognised construct(s) in the input; --strict, so failing.")
 
