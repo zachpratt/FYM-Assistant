@@ -3011,9 +3011,19 @@ id,name,source
 4011,Klamath Falls Yard UP,scraped
 4012,Klamath Falls White Line Yard BNSF,scraped
 4014,Gilchrist Jct,scraped
+4015,"Alturas, CA",manual
 4016,Dorris,scraped
 4017,Clear Creek Jct.,scraped
 4018,South St. Paul Q Jct. UP,scraped
 4020,Richmond,scraped
 4022,Dakota City,scraped
+4023,"Brandon CN, MB",manual
+4024,"Brandon Koch Spur CPKC, MB",manual
+4025,"Brandon South Spur CPKC, MB",manual
+4026,"Brandon East Spur CN, MB",manual
+4027,"Maryfield, SK",manual
 4028,Brandon Yard CPKC,scraped
+4029,"Sylvite Potash Mine CPKC, SK",manual
+4030,"Killarney, MB",manual
+4031,"Hargrave, MB",manual
+4032,"Carberry, MB",manual
