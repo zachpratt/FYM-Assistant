@@ -1274,7 +1274,7 @@ id,name,source
 2273,"White River Junction, VT",map
 2274,"Bellows Falls, VT",map
 2275,"Suffolk Kilby Yard, VA",map
-2276,"Suffolk Wilroy Industr. Park, VA",map
+2276,"Suffolk Wilroy Ind. Park, VA",map
 2277,"Suffolk APM Terminals, VA",map
 2278,"New Wales, FL",map
 2279,"Ridgewood, FL",map
@@ -3014,16 +3014,18 @@ id,name,source
 4015,"Alturas, CA",manual
 4016,Dorris,scraped
 4017,Clear Creek Jct.,scraped
-4018,South St. Paul Q Jct. UP,scraped
-4020,Richmond,scraped
-4022,Dakota City,scraped
-4023,"Brandon CN, MB",manual
-4024,"Brandon Koch Spur CPKC, MB",manual
-4025,"Brandon South Spur CPKC, MB",manual
-4026,"Brandon East Spur CN, MB",manual
-4027,"Maryfield, SK",manual
-4028,Brandon Yard CPKC,scraped
-4029,"Sylvite Potash Mine CPKC, SK",manual
-4030,"Killarney, MB",manual
-4031,"Hargrave, MB",manual
-4032,"Carberry, MB",manual
+4018,"South St. Paul Q Jct. UP, MN",map
+4019,"South St. Paul Q Jct TCWR, MN",map
+4020,"Richmond UP, CA",map
+4021,"South Sioux City, NE",map
+4022,"Dakota City, NE",map
+4023,"Brandon Yard CN, MB",map
+4024,"Brandon Koch Spur, MB",map
+4025,"Brandon South Spur, MB",map
+4026,"Brandon East Industrial Zone, MB",map
+4027,"Maryfield, SK",map
+4028,"Brandon Yard CPKC, MB",map
+4029,"Sylvite, SK",map
+4030,"Killarney, MB",map
+4031,"Hargrave, MB",map
+4032,"Carberry, MB",map
