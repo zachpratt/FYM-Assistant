@@ -1,5 +1,5 @@
 {
- "built": "2026-08-06T18:16:45",
+ "built": "2026-08-06T18:19:28",
  "fingerprints": {
   "BNSF": [
    "001e4bf597 H-RRBRIC1-##",
@@ -16686,8 +16686,8 @@
   ]
  },
  "locations": {
-  "manual": 1,
-  "map": 3019,
+  "manual": 0,
+  "map": 3027,
   "named": 2849,
   "total": 2849
  },
