@@ -162,9 +162,9 @@ FREIGHT_CLASS = {
         'Roadswitchers':                          'carload',
         'Transfer Moves':                         'carload',
         'Uniform Bulk':                           'unit',
-        'Unit Bulk':                              'unit',
         'Unit Coal':                              'unit',
         'Unit Grain':                             'unit',
+        'Unit Potash/Phosphate':                  'unit',
         'Unit Sand/Sulphur':                      'unit',
         'Yard Jobs':                              'carload',
     },
@@ -769,8 +769,11 @@ def dump_payload(payload):
 # vocabulary: unclassified work-looking notes are stored in the build report
 # and diffed on the next build, so a TSAR update that phrases car work in a
 # new way is caught by `make site`, not by a silently missing route.
-PICKUP_RE = re.compile(r'\b(pi+cks?[\s-]?up|lift|add)\b', re.I)
-SETOUT_RE = re.compile(r'\b(set[\s-]?(?:out|off)|drop|deliver)\b', re.I)
+PICKUP_RE = re.compile(r'\b(pi+cks?[\s-]?up|lift|add|takes?\s+outbound)\b', re.I)
+SETOUT_RE = re.compile(
+    r'\b(set[\s-]?(?:out|off)|drop|deliver)\b'
+    r'|^\s*cars?\s+for\b',  # anchored: bare "Cars for X" delivers; mid-text
+    re.I)                   # "pick up cars for Y" must stay a pickup only
 SERVICE_NOTE_RE = re.compile(
     r'^\s*(train\s+)?(service|fuel|crew)( ?(point|stop|change|check))?s?\W*$', re.I)
 WORKISH_RE = re.compile(r'\b(block|cars?|traffic|loads?|empties|interchange)\b', re.I)
@@ -1863,8 +1866,8 @@ const MI=3959, RAD=Math.PI/180;
 // set out on arrival. Origin (board) and destination (alight) stay implicit.
 // Keep in sync with PICKUP_RE/SETOUT_RE in the Python build, whose report
 // audit is the drift alarm for this vocabulary.
-const PICKUP_RE=/\b(pi+cks?[\s-]?up|lift|add)\b/i,          // "picks up", "Piick Up" typo
-      SETOUT_RE=/\b(set[\s-]?(?:out|off)|drop|deliver)\b/i; // "Set Off" is NS house style
+const PICKUP_RE=/\b(pi+cks?[\s-]?up|lift|add|takes?\s+outbound)\b/i, // "picks up", "Piick Up" typo, "takes outbound traffic"
+      SETOUT_RE=/\b(set[\s-]?(?:out|off)|drop|deliver)\b|^\s*cars?\s+for\b/i; // "Set Off" is NS house style; anchored "Cars for X" delivers
 DATA.trains.forEach(t=>{
   t.wr=t.ww.filter(y=>{
     if(y===t.o||y===t.d||t.r.includes(y)) return true;

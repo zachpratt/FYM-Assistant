@@ -1187,7 +1187,7 @@ id,name,source
 2186,"Welcome UP, MN",map
 2187,"Winnebago, MN",map
 2188,"Louisville Osborn Yard, KY",map
-2189,Old Town,scraped
+2189,New Martinsville Brooklyn Jct. Yard,scraped
 2190,"Terre Haute Ft. Harrison Industrial Park, IN",map
 2191,"Terre Haute Hulman Yard, IN",map
 2192,"Kansas City 12th St. Yard, MO",map
@@ -3016,7 +3016,8 @@ id,name,source
 4016,"Dorris, CA",map
 4017,"Clear Creek Jct, CA",map
 4018,South St. Paul Q Jct. UP,scraped
-4020,Richmond,scraped
+4020,Richmond UP,scraped
+4021,South Sioux City,scraped
 4022,Dakota City,scraped
 4023,"Brandon CN, MB",map
 4024,"Brandon Koch Spur, MB",map
@@ -3028,3 +3029,4 @@ id,name,source
 4030,"Hargrave, MB",map
 4031,"Broadview, SK",map
 4032,"Carberry, MB",map
+4034,Moundsville,scraped
