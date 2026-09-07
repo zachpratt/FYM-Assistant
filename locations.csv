@@ -1187,7 +1187,7 @@ id,name,source
 2186,"Welcome UP, MN",map
 2187,"Winnebago, MN",map
 2188,"Louisville Osborn Yard, KY",map
-2189,Old Town,scraped
+2189,New Martinsville Brooklyn Jct. Yard,scraped
 2190,"Terre Haute Ft. Harrison Industrial Park, IN",map
 2191,"Terre Haute Hulman Yard, IN",map
 2192,"Kansas City 12th St. Yard, MO",map
@@ -3030,3 +3030,4 @@ id,name,source
 4030,"Killarney, MB",map
 4031,"Hargrave, MB",map
 4032,"Carberry, MB",map
+4034,Moundsville,scraped
