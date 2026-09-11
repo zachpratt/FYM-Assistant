@@ -85,6 +85,35 @@ the payload regardless and are worth keeping current:
   in sync); unclassified work-looking notes are stored in the build report
   and only NEW ones are printed on the next build.
 
+## Player folder layer (client-side, read-only)
+
+"Open my FYM folder" in the header lets a visitor point the page at their
+own Freight Yard Manager folder. Chrome/Edge use `showDirectoryPicker`
+with the handle kept in IndexedDB (`fym` / `handles` / `game`); other
+browsers get a `webkitdirectory` input. The page only ever reads three
+things, all parsed in JS inside `HTML_TEMPLATE` (section "player folder"):
+
+- `FYMMyMaps.ini` — `<id>:<0|1>` per map; flag 1 = assigned to this
+  player = **"my yards"** (Zach's ruling; a `.wag` also exists for yards he
+  merely ran trains through, so never key "mine" on `.wag` presence).
+  Assigned yards are auto-added to favorites. The file enumerates every
+  map id the game knows, so diffing it against `locations.csv` is the
+  new-id alarm.
+- `FYMLocoCars6.ini` — `TypeID=` / `Name=` blocks, the car type names.
+- `yards/<id>.wag` — the yard's inventory: `[TrainNumber=n]` cut blocks
+  (`TrainName=`, `TrainCreator=`) each followed by `[CarID=n]` car blocks
+  (`CarName=`, `TypeID=`, `TypeGroup=` F/E, `DestinationID=` where field
+  1 is the next yard, `IsLoaded=` 7 loaded / 6 empty, then `StartHistory`
+  rows `yard#code#mm/dd/yyyy#train#player#n`; codes 10 arrived, 20
+  departed, 40 loaded, 41 unloaded, 30/50/60 service and shop, 00 created).
+  `parseWag` must reproduce the Python-derived figures for Fostoria 1091
+  (714 cars, 46 cuts, 303 loaded, 385 empty, 194 staying, 107 idle > 1 y).
+
+Never write into the folder from the page. The native folder dialog cannot
+be automated: verify the flow by fetching files from `game_data/` while
+serving the repo root and feeding a `Map` of `File`s to `loadGame()`, then
+have Zach click the real button once.
+
 ## Domain rules that look like bugs but aren't
 
 - **Symbols are verbatim by decision.** Displayed symbol = `[TypeInfo prefix] +

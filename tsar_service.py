@@ -1238,6 +1238,34 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .dpanel{background:var(--panel);border:1px solid var(--line);border-radius:10px;
   max-width:1180px;margin:9px auto;padding:14px 18px}
 .dpanel h4{margin:14px 0 7px;font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:var(--dim)}
+/* ---- player folder: header button, note, intro modal, yard inventory ---- */
+.gamewrap{display:inline-flex;align-items:center;gap:4px}
+.hbtn{background:var(--chip);border:1px solid var(--line);border-radius:7px;color:var(--ink);
+  padding:8px 12px;cursor:pointer;font-size:13px;white-space:nowrap}
+.hbtn:hover{border-color:var(--accent)}
+.hbtn.on{border-color:var(--accent);color:var(--accent)}
+.hbtn.help{padding:8px 11px;font-weight:700}
+.gamenote{margin:6px 20px;font-size:12px;color:var(--future)}
+.intro{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;display:none;
+  align-items:center;justify-content:center;padding:20px}
+.intro.open{display:flex}
+.introcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;max-width:600px;
+  padding:20px 24px;font-size:14px;line-height:1.5;color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.introcard h3{margin:0 0 10px;font-size:16px}
+.introcard p{margin:8px 0}
+.introcard .gobtn{margin-top:8px}
+.mypanel .myrow{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.stale{color:var(--future)}
+.ygh{margin:14px 0 4px;font-size:13px;font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.yrow{display:grid;grid-template-columns:140px minmax(120px,1fr) 24px minmax(140px,1fr) 56px;gap:8px;
+  padding:4px 0;font-size:13px;border-top:1px solid var(--line);align-items:center}
+.yrow .ycar{font-family:var(--mono);color:var(--ink)}
+.yrow .ytype{color:var(--muted)}
+.yrow .ydwell{text-align:right;font-family:var(--mono);font-size:12px}
+.yrow.stale .ydwell{color:var(--future);font-weight:600}
+.lbadge{display:inline-block;width:20px;text-align:center;border-radius:4px;font-size:11px;font-weight:700;
+  padding:1px 0;background:var(--chip);color:var(--muted)}
+.lbadge.ld-loaded{background:var(--active);color:#0e1116}
 .dpanel h4:first-child{margin-top:0}
 .dpanel .drow{padding:3px 0;font-size:13px}
 .dpanel .dim{color:var(--muted)}
@@ -1373,6 +1401,9 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
   .node{padding:8px 10px;font-size:13px}
   .sib{padding:7px 12px;font-size:13px}
   .locbar{margin:0 8px 6px;padding:8px 10px;gap:8px}
+  .yrow{grid-template-columns:1fr auto auto}
+  .yrow .ytype{display:none}
+  .yrow .ydest{grid-column:1/-1}
   .locbar .seg button{padding:8px 10px}
   .locnote{display:none}
   .wrap{padding:8px 8px 60px}
@@ -1396,6 +1427,12 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
       <span class="sub">find a train by location, type &amp; railroad</span>
     </div>
     <button class="fbtn" id="fbtn">Filters</button>
+    <span class="gamewrap">
+      <button class="hbtn" id="gamebtn">Open my FYM folder</button>
+      <button class="clearbtn" id="gameoff" title="forget this folder" style="display:none">disconnect ✕</button>
+      <input type="file" id="gamedir" webkitdirectory style="display:none">
+    </span>
+    <button class="hbtn help" id="helpbtn" title="how this site works">?</button>
     <div class="count" id="count"></div>
   </div>
   <div class="controls">
@@ -1433,6 +1470,26 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
     </div>
   </div>
 </header>
+
+<div class="gamenote" id="gamenote" style="display:none"></div>
+<div class="intro" id="intro">
+  <div class="introcard">
+    <h3>How this site works</h3>
+    <p><b>Find trains.</b> Every train in the game's TSAR rosters is here. Pick a <b>Location</b> to see
+      the trains that originate, terminate or work there, then narrow by railroad, type, symbol or status.
+      Expand a card for the route and the yardmaster's instructions; an interchange link jumps to the
+      connecting train.</p>
+    <p><b>Favorites.</b> Click ☆ next to a yard's name to save it. Saved yards live in the Favorites
+      dropdown and float to the top of the location list. They are stored in this browser only.</p>
+    <p><b>Route a car (beta).</b> The toggle under the update line opens a from/to search that proposes
+      train chains built only from what the rosters say.</p>
+    <p><b>Your own yards (optional).</b> <b>Open my FYM folder</b> lets this page read your Freight Yard
+      Manager folder: it lists the yards assigned to you and every car sitting in them, where each is
+      going and how long it has waited. Read-only, and nothing leaves your browser. Chrome and Edge
+      remember the folder; other browsers ask each visit.</p>
+    <button class="gobtn" id="introok">Got it</button>
+  </div>
+</div>
 
 <div class="updbar" id="updbar" style="display:none">
   <span id="updline"></span>
@@ -1795,6 +1852,8 @@ const locbar=document.getElementById("locbar");
 
 function render(reset=true){
   if(rstate.res){ renderRoutes(); return; }
+  // the inventory view only exists for a yard whose .wag we can read
+  if(state.view==="myyard" && !(state.loc && GAME.visited.has(state.loc))) state.view="cards";
   const base=filteredBase();
   if(reset) syncTypes(base);
   const list = state.type ? base.filter(t=>t.ty===state.type) : base;
@@ -1825,6 +1884,7 @@ function render(reset=true){
       `</span>`+
       `<span class="seg" id="viewseg">`+
         [["cards","Cards"],["sheet",NARROW.matches?"Sheet":"Yard sheet"],["details","Details"]]
+          .concat(GAME.visited.has(L)?[["myyard",GAME.my.has(L)?"My yard":"Visited yard"]]:[])
           .map(([v,lb])=>`<button data-v="${v}"${v===state.view?' class="on"':''}>${lb}</button>`).join("")+
       `</span>`+
       `<span class="locnote" style="color:var(--muted)">${list.length} train(s) ${verb}</span>`;
@@ -1856,6 +1916,17 @@ function render(reset=true){
     wrap.appendChild(detailsPanel(state.loc));
     return;
   }
+  // inventory view: the cars sitting in this yard, from the player's own folder
+  if(state.loc && state.view==="myyard"){
+    wrap.innerHTML="";
+    if(!GAME.wags[state.loc]){
+      wrap.innerHTML=`<div class="empty">Reading this yard's inventory…</div>`;
+      wagFor(state.loc).then(()=>{ if(state.view==="myyard") render(); });
+      return;
+    }
+    wrap.appendChild(yardPanel(state.loc));
+    return;
+  }
 
   // yard sheet: a compact switchlist of the same filtered set, one row per
   // train with its full instruction text at this yard. Only meaningful with a
@@ -1864,6 +1935,8 @@ function render(reset=true){
   if(sheet) list.sort((a,b)=>roleRank(a)-roleRank(b) || (a.fs<b.fs?-1:a.fs>b.fs?1:0));
 
   if(reset) wrap.innerHTML="";
+  // landing state with a folder connected: the player's yards come first
+  if(reset && !state.loc && GAME.kind) wrap.appendChild(myYardsPanel());
   const slice=list.slice(state.shown, state.shown+PAGE);
 
   if(list.length===0 && reset){
@@ -2701,6 +2774,245 @@ function corridorCard(c){
 })();
 
 loadFavs(); paintFavs();
+
+// ---- player folder (read-only; everything stays in this browser) ----
+// Chrome/Edge: showDirectoryPicker gives a handle we can keep in IndexedDB and
+// re-open next visit. Elsewhere: a directory <input>, which lists the folder's
+// files lazily (the 5 GB of map images are never read). Either way the page
+// only ever reads FYMMyMaps.ini (which maps are assigned to this player),
+// FYMLocoCars6.ini (car type names) and yards/<id>.wag (a yard's inventory).
+const STALE_DAYS=365;
+const GAME={kind:null, root:null, files:null, stored:null, my:new Set(), visited:new Set(),
+            types:{}, wags:{}, saved:{}};
+const HAS_PICKER=!!window.showDirectoryPicker;
+const gamebtn=document.getElementById("gamebtn"), gameoff=document.getElementById("gameoff"),
+      gamedir=document.getElementById("gamedir"), gamenote=document.getElementById("gamenote");
+
+function idb(fn){
+  return new Promise(res=>{
+    try{
+      const r=indexedDB.open("fym",1);
+      r.onupgradeneeded=()=>r.result.createObjectStore("handles");
+      r.onerror=()=>res(null);
+      r.onsuccess=()=>{ try{ fn(r.result,res); }catch(e){ res(null); } };
+    }catch(e){ res(null); }
+  });
+}
+const idbGet=key=>idb((db,res)=>{ const g=db.transaction("handles").objectStore("handles").get(key);
+  g.onsuccess=()=>res(g.result||null); g.onerror=()=>res(null); });
+const idbSet=(key,val)=>idb((db,res)=>{ const t=db.transaction("handles","readwrite");
+  t.objectStore("handles").put(val,key); t.oncomplete=()=>res(true); t.onerror=()=>res(null); });
+const idbDel=key=>idb((db,res)=>{ const t=db.transaction("handles","readwrite");
+  t.objectStore("handles").delete(key); t.oncomplete=()=>res(true); t.onerror=()=>res(null); });
+
+let noteTimer;
+function gameNote(msg){
+  gamenote.textContent=msg; gamenote.style.display=msg?"":"none";
+  clearTimeout(noteTimer); if(msg) noteTimer=setTimeout(()=>{ gamenote.style.display="none"; },8000);
+}
+
+async function gameText(path){
+  let f;
+  if(GAME.kind==="handle"){
+    const parts=path.split("/"); let d=GAME.root;
+    for(const p of parts.slice(0,-1)) d=await d.getDirectoryHandle(p);
+    f=await (await d.getFileHandle(parts[parts.length-1])).getFile();
+  } else {
+    f=GAME.files.get(path); if(!f) throw new Error("missing "+path);
+  }
+  GAME.saved[path]=f.lastModified;
+  return await f.text();
+}
+async function gameList(dir){
+  if(GAME.kind==="handle"){
+    const d=await GAME.root.getDirectoryHandle(dir), out=[];
+    for await (const [name,h] of d.entries()) if(h.kind==="file") out.push(name);
+    return out;
+  }
+  const pre=dir+"/";
+  return [...GAME.files.keys()].filter(k=>k.startsWith(pre)&&!k.slice(pre.length).includes("/")).map(k=>k.slice(pre.length));
+}
+
+// .wag: track state, then [TrainNumber=n] cut blocks each followed by its
+// [CarID=n] car blocks. Field 1 of DestinationID is the car's next yard;
+// IsLoaded 7 = loaded, 6 = empty; history rows are yard#code#date#train#player#n.
+const EV={"00":"created","10":"arrived","20":"departed","30":"serviced","40":"loaded",
+          "41":"unloaded","50":"repaired","60":"to shop","70":"note"};
+function parseWag(text){
+  const lines=text.split(/\r?\n/), res={version:lines[0]||"", cuts:[], cars:[]};
+  let cut=null, car=null, inHist=false;
+  for(const l of lines){
+    if(l.startsWith("[TrainNumber=")){ cut={name:"",creator:"",cars:[]}; res.cuts.push(cut); car=null; inHist=false; continue; }
+    if(l.startsWith("[CarID=")){ car={cutIdx:res.cuts.length-1}; if(cut) cut.cars.push(car); res.cars.push(car); inHist=false; continue; }
+    if(car){
+      if(inHist){
+        const f=l.split("#");
+        if(f.length>=6 && /^\d\d\/\d\d\/\d{4}$/.test(f[2])) car.last={yard:f[0],code:f[1],date:f[2],train:f[3],player:f[4]};
+        continue;
+      }
+      if(l==="StartHistory"){ inHist=true; continue; }
+      const eq=l.indexOf("="); if(eq<0) continue;
+      const k=l.slice(0,eq), v=l.slice(eq+1);
+      if(k==="CarName") car.name=v;
+      else if(k==="TypeID") car.tid=v;
+      else if(k==="TypeGroup") car.grp=v.split(":")[0];
+      else if(k==="DestinationID"){ const d=v.split(":"); car.dest=d[0]||""; car.dest2=d[10]||""; }
+      else if(k==="IsLoaded") car.loaded=v;
+      else if(k==="Originator") car.orig=v;
+      continue;
+    }
+    if(cut){ if(l.startsWith("TrainName=")) cut.name=l.slice(10); else if(l.startsWith("TrainCreator=")) cut.creator=l.slice(13); }
+  }
+  const now=Date.now();
+  res.cars.forEach(c=>{
+    c.dwell=null;
+    if(c.last){ const m=c.last.date.match(/(\d\d)\/(\d\d)\/(\d{4})/);
+      c.dwell=Math.floor((now-new Date(+m[3],+m[1]-1,+m[2]))/86400000); }
+  });
+  res.loaded=res.cars.filter(c=>c.loaded==="7").length;
+  res.empty=res.cars.filter(c=>c.loaded==="6").length;
+  res.stale=res.cars.filter(c=>c.dwell!==null&&c.dwell>STALE_DAYS).length;
+  res.ok=/^V\d/.test(res.version)&&res.cars.length>0;
+  return res;
+}
+async function wagFor(id){
+  if(GAME.wags[id]) return GAME.wags[id];
+  if(!GAME.visited.has(id)) return null;
+  try{ const w=parseWag(await gameText("yards/"+id+".wag")); w.saved=GAME.saved["yards/"+id+".wag"]; GAME.wags[id]=w; }
+  catch(e){ GAME.wags[id]={ok:false,error:String(e.message||e),cars:[],cuts:[]}; }
+  return GAME.wags[id];
+}
+
+async function loadGame(){
+  let mm;
+  try{ mm=await gameText("FYMMyMaps.ini"); }
+  catch(e){ gameNote("That folder has no FYMMyMaps.ini — pick the Freight Yard Manager folder itself."); await disconnectGame(); return; }
+  GAME.my=new Set(mm.split(/\r?\n/).map(l=>l.split(":")).filter(p=>p.length>1&&p[1].trim()==="1").map(p=>p[0].trim()));
+  try{
+    let id=null;
+    (await gameText("FYMLocoCars6.ini")).split(/\r?\n/).forEach(l=>{
+      if(l.startsWith("TypeID=")) id=l.slice(7).trim();
+      else if(l.startsWith("Name=")&&id) GAME.types[id]=l.slice(5).trim();
+    });
+  }catch(e){}
+  try{ GAME.visited=new Set((await gameList("yards")).filter(n=>n.endsWith(".wag")).map(n=>n.slice(0,-4))); }
+  catch(e){ GAME.visited=new Set(); }
+  // assigned yards become favorites; nothing already starred is removed
+  let added=0;
+  GAME.my.forEach(id=>{ if(KNOWN_LOC.has(id)&&!isFav(id)){ favs.push(id); added++; } });
+  if(added){ saveFavs(); paintFavs(); }
+  await Promise.all([...GAME.my].map(id=>wagFor(id)));
+  paintGameBtn(); gameNote(""); render();
+}
+async function disconnectGame(){
+  await idbDel("game");
+  Object.assign(GAME,{kind:null,root:null,files:null,stored:null,my:new Set(),visited:new Set(),types:{},wags:{},saved:{}});
+  if(state.view==="myyard") state.view="cards";
+  paintGameBtn(); render();
+}
+function paintGameBtn(){
+  const n=GAME.my.size;
+  if(GAME.kind){
+    gamebtn.textContent=(NARROW.matches?"FYM ✓ ":"FYM folder ✓ · ")+n+" yard"+(n===1?"":"s");
+    gamebtn.classList.add("on"); gameoff.style.display="";
+  } else {
+    gamebtn.textContent=GAME.stored?(NARROW.matches?"Reconnect FYM":"Reconnect my FYM folder")
+                                   :(NARROW.matches?"FYM folder":"Open my FYM folder");
+    gamebtn.classList.remove("on"); gameoff.style.display="none";
+  }
+}
+gamebtn.onclick=async()=>{
+  if(GAME.kind){ locclear.onclick(); return; }         // connected: back to the landing view
+  if(!HAS_PICKER){ gamedir.click(); return; }
+  try{
+    let h=GAME.stored;
+    if(h && (await h.requestPermission({mode:"read"}))!=="granted") h=null;
+    if(!h){ h=await window.showDirectoryPicker({mode:"read"}); await idbSet("game",h); }
+    GAME.kind="handle"; GAME.root=h; GAME.stored=h;
+    gameNote("Reading your folder…");
+    await loadGame();
+  }catch(e){ if(e.name!=="AbortError") gameNote("Could not open the folder: "+(e.message||e)); }
+};
+gamedir.onchange=async()=>{
+  const files=new Map();
+  for(const f of gamedir.files){ files.set(f.webkitRelativePath.split("/").slice(1).join("/"), f); }
+  GAME.kind="files"; GAME.files=files;
+  gameNote("Reading your folder…");
+  await loadGame();
+  gamedir.value="";
+};
+gameoff.onclick=()=>disconnectGame();
+(async()=>{
+  if(HAS_PICKER){
+    const h=await idbGet("game");
+    if(h){
+      GAME.stored=h;
+      try{ if((await h.queryPermission({mode:"read"}))==="granted"){ GAME.kind="handle"; GAME.root=h; await loadGame(); return; } }
+      catch(e){}
+    }
+  }
+  paintGameBtn();
+})();
+
+const fmtDate=ms=>new Date(ms).toISOString().slice(0,10);
+function myYardsPanel(){
+  const el=document.createElement("div"); el.className="dpanel mypanel";
+  const ids=[...GAME.my].filter(id=>KNOWN_LOC.has(id)).sort((a,b)=>locLabel(a).localeCompare(locLabel(b)));
+  let h=`<h4>My yards <span class="dim">· ${ids.length} assigned in FYMMyMaps.ini</span></h4>`;
+  if(!ids.length) h+=`<div class="drow dim">No yards are flagged as yours in FYMMyMaps.ini.</div>`;
+  h+=ids.map(id=>{
+    const w=GAME.wags[id];
+    const st=!w ? "no inventory file yet" : !w.ok ? "unrecognised .wag" :
+      `${w.cars.length} cars · ${w.cuts.length} cuts · ${w.loaded} loaded / ${w.empty} empty`+
+      (w.stale?` · <span class="stale">${w.stale} idle over a year</span>`:"")+(w.saved?` · saved ${fmtDate(w.saved)}`:"");
+    return `<div class="drow myrow"><button class="sib" data-loc="${id}">${esc(locLabel(id))}</button><span class="dim">${st}</span></div>`;
+  }).join("");
+  el.innerHTML=h;
+  el.querySelectorAll(".sib").forEach(b=>{ b.onclick=()=>{ state.view="myyard"; gotoLoc(b.dataset.loc); }; });
+  return el;
+}
+let yardGroup="cut";
+function carRow(c,L){
+  const lb=c.loaded==="7"?["L","loaded","ld-loaded"]:c.loaded==="6"?["E","empty","ld-empty"]:["·","load state "+c.loaded,"ld-other"];
+  const stale=c.dwell!==null&&c.dwell>STALE_DAYS;
+  const dest=!c.dest?"":c.dest===L?`<span class="dim">here</span>`:`<button class="odlink" data-loc="${c.dest}">${esc(locLabel(c.dest))}</button>`;
+  const type=c.grp==="E"?"Locomotive":(GAME.types[c.tid]||"#"+c.tid);
+  const tip=c.last?`${c.last.date} ${EV[c.last.code]||"event "+c.last.code}${c.last.train&&c.last.train!=="^"?" · "+c.last.train:""}`:"no dated history";
+  return `<div class="yrow${stale?" stale":""}"><span class="ycar">${esc(c.name||"")}</span><span class="ytype">${esc(type)}</span>`+
+    `<span class="lbadge ${lb[2]}" title="${lb[1]}">${lb[0]}</span><span class="ydest">${dest}</span>`+
+    `<span class="ydwell" title="${esc(tip)}">${c.dwell===null?"—":c.dwell+"d"}</span></div>`;
+}
+function yardPanel(L){
+  const w=GAME.wags[L], el=document.createElement("div"); el.className="dpanel yardpanel";
+  let h=`<h4>${GAME.my.has(L)?"My yard":"Visited yard"} <span class="dim">· ${esc(locLabel(L))}</span></h4>`;
+  if(!w.ok){ el.innerHTML=h+`<div class="drow dim">Could not read this yard's inventory (${esc(w.error||"unrecognised .wag format")}).</div>`; return el; }
+  h+=`<div class="drow">${w.cars.length} cars in ${w.cuts.length} cuts · <b>${w.loaded}</b> loaded / <b>${w.empty}</b> empty`+
+    (w.stale?` · <span class="stale">${w.stale} idle over a year</span>`:"")+(w.saved?` · saved ${fmtDate(w.saved)}`:"")+
+    ` <label class="dim" style="margin-left:12px">group by <select class="inp" id="ygroup" style="padding:4px 8px;min-width:0">`+
+    `<option value="cut"${yardGroup==="cut"?" selected":""}>cut</option><option value="dest"${yardGroup==="dest"?" selected":""}>destination</option></select></label></div>`;
+  let groups;
+  if(yardGroup==="cut") groups=w.cuts.map(c=>({title:c.name||"(unnamed cut)", sub:c.creator?"built by "+c.creator:"", cars:c.cars}));
+  else {
+    const m={}; w.cars.forEach(c=>{ (m[c.dest]=m[c.dest]||[]).push(c); });
+    groups=Object.keys(m).sort((a,b)=>m[b].length-m[a].length).map(d=>({title:d===L?"staying here":locLabel(d), dest:d!==L?d:"", cars:m[d]}));
+  }
+  h+=groups.map(g=>`<h5 class="ygh">${g.dest?`<button class="sib" data-loc="${g.dest}">${esc(g.title)}</button>`:esc(g.title)}`+
+    `<span class="dim">${g.cars.length} car${g.cars.length===1?"":"s"}${g.sub?" · "+esc(g.sub):""}</span></h5>`+
+    g.cars.map(c=>carRow(c,L)).join("")).join("");
+  el.innerHTML=h;
+  el.querySelector("#ygroup").onchange=e=>{ yardGroup=e.target.value; render(); };
+  el.querySelectorAll(".sib,.odlink").forEach(b=>{ b.onclick=()=>gotoLoc(b.dataset.loc); });
+  return el;
+}
+
+// ---- first-run intro ----
+const intro=document.getElementById("intro");
+function showIntro(on){ intro.classList.toggle("open",on); }
+document.getElementById("introok").onclick=()=>{ showIntro(false); try{ localStorage.setItem("fym.intro","1"); }catch(e){} };
+document.getElementById("helpbtn").onclick=()=>showIntro(true);
+intro.onclick=e=>{ if(e.target===intro) document.getElementById("introok").onclick(); };
+(function(){ let seen="0"; try{ seen=localStorage.getItem("fym.intro")||"0"; }catch(e){} if(seen!=="1") showIntro(true); })();
+
 render();
 </script>
 </body>
