@@ -148,7 +148,18 @@ match beats a state match wherever it sits, so the implementation is
 precedence industry > id > state > railroad > catch-all with the display
 order breaking ties; the 62 catch-all is evaluated last even when it is
 shown at the top (Fostoria's NS Bellevue), and Bad Orders (60) is pinned
-above everything on screen. The `DisplaySetups` list is the on-screen
+above everything on screen. A sort's TRAIN (`sortTrains`) is chosen in
+trust order, every path gated by `carries()` on the block's car classes so
+a unit/engine/non-revenue train is never suggested: "symbol" — the sort
+name carries a boarding train's symbol core or its unique 4+-char leading
+token (Pekin: MBNAS, LPD01, "1900 PEOR" = IMRR 1900 Powerton); "vote" —
+the block's cars elect the train most of them have direct, needing ≥2
+voters and ≥⅕ of the outbound cars; "tokens" — the definition scored
+against stops; "name" — a place word, last resort. The heading labels
+vote/tokens/name so the reader knows how much to trust it (Zach, 2026-09-11:
+railroad-list sorts at Pekin mean "hand these to the home road's
+manifest", not "that road's trains" — which is why token scoring is below
+the vote). The `DisplaySetups` list is the on-screen
 order top to bottom. The view is the named display carrying the yard's
 dominant operator, else "all sorts" (slot order), overridable per yard.
 Railroad ids are the game's own table (500..~818, not the Shortline

@@ -24729,12 +24729,44 @@ function sortFor(S,group,c){
   });
   return best;
 }
-// trains from this yard that carry a sort's block, scored by how much of the
-// sort's definition they cover; name words are only a last resort
-function sortTrains(sl,L,atL){
+// trains from this yard that carry a sort's block. In order of trust:
+// "symbol" — the sort is named with the symbol of a train boarding here
+// (Pekin's MBNAS, LPD01); "vote" — the block's own cars, each with a
+// class-gated direct train, elect the train most of them would take;
+// "tokens" — the sort's definition scored against the train's stops;
+// "name" — a place word in the sort name, last resort. Every path is gated
+// by carries(): a unit coal train never carries a manifest block.
+const symCore=fs=>fs.toUpperCase().replace(/-##[A-Z]?$/,"").replace(/^[A-Z]{2,5} (?=\S)/,"").trim();
+function sortTrains(sl,L,atL,cars,J){
   const Lm=mapOf(L);
   // an industry-only sort is a local spot, not a block for a train
-  if(sl.inds.size&&!sl.ids.size&&!sl.states.size&&!sl.rr.length&&!sl.flags.has("62")) return {hits:[],byName:false,local:true};
+  if(sl.inds.size&&!sl.ids.size&&!sl.states.size&&!sl.rr.length&&!sl.flags.has("62")) return {hits:[],how:"local",local:true};
+  const classes=[...new Set((cars||[]).map(carClass))]; if(!classes.length) classes.push("carload");
+  atL=atL.filter(t=>classes.some(cls=>carries(t,cls)));
+  const dedupe=xs=>{ const seen=new Set(); return xs.filter(x=>{ const k=x.t.rr+"|"+x.t.fs; if(seen.has(k)) return false; seen.add(k); return true; }); };
+  // 1. the sort names a train symbol outright: the whole symbol core, or
+  // its leading token when that token is 4+ characters and no other symbol
+  // boarding here starts with it (Pekin's "1900 PEOR" = IMRR 1900 Powerton)
+  const nm=" "+cleanSortName(sl.name).toUpperCase().replace(/[^A-Z0-9]+/g," ")+" ";
+  const lead=fs=>symCore(fs).split(/[^A-Z0-9]+/)[0]||"";
+  const leadCount={}; dedupe(atL.map(t=>({t}))).forEach(x=>{ const k=lead(x.t.fs); leadCount[k]=(leadCount[k]||0)+1; });
+  const bySym=dedupe(atL.filter(t=>{
+    const c=symCore(t.fs).replace(/[^A-Z0-9]+/g," "), k=lead(t.fs);
+    return (c.length>=3&&nm.includes(" "+c+" ")) || (k.length>=4&&leadCount[k]===1&&nm.includes(" "+k+" "));
+  }).map(t=>({t,sc:10,why:"named in the sort"})));
+  if(bySym.length) return {hits:bySym.slice(0,4),how:"symbol"};
+  // 2. the block's cars vote with their direct trains — only when enough of
+  // the block has one (at least two cars and a fifth of the outbound cars)
+  if(cars&&J){
+    const votes={}, ref={}; let voters=0, outbound=0;
+    cars.forEach(c=>{ if(!c.dest||c.dest===L||c.dest===UNASSIGNED) return; outbound++;
+      const hs=J.forCar(c); if(!hs||!hs.length) return; voters++;
+      hs.slice(0,3).forEach((h,i)=>{ const k=h.t.rr+"|"+h.t.fs; votes[k]=(votes[k]||0)+(i?1:2); ref[k]=h.t; }); });
+    const won=Object.keys(votes).sort((a,b)=>votes[b]-votes[a]||(a<b?-1:1));
+    if(won.length&&voters>=2&&voters*5>=outbound)
+      return {hits:won.slice(0,4).map(k=>({t:ref[k],sc:votes[k],why:Math.min(voters,Math.round(votes[k]/2))+" of "+voters+" cars in this block have it as a direct train"})),how:"vote",voters};
+  }
+  // 3. the sort's definition against the train's stops
   const scored=atL.map(t=>{
     // a sort's id can be a sibling yard on this very map (Payne is on the
     // Fostoria map): match those by exact yard id, others by map family
@@ -24750,13 +24782,13 @@ function sortTrains(sl,L,atL){
     sl.rr.forEach(([r,st])=>{ const m=RR_IDS[r]; if(m&&m===op&&(st==="0"||ends.some(y=>stateOf(y)===st))){ sc+=2; why.push(m+" train"); } });
     return {t,sc,why:why.join(", ")};
   }).filter(x=>x.sc>0).sort((a,b)=>b.sc-a.sc||(a.t.fs<b.t.fs?-1:1));
-  const seen=new Set(), uniq=scored.filter(x=>{ const k=x.t.rr+"|"+x.t.fs; if(seen.has(k)) return false; seen.add(k); return true; });
-  if(uniq.length) return {hits:uniq.slice(0,4),byName:false};
-  // fallback: a catch-all or state-only sort whose name carries a place
+  const uniq=dedupe(scored);
+  if(uniq.length) return {hits:uniq.slice(0,4),how:"tokens"};
+  // 4. fallback: a catch-all or state-only sort whose name carries a place
   const own=new Set(famIds(L).map(y=>(LOC[y]||"").toUpperCase()).join(" ").split(/[^A-Z]+/));
   const words=cleanSortName(sl.name).toUpperCase().split(/[^A-Z]+/).filter(w=>w.length>=4&&!own.has(w)&&!/^(SORT|EXIT|EXITS|LOCAL|EMPTIES|LOADS|SWITCHER|NORTH|SOUTH|EAST|WEST|YARD|TRASH|DELIVERY)$/.test(w));
   const byName=atL.map(t=>{ const nm=[t.d].concat(t.wa).map(y=>(LOC[y]||"").toUpperCase()).join(" "); const hit=words.find(w=>nm.includes(w)); return hit?{t,sc:1,why:"name matches "+hit}:null; }).filter(Boolean);
-  return {hits:byName.slice(0,4),byName:true};
+  return {hits:byName.slice(0,4),how:"name"};
 }
 function yardSorts(w,L){
   if(!w.sorts||!Object.keys(w.sorts.slots).length) return null;
@@ -24782,7 +24814,8 @@ function yardSorts(w,L){
   w.cars.forEach(c=>{ if(c.grp==="E") return; const b=sortFor(S,group,c); if(b){ perCar.set(c,b); (bySlot[b.k]=bySlot[b.k]||[]).push(c); } });
   const Lm=mapOf(L);
   const atL=DATA.trains.filter(t=>status(t)==="active"&&(mapOf(t.o)===Lm||t.wb.some(y=>mapOf(y)===Lm)));
-  const trains={}; Object.keys(bySlot).forEach(k=>{ trains[k]=sortTrains(S.slots[k],L,atL); });
+  const J=yardJoin(w,L);
+  const trains={}; Object.keys(bySlot).forEach(k=>{ trains[k]=sortTrains(S.slots[k],L,atL,bySlot[k],J); });
   w.sortView={L,chosen,names,group,perCar,bySlot,trains};
   return w.sortView;
 }
@@ -24864,7 +24897,8 @@ function yardPanel(L){
       const st=SV.trains[g.slot];
       if(st&&st.local) return `<span class="ytrains"><span class="dim">local industry spot</span></span>`;
       if(!st||!st.hits.length) return `<span class="ytrains"><span class="stale">no train from here covers this sort</span></span>`;
-      return `<span class="ytrains">${st.byName?'<span class="dim" title="matched on the sort name only">by name: </span>':""}`+
+      const HOW={vote:["by its cars: ","the train most of this block's cars would take direct"],tokens:["inferred: ","scored on the sort's destinations, states and railroads"],name:["by name: ","matched on a place word in the sort name only"]};
+      return `<span class="ytrains">${HOW[st.how]?`<span class="dim" title="${HOW[st.how][1]}">${HOW[st.how][0]}</span>`:""}`+
         st.hits.map(x=>`<button class="jump" data-jump="${x.t.i}" title="${esc(x.t.rr+" "+x.t.fs+" · "+x.why)}">${esc(x.t.fs)}</button>`).join(" ")+`</span>`;
     }
     if(!g.dest) return "";
