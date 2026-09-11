@@ -853,6 +853,15 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .combo .opt .cnt{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--dim)}
 .clearbtn{background:none;border:0;color:var(--dim);cursor:pointer;font-size:12px;padding:2px 4px}
 .clearbtn:hover{color:var(--ink)}
+.combo .opt .lid .fv{color:var(--accent);margin-right:3px}
+/* favorites: chips under the Location box + star in the location bar */
+.favs{display:flex;gap:6px;flex-wrap:wrap;align-items:baseline;margin-top:6px}
+.favs .favlbl{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim)}
+.sib.fav{border-color:var(--accent);padding-right:6px}
+.sib.fav .rm{margin-left:6px;color:var(--dim);font-size:11px}
+.sib.fav .rm:hover{color:var(--ink)}
+.star{background:none;border:0;cursor:pointer;font-size:18px;line-height:1;padding:0 2px;color:var(--dim)}
+.star.on,.star:hover{color:var(--accent)}
 
 /* ---- location banner ---- */
 /* ---- last-update banner ---- */
@@ -1012,6 +1021,7 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
         <button class="clearbtn" id="locclear" title="clear" style="display:none">clear ✕</button>
       </div>
       <div class="menu" id="locmenu"></div>
+      <div class="favs" id="favs" style="display:none"></div>
     </div>
     <div class="field" id="rrfield">
       <label>Railroad</label>
@@ -1111,6 +1121,46 @@ function status(t){
 const state = {loc:"", locmode:"", view:"cards", rrs:new Set(DATA.rrs.map(r=>r.c)), type:"", sym:"", stat:"active", shown:0};
 const PAGE = 300;
 
+// ---- favorites ----
+// Kept in this browser only (localStorage), keyed by location id so a name
+// change in locations.csv never orphans a star. Ids that are not in this
+// build's location table stay stored but are not shown — a yard can leave a
+// roster and come back. Storage may be unavailable (private window, file://
+// in some browsers); every access is guarded so the page just has no favorites.
+const FAV_KEY="fym.favs";
+let favs=[];
+function loadFavs(){
+  try{ const v=JSON.parse(localStorage.getItem(FAV_KEY)||"[]"); favs=Array.isArray(v)?v.map(String):[]; }
+  catch(e){ favs=[]; }
+}
+function saveFavs(){ try{ localStorage.setItem(FAV_KEY,JSON.stringify(favs)); }catch(e){} }
+const isFav=id=>favs.includes(id);
+function toggleFav(id){
+  favs = isFav(id) ? favs.filter(x=>x!==id) : favs.concat([id]);
+  saveFavs(); paintFavs(); paintStar();
+}
+// The locbar star is repainted in place: render(false) means "append the next
+// page of results", and a full render() would reset the pager.
+function paintStar(){
+  const b=document.getElementById("favstar"); if(!b) return;
+  const on=isFav(state.loc);
+  b.textContent=on?"★":"☆"; b.classList.toggle("on",on);
+  b.title=(on?"remove from":"add to")+" favorites";
+}
+const KNOWN_LOC=new Set(DATA.locs.map(l=>l.id));
+const favsEl=document.getElementById("favs");
+function paintFavs(){
+  const ids=favs.filter(id=>KNOWN_LOC.has(id));
+  favsEl.style.display=ids.length?"":"none";
+  favsEl.innerHTML=ids.length ? `<span class="favlbl">favorites</span>`+
+    ids.map(id=>`<button class="sib fav" data-loc="${id}" title="open this yard">${esc(locLabel(id))}`+
+      `<span class="rm" data-rm="${id}" title="remove from favorites">✕</span></button>`).join("") : "";
+  favsEl.querySelectorAll(".fav").forEach(b=>{ b.onclick=()=>gotoLoc(b.dataset.loc); });
+  favsEl.querySelectorAll(".rm").forEach(x=>{
+    x.onclick=e=>{ e.stopPropagation(); toggleFav(x.dataset.rm); };
+  });
+}
+
 // ---- build controls ----
 const rrpills = document.getElementById("rrpills");
 const pillOf = {};
@@ -1184,9 +1234,11 @@ const pickList = DATA.locs
 
 function openMenu(q){
   q=q.trim().toLowerCase();
-  opts = pickList.filter(o=>!q || o.id.includes(q) || o.nm.toLowerCase().includes(q)).slice(0,60);
+  opts = pickList.filter(o=>!q || o.id.includes(q) || o.nm.toLowerCase().includes(q));
+  if(favs.length) opts.sort((a,b)=>isFav(b.id)-isFav(a.id));   // stable: favorites first
+  opts = opts.slice(0,60);
   locmenu.innerHTML = opts.map((o,i)=>
-    `<div class="opt" data-i="${i}"><span class="lid">${o.id}</span>`+
+    `<div class="opt" data-i="${i}"><span class="lid">${isFav(o.id)?'<span class="fv">★</span>':''}${o.id}</span>`+
     `<span class="lnm ${o.nm?'':'unk'}">${o.nm?esc(o.nm):'unnamed'}</span>`+
     `<span class="cnt">${o.c} trains</span></div>`).join("")
     || `<div class="opt"><span class="lnm unk">no match</span></div>`;
@@ -1296,6 +1348,7 @@ function render(reset=true){
     const counts={"":pool.length,o:n.o,d:n.d,w:n.w};
     locbar.innerHTML=`<span class="lid">#${L}</span>`+
       `<span class="big">${LOC[L]?esc(LOC[L]):"Unnamed location"}</span>`+
+      `<button class="star${isFav(L)?' on':''}" id="favstar" title="${isFav(L)?'remove from':'add to'} favorites">${isFav(L)?'★':'☆'}</button>`+
       `<span class="seg" id="locmodeseg">`+
         modeLabels.map(([v,lb])=>`<button data-m="${v}"${v===state.locmode?' class="on"':''}>${lb} (${counts[v]})</button>`).join("")+
       `</span>`+
@@ -1323,6 +1376,7 @@ function render(reset=true){
     locbar.querySelectorAll("#viewseg button").forEach(b=>{
       b.onclick=()=>{ state.view=b.dataset.v; render(); };
     });
+    document.getElementById("favstar").onclick=()=>toggleFav(L);
   } else locbar.className="locbar";
 
   // details view: facts about the place instead of a train list
@@ -1621,6 +1675,7 @@ function debounce(fn,ms){let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>f
   }
 })();
 
+loadFavs(); paintFavs();
 render();
 </script>
 </body>

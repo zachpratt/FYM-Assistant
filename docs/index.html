@@ -62,6 +62,15 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .combo .opt .cnt{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--dim)}
 .clearbtn{background:none;border:0;color:var(--dim);cursor:pointer;font-size:12px;padding:2px 4px}
 .clearbtn:hover{color:var(--ink)}
+.combo .opt .lid .fv{color:var(--accent);margin-right:3px}
+/* favorites: chips under the Location box + star in the location bar */
+.favs{display:flex;gap:6px;flex-wrap:wrap;align-items:baseline;margin-top:6px}
+.favs .favlbl{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim)}
+.sib.fav{border-color:var(--accent);padding-right:6px}
+.sib.fav .rm{margin-left:6px;color:var(--dim);font-size:11px}
+.sib.fav .rm:hover{color:var(--ink)}
+.star{background:none;border:0;cursor:pointer;font-size:18px;line-height:1;padding:0 2px;color:var(--dim)}
+.star.on,.star:hover{color:var(--accent)}
 
 /* ---- location banner ---- */
 /* ---- last-update banner ---- */
@@ -221,6 +230,7 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
         <button class="clearbtn" id="locclear" title="clear" style="display:none">clear ✕</button>
       </div>
       <div class="menu" id="locmenu"></div>
+      <div class="favs" id="favs" style="display:none"></div>
     </div>
     <div class="field" id="rrfield">
       <label>Railroad</label>
@@ -255,8 +265,8 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 <main class="wrap" id="wrap"></main>
 
 <script>
-const DATA = {"gen":"2026-09-07",
-"upd":{"date":"2026-09-07","railroads":[{"code":"CSX","counts":[9,2,150],"added":["B158-##","L140-##","L143-##","L143-##","L147-##","L147-##","M302-##","M316-##","M317-##"],"removed":["L779-##","L780-##"],"changed":["B158-##","B243-##","B244-##","B254-##","B619-##","B620-##","B621-##","B622-##","B631-##","B632-##","B638-##","B642-##","B661-##","B662-##","B795-##","B796-##","B831-##","B831-##","B840-##","C002-##","C040-##","C041-##","C049-##","C050-##","C149-##","C315-##","C378-##","C378-##","C410-##","C617-##","C634-##","C640-##","C726-##","C726-##","C733-##","C733-##","C739-##","C739-##","C741-##","C743-##","C744-##","C747-##","C750-##","C752-##","C753-##","C754-##","C760-##","C760-##","C767-##","C768-##","C769-##","C770-##","C780-##","C782-##","C785-##","C788-##","C792-##","C795-##","E002-##","E017-##","E040-##","E041-##","E049-##","E050-##","E315-##","E370-##","E378-##","E378-##","E410-##","E634-##","E640-##","E641-##","E730-##","E730-##","E730-##","E731-##","E731-##","E731-##","E733-##","E733-##","E737-##","E737-##","E740-##","E741-##","E743-##","E744-##","E745-##","E745-##","E746-##","E750-##","E754-##","E759-##","E760-##","E760-##","E780-##","E783-##","E784-##","E795-##","G152-##","G575-##","G576-##","G837-##","I042-##","I043-##","I044-##","I044-##","I045-##","I145-##","I177-##","I178-##","I178-##","I178-##","I178-##","L142-##","L142-##","L158-##","L158-##","L158-##","L162-##","L163-##","L165-##","L648-##","L757-##","L774-##","L774-##","L779-##","L780-##","M202-##","M208-##","M302-##","M316-##","M317-##","M320-##","M321-##","M441-##","M441-##","M442-##","M442-##","M442-##","M455-##","M457-##","M457-##","R119-##","R119-##","R122-##","R122-##","R134-##","R134-##","R135-##","R135-##"]},{"code":"UP","counts":[3,0,0],"added":["LDB15-##","LDB17-##","LNL37-##"],"removed":[],"changed":[]}]},
+const DATA = {"gen":"2026-09-11",
+"upd":{"date":"2026-09-07","railroads":[{"added":["B158-##","L140-##","L143-##","L143-##","L147-##","L147-##","M302-##","M316-##","M317-##"],"changed":["B158-##","B243-##","B244-##","B254-##","B619-##","B620-##","B621-##","B622-##","B631-##","B632-##","B638-##","B642-##","B661-##","B662-##","B795-##","B796-##","B831-##","B831-##","B840-##","C002-##","C040-##","C041-##","C049-##","C050-##","C149-##","C315-##","C378-##","C378-##","C410-##","C617-##","C634-##","C640-##","C726-##","C726-##","C733-##","C733-##","C739-##","C739-##","C741-##","C743-##","C744-##","C747-##","C750-##","C752-##","C753-##","C754-##","C760-##","C760-##","C767-##","C768-##","C769-##","C770-##","C780-##","C782-##","C785-##","C788-##","C792-##","C795-##","E002-##","E017-##","E040-##","E041-##","E049-##","E050-##","E315-##","E370-##","E378-##","E378-##","E410-##","E634-##","E640-##","E641-##","E730-##","E730-##","E730-##","E731-##","E731-##","E731-##","E733-##","E733-##","E737-##","E737-##","E740-##","E741-##","E743-##","E744-##","E745-##","E745-##","E746-##","E750-##","E754-##","E759-##","E760-##","E760-##","E780-##","E783-##","E784-##","E795-##","G152-##","G575-##","G576-##","G837-##","I042-##","I043-##","I044-##","I044-##","I045-##","I145-##","I177-##","I178-##","I178-##","I178-##","I178-##","L142-##","L142-##","L158-##","L158-##","L158-##","L162-##","L163-##","L165-##","L648-##","L757-##","L774-##","L774-##","L779-##","L780-##","M202-##","M208-##","M302-##","M316-##","M317-##","M320-##","M321-##","M441-##","M441-##","M442-##","M442-##","M442-##","M455-##","M457-##","M457-##","R119-##","R119-##","R122-##","R122-##","R134-##","R134-##","R135-##","R135-##"],"code":"CSX","counts":[9,2,150],"removed":["L779-##","L780-##"]},{"added":["LDB15-##","LDB17-##","LNL37-##"],"changed":[],"code":"UP","counts":[3,0,0],"removed":[]}]},
 "rrs":[
 {"c":"BNSF","n":"BNSF","k":"#f26a21","m":0,"ty":["Baretable Intermodal (B)","Dimensional Special (J)","Domestic Intermodal (Q)","Helpers (K)","High Priority Domestic Intermodal (Z)","High Priority High HPT Manifest (HH)","High Priority Low HPT Manifest (HL)","International Intermodal (S)","Light Engines (D)","Local (L)","Low Priority Manifest (M)","Road Switcher (R)","Transfer (T)","Unit Ag. Empty (X)","Unit Ag. Loaded (G)","Unit Coal Empty (E)","Unit Coal Loaded (C)","Unit Train (U)","Vehicle (V)","Yard Job (Y)"],"px":{"Domestic Intermodal (Q)":"Q-","High Priority Domestic Intermodal (Z)":"Z-","International Intermodal (S)":"S-","High Priority High HPT Manifest (HH)":"H-","Vehicle (V)":"V-","Local (L)":"L-","Road Switcher (R)":"R-","Transfer (T)":"T-","Unit Coal Loaded (C)":"C-","Unit Coal Empty (E)":"E-","Unit Ag. Loaded (G)":"G-","Unit Ag. Empty (X)":"X-","Unit Train (U)":"U-","Yard Job (Y)":"Y-","Baretable Intermodal (B)":"B-","Light Engines (D)":"D-","Low Priority Manifest (M)":"M-","Dimensional Special (J)":"J-","Helpers (K)":"K-","High Priority Low HPT Manifest (HL)":"H-"}},
 {"c":"CN","n":"CN","k":"#e23b3b","m":0,"ty":["Actual Blocked Manifest","CPR Origin/Shared Running","Express Automotive","Extra Trains","High Priority IM","Locals","Manifest","Quality Intermodal","Roadswitchers","Transfer Moves","Uniform Bulk","Unit Coal","Unit Grain","Unit Potash/Phosphate","Unit Sand/Sulphur","Work Trains","Yard Jobs"],"px":{"Actual Blocked Manifest":"A","Unit Potash/Phosphate":"B","Unit Coal":"C","Unit Grain":"G","Transfer Moves":"K","Locals":"L","Manifest":"M","Quality Intermodal":"Q","Roadswitchers":"R","Unit Sand/Sulphur":"S","Uniform Bulk":"U","Work Trains":"W","Extra Trains":"X","Yard Jobs":"Y","Express Automotive":"E","High Priority IM":"Z","CPR Origin/Shared Running":"H"}},
@@ -20454,6 +20464,46 @@ function status(t){
 const state = {loc:"", locmode:"", view:"cards", rrs:new Set(DATA.rrs.map(r=>r.c)), type:"", sym:"", stat:"active", shown:0};
 const PAGE = 300;
 
+// ---- favorites ----
+// Kept in this browser only (localStorage), keyed by location id so a name
+// change in locations.csv never orphans a star. Ids that are not in this
+// build's location table stay stored but are not shown — a yard can leave a
+// roster and come back. Storage may be unavailable (private window, file://
+// in some browsers); every access is guarded so the page just has no favorites.
+const FAV_KEY="fym.favs";
+let favs=[];
+function loadFavs(){
+  try{ const v=JSON.parse(localStorage.getItem(FAV_KEY)||"[]"); favs=Array.isArray(v)?v.map(String):[]; }
+  catch(e){ favs=[]; }
+}
+function saveFavs(){ try{ localStorage.setItem(FAV_KEY,JSON.stringify(favs)); }catch(e){} }
+const isFav=id=>favs.includes(id);
+function toggleFav(id){
+  favs = isFav(id) ? favs.filter(x=>x!==id) : favs.concat([id]);
+  saveFavs(); paintFavs(); paintStar();
+}
+// The locbar star is repainted in place: render(false) means "append the next
+// page of results", and a full render() would reset the pager.
+function paintStar(){
+  const b=document.getElementById("favstar"); if(!b) return;
+  const on=isFav(state.loc);
+  b.textContent=on?"★":"☆"; b.classList.toggle("on",on);
+  b.title=(on?"remove from":"add to")+" favorites";
+}
+const KNOWN_LOC=new Set(DATA.locs.map(l=>l.id));
+const favsEl=document.getElementById("favs");
+function paintFavs(){
+  const ids=favs.filter(id=>KNOWN_LOC.has(id));
+  favsEl.style.display=ids.length?"":"none";
+  favsEl.innerHTML=ids.length ? `<span class="favlbl">favorites</span>`+
+    ids.map(id=>`<button class="sib fav" data-loc="${id}" title="open this yard">${esc(locLabel(id))}`+
+      `<span class="rm" data-rm="${id}" title="remove from favorites">✕</span></button>`).join("") : "";
+  favsEl.querySelectorAll(".fav").forEach(b=>{ b.onclick=()=>gotoLoc(b.dataset.loc); });
+  favsEl.querySelectorAll(".rm").forEach(x=>{
+    x.onclick=e=>{ e.stopPropagation(); toggleFav(x.dataset.rm); };
+  });
+}
+
 // ---- build controls ----
 const rrpills = document.getElementById("rrpills");
 const pillOf = {};
@@ -20527,9 +20577,11 @@ const pickList = DATA.locs
 
 function openMenu(q){
   q=q.trim().toLowerCase();
-  opts = pickList.filter(o=>!q || o.id.includes(q) || o.nm.toLowerCase().includes(q)).slice(0,60);
+  opts = pickList.filter(o=>!q || o.id.includes(q) || o.nm.toLowerCase().includes(q));
+  if(favs.length) opts.sort((a,b)=>isFav(b.id)-isFav(a.id));   // stable: favorites first
+  opts = opts.slice(0,60);
   locmenu.innerHTML = opts.map((o,i)=>
-    `<div class="opt" data-i="${i}"><span class="lid">${o.id}</span>`+
+    `<div class="opt" data-i="${i}"><span class="lid">${isFav(o.id)?'<span class="fv">★</span>':''}${o.id}</span>`+
     `<span class="lnm ${o.nm?'':'unk'}">${o.nm?esc(o.nm):'unnamed'}</span>`+
     `<span class="cnt">${o.c} trains</span></div>`).join("")
     || `<div class="opt"><span class="lnm unk">no match</span></div>`;
@@ -20639,6 +20691,7 @@ function render(reset=true){
     const counts={"":pool.length,o:n.o,d:n.d,w:n.w};
     locbar.innerHTML=`<span class="lid">#${L}</span>`+
       `<span class="big">${LOC[L]?esc(LOC[L]):"Unnamed location"}</span>`+
+      `<button class="star${isFav(L)?' on':''}" id="favstar" title="${isFav(L)?'remove from':'add to'} favorites">${isFav(L)?'★':'☆'}</button>`+
       `<span class="seg" id="locmodeseg">`+
         modeLabels.map(([v,lb])=>`<button data-m="${v}"${v===state.locmode?' class="on"':''}>${lb} (${counts[v]})</button>`).join("")+
       `</span>`+
@@ -20666,6 +20719,7 @@ function render(reset=true){
     locbar.querySelectorAll("#viewseg button").forEach(b=>{
       b.onclick=()=>{ state.view=b.dataset.v; render(); };
     });
+    document.getElementById("favstar").onclick=()=>toggleFav(L);
   } else locbar.className="locbar";
 
   // details view: facts about the place instead of a train list
@@ -20964,6 +21018,7 @@ function debounce(fn,ms){let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>f
   }
 })();
 
+loadFavs(); paintFavs();
 render();
 </script>
 </body>
