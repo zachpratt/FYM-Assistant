@@ -115,13 +115,11 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .mypanel .myrow{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
 .stale{color:var(--future)}
 .ygh{margin:14px 0 4px;font-size:13px;font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
-.yrow{display:grid;grid-template-columns:140px minmax(120px,1fr) 24px minmax(140px,1fr) minmax(110px,.8fr) 56px;gap:8px;
+.yrow{display:grid;grid-template-columns:140px minmax(120px,1fr) 24px minmax(140px,1fr) 56px;gap:8px;
   padding:4px 0;font-size:13px;border-top:1px solid var(--line);align-items:center}
 .yrow .ycar{font-family:var(--mono);color:var(--ink)}
 .yrow .ytype{color:var(--muted)}
 .yrow .ydwell{text-align:right;font-family:var(--mono);font-size:12px}
-.yrow .yvia .jump,.ytrains .jump{font-family:var(--mono);font-size:12px}
-.ytrains{display:inline-flex;gap:8px;flex-wrap:wrap;align-items:baseline;margin-left:6px}
 .yrow.stale .ydwell{color:var(--future);font-weight:600}
 .lbadge{display:inline-block;width:20px;text-align:center;border-radius:4px;font-size:11px;font-weight:700;
   padding:1px 0;background:var(--chip);color:var(--muted)}
@@ -263,8 +261,7 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
   .locbar{margin:0 8px 6px;padding:8px 10px;gap:8px}
   .yrow{grid-template-columns:1fr auto auto}
   .yrow .ytype{display:none}
-  .yrow .ydest{grid-column:1/2}
-  .yrow .yvia{grid-column:2/-1;text-align:right}
+  .yrow .ydest{grid-column:1/-1}
   .locbar .seg button{padding:8px 10px}
   .locnote{display:none}
   .wrap{padding:8px 8px 60px}
@@ -24055,20 +24052,19 @@ function materialize(plan,src,dst,canCarry,seenChain,chains){
   }
 }
 
-function carries(t,carType){
-  const cs=fclasses(t);
-  if(cs.includes("passenger")||cs.includes("engines")||cs.includes("nonrev")) return false;
-  if(carType==="any" || cs.includes(carType)) return true;
-  // locals, yard jobs and transfers are drayage, not line-haul service:
-  // they shuttle whatever the yardmaster hands them (a container reaches
-  // its ramp BECAUSE the transfer job exists), whatever their class says
-  return /\b(local|yard ?job|transfer|switch)\b/i.test(t.ty);
-}
 function findRoutes(src,dst,carType){
   // pool by capability: passenger, light power and non-revenue types never
   // carry a routed car; otherwise a train qualifies when its capability set
   // includes the selected car type ("any" = any revenue freight service)
-  const canCarry=t=>carries(t,carType);
+  const canCarry=t=>{
+    const cs=fclasses(t);
+    if(cs.includes("passenger")||cs.includes("engines")||cs.includes("nonrev")) return false;
+    if(carType==="any" || cs.includes(carType)) return true;
+    // locals, yard jobs and transfers are drayage, not line-haul service:
+    // they shuttle whatever the yardmaster hands them (a container reaches
+    // its ramp BECAUSE the transfer job exists), whatever their class says
+    return /\b(local|yard ?job|transfer|switch)\b/i.test(t.ty);
+  };
   const srcMap=mapOf(src), dstMap=mapOf(dst);
   if(srcMap===dstMap) return {src,dst,homeRR:null,corridors:[],total:0,truncated:false};
   const pool=DATA.trains.filter(t=>status(t)==="active"&&canCarry(t));
@@ -24370,7 +24366,7 @@ loadFavs(); paintFavs();
 const STALE_DAYS=365;
 const UNASSIGNED="1000";   // the game's "no destination yet" id — not a place
 const GAME={kind:null, root:null, files:null, stored:null, my:new Set(), visited:new Set(),
-            types:{}, parent:{}, wags:{}, saved:{}};
+            types:{}, wags:{}, saved:{}};
 const HAS_PICKER=!!window.showDirectoryPicker;
 const gamebtn=document.getElementById("gamebtn"), gameoff=document.getElementById("gameoff"),
       gamedir=document.getElementById("gamedir"), gamenote=document.getElementById("gamenote");
@@ -24479,7 +24475,6 @@ async function loadGame(){
     let id=null;
     (await gameText("FYMLocoCars6.ini")).split(/\r?\n/).forEach(l=>{
       if(l.startsWith("TypeID=")) id=l.slice(7).trim();
-      else if(l.startsWith("ParentTypeID=")&&id) GAME.parent[id]=l.slice(13).trim();
       else if(l.startsWith("Name=")&&id) GAME.types[id]=l.slice(5).trim();
     });
   }catch(e){}
@@ -24494,7 +24489,7 @@ async function loadGame(){
 }
 async function disconnectGame(){
   await idbDel("game");
-  Object.assign(GAME,{kind:null,root:null,files:null,stored:null,my:new Set(),visited:new Set(),types:{},parent:{},wags:{},saved:{}});
+  Object.assign(GAME,{kind:null,root:null,files:null,stored:null,my:new Set(),visited:new Set(),types:{},wags:{},saved:{}});
   if(state.view==="myyard") state.view="cards";
   paintGameBtn(); render();
 }
@@ -24559,60 +24554,6 @@ function myYardsPanel(){
   el.querySelectorAll(".sib").forEach(b=>{ b.onclick=()=>{ state.view="myyard"; gotoLoc(b.dataset.loc); }; });
   return el;
 }
-// ---- car-to-train join ----
-// For a yard L and a destination D: active trains that board at L (originate
-// there or explicitly pick up) and reach D's map (terminate, explicitly set
-// out, or pass through), filtered by the car's class. Same boarding /
-// alighting / capability rules as the route finder, so the two agree.
-const IM_TYPES=new Set(["5","6","19"]), AUTO_TYPES=new Set(["7"]);
-function carClass(c){
-  const ids=[c.tid, GAME.parent[c.tid]];
-  if(ids.some(i=>IM_TYPES.has(i))) return "intermodal";
-  if(ids.some(i=>AUTO_TYPES.has(i))) return "auto";
-  return "carload";
-}
-const cityOf=id=>(LOC[id]||"").split(",")[0].replace(/\b(Yard|Jct\.?|Junction)\b/gi,"").trim();
-function yardJoin(w,L){
-  if(w.join && w.join.L===L) return w.join;
-  const Lm=mapOf(L);
-  const atL=DATA.trains.filter(t=>status(t)==="active" && (mapOf(t.o)===Lm || t.wb.some(y=>mapOf(y)===Lm)));
-  const byDest={};
-  w.cars.forEach(c=>{
-    const D=c.dest; if(!D||D===L||D===UNASSIGNED) return;
-    const cls=carClass(c), key=D+"|"+cls;
-    if(byDest[key]) return;
-    const Dm=mapOf(D), city=cityOf(D).toLowerCase();
-    const hits=[];
-    atL.forEach(t=>{
-      if(!carries(t,cls)) return;
-      const how=mapOf(t.d)===Dm?"terminates":t.wa.some(y=>mapOf(y)===Dm)?"sets out":t.r.some(y=>mapOf(y)===Dm)?"passes":"";
-      if(!how) return;
-      const board=mapOf(t.o)===Lm?"originates":"picks up";
-      const notes=[].concat(...famIds(L).map(y=>t.wn[y]||[]));
-      const mention=city.length>2 && notes.some(n=>n.toLowerCase().includes(city));
-      hits.push({t,how,board,mention});
-    });
-    const rank=h=>(h.mention?0:4)+(h.how==="terminates"?0:h.how==="sets out"?1:2)+(h.board==="originates"?0:0.5);
-    hits.sort((a,b)=>rank(a)-rank(b) || (a.t.fs<b.t.fs?-1:1));
-    byDest[key]=hits;
-  });
-  w.join={L, byDest, forCar:c=>byDest[c.dest+"|"+carClass(c)]||null};
-  return w.join;
-}
-function trainChip(h){
-  return `<button class="jump" data-jump="${h.t.i}" title="${esc(h.t.rr+" "+h.t.fs+" · "+h.board+" here, "+h.how+" there"+(h.mention?" · instructions here name that destination":""))}">${h.mention?"★ ":""}${esc(h.t.fs)}</button>`;
-}
-function wireJoin(el,L){
-  el.querySelectorAll("[data-jump]").forEach(b=>{ b.onclick=e=>{ e.stopPropagation(); jumpTo(+b.dataset.jump); }; });
-  el.querySelectorAll("[data-route]").forEach(b=>{ b.onclick=()=>{
-    const D=b.dataset.route;
-    rstate.from={id:L,nm:LOC[L]||""}; rstate.to={id:D,nm:LOC[D]||""};
-    rfin.value=L+(LOC[L]?"  "+LOC[L]:""); rtin.value=D+(LOC[D]?"  "+LOC[D]:"");
-    if([...rcartype.options].some(o=>o.value===b.dataset.cls)) rcartype.value=b.dataset.cls;
-    setRouter(true); routeNow(); window.scrollTo({top:0,behavior:"smooth"});
-  }; });
-}
-
 let yardGroup="cut";
 function carRow(c,L){
   const lb=c.loaded==="7"?["L","loaded","ld-loaded"]:c.loaded==="6"?["E","empty","ld-empty"]:["·","load state "+c.loaded,"ld-other"];
@@ -24622,25 +24563,16 @@ function carRow(c,L){
     :`<button class="odlink" data-loc="${c.dest}">${esc(locLabel(c.dest))}</button>`;
   const type=c.grp==="E"?"Locomotive":(GAME.types[c.tid]||"#"+c.tid);
   const tip=c.last?`${c.last.date} ${EV[c.last.code]||"event "+c.last.code}${c.last.train&&c.last.train!=="^"?" · "+c.last.train:""}`:"no dated history";
-  const hits=(c.dest&&c.dest!==L&&c.dest!==UNASSIGNED)?GAME.wags[L].join.forCar(c):null;
-  const via=!hits?"":hits.length?trainChip(hits[0])+(hits.length>1?`<span class="dim"> +${hits.length-1}</span>`:"")
-    :`<span class="stale">no direct train</span>`;
   return `<div class="yrow${stale?" stale":""}"><span class="ycar">${esc(c.name||"")}</span><span class="ytype">${esc(type)}</span>`+
     `<span class="lbadge ${lb[2]}" title="${lb[1]}">${lb[0]}</span><span class="ydest">${dest}</span>`+
-    `<span class="yvia">${via}</span>`+
     `<span class="ydwell" title="${esc(tip)}">${c.dwell===null?"—":c.dwell+"d"}</span></div>`;
 }
 function yardPanel(L){
   const w=GAME.wags[L], el=document.createElement("div"); el.className="dpanel yardpanel";
   let h=`<h4>${GAME.my.has(L)?"My yard":"Visited yard"} <span class="dim">· ${esc(locLabel(L))}</span></h4>`;
   if(!w.ok){ el.innerHTML=h+`<div class="drow dim">Could not read this yard's inventory (${esc(w.error||"unrecognised .wag format")}).</div>`; return el; }
-  const J=yardJoin(w,L);
-  let direct=0, none=0;
-  w.cars.forEach(c=>{ const hs=(c.dest&&c.dest!==L&&c.dest!==UNASSIGNED)?J.forCar(c):null; if(hs){ if(hs.length) direct++; else none++; } });
   h+=`<div class="drow">${w.cars.length} cars in ${w.cuts.length} cuts · <b>${w.loaded}</b> loaded / <b>${w.empty}</b> empty`+
     (w.stale?` · <span class="stale">${w.stale} idle over a year</span>`:"")+(w.saved?` · saved ${fmtDate(w.saved)}`:"")+
-    `</div><div class="drow dim"><b>${direct}</b> outbound cars have a direct train from here · `+
-    `<b class="${none?"stale":""}">${none}</b> need a connection (★ = this yard's instructions name the destination)`+
     ` <label class="dim" style="margin-left:12px">group by <select class="inp" id="ygroup" style="padding:4px 8px;min-width:0">`+
     `<option value="cut"${yardGroup==="cut"?" selected":""}>cut</option><option value="dest"${yardGroup==="dest"?" selected":""}>destination</option></select></label></div>`;
   let groups;
@@ -24651,25 +24583,12 @@ function yardPanel(L){
       title:d===L?"staying here":d===UNASSIGNED?"unassigned":locLabel(d),
       dest:(d!==L&&d!==UNASSIGNED)?d:"", cars:m[d]}));
   }
-  const groupTrains=g=>{
-    if(!g.dest) return "";
-    // one chip list per car class present in the group (usually one)
-    const classes=[...new Set(g.cars.map(carClass))];
-    return classes.map(cls=>{
-      const hs=J.byDest[g.dest+"|"+cls]||[];
-      const lbl=classes.length>1?`<span class="dim">${cls}: </span>`:"";
-      if(!hs.length) return `<span class="ytrains">${lbl}<span class="stale">no direct train</span> `+
-        `<button class="jump" data-route="${g.dest}" data-cls="${cls}">find a route ▸</button></span>`;
-      return `<span class="ytrains">${lbl}${hs.slice(0,4).map(trainChip).join(" ")}${hs.length>4?`<span class="dim"> +${hs.length-4} more</span>`:""}</span>`;
-    }).join(" ");
-  };
   h+=groups.map(g=>`<h5 class="ygh">${g.dest?`<button class="sib" data-loc="${g.dest}">${esc(g.title)}</button>`:esc(g.title)}`+
-    `<span class="dim">${g.cars.length} car${g.cars.length===1?"":"s"}${g.sub?" · "+esc(g.sub):""}</span>${groupTrains(g)}</h5>`+
+    `<span class="dim">${g.cars.length} car${g.cars.length===1?"":"s"}${g.sub?" · "+esc(g.sub):""}</span></h5>`+
     g.cars.map(c=>carRow(c,L)).join("")).join("");
   el.innerHTML=h;
   el.querySelector("#ygroup").onchange=e=>{ yardGroup=e.target.value; render(); };
   el.querySelectorAll(".sib,.odlink").forEach(b=>{ b.onclick=()=>gotoLoc(b.dataset.loc); });
-  wireJoin(el,L);
   return el;
 }
 
@@ -24689,7 +24608,7 @@ intro.onclick=e=>{ if(e.target===intro) document.getElementById("introok").oncli
 let navRestoring=false, navKey="", navIdx=0;
 const navback=document.getElementById("navback");
 function navState(){
-  return {i:navIdx, loc:state.loc, locmode:state.locmode, view:state.view, sym:state.sym, stat:state.stat,
+  return {i:navIdx, loc:state.loc, locmode:state.locmode, view:state.view,
           rf:rstate.from?rstate.from.id:"", rt:rstate.to?rstate.to.id:"", car:rcartype.value};
 }
 function navHash(s){
@@ -24697,7 +24616,6 @@ function navHash(s){
   if(s.loc) p.push("loc="+s.loc);
   if(s.locmode) p.push("m="+s.locmode);
   if(s.view&&s.view!=="cards") p.push("v="+s.view);
-  if(s.sym) p.push("sym="+encodeURIComponent(s.sym));
   if(s.rf&&s.rt) p.push("route="+s.rf+"-"+s.rt+(s.car&&s.car!=="carload"?"-"+s.car:""));
   return p.length ? "#"+p.join("&") : location.pathname+location.search;
 }
@@ -24708,7 +24626,6 @@ function navFromHash(){
     if(k==="loc"&&KNOWN_LOC.has(v)) s.loc=v;
     else if(k==="m"&&["o","d","w"].includes(v)) s.locmode=v;
     else if(k==="v"&&["sheet","details","myyard"].includes(v)) s.view=v;
-    else if(k==="sym"&&v) s.sym=decodeURIComponent(v);
     else if(k==="route"){ const q=v.split("-"); if(KNOWN_LOC.has(q[0])&&KNOWN_LOC.has(q[1])){ s.rf=q[0]; s.rt=q[1]; s.car=q[2]||"carload"; } }
   });
   return s;
@@ -24736,7 +24653,6 @@ function navApply(s){
     }
     syncRouteBtns();
     state.loc=s.loc&&KNOWN_LOC.has(s.loc)?s.loc:""; state.locmode=s.locmode||""; state.view=s.view||"cards";
-    state.sym=s.sym||""; symin.value=state.sym; setStat(s.stat||"active");
     if(state.loc){ locin.value=state.loc+(LOC[state.loc]?"  "+LOC[state.loc]:""); locclear.style.display=""; }
     else { locin.value=""; locclear.style.display="none"; }
     locmenu.classList.remove("open");

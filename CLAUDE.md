@@ -110,16 +110,6 @@ things, all parsed in JS inside `HTML_TEMPLATE` (section "player folder"):
   `parseWag` must reproduce the Python-derived figures for Fostoria 1091
   (714 cars, 46 cuts, 303 loaded, 385 empty, 194 staying, 107 idle > 1 y).
 
-**Car-to-train join** (`yardJoin` in the same section): for each car's
-destination, the active trains that board at this yard (originate or
-explicit pickup) and reach the destination's map (terminate, explicit
-setout, or pass through), gated by the car's class via `carries()` — the
-same function the route finder uses, so the two never disagree. Car class
-comes from `TypeID`/`ParentTypeID` (5, 6, 19 intermodal; 7 autorack; else
-carload). A ★ marks a train whose instructions at this yard name the
-destination's city. "Find a route ▸" hands a destination with no direct
-train to the route finder.
-
 Never write into the folder from the page. The native folder dialog cannot
 be automated: verify the flow by fetching files from `game_data/` while
 serving the repo root and feeding a `Map` of `File`s to `loadGame()`, then
