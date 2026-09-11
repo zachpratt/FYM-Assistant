@@ -103,7 +103,8 @@ things, all parsed in JS inside `HTML_TEMPLATE` (section "player folder"):
 - `yards/<id>.wag` — the yard's inventory: `[TrainNumber=n]` cut blocks
   (`TrainName=`, `TrainCreator=`) each followed by `[CarID=n]` car blocks
   (`CarName=`, `TypeID=`, `TypeGroup=` F/E, `DestinationID=` where field
-  1 is the next yard, `IsLoaded=` 7 loaded / 6 empty, then `StartHistory`
+  1 is the next yard (id 1000 = "unassigned", a word, never a link),
+  `IsLoaded=` 7 loaded / 6 empty, then `StartHistory`
   rows `yard#code#mm/dd/yyyy#train#player#n`; codes 10 arrived, 20
   departed, 40 loaded, 41 unloaded, 30/50/60 service and shop, 00 created).
   `parseWag` must reproduce the Python-derived figures for Fostoria 1091

@@ -24364,6 +24364,7 @@ loadFavs(); paintFavs();
 // only ever reads FYMMyMaps.ini (which maps are assigned to this player),
 // FYMLocoCars6.ini (car type names) and yards/<id>.wag (a yard's inventory).
 const STALE_DAYS=365;
+const UNASSIGNED="1000";   // the game's "no destination yet" id — not a place
 const GAME={kind:null, root:null, files:null, stored:null, my:new Set(), visited:new Set(),
             types:{}, wags:{}, saved:{}};
 const HAS_PICKER=!!window.showDirectoryPicker;
@@ -24557,7 +24558,9 @@ let yardGroup="cut";
 function carRow(c,L){
   const lb=c.loaded==="7"?["L","loaded","ld-loaded"]:c.loaded==="6"?["E","empty","ld-empty"]:["·","load state "+c.loaded,"ld-other"];
   const stale=c.dwell!==null&&c.dwell>STALE_DAYS;
-  const dest=!c.dest?"":c.dest===L?`<span class="dim">here</span>`:`<button class="odlink" data-loc="${c.dest}">${esc(locLabel(c.dest))}</button>`;
+  const dest=!c.dest?"":c.dest===L?`<span class="dim">here</span>`
+    :c.dest===UNASSIGNED?`<span class="dim">unassigned</span>`
+    :`<button class="odlink" data-loc="${c.dest}">${esc(locLabel(c.dest))}</button>`;
   const type=c.grp==="E"?"Locomotive":(GAME.types[c.tid]||"#"+c.tid);
   const tip=c.last?`${c.last.date} ${EV[c.last.code]||"event "+c.last.code}${c.last.train&&c.last.train!=="^"?" · "+c.last.train:""}`:"no dated history";
   return `<div class="yrow${stale?" stale":""}"><span class="ycar">${esc(c.name||"")}</span><span class="ytype">${esc(type)}</span>`+
@@ -24576,7 +24579,9 @@ function yardPanel(L){
   if(yardGroup==="cut") groups=w.cuts.map(c=>({title:c.name||"(unnamed cut)", sub:c.creator?"built by "+c.creator:"", cars:c.cars}));
   else {
     const m={}; w.cars.forEach(c=>{ (m[c.dest]=m[c.dest]||[]).push(c); });
-    groups=Object.keys(m).sort((a,b)=>m[b].length-m[a].length).map(d=>({title:d===L?"staying here":locLabel(d), dest:d!==L?d:"", cars:m[d]}));
+    groups=Object.keys(m).sort((a,b)=>m[b].length-m[a].length).map(d=>({
+      title:d===L?"staying here":d===UNASSIGNED?"unassigned":locLabel(d),
+      dest:(d!==L&&d!==UNASSIGNED)?d:"", cars:m[d]}));
   }
   h+=groups.map(g=>`<h5 class="ygh">${g.dest?`<button class="sib" data-loc="${g.dest}">${esc(g.title)}</button>`:esc(g.title)}`+
     `<span class="dim">${g.cars.length} car${g.cars.length===1?"":"s"}${g.sub?" · "+esc(g.sub):""}</span></h5>`+
