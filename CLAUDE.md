@@ -65,6 +65,26 @@ Everything is in `tsar_service.py` (~1,100 lines, roughly half of which is
 `docs/build-report.json` is machine-read state, not just logging — the next
 build diffs against it.
 
+## Car router (beta, collapsed by default)
+
+Merged from the former `routing-tools` branch on 2026-09-11. The "Route a
+car (beta)" bar sits behind a `▸` toggle under the update banner, remembered
+per browser (`localStorage` key `fym.router`), so the public page reads as the
+plain train finder until a visitor opens it. Its data layers are built into
+the payload regardless and are worth keeping current:
+
+- `geo.csv` (lat/lon per identity; `his_import.py` derives rows from the
+  map bundles' `.his` footers, `geo_import.py` adds city-level rows from an
+  offline GeoNames download; derived rows win) → `DATA.geo`, the Details
+  view, distance ranking and the terminal-road test.
+- `interchange_data/` (shortline partner table + derived exchange points) →
+  `DATA.ixp`; bad yard ids there are anomalies.
+- `FREIGHT_CLASS` in `tsar_service.py` maps every declared train type to a
+  freight capability; a new or stale type is an anomaly in `--strict`.
+- `audit_directions` mirrors the JS pickup/setout regexes (keep both copies
+  in sync); unclassified work-looking notes are stored in the build report
+  and only NEW ones are printed on the next build.
+
 ## Domain rules that look like bugs but aren't
 
 - **Symbols are verbatim by decision.** Displayed symbol = `[TypeInfo prefix] +

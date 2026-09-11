@@ -101,6 +101,44 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .dpanel .dim{color:var(--muted)}
 .dpanel .ext{color:var(--future)}
 
+/* ---- last-update banner ---- */
+.updbar{margin:6px 20px;font-size:12px;color:var(--muted)}
+.updbar .rrcode{color:var(--ink);font-weight:600}
+.updpanel{display:none;margin-top:6px;padding:10px 14px;border:1px solid var(--line);
+  border-radius:8px;background:var(--panel)}
+.updpanel.open{display:block}
+.updpanel h5{margin:6px 0 3px;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim)}
+.updpanel .syms{display:flex;flex-wrap:wrap;gap:4px 12px;font-family:var(--mono);font-size:12px}
+.updpanel .gone{color:var(--dim);text-decoration:line-through}
+
+/* ---- car routing ---- */
+.rtogglebar{margin:6px 20px;font-size:12px}
+.routebar{margin:0 20px 6px;padding:10px 14px;border:1px solid var(--line);border-left:3px solid var(--future);
+  border-radius:8px;background:var(--panel);display:none;align-items:center;gap:12px;flex-wrap:wrap}
+.routebar.open{display:flex}
+.routebar .rtitle{font-weight:600}
+.routebar .beta{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--future);
+  border:1px solid var(--future);border-radius:4px;padding:1px 5px;margin-left:8px}
+.routebar .rchk{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+.gobtn{background:var(--accent);color:#0e1116;border:0;border-radius:7px;padding:8px 12px;
+  cursor:pointer;font-weight:600}
+.rhead{max-width:1180px;margin:10px auto;color:var(--muted);font-size:13px;line-height:1.5}
+.rhead b{color:var(--ink)}
+.warn{color:#f0b429}
+.corr{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin:10px auto;
+  max-width:1180px;padding:10px 14px}
+.chead{font-size:12px;color:var(--muted);margin-bottom:6px}
+.chead b{color:var(--ink)}
+.leg{display:flex;gap:10px;align-items:baseline;padding:6px 4px;cursor:pointer;border-radius:6px}
+.leg:hover{background:var(--panel2)}
+.leg .chev{color:var(--dim);font-size:10px}
+.leg .lty{font-size:11px;color:var(--dim)}
+.leg .lod{font-size:12px;color:var(--muted)}
+.legnote{margin:0 0 4px 46px;font-size:12px;color:var(--muted)}
+.legnote .txt{color:var(--ink)}
+.legnote.ok{color:var(--accent)}
+.legnote.bad{color:#f0b429}
+
 /* ---- yard sheet ---- */
 .srow{display:grid;grid-template-columns:44px 88px 170px minmax(200px,1fr) 2fr;gap:12px;
   align-items:baseline;padding:8px 14px;border-bottom:1px solid var(--line);cursor:pointer;
@@ -260,6 +298,30 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
   <div class="updpanel" id="updpanel"></div>
 </div>
 
+<div class="rtogglebar"><button class="jump" id="rtoggle">Route a car (beta) ▸</button></div>
+<div class="routebar" id="routebar">
+  <span class="rtitle">Route a car<span class="beta">beta</span></span>
+  <div class="combo">
+    <input class="inp" id="rfin" placeholder="from yard…" autocomplete="off">
+    <div class="menu" id="rfmenu"></div>
+  </div>
+  <span style="color:var(--dim)">→</span>
+  <div class="combo">
+    <input class="inp" id="rtin" placeholder="to yard…" autocomplete="off">
+    <div class="menu" id="rtmenu"></div>
+  </div>
+  <label class="rchk">car type
+    <select class="inp" id="rcartype" style="min-width:0;padding:6px 8px">
+      <option value="carload">Manifest car</option>
+      <option value="intermodal">Container / trailer</option>
+      <option value="auto">Autorack</option>
+      <option value="any">Any freight</option>
+    </select>
+  </label>
+  <button class="gobtn" id="rgo" style="display:none">find routes</button>
+  <button class="clearbtn" id="rclear" style="display:none">clear ✕</button>
+</div>
+
 <div class="locbar" id="locbar"></div>
 <main class="wrap" id="wrap"></main>
 
@@ -267,14 +329,14 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 const DATA = {"gen":"2026-09-11",
 "upd":{"date":"2026-09-07","railroads":[{"added":["B158-##","L140-##","L143-##","L143-##","L147-##","L147-##","M302-##","M316-##","M317-##"],"changed":["B158-##","B243-##","B244-##","B254-##","B619-##","B620-##","B621-##","B622-##","B631-##","B632-##","B638-##","B642-##","B661-##","B662-##","B795-##","B796-##","B831-##","B831-##","B840-##","C002-##","C040-##","C041-##","C049-##","C050-##","C149-##","C315-##","C378-##","C378-##","C410-##","C617-##","C634-##","C640-##","C726-##","C726-##","C733-##","C733-##","C739-##","C739-##","C741-##","C743-##","C744-##","C747-##","C750-##","C752-##","C753-##","C754-##","C760-##","C760-##","C767-##","C768-##","C769-##","C770-##","C780-##","C782-##","C785-##","C788-##","C792-##","C795-##","E002-##","E017-##","E040-##","E041-##","E049-##","E050-##","E315-##","E370-##","E378-##","E378-##","E410-##","E634-##","E640-##","E641-##","E730-##","E730-##","E730-##","E731-##","E731-##","E731-##","E733-##","E733-##","E737-##","E737-##","E740-##","E741-##","E743-##","E744-##","E745-##","E745-##","E746-##","E750-##","E754-##","E759-##","E760-##","E760-##","E780-##","E783-##","E784-##","E795-##","G152-##","G575-##","G576-##","G837-##","I042-##","I043-##","I044-##","I044-##","I045-##","I145-##","I177-##","I178-##","I178-##","I178-##","I178-##","L142-##","L142-##","L158-##","L158-##","L158-##","L162-##","L163-##","L165-##","L648-##","L757-##","L774-##","L774-##","L779-##","L780-##","M202-##","M208-##","M302-##","M316-##","M317-##","M320-##","M321-##","M441-##","M441-##","M442-##","M442-##","M442-##","M455-##","M457-##","M457-##","R119-##","R119-##","R122-##","R122-##","R134-##","R134-##","R135-##","R135-##"],"code":"CSX","counts":[9,2,150],"removed":["L779-##","L780-##"]},{"added":["LDB15-##","LDB17-##","LNL37-##"],"changed":[],"code":"UP","counts":[3,0,0],"removed":[]}]},
 "rrs":[
-{"c":"BNSF","n":"BNSF","k":"#f26a21","m":0,"ty":["Baretable Intermodal (B)","Dimensional Special (J)","Domestic Intermodal (Q)","Helpers (K)","High Priority Domestic Intermodal (Z)","High Priority High HPT Manifest (HH)","High Priority Low HPT Manifest (HL)","International Intermodal (S)","Light Engines (D)","Local (L)","Low Priority Manifest (M)","Road Switcher (R)","Transfer (T)","Unit Ag. Empty (X)","Unit Ag. Loaded (G)","Unit Coal Empty (E)","Unit Coal Loaded (C)","Unit Train (U)","Vehicle (V)","Yard Job (Y)"],"px":{"Domestic Intermodal (Q)":"Q-","High Priority Domestic Intermodal (Z)":"Z-","International Intermodal (S)":"S-","High Priority High HPT Manifest (HH)":"H-","Vehicle (V)":"V-","Local (L)":"L-","Road Switcher (R)":"R-","Transfer (T)":"T-","Unit Coal Loaded (C)":"C-","Unit Coal Empty (E)":"E-","Unit Ag. Loaded (G)":"G-","Unit Ag. Empty (X)":"X-","Unit Train (U)":"U-","Yard Job (Y)":"Y-","Baretable Intermodal (B)":"B-","Light Engines (D)":"D-","Low Priority Manifest (M)":"M-","Dimensional Special (J)":"J-","Helpers (K)":"K-","High Priority Low HPT Manifest (HL)":"H-"}},
-{"c":"CN","n":"CN","k":"#e23b3b","m":0,"ty":["Actual Blocked Manifest","CPR Origin/Shared Running","Express Automotive","Extra Trains","High Priority IM","Locals","Manifest","Quality Intermodal","Roadswitchers","Transfer Moves","Uniform Bulk","Unit Coal","Unit Grain","Unit Potash/Phosphate","Unit Sand/Sulphur","Work Trains","Yard Jobs"],"px":{"Actual Blocked Manifest":"A","Unit Potash/Phosphate":"B","Unit Coal":"C","Unit Grain":"G","Transfer Moves":"K","Locals":"L","Manifest":"M","Quality Intermodal":"Q","Roadswitchers":"R","Unit Sand/Sulphur":"S","Uniform Bulk":"U","Work Trains":"W","Extra Trains":"X","Yard Jobs":"Y","Express Automotive":"E","High Priority IM":"Z","CPR Origin/Shared Running":"H"}},
-{"c":"CPKC","n":"CPKC","k":"#e6484f","m":0,"ty":["Canada Central Division","Canada East Division","Canada Pacific Division","Canada Prairies Division","Expedited Merchandise","Foreign Haulage/Non-Revenue","Mexico North Division","Overflow and Detours","Priority IM/Autos/Manifest","Regional Freight","US Central Division","US East Division","US Northeastern Division","US South Division","US West Division","Unit Autorack","Unit Bulk","Unit Coal/Petcoke","Unit Crude Oil","Unit Ethanol","Unit Frac Sand","Unit Grain","Unit Molten Sulfur","Unit Phosphate","Unit Potash","Unit Sulphur"],"px":{}},
-{"c":"CSX","n":"CSX","k":"#3d7edb","m":0,"ty":["Auto/IM","Automotive","Coal","Coal DPU","DPU Autorack","DPU IM Priority","DPU Intermodal","DPU Manifest","E. Coal DPU","Empty Coal","Ethanol","Foreign Movements","Grain","Intermodal","Local","Manifest","Manifest/IM","Misc. Priority","Misc. Unit","Oil","Priority Intermodal","Priorty IM Peak","Yard Job/Local"],"px":{}},
-{"c":"NS","n":"NS","k":"#9aa4b1","m":0,"ty":["Aggregates/Sand","Auto / Manifest Mix","Autos","Baretable Intermodal","DPU Manifest","Ethanol/Oil ","Intermodal","Intermodal/Auto Mix","Light Engines","Local","Manifest","Manifest/IM Mix","Priority Intermodal","Roadrailer","Specials/Company Trains","Suspended trains","Unit","Unit Coal Empty","Unit Coal Loaded","Unit Grain Empty","Unit Grain Loaded","Yard Job"],"px":{}},
-{"c":"PASSENGER","n":"Passenger","k":"#7c93a8","m":1,"ty":["Altamont Commuter Exp.","Amtrak","CT rail","GO Transit","LA Metrolink","Maryland Commuter","Massachusetts Bay","Metra","Metro North","New Jersey Transit","New Mexico Rail Runner","Rocky Mountaineer","SEPTA","Sounder","South Shore Line","TRI-Rail","Trinity Railway Express","VIA","Virginia Railway Express","West Coast Express"],"px":{"Amtrak":"AMTK","South Shore Line":"NICD","VIA":"VIA","Metra":"METX","LA Metrolink":"SCAX","Sounder":"SOUNDER","West Coast Express":"WCE","Rocky Mountaineer":"GCR","GO Transit":"GO","Altamont Commuter Exp.":"ACE","Maryland Commuter":"MARC","Metro North":"MNCR","New Jersey Transit":"NJT","SEPTA":"SEPA","Trinity Railway Express":"TRE","Massachusetts Bay":"MBTA","Virginia Railway Express":"VRE","TRI-Rail":"TRCX","New Mexico Rail Runner":"NMRX","CT rail":"CTR"}},
-{"c":"SHORTLINE","n":"Shortlines","k":"#2dd4a7","m":1,"ty":["ABC Coke","Aberdeen & Rockfish","Aberdeen, Carolina and Western","Akron Barberton Cluster Railway","Alabama & Gulf Coast","Alabama Southern","Alabama Warrior","Alaska Rail Marine","Albany Port Railroad","Albany and Eastern","Alexander Railroad","Allegheny Valley Railroad","Alton & Southern","Amtrak","Ann Arbor","Appalachian and Ohio","Arizona & California","Arkansas Midland Railroad","Ashland Railway","Batten Kill Railroad","Belt Railway of Chicago","Birmingham Terminal Railway","Boone Scenic Valley Railroad","Buckingham Branch","Buffalo & Pittsburgh Railroad","Burlington Junction Railway","Burns Harbor Railroad","CG Railway","CORP","California Northern","California Steel Industries","Canton Railroad","Carlton Trail Railway","Carolina Coastal Railway","CaterParrott Railnet","Cedar Rapids & Iowa City","Central California Traction","Central Manitoba Railway","Central Railroad of Indiana","Chesapeake & Albemarle","Chicago Rail Link","Chicago South Shore","Chicago, Fort Wayne and Eastern","Chicago, St. Paul & Pacific","Cimarron Valley Railroad","Cincinnati Eastern Railroad","Cleveland Works Rail","Columbia and Cowlitz Railway","Columbia-Walla Walla Railway","Columbus & Chattahoochee","Columbus and Greenville","Commonwealth Railway","Connecticut Southern","Conrail - Detroit","Conrail - Jersey North","Conrail - Philadelphia","Coos Bay Rail Line","Crab Orchard and Egyptian","Dakota & Iowa","Dakota, Missouri Valley & Western","Dallas, Garland & Northeastern","Decatur & Eastern Illinois","Decatur Junction","Delaware & Raritan River","Delaware-Lackawanna","Delray Connecting","Denver Rock Island","East Penn Railroad","East Tennessee Railway","Eastern Idaho Railroad","Ellis & Eastern Railroad","Elwood Joliet & Southern","Essex Terminal Railway","Evansville Western","Finger Lakes Railway","Florida Central Railroad","Florida East Coast","Florida Midland Railroad","Fort Worth & Western","Foster Townsend Rail Logistics","Fox Valley & Lake Superior","Franklin Industrial Minerals","Fredonia Valley Railroad","Gary Railway","Geaux Geaux Railroad","Georgia & Florida Railroad","Georgia Central","Georgia Southern Railway","Georgia Southwestern Railroad","Golden Isles Terminal","Golden Triangle Railroad","Grand Elk Railroad","Great Lakes Central","Greater Winnipeg Water District Railway","Guelph Junction Railway","Hilton & Albany Railroad","Huron & Eastern","Huron Central Railway","Illinois & Midland","Illinois Railway","Indiana & Ohio","Indiana Harbor Belt","Indiana Northeastern","Indiana Rail Road","Indiana Southern","Iowa Interstate","Iowa Traction","Ithaca Central","Jackson & Lansing Railroad","Kanawha River Railroad","Kankakee, Beaverville & Southern","Kansas City Terminal","Kansas and Oklahoma Railroad","Kaw River Railroad","Keokuk Junction Railway","Kiamichi Railroad","Knoxville & Holston River","Lake Michigan & Indiana Railroad","Lake State Railway","Lancaster & Chester Railroad","Last Mountain Railway","Lehigh Valley Rail Management","Little Rock & Western Railway","Little Rock Port Authority","Longview Switching Company","Los Angeles Junction","Louisiana and Delta Railroad","Louisville and Indiana","MG Rail","Madison Railroad","Massachusetts Central Railroad","Massena Terminal Railway","Meridian & Bigbee Railroad","Meridian Southern Railway","Metra","Minnesota Commercial","Minnesota Prairie Line","Mississippian Railway","Missouri & Northern Arkansas","Missouri Eastern Railroad","Modesto and Empire Traction Company","Montana Rail Link","Morristown & Erie","Napoleon, Defiance & Western","Nebraska Central Railroad","New Brunswick Southern","New Castle Industrial Railroad","New England Central","New Orleans & Gulf Coast","New Orleans Public Belt","New York Container Terminal Rail","New York New Jersey Rail","New York and Atlantic","New York and Ogdensburg Railway","New York, Susquehanna and Western","Norfolk & Portsmouth Belt","Northern Lines Railway","Northwestern Pacific Railroad","Ohio Central Railroad System","Omaha, Lincoln & Beatrice","Oregon Pacific Railroad","Ottawa Valley Railway","Otter Tail Valley","Ozark Valley","Pacific Harbor Line","Paducah & Louisville","Palmetto Railways","Pan Am Southern","Peninsula Terminal","Pioneer Valley Railroad","Pittsburgh & Ohio Central","Port Colborne Harbour Railway","Port Harbor Railroad","Port Rail","Port Terminal Railroad","Port of Montreal","Port of Tillamook Bay","Portland Terminal Railroad","Portland Vancouver Junction","Portland and Western","Providence & Worcester","Puget Sound & Pacific","RJ Corman Allentown","RJ Corman Cleveland Line","RJ Corman Lehigh","RJ Corman Memphis Line","RJ Corman Switching","RJ Corman Tennessee Terminal","RJ Corman Western Ohio","Rail Synergy Oshawa","Rainier Rail","Raleigh and Fayetteville Railroad","Rapid City, Pierre & Eastern","Reading & Northern","Red River Valley & Western","Republic Short Line","Riceboro Southern Railway","Richmond Pacific","Ringneck & Western Railroad","Rochester & Southern","Rock & Rail","SMS Rail Lines","San Antonio Central","San Diego and Imperial Valley","San Joaquin Valley","Sand Springs Railway","Santa Maria Valley","Savannah & Old Fort Railroad","Savannah Port Terminal","Seaspan Coastal Intermodal","Seminole Gulf Railway","Sierra Northern","South Carolina Central","South Central Florida Express","South Chicago & Indiana Harbor","South Kansas & Oklahoma","Southern Rails Cooperative","Southern Railway of BC","Southwest Pennsylvania","St. Lawrence & Atlantic","St. Maries River Railroad","St. Paul & Pacific Railroad","Stockton Terminal and Eastern","Swan Ranch Railroad","Tacoma Rail","Tazewell & Peoria Railroad","Tennessee Southern","Tennessee Valley Railroad","Terminal Railroad","Terminal Railway Alabama State Docks","Texas Central Business Lines","Texas Northeastern Railroad","Texas, Gonzales and Northern","Toledo Industrial Railroad","Toledo, Peoria & Western","Toronto Terminals Railway","Trona Railway","Tulsa-Sapulpa Union Railway","Twin Cities & Western","Union Railroad","United States Sugar Corporation","Upper Merion and Plymouth","Utah Railway","Valdosta Railway","Ventura County","Vermont Rail System","Vicksburg Southern","Wheeling & Lake Erie","Wichita Terminal Association","Winchester & Western","Winston-Salem Southbound","Wisconsin & Southern","Yadkin Valley"],"px":{"Wheeling & Lake Erie":"WE","Iowa Interstate":"IAIS","Florida East Coast":"FEC","Indiana Rail Road":"INRD","Conrail - Jersey North":"CRNJ","New York New Jersey Rail":"NYNJ","New Orleans Public Belt":"NOPB","Reading & Northern":"RBMN","Chicago, Fort Wayne and Eastern":"CFE","Louisville and Indiana":"LIRC","Utah Railway":"UTAH","Conrail - Philadelphia":"CRSJ","Conrail - Detroit":"CRMI","Arizona & California":"ARZC","Dallas, Garland & Northeastern":"DGNO","CORP":"CORP","Providence & Worcester":"PW","Aberdeen, Carolina and Western":"ACWR","Tacoma Rail":"TMBL","Union Railroad":"URR","Great Lakes Central":"GLC","Delaware-Lackawanna":"DL","Lake State Railway":"LSRC","Chicago South Shore":"CSS","Portland and Western":"PNWR","Southern Railway of BC":"SRY","California Northern":"CFNR","New England Central":"NECR","Terminal Railroad":"TRRA","Ann Arbor":"AA","Rochester & Southern":"RSR","Ventura County":"VCRR","San Joaquin Valley":"SJVR","Indiana Harbor Belt":"IHB","Connecticut Southern":"CSO","Evansville Western":"EVWR","Indiana & Ohio":"IORY","New York, Susquehanna and Western":"NYSW","Aberdeen & Rockfish":"AR","Winston-Salem Southbound":"WSS","Santa Maria Valley":"SMV","New Brunswick Southern":"NBSR","Alton & Southern":"ALS","Chicago Rail Link":"CRL","Minnesota Commercial":"MNNR","Belt Railway of Chicago":"BRC","Kiamichi Railroad":"KRR","Port Terminal Railroad":"PTRA","Alaska Rail Marine":"ARM","Birmingham Terminal Railway":"BHRR","Amtrak":"AMTK","Indiana Southern":"ISRR","Alabama Southern":"ABS","Buckingham Branch":"BB","Central California Traction":"CCT","Norfolk & Portsmouth Belt":"NPBL","Pacific Harbor Line":"PHL","Decatur Junction":"DT","Richmond Pacific":"RPRC","ABC Coke":"ABCX","Denver Rock Island":"DRIR","Kansas City Terminal":"KCT","Los Angeles Junction":"LAJ","Georgia Central":"GC","Port of Montreal":"POM","Stockton Terminal and Eastern":"STE","Paducah & Louisville":"PAL","Carlton Trail Railway":"CTRW","New York and Atlantic":"NYA","Tennessee Southern":"TSRR","Southwest Pennsylvania":"SWP","Golden Isles Terminal":"GITM","Winchester & Western":"WW","Savannah Port Terminal":"SAPT","Alabama Warrior":"ABWR","Ohio Central Railroad System":"OHCR","RJ Corman Lehigh":"LRWY","Ashland Railway":"ASRY","Vicksburg Southern":"VSOR","Delray Connecting":"DC","Palmetto Railways":"PR","Albany and Eastern":"AERC","Montana Rail Link":"MRL","Alabama & Gulf Coast":"AGR","CG Railway":"CGR","Sierra Northern":"SERA","Texas Central Business Lines":"TCB","Knoxville & Holston River":"KXHR","Foster Townsend Rail Logistics":"FTRL","Ozark Valley":"OVRR","Valdosta Railway":"VR","Georgia Southern Railway":"GS","Illinois & Midland":"IMRR","Huron & Eastern":"HESR","Dakota & Iowa":"DAIR","Iowa Traction":"IATR","Portland Terminal Railroad":"PTRC","Port of Tillamook Bay":"POTB","Northern Lines Railway":"NLR","San Diego and Imperial Valley":"SDIY","Otter Tail Valley":"OTVR","Cedar Rapids & Iowa City":"CIC","Canton Railroad":"CTN","South Chicago & Indiana Harbor":"SCIH","Massena Terminal Railway":"MSTR","Missouri Eastern Railroad":"MER","Kaw River Railroad":"KAW","Little Rock Port Authority":"LRPA","Georgia & Florida Railroad":"GFRR","Georgia Southwestern Railroad":"GSWR","Jackson & Lansing Railroad":"JAIL","Dakota, Missouri Valley & Western":"DMVW","Red River Valley & Western":"RRVW","Rapid City, Pierre & Eastern":"RCPE","Peninsula Terminal":"PT","Pan Am Southern":"BERX","Meridian & Bigbee Railroad":"MNBR","Nebraska Central Railroad":"NCRC","Morristown & Erie":"ME","Kanawha River Railroad":"KNWA","St. Lawrence & Atlantic":"SLR","Vermont Rail System":"VRS","Commonwealth Railway":"CWRY","Cimarron Valley Railroad":"CVR","California Steel Industries":"CSI","Finger Lakes Railway":"FGLK","Upper Merion and Plymouth":"UMP","Gary Railway":"GRW","East Tennessee Railway":"ETRY","Southern Rails Cooperative":"SORA","Tennessee Valley Railroad":"TVRM","Lehigh Valley Rail Management":"LVRB","Cleveland Works Rail":"CWRO","Wisconsin & Southern":"WSOR","Decatur & Eastern Illinois":"DREI","Essex Terminal Railway":"ETL","Ringneck & Western Railroad":"RWRR","Lancaster & Chester Railroad":"LC","Central Railroad of Indiana":"CIND","Illinois Railway":"IR","Franklin Industrial Minerals":"FIMX","New York Container Terminal Rail":"NYCT","Toledo, Peoria & Western":"TPW","RJ Corman Memphis Line":"RJCM","Trona Railway":"TRC","Buffalo & Pittsburgh Railroad":"BPRR","Huron Central Railway":"HCRY","Ottawa Valley Railway":"OVR","Greater Winnipeg Water District Railway":"GWWD","Central Manitoba Railway":"CEMR","Appalachian and Ohio":"AO","South Central Florida Express":"SCXF","United States Sugar Corporation":"USCX","St. Paul & Pacific Railroad":"SPP","New Castle Industrial Railroad":"NCIR","Longview Switching Company":"LVSW","Columbia and Cowlitz Railway":"CLC","Little Rock & Western Railway":"LRWN","Arkansas Midland Railroad":"AKMD","Ellis & Eastern Railroad":"EE","Twin Cities & Western":"TCWR","Minnesota Prairie Line":"MPLI","Meridian Southern Railway":"MDS","Florida Midland Railroad":"FMID","Florida Central Railroad":"FCEN","Allegheny Valley Railroad":"AVR","Hilton & Albany Railroad":"HAL","Geaux Geaux Railroad":"GOGR","New Orleans & Gulf Coast":"NOGC","Chicago, St. Paul & Pacific":"CSP","Omaha, Lincoln & Beatrice":"OLB","Pioneer Valley Railroad":"PVRR","South Kansas & Oklahoma":"SKOL","Terminal Railway Alabama State Docks":"TASD","Kansas and Oklahoma Railroad":"KO","Wichita Terminal Association":"WTA","Puget Sound & Pacific":"PSAP","Swan Ranch Railroad":"SRRR","Boone Scenic Valley Railroad":"BSVY","Carolina Coastal Railway":"CLNA","Missouri & Northern Arkansas":"MNA","RJ Corman Switching":"RJCC","RJ Corman Western Ohio":"RJCW","Port Harbor Railroad":"PHRR","RJ Corman Tennessee Terminal":"RJCK","Napoleon, Defiance & Western":"NDW","St. Maries River Railroad":"STMA","Last Mountain Railway":"LMR","Metra":"METX","Oregon Pacific Railroad":"OPR","Toronto Terminals Railway":"TTR","Massachusetts Central Railroad":"MCER","Tulsa-Sapulpa Union Railway":"TSU","Sand Springs Railway":"SS","Yadkin Valley":"YVRR","Portland Vancouver Junction":"PVJR","Raleigh and Fayetteville Railroad":"RFCC","Northwestern Pacific Railroad":"NWP","South Carolina Central":"SCRF","Akron Barberton Cluster Railway":"AB","Batten Kill Railroad":"BKRR","Albany Port Railroad":"APD","Fort Worth & Western":"FWWR","Crab Orchard and Egyptian":"COER","Columbus & Chattahoochee":"CCH","Seminole Gulf Railway":"SGLR","East Penn Railroad":"ESPN","Rainier Rail":"RNIR","Rock & Rail":"RRRR","Riceboro Southern Railway":"RSOR","Savannah & Old Fort Railroad":"SVHO","Fredonia Valley Railroad":"FVRR","San Antonio Central":"SAC","Seaspan Coastal Intermodal":"SCIC","Eastern Idaho Railroad":"EIRR","Modesto and Empire Traction Company":"MET","Cincinnati Eastern Railroad":"CCET","Texas, Gonzales and Northern":"TXGN","Fox Valley & Lake Superior":"FOXY","Burlington Junction Railway":"BJRY","Chesapeake & Albemarle":"CA","New York and Ogdensburg Railway":"NYOG","Indiana Northeastern":"IN","Delaware & Raritan River":"DRR","Kankakee, Beaverville & Southern":"KBSR","Tazewell & Peoria Railroad":"TZPR","Keokuk Junction Railway":"KJRY","Texas Northeastern Railroad":"TNER","CaterParrott Railnet":"CPR","Mississippian Railway":"MSRW","Port Rail":"PRL","MG Rail":"MGRI","Columbus and Greenville":"CAGY","Golden Triangle Railroad":"GTRA","RJ Corman Allentown":"RJCN","Ithaca Central":"ITHR","Columbia-Walla Walla Railway":"CWW","Guelph Junction Railway":"GJR","Grand Elk Railroad":"GDLK","Alexander Railroad":"ARC","Toledo Industrial Railroad":"TIR","Republic Short Line":"RSL","RJ Corman Cleveland Line":"RJCL","Elwood Joliet & Southern":"EJSR","Louisiana and Delta Railroad":"LDRR","Rail Synergy Oshawa":"RSOS","Madison Railroad":"CMPA","Coos Bay Rail Line":"CBRL","Burns Harbor Railroad":"BHS","Lake Michigan & Indiana Railroad":"LMIC","Port Colborne Harbour Railway":"PCHR","Pittsburgh & Ohio Central":"POHC","SMS Rail Lines":"SMS"}},
-{"c":"UP","n":"UP","k":"#ffd200","m":0,"ty":["Auto","Bulk Unit","Coal","Expedited Z","Grain Byproducts","Grain Empties","Grain Loads","Grain Meal","Grain Reposition","Grain Shuttle","Intermodal I","Light Engines","Local","Manifest","Quality Intermodal","Quality Manifest","Rock","Special","Unit","Unit Ethanol","Work, MofW","Yard"],"px":{"Auto":"A","Coal":"C","Light Engines":"E","Grain Reposition":"GK","Grain Empties":"GE","Grain Loads":"GL","Grain Shuttle":"GS","Intermodal I":"I","Quality Intermodal":"K","Local":"L","Manifest":"M","Bulk Unit":"O","Quality Manifest":"Q","Rock":"R","Special":"S","Work, MofW":"W","Yard":"Y","Expedited Z":"Z","Unit":"U","Unit Ethanol":"UE","Grain Byproducts":"GB","Grain Meal":"GM"}}
+{"c":"BNSF","n":"BNSF","k":"#f26a21","m":0,"pax":0,"ty":["Baretable Intermodal (B)","Dimensional Special (J)","Domestic Intermodal (Q)","Helpers (K)","High Priority Domestic Intermodal (Z)","High Priority High HPT Manifest (HH)","High Priority Low HPT Manifest (HL)","International Intermodal (S)","Light Engines (D)","Local (L)","Low Priority Manifest (M)","Road Switcher (R)","Transfer (T)","Unit Ag. Empty (X)","Unit Ag. Loaded (G)","Unit Coal Empty (E)","Unit Coal Loaded (C)","Unit Train (U)","Vehicle (V)","Yard Job (Y)"],"px":{"Domestic Intermodal (Q)":"Q-","High Priority Domestic Intermodal (Z)":"Z-","International Intermodal (S)":"S-","High Priority High HPT Manifest (HH)":"H-","Vehicle (V)":"V-","Local (L)":"L-","Road Switcher (R)":"R-","Transfer (T)":"T-","Unit Coal Loaded (C)":"C-","Unit Coal Empty (E)":"E-","Unit Ag. Loaded (G)":"G-","Unit Ag. Empty (X)":"X-","Unit Train (U)":"U-","Yard Job (Y)":"Y-","Baretable Intermodal (B)":"B-","Light Engines (D)":"D-","Low Priority Manifest (M)":"M-","Dimensional Special (J)":"J-","Helpers (K)":"K-","High Priority Low HPT Manifest (HL)":"H-"},"fc":{"Baretable Intermodal (B)":"intermodal","Dimensional Special (J)":"nonrev","Domestic Intermodal (Q)":"intermodal","Helpers (K)":"engines","High Priority Domestic Intermodal (Z)":"intermodal","High Priority High HPT Manifest (HH)":"carload","High Priority Low HPT Manifest (HL)":"carload","International Intermodal (S)":"intermodal","Light Engines (D)":"engines","Local (L)":"carload","Low Priority Manifest (M)":"carload","Road Switcher (R)":"carload","Transfer (T)":"carload","Unit Ag. Empty (X)":"unit","Unit Ag. Loaded (G)":"unit","Unit Coal Empty (E)":"unit","Unit Coal Loaded (C)":"unit","Unit Train (U)":"unit","Vehicle (V)":"auto","Yard Job (Y)":"carload"}},
+{"c":"CN","n":"CN","k":"#e23b3b","m":0,"pax":0,"ty":["Actual Blocked Manifest","CPR Origin/Shared Running","Express Automotive","Extra Trains","High Priority IM","Locals","Manifest","Quality Intermodal","Roadswitchers","Transfer Moves","Uniform Bulk","Unit Coal","Unit Grain","Unit Potash/Phosphate","Unit Sand/Sulphur","Work Trains","Yard Jobs"],"px":{"Actual Blocked Manifest":"A","Unit Potash/Phosphate":"B","Unit Coal":"C","Unit Grain":"G","Transfer Moves":"K","Locals":"L","Manifest":"M","Quality Intermodal":"Q","Roadswitchers":"R","Unit Sand/Sulphur":"S","Uniform Bulk":"U","Work Trains":"W","Extra Trains":"X","Yard Jobs":"Y","Express Automotive":"E","High Priority IM":"Z","CPR Origin/Shared Running":"H"},"fc":{"Actual Blocked Manifest":"carload","CPR Origin/Shared Running":"carload","Express Automotive":"auto","Extra Trains":"nonrev","Work Trains":"nonrev","High Priority IM":"intermodal","Locals":"carload","Manifest":"carload","Quality Intermodal":"intermodal","Roadswitchers":"carload","Transfer Moves":"carload","Uniform Bulk":"unit","Unit Coal":"unit","Unit Grain":"unit","Unit Potash/Phosphate":"unit","Unit Sand/Sulphur":"unit","Yard Jobs":"carload"}},
+{"c":"CPKC","n":"CPKC","k":"#e6484f","m":0,"pax":0,"ty":["Canada Central Division","Canada East Division","Canada Pacific Division","Canada Prairies Division","Expedited Merchandise","Foreign Haulage/Non-Revenue","Mexico North Division","Overflow and Detours","Priority IM/Autos/Manifest","Regional Freight","US Central Division","US East Division","US Northeastern Division","US South Division","US West Division","Unit Autorack","Unit Bulk","Unit Coal/Petcoke","Unit Crude Oil","Unit Ethanol","Unit Frac Sand","Unit Grain","Unit Molten Sulfur","Unit Phosphate","Unit Potash","Unit Sulphur"],"px":{},"fc":{"Canada Central Division":"carload","Canada East Division":"carload","Canada Pacific Division":"carload","Canada Prairies Division":"carload","Expedited Merchandise":"carload","Foreign Haulage/Non-Revenue":"nonrev","Mexico North Division":"carload","Overflow and Detours":"nonrev","Priority IM/Autos/Manifest":"carload+intermodal+auto","Regional Freight":"carload","US Central Division":"carload","US East Division":"carload","US Northeastern Division":"carload","US South Division":"carload","US West Division":"carload","Unit Autorack":"auto","Unit Bulk":"unit","Unit Coal/Petcoke":"unit","Unit Crude Oil":"unit","Unit Ethanol":"unit","Unit Frac Sand":"unit","Unit Grain":"unit","Unit Molten Sulfur":"unit","Unit Phosphate":"unit","Unit Potash":"unit","Unit Sulphur":"unit"}},
+{"c":"CSX","n":"CSX","k":"#3d7edb","m":0,"pax":0,"ty":["Auto/IM","Automotive","Coal","Coal DPU","DPU Autorack","DPU IM Priority","DPU Intermodal","DPU Manifest","E. Coal DPU","Empty Coal","Ethanol","Foreign Movements","Grain","Intermodal","Local","Manifest","Manifest/IM","Misc. Priority","Misc. Unit","Oil","Priority Intermodal","Priorty IM Peak","Yard Job/Local"],"px":{},"fc":{"Auto/IM":"auto+intermodal","Automotive":"auto","Coal":"unit","Coal DPU":"unit","DPU Autorack":"auto","DPU IM Priority":"intermodal","DPU Intermodal":"intermodal","DPU Manifest":"carload","E. Coal DPU":"unit","Empty Coal":"unit","Ethanol":"unit","Foreign Movements":"nonrev","Grain":"unit","Intermodal":"intermodal","Local":"carload","Manifest":"carload","Manifest/IM":"carload+intermodal","Misc. Priority":"carload","Misc. Unit":"unit","Oil":"unit","Priority Intermodal":"intermodal","Priorty IM Peak":"intermodal","Yard Job/Local":"carload"}},
+{"c":"NS","n":"NS","k":"#9aa4b1","m":0,"pax":0,"ty":["Aggregates/Sand","Auto / Manifest Mix","Autos","Baretable Intermodal","DPU Manifest","Ethanol/Oil ","Intermodal","Intermodal/Auto Mix","Light Engines","Local","Manifest","Manifest/IM Mix","Priority Intermodal","Roadrailer","Specials/Company Trains","Suspended trains","Unit","Unit Coal Empty","Unit Coal Loaded","Unit Grain Empty","Unit Grain Loaded","Yard Job"],"px":{},"fc":{"Aggregates/Sand":"unit","Auto / Manifest Mix":"carload+auto","Autos":"auto","Baretable Intermodal":"intermodal","DPU Manifest":"carload","Ethanol/Oil ":"unit","Intermodal":"intermodal","Intermodal/Auto Mix":"intermodal+auto","Light Engines":"engines","Local":"carload","Manifest":"carload","Manifest/IM Mix":"carload+intermodal","Priority Intermodal":"intermodal","Roadrailer":"intermodal","Specials/Company Trains":"nonrev","Suspended trains":"nonrev","Unit":"unit","Unit Coal Empty":"unit","Unit Coal Loaded":"unit","Unit Grain Empty":"unit","Unit Grain Loaded":"unit","Yard Job":"carload"}},
+{"c":"PASSENGER","n":"Passenger","k":"#7c93a8","m":1,"pax":1,"ty":["Altamont Commuter Exp.","Amtrak","CT rail","GO Transit","LA Metrolink","Maryland Commuter","Massachusetts Bay","Metra","Metro North","New Jersey Transit","New Mexico Rail Runner","Rocky Mountaineer","SEPTA","Sounder","South Shore Line","TRI-Rail","Trinity Railway Express","VIA","Virginia Railway Express","West Coast Express"],"px":{"Amtrak":"AMTK","South Shore Line":"NICD","VIA":"VIA","Metra":"METX","LA Metrolink":"SCAX","Sounder":"SOUNDER","West Coast Express":"WCE","Rocky Mountaineer":"GCR","GO Transit":"GO","Altamont Commuter Exp.":"ACE","Maryland Commuter":"MARC","Metro North":"MNCR","New Jersey Transit":"NJT","SEPTA":"SEPA","Trinity Railway Express":"TRE","Massachusetts Bay":"MBTA","Virginia Railway Express":"VRE","TRI-Rail":"TRCX","New Mexico Rail Runner":"NMRX","CT rail":"CTR"},"fc":{}},
+{"c":"SHORTLINE","n":"Shortlines","k":"#2dd4a7","m":1,"pax":0,"ty":["ABC Coke","Aberdeen & Rockfish","Aberdeen, Carolina and Western","Akron Barberton Cluster Railway","Alabama & Gulf Coast","Alabama Southern","Alabama Warrior","Alaska Rail Marine","Albany Port Railroad","Albany and Eastern","Alexander Railroad","Allegheny Valley Railroad","Alton & Southern","Amtrak","Ann Arbor","Appalachian and Ohio","Arizona & California","Arkansas Midland Railroad","Ashland Railway","Batten Kill Railroad","Belt Railway of Chicago","Birmingham Terminal Railway","Boone Scenic Valley Railroad","Buckingham Branch","Buffalo & Pittsburgh Railroad","Burlington Junction Railway","Burns Harbor Railroad","CG Railway","CORP","California Northern","California Steel Industries","Canton Railroad","Carlton Trail Railway","Carolina Coastal Railway","CaterParrott Railnet","Cedar Rapids & Iowa City","Central California Traction","Central Manitoba Railway","Central Railroad of Indiana","Chesapeake & Albemarle","Chicago Rail Link","Chicago South Shore","Chicago, Fort Wayne and Eastern","Chicago, St. Paul & Pacific","Cimarron Valley Railroad","Cincinnati Eastern Railroad","Cleveland Works Rail","Columbia and Cowlitz Railway","Columbia-Walla Walla Railway","Columbus & Chattahoochee","Columbus and Greenville","Commonwealth Railway","Connecticut Southern","Conrail - Detroit","Conrail - Jersey North","Conrail - Philadelphia","Coos Bay Rail Line","Crab Orchard and Egyptian","Dakota & Iowa","Dakota, Missouri Valley & Western","Dallas, Garland & Northeastern","Decatur & Eastern Illinois","Decatur Junction","Delaware & Raritan River","Delaware-Lackawanna","Delray Connecting","Denver Rock Island","East Penn Railroad","East Tennessee Railway","Eastern Idaho Railroad","Ellis & Eastern Railroad","Elwood Joliet & Southern","Essex Terminal Railway","Evansville Western","Finger Lakes Railway","Florida Central Railroad","Florida East Coast","Florida Midland Railroad","Fort Worth & Western","Foster Townsend Rail Logistics","Fox Valley & Lake Superior","Franklin Industrial Minerals","Fredonia Valley Railroad","Gary Railway","Geaux Geaux Railroad","Georgia & Florida Railroad","Georgia Central","Georgia Southern Railway","Georgia Southwestern Railroad","Golden Isles Terminal","Golden Triangle Railroad","Grand Elk Railroad","Great Lakes Central","Greater Winnipeg Water District Railway","Guelph Junction Railway","Hilton & Albany Railroad","Huron & Eastern","Huron Central Railway","Illinois & Midland","Illinois Railway","Indiana & Ohio","Indiana Harbor Belt","Indiana Northeastern","Indiana Rail Road","Indiana Southern","Iowa Interstate","Iowa Traction","Ithaca Central","Jackson & Lansing Railroad","Kanawha River Railroad","Kankakee, Beaverville & Southern","Kansas City Terminal","Kansas and Oklahoma Railroad","Kaw River Railroad","Keokuk Junction Railway","Kiamichi Railroad","Knoxville & Holston River","Lake Michigan & Indiana Railroad","Lake State Railway","Lancaster & Chester Railroad","Last Mountain Railway","Lehigh Valley Rail Management","Little Rock & Western Railway","Little Rock Port Authority","Longview Switching Company","Los Angeles Junction","Louisiana and Delta Railroad","Louisville and Indiana","MG Rail","Madison Railroad","Massachusetts Central Railroad","Massena Terminal Railway","Meridian & Bigbee Railroad","Meridian Southern Railway","Metra","Minnesota Commercial","Minnesota Prairie Line","Mississippian Railway","Missouri & Northern Arkansas","Missouri Eastern Railroad","Modesto and Empire Traction Company","Montana Rail Link","Morristown & Erie","Napoleon, Defiance & Western","Nebraska Central Railroad","New Brunswick Southern","New Castle Industrial Railroad","New England Central","New Orleans & Gulf Coast","New Orleans Public Belt","New York Container Terminal Rail","New York New Jersey Rail","New York and Atlantic","New York and Ogdensburg Railway","New York, Susquehanna and Western","Norfolk & Portsmouth Belt","Northern Lines Railway","Northwestern Pacific Railroad","Ohio Central Railroad System","Omaha, Lincoln & Beatrice","Oregon Pacific Railroad","Ottawa Valley Railway","Otter Tail Valley","Ozark Valley","Pacific Harbor Line","Paducah & Louisville","Palmetto Railways","Pan Am Southern","Peninsula Terminal","Pioneer Valley Railroad","Pittsburgh & Ohio Central","Port Colborne Harbour Railway","Port Harbor Railroad","Port Rail","Port Terminal Railroad","Port of Montreal","Port of Tillamook Bay","Portland Terminal Railroad","Portland Vancouver Junction","Portland and Western","Providence & Worcester","Puget Sound & Pacific","RJ Corman Allentown","RJ Corman Cleveland Line","RJ Corman Lehigh","RJ Corman Memphis Line","RJ Corman Switching","RJ Corman Tennessee Terminal","RJ Corman Western Ohio","Rail Synergy Oshawa","Rainier Rail","Raleigh and Fayetteville Railroad","Rapid City, Pierre & Eastern","Reading & Northern","Red River Valley & Western","Republic Short Line","Riceboro Southern Railway","Richmond Pacific","Ringneck & Western Railroad","Rochester & Southern","Rock & Rail","SMS Rail Lines","San Antonio Central","San Diego and Imperial Valley","San Joaquin Valley","Sand Springs Railway","Santa Maria Valley","Savannah & Old Fort Railroad","Savannah Port Terminal","Seaspan Coastal Intermodal","Seminole Gulf Railway","Sierra Northern","South Carolina Central","South Central Florida Express","South Chicago & Indiana Harbor","South Kansas & Oklahoma","Southern Rails Cooperative","Southern Railway of BC","Southwest Pennsylvania","St. Lawrence & Atlantic","St. Maries River Railroad","St. Paul & Pacific Railroad","Stockton Terminal and Eastern","Swan Ranch Railroad","Tacoma Rail","Tazewell & Peoria Railroad","Tennessee Southern","Tennessee Valley Railroad","Terminal Railroad","Terminal Railway Alabama State Docks","Texas Central Business Lines","Texas Northeastern Railroad","Texas, Gonzales and Northern","Toledo Industrial Railroad","Toledo, Peoria & Western","Toronto Terminals Railway","Trona Railway","Tulsa-Sapulpa Union Railway","Twin Cities & Western","Union Railroad","United States Sugar Corporation","Upper Merion and Plymouth","Utah Railway","Valdosta Railway","Ventura County","Vermont Rail System","Vicksburg Southern","Wheeling & Lake Erie","Wichita Terminal Association","Winchester & Western","Winston-Salem Southbound","Wisconsin & Southern","Yadkin Valley"],"px":{"Wheeling & Lake Erie":"WE","Iowa Interstate":"IAIS","Florida East Coast":"FEC","Indiana Rail Road":"INRD","Conrail - Jersey North":"CRNJ","New York New Jersey Rail":"NYNJ","New Orleans Public Belt":"NOPB","Reading & Northern":"RBMN","Chicago, Fort Wayne and Eastern":"CFE","Louisville and Indiana":"LIRC","Utah Railway":"UTAH","Conrail - Philadelphia":"CRSJ","Conrail - Detroit":"CRMI","Arizona & California":"ARZC","Dallas, Garland & Northeastern":"DGNO","CORP":"CORP","Providence & Worcester":"PW","Aberdeen, Carolina and Western":"ACWR","Tacoma Rail":"TMBL","Union Railroad":"URR","Great Lakes Central":"GLC","Delaware-Lackawanna":"DL","Lake State Railway":"LSRC","Chicago South Shore":"CSS","Portland and Western":"PNWR","Southern Railway of BC":"SRY","California Northern":"CFNR","New England Central":"NECR","Terminal Railroad":"TRRA","Ann Arbor":"AA","Rochester & Southern":"RSR","Ventura County":"VCRR","San Joaquin Valley":"SJVR","Indiana Harbor Belt":"IHB","Connecticut Southern":"CSO","Evansville Western":"EVWR","Indiana & Ohio":"IORY","New York, Susquehanna and Western":"NYSW","Aberdeen & Rockfish":"AR","Winston-Salem Southbound":"WSS","Santa Maria Valley":"SMV","New Brunswick Southern":"NBSR","Alton & Southern":"ALS","Chicago Rail Link":"CRL","Minnesota Commercial":"MNNR","Belt Railway of Chicago":"BRC","Kiamichi Railroad":"KRR","Port Terminal Railroad":"PTRA","Alaska Rail Marine":"ARM","Birmingham Terminal Railway":"BHRR","Amtrak":"AMTK","Indiana Southern":"ISRR","Alabama Southern":"ABS","Buckingham Branch":"BB","Central California Traction":"CCT","Norfolk & Portsmouth Belt":"NPBL","Pacific Harbor Line":"PHL","Decatur Junction":"DT","Richmond Pacific":"RPRC","ABC Coke":"ABCX","Denver Rock Island":"DRIR","Kansas City Terminal":"KCT","Los Angeles Junction":"LAJ","Georgia Central":"GC","Port of Montreal":"POM","Stockton Terminal and Eastern":"STE","Paducah & Louisville":"PAL","Carlton Trail Railway":"CTRW","New York and Atlantic":"NYA","Tennessee Southern":"TSRR","Southwest Pennsylvania":"SWP","Golden Isles Terminal":"GITM","Winchester & Western":"WW","Savannah Port Terminal":"SAPT","Alabama Warrior":"ABWR","Ohio Central Railroad System":"OHCR","RJ Corman Lehigh":"LRWY","Ashland Railway":"ASRY","Vicksburg Southern":"VSOR","Delray Connecting":"DC","Palmetto Railways":"PR","Albany and Eastern":"AERC","Montana Rail Link":"MRL","Alabama & Gulf Coast":"AGR","CG Railway":"CGR","Sierra Northern":"SERA","Texas Central Business Lines":"TCB","Knoxville & Holston River":"KXHR","Foster Townsend Rail Logistics":"FTRL","Ozark Valley":"OVRR","Valdosta Railway":"VR","Georgia Southern Railway":"GS","Illinois & Midland":"IMRR","Huron & Eastern":"HESR","Dakota & Iowa":"DAIR","Iowa Traction":"IATR","Portland Terminal Railroad":"PTRC","Port of Tillamook Bay":"POTB","Northern Lines Railway":"NLR","San Diego and Imperial Valley":"SDIY","Otter Tail Valley":"OTVR","Cedar Rapids & Iowa City":"CIC","Canton Railroad":"CTN","South Chicago & Indiana Harbor":"SCIH","Massena Terminal Railway":"MSTR","Missouri Eastern Railroad":"MER","Kaw River Railroad":"KAW","Little Rock Port Authority":"LRPA","Georgia & Florida Railroad":"GFRR","Georgia Southwestern Railroad":"GSWR","Jackson & Lansing Railroad":"JAIL","Dakota, Missouri Valley & Western":"DMVW","Red River Valley & Western":"RRVW","Rapid City, Pierre & Eastern":"RCPE","Peninsula Terminal":"PT","Pan Am Southern":"BERX","Meridian & Bigbee Railroad":"MNBR","Nebraska Central Railroad":"NCRC","Morristown & Erie":"ME","Kanawha River Railroad":"KNWA","St. Lawrence & Atlantic":"SLR","Vermont Rail System":"VRS","Commonwealth Railway":"CWRY","Cimarron Valley Railroad":"CVR","California Steel Industries":"CSI","Finger Lakes Railway":"FGLK","Upper Merion and Plymouth":"UMP","Gary Railway":"GRW","East Tennessee Railway":"ETRY","Southern Rails Cooperative":"SORA","Tennessee Valley Railroad":"TVRM","Lehigh Valley Rail Management":"LVRB","Cleveland Works Rail":"CWRO","Wisconsin & Southern":"WSOR","Decatur & Eastern Illinois":"DREI","Essex Terminal Railway":"ETL","Ringneck & Western Railroad":"RWRR","Lancaster & Chester Railroad":"LC","Central Railroad of Indiana":"CIND","Illinois Railway":"IR","Franklin Industrial Minerals":"FIMX","New York Container Terminal Rail":"NYCT","Toledo, Peoria & Western":"TPW","RJ Corman Memphis Line":"RJCM","Trona Railway":"TRC","Buffalo & Pittsburgh Railroad":"BPRR","Huron Central Railway":"HCRY","Ottawa Valley Railway":"OVR","Greater Winnipeg Water District Railway":"GWWD","Central Manitoba Railway":"CEMR","Appalachian and Ohio":"AO","South Central Florida Express":"SCXF","United States Sugar Corporation":"USCX","St. Paul & Pacific Railroad":"SPP","New Castle Industrial Railroad":"NCIR","Longview Switching Company":"LVSW","Columbia and Cowlitz Railway":"CLC","Little Rock & Western Railway":"LRWN","Arkansas Midland Railroad":"AKMD","Ellis & Eastern Railroad":"EE","Twin Cities & Western":"TCWR","Minnesota Prairie Line":"MPLI","Meridian Southern Railway":"MDS","Florida Midland Railroad":"FMID","Florida Central Railroad":"FCEN","Allegheny Valley Railroad":"AVR","Hilton & Albany Railroad":"HAL","Geaux Geaux Railroad":"GOGR","New Orleans & Gulf Coast":"NOGC","Chicago, St. Paul & Pacific":"CSP","Omaha, Lincoln & Beatrice":"OLB","Pioneer Valley Railroad":"PVRR","South Kansas & Oklahoma":"SKOL","Terminal Railway Alabama State Docks":"TASD","Kansas and Oklahoma Railroad":"KO","Wichita Terminal Association":"WTA","Puget Sound & Pacific":"PSAP","Swan Ranch Railroad":"SRRR","Boone Scenic Valley Railroad":"BSVY","Carolina Coastal Railway":"CLNA","Missouri & Northern Arkansas":"MNA","RJ Corman Switching":"RJCC","RJ Corman Western Ohio":"RJCW","Port Harbor Railroad":"PHRR","RJ Corman Tennessee Terminal":"RJCK","Napoleon, Defiance & Western":"NDW","St. Maries River Railroad":"STMA","Last Mountain Railway":"LMR","Metra":"METX","Oregon Pacific Railroad":"OPR","Toronto Terminals Railway":"TTR","Massachusetts Central Railroad":"MCER","Tulsa-Sapulpa Union Railway":"TSU","Sand Springs Railway":"SS","Yadkin Valley":"YVRR","Portland Vancouver Junction":"PVJR","Raleigh and Fayetteville Railroad":"RFCC","Northwestern Pacific Railroad":"NWP","South Carolina Central":"SCRF","Akron Barberton Cluster Railway":"AB","Batten Kill Railroad":"BKRR","Albany Port Railroad":"APD","Fort Worth & Western":"FWWR","Crab Orchard and Egyptian":"COER","Columbus & Chattahoochee":"CCH","Seminole Gulf Railway":"SGLR","East Penn Railroad":"ESPN","Rainier Rail":"RNIR","Rock & Rail":"RRRR","Riceboro Southern Railway":"RSOR","Savannah & Old Fort Railroad":"SVHO","Fredonia Valley Railroad":"FVRR","San Antonio Central":"SAC","Seaspan Coastal Intermodal":"SCIC","Eastern Idaho Railroad":"EIRR","Modesto and Empire Traction Company":"MET","Cincinnati Eastern Railroad":"CCET","Texas, Gonzales and Northern":"TXGN","Fox Valley & Lake Superior":"FOXY","Burlington Junction Railway":"BJRY","Chesapeake & Albemarle":"CA","New York and Ogdensburg Railway":"NYOG","Indiana Northeastern":"IN","Delaware & Raritan River":"DRR","Kankakee, Beaverville & Southern":"KBSR","Tazewell & Peoria Railroad":"TZPR","Keokuk Junction Railway":"KJRY","Texas Northeastern Railroad":"TNER","CaterParrott Railnet":"CPR","Mississippian Railway":"MSRW","Port Rail":"PRL","MG Rail":"MGRI","Columbus and Greenville":"CAGY","Golden Triangle Railroad":"GTRA","RJ Corman Allentown":"RJCN","Ithaca Central":"ITHR","Columbia-Walla Walla Railway":"CWW","Guelph Junction Railway":"GJR","Grand Elk Railroad":"GDLK","Alexander Railroad":"ARC","Toledo Industrial Railroad":"TIR","Republic Short Line":"RSL","RJ Corman Cleveland Line":"RJCL","Elwood Joliet & Southern":"EJSR","Louisiana and Delta Railroad":"LDRR","Rail Synergy Oshawa":"RSOS","Madison Railroad":"CMPA","Coos Bay Rail Line":"CBRL","Burns Harbor Railroad":"BHS","Lake Michigan & Indiana Railroad":"LMIC","Port Colborne Harbour Railway":"PCHR","Pittsburgh & Ohio Central":"POHC","SMS Rail Lines":"SMS"},"fc":{}},
+{"c":"UP","n":"UP","k":"#ffd200","m":0,"pax":0,"ty":["Auto","Bulk Unit","Coal","Expedited Z","Grain Byproducts","Grain Empties","Grain Loads","Grain Meal","Grain Reposition","Grain Shuttle","Intermodal I","Light Engines","Local","Manifest","Quality Intermodal","Quality Manifest","Rock","Special","Unit","Unit Ethanol","Work, MofW","Yard"],"px":{"Auto":"A","Coal":"C","Light Engines":"E","Grain Reposition":"GK","Grain Empties":"GE","Grain Loads":"GL","Grain Shuttle":"GS","Intermodal I":"I","Quality Intermodal":"K","Local":"L","Manifest":"M","Bulk Unit":"O","Quality Manifest":"Q","Rock":"R","Special":"S","Work, MofW":"W","Yard":"Y","Expedited Z":"Z","Unit":"U","Unit Ethanol":"UE","Grain Byproducts":"GB","Grain Meal":"GM"},"fc":{"Auto":"auto","Bulk Unit":"unit","Coal":"unit","Expedited Z":"intermodal","Grain Byproducts":"unit","Grain Empties":"unit","Grain Loads":"unit","Grain Meal":"unit","Grain Reposition":"unit","Grain Shuttle":"unit","Intermodal I":"intermodal","Light Engines":"engines","Local":"carload","Manifest":"carload","Quality Intermodal":"intermodal","Quality Manifest":"carload","Rock":"unit","Special":"nonrev","Unit":"unit","Unit Ethanol":"unit","Work, MofW":"nonrev","Yard":"carload"}}
 ],
 "locs":[
 {"id":"1001","nm":"Los Angeles Dolores Yard/ICTF, CA"},
@@ -3135,6 +3197,713 @@ const DATA = {"gen":"2026-09-11",
 {"id":"4036","nm":""},
 {"id":"4037","nm":""}
 ],
+"ixp":{"AA":{"p":["CN","CSX","NS","IORY","WE"],"f":["CSX","NS"]},"AB":{"p":["WE"],"f":[]},"ABCX":{"p":["BNSF","CSX","NS"],"f":[]},"ABWR":{"p":["BNSF","CSX","NS"],"f":[]},"ACWR":{"p":["CSX","NS"],"f":[]},"AERC":{"p":["PNWR"],"f":[]},"AGR":{"p":["BNSF","CN","CPKC","CSX","NS"],"f":["BNSF"]},"AKMD":{"p":["BNSF","UP"],"f":[]},"ALS":{"p":["CSX","CPKC","NS","UP","TRRA"],"f":["UP"]},"AO":{"p":["CSX"],"f":[]},"APD":{"p":["CPKC","CSX"],"f":[]},"AR":{"p":["CSX","NS"],"f":[]},"ARC":{"p":["NS"],"f":[]},"ASRY":{"p":["CSX","NS"],"f":[]},"AVR":{"p":["CSX","NS","BPRR","WE"],"f":[]},"BB":{"p":["NS"],"f":[]},"BERX":{"p":["CSX","NS","CPKC","NECR","VTR"],"f":[]},"BHRR":{"p":["BNSF","CSX","NS"],"f":[]},"BHS":{"p":["NS","IHB"],"f":[]},"BJRY":{"p":["BNSF"],"f":[]},"BKRR":{"p":["BERX"],"f":[]},"BPRR":{"p":["CN","CPKC","CSX","NS","WE"],"f":[]},"BRC":{"p":["BNSF","CN","CPKC","CSX","NS","UP"],"f":[]},"BSVY":{"p":["UP"],"f":[]},"CA":{"p":["NS"],"f":[]},"CAGY":{"p":["CPKC","AGR","BNSF","NS","ABS","CSX"],"f":[]},"CBRL":{"p":["UP"],"f":[]},"CCET":{"p":["NS"],"f":[]},"CCH":{"p":["NS"],"f":[]},"CCT":{"p":["BNSF","UP"],"f":[]},"CEMR":{"p":["CN"],"f":[]},"CFE":{"p":["CSX","NS","IHB","IORY"],"f":[]},"CFNR":{"p":["UP"],"f":[]},"CGR":{"p":["CN","CSX","NS","AGR"],"f":[]},"CIC":{"p":["CN","UP","IAIS"],"f":[]},"CIND":{"p":["CSX","NS","IORY"],"f":[]},"CLC":{"p":["LVSW"],"f":[]},"CLNA":{"p":["CSX"],"f":[]},"CMPA":{"p":["CSX"],"f":[]},"COER":{"p":["BNSF","UP"],"f":[]},"CORP":{"p":["UP"],"f":[]},"CPR":{"p":["NS"],"f":[]},"CRL":{"p":["NS","BRC","IAIS","IHB"],"f":["IHB"]},"CRMI":{"p":["CSX","NS"],"f":[]},"CRNJ":{"p":["CSX","NS"],"f":[]},"CRSJ":{"p":["CSX","NS"],"f":[]},"CSI":{"p":["BNSF","UP"],"f":[]},"CSP":{"p":["CPKC"],"f":[]},"CSS":{"p":["CN","BRC","CSX","IHB"],"f":["BRC"]},"CTN":{"p":["CSX","NS"],"f":[]},"CTRW":{"p":["CPKC","CN"],"f":["CN"]},"CVR":{"p":["BNSF"],"f":[]},"CWRO":{"p":["CSX","NS","WE"],"f":[]},"CWRY":{"p":["CSX","NS"],"f":[]},"CWW":{"p":["UP","BNSF"],"f":["UP"]},"DAIR":{"p":["BNSF","CN","UP"],"f":[]},"DC":{"p":["CN","CSX","NS"],"f":[]},"DGNO":{"p":["BNSF","CPKC","UP"],"f":[]},"DL":{"p":["NS"],"f":[]},"DMVW":{"p":["BNSF","CPKC"],"f":["CPKC"]},"DREI":{"p":["CN","CSX","NS","UP"],"f":["CSX"]},"DRIR":{"p":["BNSF","UP"],"f":["UP"]},"DRR":{"p":["NJ"],"f":[]},"DT":{"p":["CN"],"f":[]},"EE":{"p":["BNSF"],"f":[]},"EIRR":{"p":["UP"],"f":[]},"ETL":{"p":["CN","CPKC"],"f":[]},"ESPN":{"p":["NS"],"f":[]},"ETRY":{"p":["CSX","NS"],"f":[]},"EVWR":{"p":["BNSF","CSX","NS","UP"],"f":[]},"FCEN":{"p":["CSX"],"f":[]},"FEC":{"p":["CSX","NS"],"f":[]},"FGLK":{"p":["CSX","NS","NYSW"],"f":[]},"FIMX":{"p":["NS"],"f":[]},"FMID":{"p":["CSX"],"f":[]},"FOXY":{"p":["CN"],"f":[]},"FVRR":{"p":["PAL"],"f":[]},"FWWR":{"p":["BNSF","CPKC","UP"],"f":["BNSF","UP"]},"GC":{"p":["CSX","NS"],"f":[]},"GDLK":{"p":["CN","CSX","NS"],"f":[]},"GFRR":{"p":["CSX","NS"],"f":[]},"GITM":{"p":["CSX","NS"],"f":[]},"GJR":{"p":["CPKC","CN"],"f":[]},"GLC":{"p":["AA","CN"],"f":["AA"]},"GOGR":{"p":["CN"],"f":[]},"GRW":{"p":["CN","CSX","NS","IHB","UP"],"f":[]},"GS":{"p":["NS"],"f":[]},"GTRA":{"p":["CPKC","AGR","BNSF","NS","ABS","CSX"],"f":[]},"GWWD":{"p":["CN"],"f":[]},"HAL":{"p":["NS"],"f":[]},"HCRY":{"p":["CPKC"],"f":[]},"HESR":{"p":["CN","CSX"],"f":[]},"IAIS":{"p":["BNSF","CN","CPKC","UP","IHB"],"f":[]},"IATR":{"p":["CPKC","UP"],"f":[]},"IHB":{"p":["BNSF","CN","CPKC","CSX","NS","UP"],"f":[]},"IMRR":{"p":["BNSF","CN","UP","IAIS","TZPR"],"f":[]},"IN":{"p":["NS"],"f":[]},"INRD":{"p":["CN","CSX","BRC"],"f":[]},"IORY":{"p":["CN","CSX","NS","CFE","CIND","WE"],"f":[]},"IR":{"p":["BNSF","CSX"],"f":["BNSF"]},"ISRR":{"p":["CSX"],"f":[]},"ITHR":{"p":["NS"],"f":[]},"JAIL":{"p":["CN","CSX","NS"],"f":["NS"]},"KAW":{"p":["BNSF","CPKC","NS","UP","KCTL"],"f":["BNSF"]},"KBSR":{"p":["CSX","CN","NS","UP"],"f":[]},"KJRY":{"p":["BNSF","CN","NS","UP"],"f":[]},"KNWA":{"p":["NS"],"f":[]},"KO":{"p":["BNSF","UP","SKOL"],"f":[]},"KRR":{"p":["BNSF","CPKC","UP"],"f":[]},"KXHR":{"p":["CSX","NS"],"f":["NS"]},"LAJ":{"p":["BNSF","UP"],"f":["BNSF"]},"LC":{"p":["CSX","NS"],"f":[]},"LDRR":{"p":["BNSF","UP"],"f":[]},"LIRC":{"p":["CSX","NS"],"f":["CSX"]},"LMIC":{"p":["NS","CSS"],"f":[]},"LMR":{"p":["CN"],"f":[]},"LRPA":{"p":["BNSF","UP"],"f":[]},"LRWN":{"p":["BNSF","UP"],"f":[]},"LRWY":{"p":["NS"],"f":[]},"LSRC":{"p":["CSX"],"f":[]},"LVSW":{"p":["BNSF","UP"],"f":[]},"MCER":{"p":["CSX","NECR"],"f":[]},"MDS":{"p":["CPKC","NS"],"f":[]},"MER":{"p":["TRRA"],"f":[]},"MET":{"p":["BNSF","UP"],"f":[]},"METX":{"p":["CRL"],"f":[]},"MGRI":{"p":["LIRC"],"f":[]},"MNA":{"p":["BNSF","CPKC","UP"],"f":["Springfield","cars","must","go","via","BNSF"]},"MNBR":{"p":["CPKC","CSX","NS"],"f":[]},"MNNR":{"p":["UP","BNSF","CN","CPKC"],"f":[]},"MPLI":{"p":["BNSF","CN","TCWR","CPKC","UP"],"f":[]},"MSRW":{"p":["BNSF"],"f":[]},"MSTR":{"p":["CSX"],"f":[]},"NBSR":{"p":["CN","CPKC","CSX"],"f":[]},"NCIR":{"p":["CSX","NS"],"f":[]},"NCRC":{"p":["BNSF","UP"],"f":["UP"]},"NDW":{"p":["CSX","NS"],"f":[]},"NECR":{"p":["CN","CPKC","CSX","PW","PAS"],"f":[]},"NLR":{"p":["BNSF"],"f":[]},"NOGC":{"p":["UP"],"f":[]},"NOPB":{"p":["BNSF","CN","CPKC","CSX","NS","UP"],"f":[]},"NPBL":{"p":["CSX","NS"],"f":[]},"NYA":{"p":["CSX","NS","PW"],"f":[]},"NYNJ":{"p":["CSNJ","NYA"],"f":[]},"NYOG":{"p":["CSX"],"f":[]},"NYSW":{"p":["CSX","NS"],"f":[]},"OHCR":{"p":["CSX","CUOH","NS","WE"],"f":[]},"OLB":{"p":["BNSF","UP"],"f":[]},"OPR":{"p":["UP"],"f":[]},"OTVR":{"p":["BNSF"],"f":[]},"OVR":{"p":["CPKC"],"f":[]},"OVRR":{"p":["CPKC"],"f":[]},"PAL":{"p":["BNSF","CN","CSX","NS"],"f":[]},"PHL":{"p":["BNSF","UP"],"f":[]},"PCHR":{"p":["CN","CPKC"],"f":[]},"PHRR":{"p":["TRRA","NS"],"f":[]},"PNWR":{"p":["BNSF","UP"],"f":[]},"POHC":{"p":["CSX","NS"],"f":[]},"POM":{"p":["CN","CPKC"],"f":[]},"PR":{"p":["CSX","NS"],"f":[]},"PSAP":{"p":["BNSF","UP"],"f":["Autoracks","go","via","UP"]},"PT":{"p":["UP","BNSF"],"f":[]},"PTRA":{"p":["BNSF","CPKC","UP"],"f":["BNSF","UP"]},"PTRC":{"p":["BNSF","UP"],"f":[]},"PVJR":{"p":["BNSF"],"f":[]},"PVRR":{"p":["CSX","NECR"],"f":[]},"PW":{"p":["CSX","NECR","PAS"],"f":[]},"RBMN":{"p":["NS"],"f":[]},"RCPE":{"p":["BNSF","CPKC","UP"],"f":["CPKC"]},"RFCC":{"p":["CSX","NS"],"f":["NS"]},"RJCK":{"p":["BNSF"],"f":[]},"RJCL":{"p":["CSX","NS"],"f":[]},"RJCM":{"p":["CSX"],"f":[]},"RJCW":{"p":["CSX","NS"],"f":["CSX","only","for","Greenville"]},"RNIR":{"p":["BNSF","UP"],"f":[]},"RPRC":{"p":["BNSF","UP"],"f":[]},"RRRR":{"p":["BNSF","UP"],"f":[]},"RRVW":{"p":["BNSF","CPKC"],"f":[]},"RSL":{"p":["NS","CSX","RJCL"],"f":[]},"RSOR":{"p":["CSX"],"f":[]},"RSR":{"p":["CSX","NS"],"f":[]},"RWRR":{"p":["BNSF","CN","UP"],"f":["BNSF"]},"SAC":{"p":["BNSF","UP"],"f":[]},"SAPT":{"p":["CSX","NS"],"f":[]},"SCIH":{"p":["NS","BRC"],"f":[]},"SCRF":{"p":["CSX"],"f":[]},"SCXF":{"p":["CSX","FEC"],"f":[]},"SDIY":{"p":["BNSF"],"f":[]},"SERA":{"p":["BNSF","UP"],"f":[]},"SGLR":{"p":["CSX"],"f":[]},"SJVR":{"p":["BNSF","UP"],"f":[]},"SKOL":{"p":["BNSF","CPKC","UP"],"f":[]},"SLR":{"p":["CN","CPKC","CSX"],"f":["CN"]},"SMV":{"p":["UP"],"f":[]},"SORA":{"p":["CN","CPKC"],"f":["CN"]},"SPP":{"p":["UP"],"f":[]},"SRRR":{"p":["BNSF","UP"],"f":[]},"SRY":{"p":["BNSF","CN","CPKC"],"f":[]},"SS":{"p":["BNSF","UP","SKOL"],"f":["BNSF"]},"STE":{"p":["BNSF","UP"],"f":[]},"STMA":{"p":["UP"],"f":[]},"SVHO":{"p":["CSX"],"f":[]},"SWP":{"p":["CSX","NS","WE"],"f":[]},"TASD":{"p":["CN","CSX","NS","AGR"],"f":[]},"TCB":{"p":["BNSF","UP"],"f":[]},"TCWR":{"p":["BNSF","CN","CPKC","UP"],"f":[]},"TMBL":{"p":["BNSF","UP"],"f":[]},"TNER":{"p":["UP"],"f":[]},"TPW":{"p":["BNSF","CN","CSX","IAIS","NS","UP"],"f":[]},"TRRA":{"p":["BNSF","CN","CPKC","CSX","NS","UP"],"f":[]},"TSRR":{"p":["CSX"],"f":[]},"TSU":{"p":["UP"],"f":[]},"TVRM":{"p":["CSX","NS"],"f":["NS"]},"TZPR":{"p":["BNSF","CN","CSX","UP","IAIS"],"f":[]},"URR":{"p":["CSX","NS","WE"],"f":[]},"USCX":{"p":["FEC"],"f":[]},"VR":{"p":["CSX","NS"],"f":[]},"VSOR":{"p":["CPKC"],"f":[]},"WE":{"p":["CN","CSX","NS"],"f":[]},"WSOR":{"p":["CN","CPKC","BNSF","UP","BRC"],"f":[]},"WSS":{"p":["CSX","NS"],"f":[]},"WTA":{"p":["BNSF","UP"],"f":[]},"WW":{"p":["CSX","NS"],"f":[]}},
+"ix":[
+["AA","CSX","2055"],
+["AA","CSX","2770"],
+["AA","NS","2055"],
+["AA","IORY","3898"],
+["AB","WE","3164"],
+["ABCX","CSX","1787"],
+["ABCX","NS","1787"],
+["ABCX","NS","2423"],
+["ABWR","CSX","1787"],
+["ABWR","NS","1787"],
+["ACWR","CSX","1187"],
+["ACWR","CSX","1274"],
+["ACWR","NS","1274"],
+["AERC","PNWR","1823"],
+["AGR","BNSF","3702"],
+["AGR","CPKC","3710"],
+["AKMD","UP","1920"],
+["ALS","CSX","1120"],
+["ALS","CSX","1300"],
+["ALS","CSX","1364"],
+["ALS","CPKC","1120"],
+["ALS","CPKC","1300"],
+["ALS","CPKC","1364"],
+["ALS","NS","1300"],
+["ALS","NS","1364"],
+["ALS","UP","1120"],
+["ALS","UP","1300"],
+["ALS","UP","1364"],
+["ALS","UP","2041"],
+["ALS","UP","2903"],
+["ALS","TRRA","1300"],
+["ALS","TRRA","1364"],
+["AO","CSX","1900"],
+["APD","CSX","1060"],
+["AR","CSX","1187"],
+["ARC","NS","3781"],
+["ASRY","CSX","1028"],
+["AVR","CSX","1521"],
+["AVR","NS","1521"],
+["AVR","NS","3952"],
+["AVR","BPRR","1521"],
+["AVR","WE","1349"],
+["BB","NS","1525"],
+["BB","NS","1861"],
+["BERX","CSX","1027"],
+["BERX","CSX","1116"],
+["BERX","NS","1027"],
+["BERX","NS","1117"],
+["BERX","NS","2057"],
+["BERX","NECR","2274"],
+["BERX","NECR","2808"],
+["BHRR","BNSF","1720"],
+["BHRR","CSX","1467"],
+["BHRR","CSX","1720"],
+["BHRR","CSX","1786"],
+["BHRR","NS","1467"],
+["BHS","IHB","1762"],
+["BJRY","BNSF","1901"],
+["BJRY","BNSF","3854"],
+["BKRR","BERX","3176"],
+["BPRR","CN","2510"],
+["BPRR","CPKC","1367"],
+["BPRR","CSX","1078"],
+["BPRR","CSX","1521"],
+["BPRR","CSX","2510"],
+["BPRR","NS","1367"],
+["BPRR","NS","1521"],
+["BRC","BNSF","1072"],
+["BRC","BNSF","1473"],
+["BRC","BNSF","1606"],
+["BRC","BNSF","1810"],
+["BRC","CN","1072"],
+["BRC","CN","1473"],
+["BRC","CN","1606"],
+["BRC","CN","1632"],
+["BRC","CN","1810"],
+["BRC","CPKC","1473"],
+["BRC","CPKC","1606"],
+["BRC","CSX","1473"],
+["BRC","CSX","1606"],
+["BRC","NS","1072"],
+["BRC","NS","1473"],
+["BRC","NS","1515"],
+["BRC","NS","1606"],
+["BRC","UP","1473"],
+["BRC","UP","1606"],
+["BRC","UP","1632"],
+["CA","NS","1861"],
+["CAGY","CPKC","3709"],
+["CAGY","ABS","3709"],
+["CBRL","UP","1548"],
+["CCET","NS","3528"],
+["CCH","NS","1447"],
+["CCT","BNSF","1005"],
+["CCT","BNSF","1353"],
+["CCT","UP","1005"],
+["CEMR","CN","1610"],
+["CFE","CSX","1380"],
+["CFE","CSX","1396"],
+["CFE","CSX","1863"],
+["CFE","CSX","2307"],
+["CFE","CSX","3809"],
+["CFE","NS","1380"],
+["CFE","NS","1396"],
+["CFE","NS","1863"],
+["CFE","NS","3812"],
+["CFE","IHB","1396"],
+["CFE","IHB","1863"],
+["CFE","IORY","3812"],
+["CFNR","UP","1713"],
+["CFNR","UP","1833"],
+["CGR","CSX","2015"],
+["CIC","CN","1134"],
+["CIC","IAIS","1134"],
+["CIND","CSX","1455"],
+["CIND","NS","1455"],
+["CIND","IORY","1455"],
+["CLC","LVSW","3725"],
+["CLNA","CSX","1148"],
+["COER","UP","1180"],
+["CORP","UP","1548"],
+["CPR","NS","2081"],
+["CPR","NS","3700"],
+["CRL","NS","1473"],
+["CRL","BRC","1473"],
+["CRL","IAIS","2126"],
+["CRL","IHB","1473"],
+["CRMI","CSX","1697"],
+["CRMI","NS","1113"],
+["CRMI","NS","1181"],
+["CRMI","NS","1366"],
+["CRMI","NS","1697"],
+["CRMI","NS","2044"],
+["CRNJ","CSX","1105"],
+["CRNJ","CSX","1347"],
+["CRNJ","CSX","1688"],
+["CRNJ","CSX","1689"],
+["CRNJ","CSX","2177"],
+["CRNJ","CSX","2265"],
+["CRNJ","NS","1105"],
+["CRNJ","NS","1108"],
+["CRNJ","NS","1347"],
+["CRNJ","NS","1688"],
+["CRNJ","NS","1689"],
+["CRNJ","NS","2177"],
+["CRNJ","NS","2265"],
+["CRNJ","NS","2266"],
+["CRSJ","CSX","1474"],
+["CRSJ","CSX","1494"],
+["CRSJ","CSX","1788"],
+["CRSJ","CSX","1911"],
+["CRSJ","CSX","3636"],
+["CRSJ","NS","1494"],
+["CRSJ","NS","1884"],
+["CRSJ","NS","1911"],
+["CRSJ","NS","2039"],
+["CRSJ","NS","2182"],
+["CRSJ","NS","3592"],
+["CSI","UP","2287"],
+["CSP","CPKC","1606"],
+["CSS","CN","1055"],
+["CSS","CN","1738"],
+["CSS","CN","2920"],
+["CSS","BRC","1515"],
+["CSS","CSX","1961"],
+["CSS","CSX","2920"],
+["CSS","CSX","2929"],
+["CSS","IHB","1515"],
+["CTN","CSX","3413"],
+["CTRW","CN","1646"],
+["CTRW","CN","2794"],
+["CVR","BNSF","2281"],
+["CVR","BNSF","2282"],
+["CWRO","CSX","2370"],
+["CWRO","NS","2371"],
+["CWRO","WE","2371"],
+["CWRY","CSX","2277"],
+["CWRY","NS","2276"],
+["CWRY","NS","2277"],
+["CWW","UP","1495"],
+["DAIR","BNSF","1706"],
+["DC","CN","1988"],
+["DC","CSX","1469"],
+["DC","NS","1469"],
+["DC","NS","1988"],
+["DC","NS","2044"],
+["DGNO","BNSF","1797"],
+["DGNO","BNSF","1798"],
+["DGNO","CPKC","1795"],
+["DGNO","UP","1232"],
+["DGNO","UP","1797"],
+["DGNO","UP","1846"],
+["DMVW","BNSF","1704"],
+["DMVW","BNSF","2640"],
+["DMVW","CPKC","2226"],
+["DMVW","CPKC","2229"],
+["DREI","CSX","1085"],
+["DREI","CSX","1182"],
+["DRIR","BNSF","1800"],
+["DRIR","UP","1770"],
+["DRIR","UP","1976"],
+["DRIR","UP","1977"],
+["DRIR","UP","1979"],
+["DRIR","UP","1980"],
+["DT","CN","1986"],
+["EE","BNSF","1706"],
+["EIRR","UP","3467"],
+["ESPN","NS","1475"],
+["ETL","CN","2429"],
+["ETL","CPKC","1174"],
+["ETL","CPKC","2429"],
+["ETRY","CSX","1269"],
+["ETRY","NS","1270"],
+["EVWR","CSX","1159"],
+["EVWR","NS","3026"],
+["EVWR","NS","3027"],
+["FCEN","CSX","1361"],
+["FEC","CSX","1656"],
+["FEC","CSX","2034"],
+["FEC","NS","1656"],
+["FEC","NS","2034"],
+["FGLK","NS","2847"],
+["FIMX","NS","2458"],
+["FMID","CSX","2280"],
+["FOXY","CN","3547"],
+["FVRR","PAL","1948"],
+["FWWR","BNSF","1847"],
+["FWWR","BNSF","1904"],
+["FWWR","BNSF","3254"],
+["FWWR","BNSF","3530"],
+["FWWR","CPKC","3530"],
+["FWWR","UP","1847"],
+["FWWR","UP","1904"],
+["FWWR","UP","3248"],
+["GDLK","CN","1500"],
+["GDLK","CN","2298"],
+["GDLK","CSX","2216"],
+["GDLK","NS","1500"],
+["GFRR","CSX","2084"],
+["GFRR","CSX","2419"],
+["GITM","CSX","1288"],
+["GITM","CSX","1304"],
+["GITM","NS","1304"],
+["GJR","CPKC","3765"],
+["GLC","AA","2770"],
+["GLC","CN","1725"],
+["GOGR","CN","1931"],
+["GWWD","CN","1610"],
+["HAL","NS","2211"],
+["HCRY","CPKC","1815"],
+["HESR","CN","1725"],
+["HESR","CSX","2770"],
+["IAIS","BNSF","1115"],
+["IAIS","BNSF","1134"],
+["IAIS","BNSF","1396"],
+["IAIS","BNSF","2128"],
+["IAIS","BNSF","2375"],
+["IAIS","BNSF","2583"],
+["IAIS","BNSF","3065"],
+["IAIS","BNSF","3658"],
+["IAIS","BNSF","3661"],
+["IAIS","CN","1134"],
+["IAIS","CN","1396"],
+["IAIS","CN","3658"],
+["IAIS","CPKC","1066"],
+["IAIS","CPKC","2128"],
+["IAIS","CPKC","2375"],
+["IAIS","UP","1066"],
+["IAIS","UP","1396"],
+["IAIS","UP","3658"],
+["IAIS","UP","3661"],
+["IAIS","UP","3663"],
+["IAIS","IHB","1066"],
+["IAIS","IHB","1396"],
+["IHB","BNSF","1098"],
+["IHB","BNSF","1396"],
+["IHB","BNSF","1471"],
+["IHB","BNSF","1473"],
+["IHB","BNSF","1606"],
+["IHB","BNSF","1721"],
+["IHB","BNSF","1863"],
+["IHB","CN","1396"],
+["IHB","CN","1471"],
+["IHB","CN","1473"],
+["IHB","CN","1606"],
+["IHB","CN","1721"],
+["IHB","CN","1863"],
+["IHB","CN","2130"],
+["IHB","CPKC","1066"],
+["IHB","CPKC","1098"],
+["IHB","CPKC","1473"],
+["IHB","CPKC","1595"],
+["IHB","CPKC","1606"],
+["IHB","CPKC","1863"],
+["IHB","CSX","1066"],
+["IHB","CSX","1098"],
+["IHB","CSX","1161"],
+["IHB","CSX","1396"],
+["IHB","CSX","1471"],
+["IHB","CSX","1473"],
+["IHB","CSX","1595"],
+["IHB","CSX","1606"],
+["IHB","CSX","1863"],
+["IHB","CSX","2130"],
+["IHB","CSX","2931"],
+["IHB","NS","1396"],
+["IHB","NS","1473"],
+["IHB","NS","1515"],
+["IHB","NS","1595"],
+["IHB","NS","1606"],
+["IHB","NS","1721"],
+["IHB","NS","1863"],
+["IHB","NS","2130"],
+["IHB","NS","2926"],
+["IHB","UP","1066"],
+["IHB","UP","1098"],
+["IHB","UP","1161"],
+["IHB","UP","1396"],
+["IHB","UP","1473"],
+["IHB","UP","1595"],
+["IHB","UP","1606"],
+["IHB","UP","1721"],
+["IHB","UP","1863"],
+["IHB","UP","2166"],
+["IMRR","BNSF","1509"],
+["IMRR","BNSF","3658"],
+["IMRR","CN","3658"],
+["IMRR","UP","1509"],
+["IMRR","UP","3658"],
+["IMRR","IAIS","3658"],
+["IMRR","TZPR","3658"],
+["IN","NS","3567"],
+["INRD","CN","2351"],
+["INRD","CSX","1086"],
+["INRD","CSX","1611"],
+["INRD","CSX","2349"],
+["INRD","CSX","2563"],
+["IORY","CN","1766"],
+["IORY","CSX","1455"],
+["IORY","CSX","2158"],
+["IORY","NS","1455"],
+["IORY","NS","3526"],
+["IORY","NS","3528"],
+["IORY","NS","3812"],
+["IORY","CFE","3812"],
+["IORY","CIND","1455"],
+["IORY","WE","3812"],
+["IR","BNSF","1810"],
+["ISRR","CSX","1159"],
+["ISRR","CSX","2349"],
+["ITHR","NS","3495"],
+["JAIL","CN","2215"],
+["JAIL","NS","3831"],
+["KAW","BNSF","1227"],
+["KAW","BNSF","1301"],
+["KAW","BNSF","2011"],
+["KAW","CPKC","1227"],
+["KAW","CPKC","1301"],
+["KAW","NS","1227"],
+["KAW","UP","1227"],
+["KAW","UP","1301"],
+["KBSR","CSX","1085"],
+["KBSR","CN","3647"],
+["KBSR","NS","1532"],
+["KBSR","UP","3653"],
+["KJRY","BNSF","3658"],
+["KJRY","CN","3658"],
+["KJRY","NS","3658"],
+["KJRY","UP","3658"],
+["KNWA","NS","1453"],
+["KNWA","NS","2088"],
+["KO","BNSF","2824"],
+["KO","UP","2824"],
+["KRR","BNSF","1434"],
+["KRR","BNSF","2210"],
+["KRR","CPKC","1251"],
+["KRR","UP","1251"],
+["KRR","UP","2210"],
+["KXHR","CSX","1825"],
+["KXHR","NS","1825"],
+["LAJ","BNSF","1012"],
+["LC","CSX","2439"],
+["LDRR","BNSF","3879"],
+["LDRR","UP","3880"],
+["LIRC","CSX","1026"],
+["LIRC","CSX","1891"],
+["LIRC","NS","1026"],
+["LIRC","NS","1891"],
+["LIRC","NS","1939"],
+["LMIC","CSS","1962"],
+["LMR","CN","2968"],
+["LRPA","UP","1920"],
+["LRPA","UP","2206"],
+["LRWN","UP","1920"],
+["LRWY","NS","3495"],
+["LSRC","CSX","1739"],
+["LVSW","BNSF","2208"],
+["LVSW","BNSF","3645"],
+["LVSW","UP","2208"],
+["LVSW","UP","3645"],
+["MCER","CSX","3239"],
+["MER","TRRA","1004"],
+["MET","BNSF","2154"],
+["MET","BNSF","3461"],
+["MET","UP","2154"],
+["MET","UP","3462"],
+["METX","CRL","2126"],
+["MGRI","LIRC","1634"],
+["MNA","BNSF","1301"],
+["MNA","CPKC","1301"],
+["MNA","CPKC","2809"],
+["MNA","UP","1301"],
+["MNA","UP","3490"],
+["MNNR","UP","1176"],
+["MNNR","UP","1391"],
+["MNNR","BNSF","1391"],
+["MNNR","CPKC","1176"],
+["MNNR","CPKC","1391"],
+["MPLI","TCWR","2642"],
+["MSTR","CSX","1869"],
+["NBSR","CN","2223"],
+["NBSR","CPKC","1123"],
+["NBSR","CSX","1559"],
+["NCIR","NS","2614"],
+["NCRC","UP","2261"],
+["NCRC","UP","2262"],
+["NDW","NS","2959"],
+["NECR","CN","2273"],
+["NECR","PW","3245"],
+["NLR","BNSF","2143"],
+["NLR","BNSF","3133"],
+["NOGC","UP","1423"],
+["NOPB","BNSF","1423"],
+["NOPB","BNSF","1425"],
+["NOPB","BNSF","1426"],
+["NOPB","BNSF","2181"],
+["NOPB","CN","1422"],
+["NOPB","CN","1424"],
+["NOPB","CN","1426"],
+["NOPB","CN","2181"],
+["NOPB","CPKC","1422"],
+["NOPB","CPKC","1424"],
+["NOPB","CPKC","1425"],
+["NOPB","CSX","1422"],
+["NOPB","CSX","1423"],
+["NOPB","CSX","1425"],
+["NOPB","NS","1426"],
+["NOPB","UP","1423"],
+["NOPB","UP","1425"],
+["NOPB","UP","1426"],
+["NOPB","UP","1427"],
+["NPBL","CSX","1851"],
+["NPBL","CSX","1862"],
+["NPBL","NS","1299"],
+["NPBL","NS","1861"],
+["NYA","CSX","1128"],
+["NYA","PW","1128"],
+["NYNJ","NYA","1128"],
+["NYOG","CSX","3563"],
+["NYSW","CSX","1626"],
+["NYSW","CSX","2061"],
+["NYSW","NS","1108"],
+["NYSW","NS","2061"],
+["OHCR","CSX","1453"],
+["OHCR","CSX","2158"],
+["OHCR","NS","1453"],
+["OHCR","NS","1897"],
+["OHCR","WE","1898"],
+["OLB","BNSF","1292"],
+["OLB","BNSF","1293"],
+["OLB","UP","1292"],
+["OPR","UP","1866"],
+["OTVR","BNSF","1568"],
+["OTVR","BNSF","1586"],
+["OTVR","BNSF","2151"],
+["OVR","CPKC","1815"],
+["OVRR","CPKC","3398"],
+["PAL","BNSF","1954"],
+["PAL","BNSF","1956"],
+["PAL","CN","1954"],
+["PAL","CSX","1949"],
+["PAL","CSX","2188"],
+["PAL","NS","1939"],
+["PCHR","CN","3938"],
+["PHL","BNSF","1011"],
+["PHL","BNSF","1014"],
+["PHL","BNSF","1103"],
+["PHL","UP","1001"],
+["PHL","UP","1014"],
+["PHL","UP","1103"],
+["PHL","UP","1389"],
+["PHL","UP","3090"],
+["PHRR","TRRA","1493"],
+["PNWR","BNSF","1302"],
+["PNWR","BNSF","1702"],
+["PNWR","BNSF","1868"],
+["PNWR","BNSF","2649"],
+["PNWR","UP","1024"],
+["PNWR","UP","1302"],
+["PNWR","UP","1548"],
+["PNWR","UP","1702"],
+["PNWR","UP","1820"],
+["PNWR","UP","1823"],
+["PNWR","UP","1868"],
+["POHC","CSX","3953"],
+["POHC","NS","3954"],
+["POM","CN","1928"],
+["POM","CPKC","1928"],
+["PR","CSX","1130"],
+["PR","NS","1130"],
+["PR","NS","2616"],
+["PSAP","BNSF","3335"],
+["PSAP","BNSF","3338"],
+["PSAP","UP","2618"],
+["PSAP","UP","3335"],
+["PSAP","UP","3339"],
+["PT","UP","2137"],
+["PT","UP","2141"],
+["PTRA","BNSF","1879"],
+["PTRA","BNSF","1936"],
+["PTRA","BNSF","2529"],
+["PTRA","BNSF","3351"],
+["PTRA","CPKC","1879"],
+["PTRA","CPKC","1937"],
+["PTRA","UP","1879"],
+["PTRA","UP","1935"],
+["PTRA","UP","1936"],
+["PTRA","UP","2529"],
+["PTRA","UP","3780"],
+["PTRC","BNSF","1868"],
+["PTRC","UP","1868"],
+["PVJR","BNSF","1702"],
+["PVRR","CSX","2785"],
+["PW","CSX","1006"],
+["PW","CSX","1128"],
+["PW","CSX","1560"],
+["PW","NECR","3245"],
+["RCPE","BNSF","2123"],
+["RCPE","BNSF","3303"],
+["RCPE","BNSF","3304"],
+["RCPE","BNSF","3310"],
+["RCPE","CPKC","2356"],
+["RCPE","CPKC","2562"],
+["RCPE","UP","2356"],
+["RFCC","NS","1119"],
+["RJCK","BNSF","1450"],
+["RJCL","CSX","1975"],
+["RJCM","CSX","1844"],
+["RJCW","CSX","2890"],
+["RJCW","NS","3799"],
+["RNIR","BNSF","3335"],
+["RNIR","UP","2618"],
+["RNIR","UP","3335"],
+["RPRC","BNSF","1527"],
+["RPRC","UP","1527"],
+["RPRC","UP","2293"],
+["RRRR","BNSF","3323"],
+["RRRR","UP","3323"],
+["RRRR","UP","3324"],
+["RRRR","UP","3327"],
+["RRVW","BNSF","1603"],
+["RRVW","BNSF","1605"],
+["RRVW","BNSF","2324"],
+["RRVW","BNSF","2426"],
+["RSL","RJCL","3836"],
+["RSOR","CSX","3359"],
+["RSR","NS","1848"],
+["RWRR","BNSF","3117"],
+["SAPT","CSX","1919"],
+["SAPT","CSX","3363"],
+["SAPT","NS","1919"],
+["SCIH","NS","2130"],
+["SCIH","NS","3001"],
+["SCRF","CSX","3143"],
+["SCXF","CSX","1126"],
+["SCXF","FEC","1405"],
+["SDIY","BNSF","2145"],
+["SERA","BNSF","2023"],
+["SERA","BNSF","2024"],
+["SERA","UP","2024"],
+["SERA","UP","2622"],
+["SGLR","CSX","1542"],
+["SJVR","BNSF","1013"],
+["SJVR","BNSF","1015"],
+["SJVR","BNSF","2328"],
+["SJVR","UP","1013"],
+["SJVR","UP","1021"],
+["SJVR","UP","1651"],
+["SJVR","UP","2313"],
+["SKOL","BNSF","2184"],
+["SKOL","CPKC","2809"],
+["SKOL","UP","2184"],
+["SKOL","UP","2826"],
+["SKOL","UP","2832"],
+["SLR","CN","3943"],
+["SLR","CPKC","2269"],
+["SLR","CSX","2272"],
+["SMV","UP","1035"],
+["SORA","CN","2796"],
+["SPP","UP","1790"],
+["SRRR","BNSF","2845"],
+["SRRR","UP","2845"],
+["SRY","BNSF","1652"],
+["SS","BNSF","2184"],
+["SS","UP","2184"],
+["SS","SKOL","2184"],
+["STE","BNSF","1353"],
+["STE","UP","1354"],
+["STMA","UP","2199"],
+["SVHO","CSX","3359"],
+["SWP","NS","2069"],
+["SWP","WE","2036"],
+["TASD","CN","2805"],
+["TASD","AGR","2019"],
+["TCB","BNSF","2031"],
+["TCB","BNSF","2032"],
+["TCB","UP","2032"],
+["TCWR","BNSF","1391"],
+["TCWR","CPKC","1176"],
+["TCWR","CPKC","1391"],
+["TCWR","UP","1176"],
+["TCWR","UP","1391"],
+["TMBL","BNSF","1503"],
+["TMBL","BNSF","1554"],
+["TMBL","UP","1502"],
+["TMBL","UP","1503"],
+["TMBL","UP","1554"],
+["TNER","UP","1729"],
+["TPW","BNSF","3658"],
+["TPW","BNSF","3661"],
+["TPW","CN","2468"],
+["TPW","CN","3658"],
+["TPW","CSX","1534"],
+["TPW","IAIS","3658"],
+["TPW","IAIS","3661"],
+["TPW","IAIS","3664"],
+["TPW","NS","1534"],
+["TPW","NS","3658"],
+["TPW","UP","3658"],
+["TPW","UP","3661"],
+["TPW","UP","3662"],
+["TPW","UP","3687"],
+["TRRA","BNSF","1364"],
+["TRRA","BNSF","1493"],
+["TRRA","BNSF","1562"],
+["TRRA","BNSF","1736"],
+["TRRA","CN","1300"],
+["TRRA","CN","1364"],
+["TRRA","CPKC","1300"],
+["TRRA","CPKC","1364"],
+["TRRA","CSX","1300"],
+["TRRA","CSX","1364"],
+["TRRA","NS","1277"],
+["TRRA","NS","1300"],
+["TRRA","NS","1342"],
+["TRRA","NS","1364"],
+["TRRA","UP","1300"],
+["TRRA","UP","1364"],
+["TRRA","UP","1562"],
+["TSRR","CSX","1852"],
+["TSU","UP","2184"],
+["TVRM","CSX","2341"],
+["TVRM","NS","2341"],
+["TZPR","BNSF","2093"],
+["TZPR","BNSF","3658"],
+["TZPR","BNSF","3661"],
+["TZPR","CN","3658"],
+["TZPR","UP","2093"],
+["TZPR","UP","3658"],
+["TZPR","UP","3661"],
+["TZPR","IAIS","3658"],
+["TZPR","IAIS","3661"],
+["URR","NS","1693"],
+["URR","WE","1693"],
+["URR","WE","2572"],
+["VSOR","CPKC","1972"],
+["WE","CN","1763"],
+["WE","CSX","1028"],
+["WE","CSX","1456"],
+["WE","CSX","1763"],
+["WE","CSX","2765"],
+["WE","NS","1647"],
+["WE","NS","1693"],
+["WE","NS","2371"],
+["WE","NS","2765"],
+["WE","NS","3812"],
+["WE","NS","3869"],
+["WSOR","CN","1473"],
+["WSOR","CN","1707"],
+["WSOR","CN","3516"],
+["WSOR","CPKC","1473"],
+["WSOR","CPKC","1681"],
+["WSOR","CPKC","1707"],
+["WSOR","BNSF","1215"],
+["WSOR","BNSF","1473"],
+["WSOR","UP","1473"],
+["WSOR","UP","1707"],
+["WSOR","BRC","1473"],
+["WSS","CSX","1127"],
+["WSS","CSX","2747"],
+["WSS","NS","1175"],
+["WTA","BNSF","2824"],
+["WTA","UP","2824"],
+["WTA","UP","2825"]
+],
 "mims":[
 ["1001",["2511",0],["2512",0],["3156",1],["3157",1],["3158",1],["3159",1],["3160",0]],
 ["1002",["2104",0],["2783",1],["2784",1],["2785",0],["2786",0],["2787",1],["2788",0],["2789",0]],
@@ -4491,7 +5260,1887 @@ const DATA = {"gen":"2026-09-11",
 ["3099",33.739,-118.259,"UP"],
 ["3100",33.726,-118.247,"BNSF"],
 ["3101",33.748,-118.245,"UP"],
-["3113",38.572,-121.519,"UP"]
+["3113",38.572,-121.519,"UP"],
+["1003",42.1584,-72.3287,""],
+["1004",38.6273,-90.1979,""],
+["1005",37.9577,-121.2908,""],
+["1006",42.2626,-71.8023,""],
+["1007",34.0522,-118.2437,""],
+["1010",35.0525,-118.174,""],
+["1011",34.0522,-118.2437,""],
+["1013",35.3733,-119.0187,""],
+["1015",35.3733,-119.0187,""],
+["1018",39.7992,-88.2831,""],
+["1019",42.9787,-82.4041,""],
+["1020",33.8359,-118.3406,""],
+["1022",37.5315,-76.7964,""],
+["1023",32.7254,-97.3208,""],
+["1024",44.0521,-123.0867,""],
+["1031",42.6526,-73.7562,""],
+["1032",35.0845,-106.6511,""],
+["1035",34.9716,-120.5718,""],
+["1036",44.3034,-70.1195,""],
+["1043",35.0456,-85.3097,""],
+["1045",35.7721,-78.6386,""],
+["1049",41.3948,-75.7066,""],
+["1050",42.7284,-73.6918,""],
+["1051",44.2911,-105.5022,""],
+["1052",35.2271,-80.8431,""],
+["1058",35.0456,-85.3097,""],
+["1059",39.0997,-94.5786,""],
+["1065",41.3259,-75.7894,""],
+["1067",34.204,-83.4571,""],
+["1069",35.6384,-91.2651,""],
+["1072",41.85,-87.65,""],
+["1076",27.9475,-82.4584,""],
+["1077",25.7743,-80.1937,""],
+["1080",44.504,-70.2162,""],
+["1082",33.749,-84.388,""],
+["1083",37.5538,-77.4603,""],
+["1088",41.85,-87.65,""],
+["1089",39.9487,-87.4597,""],
+["1090",34.0522,-118.2437,""],
+["1091",41.157,-83.4169,""],
+["1093",37.0299,-76.3452,""],
+["1094",41.85,-87.65,""],
+["1096",41.5252,-88.0834,""],
+["1097",42.5751,-71.9981,""],
+["1099",42.0987,-75.918,""],
+["1101",36.819,-76.2749,""],
+["1103",34.0522,-118.2437,""],
+["1105",40.7282,-74.0776,""],
+["1106",40.7282,-74.0776,""],
+["1107",41.2619,-95.8608,""],
+["1109",40.7282,-74.0776,""],
+["1110",32.7357,-97.1081,""],
+["1112",35.2271,-80.8431,""],
+["1113",42.4904,-83.013,""],
+["1114",58.8053,-122.7002,""],
+["1115",41.2619,-95.8608,""],
+["1116",42.787,-73.971,""],
+["1117",42.8142,-73.9396,""],
+["1118",30.3322,-81.6556,""],
+["1119",35.7721,-78.6386,""],
+["1122",30.3322,-81.6556,""],
+["1125",38.8612,-90.0976,""],
+["1127",34.8849,-79.6942,""],
+["1129",38.8339,-104.8214,""],
+["1133",35.3733,-119.0187,""],
+["1135",34.6628,-106.7764,""],
+["1136",35.7326,-78.8503,""],
+["1138",42.0853,-83.6824,""],
+["1139",56.1528,-120.6814,""],
+["1140",36.0726,-79.792,""],
+["1154",38.6723,-90.1698,""],
+["1157",37.5538,-77.4603,""],
+["1161",41.85,-87.65,""],
+["1165",35.1495,-90.049,""],
+["1166",40.6695,-85.8242,""],
+["1168",36.2077,-119.3473,""],
+["1169",39.1142,-94.6275,""],
+["1172",35.1495,-90.049,""],
+["1173",37.271,-79.9414,""],
+["1174",42.3001,-83.0165,""],
+["1176",44.9444,-93.0933,""],
+["1177",38.751,-77.4753,""],
+["1179",44.6365,-123.1059,""],
+["1180",37.7306,-88.9331,""],
+["1183",44.9444,-93.0933,""],
+["1185",33.9657,-81.074,""],
+["1187",35.1315,-79.4295,""],
+["1188",34.0006,-118.1598,""],
+["1190",34.0522,-118.2437,""],
+["1192",34.0522,-118.2437,""],
+["1194",45.3933,-93.8769,""],
+["1196",38.9909,-88.1625,""],
+["1197",39.9524,-75.1636,""],
+["1201",36.7477,-119.7724,""],
+["1203",34.0522,-118.2437,""],
+["1207",40.0228,-82.4446,""],
+["1211",33.5207,-86.8025,""],
+["1212",38.6245,-90.1509,""],
+["1213",37.4283,-121.9066,""],
+["1214",39.0997,-94.5786,""],
+["1215",43.8014,-91.2396,""],
+["1217",43.8014,-91.2396,""],
+["1219",38.35,-94.7613,""],
+["1222",41.85,-87.65,""],
+["1224",33.749,-84.388,""],
+["1226",32.0835,-81.0998,""],
+["1227",39.0997,-94.5786,""],
+["1228",38.7431,-94.8255,""],
+["1232",33.7557,-96.5367,""],
+["1239",42.3314,-83.0457,""],
+["1241",29.8852,-93.9423,""],
+["1242",40.9584,-75.9746,""],
+["1243",38.5709,-90.1901,""],
+["1244",33.8126,-84.6344,""],
+["1245",33.6601,-84.4102,""],
+["1247",42.5531,-87.9334,""],
+["1248",36.2676,-94.4847,""],
+["1250",34.8893,-94.6008,""],
+["1251",33.4251,-94.0477,""],
+["1254",33.9472,-118.0854,""],
+["1256",41.7676,-76.4427,""],
+["1259",33.6795,-84.4394,""],
+["1260",39.12,-88.5434,""],
+["1261",33.5671,-84.581,""],
+["1262",33.749,-84.388,""],
+["1263",35.994,-78.8986,""],
+["1266",40.6906,-76.2622,""],
+["1267",37.7306,-88.9331,""],
+["1268",38.212,-85.2236,""],
+["1269",36.3134,-82.3535,""],
+["1275",38.4039,-96.1817,""],
+["1278",41.85,-87.65,""],
+["1280",32.2988,-90.1848,""],
+["1283",38.45,-91.0085,""],
+["1286",32.3643,-88.7037,""],
+["1287",42.0494,-92.908,""],
+["1288",31.1501,-81.4915,""],
+["1289",35.2982,-81.0159,""],
+["1290",34.0522,-118.2437,""],
+["1291",31.2724,-81.5615,""],
+["1292",40.8,-96.667,""],
+["1293",40.8,-96.667,""],
+["1297",39.6418,-77.72,""],
+["1298",37.4138,-79.1423,""],
+["1301",39.0997,-94.5786,""],
+["1302",45.5234,-122.6762,""],
+["1304",31.1501,-81.4915,""],
+["1305",41.85,-87.65,""],
+["1311",43.7064,-79.3986,""],
+["1312",42.9787,-82.4041,""],
+["1316",40.8298,-75.0777,""],
+["1319",32.0835,-81.0998,""],
+["1320",37.1318,-80.5764,""],
+["1322",35.3,-106.5511,""],
+["1324",38.6245,-90.1509,""],
+["1326",32.0835,-81.0998,""],
+["1329",32.0835,-81.0998,""],
+["1333",33.5207,-86.8025,""],
+["1334",44.6335,-121.1295,""],
+["1335",42.3314,-83.0457,""],
+["1336",40.4593,-74.361,""],
+["1341",41.1565,-92.6374,""],
+["1345",33.4484,-112.074,""],
+["1348",44.2726,-121.1739,""],
+["1350",33.9295,-116.9772,""],
+["1355",40.6268,-76.1927,""],
+["1356",42.1016,-102.8722,""],
+["1357",43.0831,-73.7846,""],
+["1359",40.4593,-74.361,""],
+["1360",40.3726,-74.5101,""],
+["1362",28.5383,-81.3792,""],
+["1363",37.5538,-77.4603,""],
+["1364",38.6245,-90.1509,""],
+["1365",42.3314,-83.0457,""],
+["1367",42.8865,-78.8784,""],
+["1368",43.2501,-79.8496,""],
+["1369",43.7064,-79.3986,""],
+["1370",43.7064,-79.3986,""],
+["1373",55.1667,-118.8027,""],
+["1374",29.7633,-95.3633,""],
+["1377",44.6713,-63.5772,""],
+["1381",40.9626,-85.3733,""],
+["1383",29.7633,-95.3633,""],
+["1386",38.7317,-82.9977,""],
+["1388",32.0835,-81.0998,""],
+["1391",44.9444,-93.0933,""],
+["1396",41.85,-87.65,""],
+["1397",34.0006,-118.1598,""],
+["1403",31.8559,-106.6392,""],
+["1406",33.9925,-117.5164,""],
+["1407",34.0922,-117.4351,""],
+["1409",41.85,-87.65,""],
+["1411",39.5493,-76.0916,""],
+["1413",40.8831,-85.4975,""],
+["1416",41.4298,-84.8714,""],
+["1419",38.3332,-123.0481,""],
+["1420",38.028,-121.8847,""],
+["1422",29.9547,-90.0751,""],
+["1423",29.9547,-90.0751,""],
+["1424",29.9547,-90.0751,""],
+["1425",29.9547,-90.0751,""],
+["1426",29.9547,-90.0751,""],
+["1432",34.7304,-86.5859,""],
+["1438",37.7742,-87.1133,""],
+["1440",42.5437,-71.6495,""],
+["1443",35.222,-101.8313,""],
+["1446",35.1495,-90.049,""],
+["1451",41.4995,-81.6954,""],
+["1452",40.2589,-103.6238,""],
+["1460",29.7633,-95.3633,""],
+["1461",40.5631,-80.2084,""],
+["1466",35.222,-101.8313,""],
+["1469",42.3314,-83.0457,""],
+["1471",41.85,-87.65,""],
+["1474",39.9524,-75.1636,""],
+["1475",40.3357,-75.9269,""],
+["1481",47.6062,-122.3321,""],
+["1482",41.1656,-80.8576,""],
+["1491",44.9444,-93.0933,""],
+["1492",36.175,-115.1372,""],
+["1493",38.7014,-90.1487,""],
+["1494",39.8193,-75.4185,""],
+["1496",48.382,-89.2502,""],
+["1504",43.3601,-80.3127,""],
+["1511",49.1063,-122.8251,""],
+["1513",53.5501,-113.4687,""],
+["1516",43.7064,-79.3986,""],
+["1520",41.85,-87.65,""],
+["1523",36.9804,-76.4297,""],
+["1525",37.1732,-78.1233,""],
+["1526",35.9828,-86.5186,""],
+["1529",42.3314,-83.0457,""],
+["1534",40.4167,-86.8753,""],
+["1536",33.4484,-112.074,""],
+["1540",44.9444,-93.0933,""],
+["1541",41.5875,-109.2029,""],
+["1544",42.8865,-78.8784,""],
+["1545",51.0501,-114.0853,""],
+["1546",34.0922,-117.4351,""],
+["1548",44.0521,-123.0867,""],
+["1549",43.0945,-79.0567,""],
+["1550",42.8865,-78.8784,""],
+["1551",51.0501,-114.0853,""],
+["1552",39.1698,-91.8829,""],
+["1553",47.3809,-122.2348,""],
+["1554",47.2529,-122.4443,""],
+["1555",47.2529,-122.4443,""],
+["1557",29.6486,-81.6376,""],
+["1560",41.3081,-72.9282,""],
+["1563",30.2421,-93.2507,""],
+["1564",40.2901,-76.9339,""],
+["1570",45.1219,-95.0433,""],
+["1573",46.2396,-119.1006,""],
+["1575",46.7208,-92.1041,""],
+["1576",42.9978,-84.1766,""],
+["1579",35.5365,-78.2844,""],
+["1585",46.8772,-96.7898,""],
+["1586",46.8766,-96.7034,""],
+["1591",37.5538,-77.4603,""],
+["1593",44.98,-93.2638,""],
+["1597",49.2497,-123.1193,""],
+["1601",30.3119,-95.4561,""],
+["1602",46.8739,-96.7695,""],
+["1603",46.9005,-97.2112,""],
+["1604",46.875,-96.9004,""],
+["1607",39.9524,-75.1636,""],
+["1608",28.7091,-100.4995,""],
+["1609",43.5459,-80.256,""],
+["1610",49.8844,-97.147,""],
+["1614",41.85,-87.65,""],
+["1617",29.8852,-93.9423,""],
+["1618",50.6665,-120.3192,""],
+["1623",49.4999,-117.2855,""],
+["1624",50.4498,-119.2023,""],
+["1627",43.1065,-76.2177,""],
+["1628",47.6062,-122.3321,""],
+["1631",41.85,-87.65,""],
+["1635",39.2014,-85.9214,""],
+["1637",39.4806,-86.055,""],
+["1639",39.2014,-85.9214,""],
+["1640",39.3542,-85.9667,""],
+["1641",41.2737,-82.8416,""],
+["1654",41.85,-87.65,""],
+["1655",41.5931,-81.5268,""],
+["1661",44.9444,-93.0933,""],
+["1665",44.9429,-123.0351,""],
+["1666",27.3364,-82.5306,""],
+["1671",44.98,-93.2638,""],
+["1673",38.9182,-78.1944,""],
+["1675",42.5459,-71.4745,""],
+["1680",32.3643,-88.7037,""],
+["1682",29.9913,-93.9585,""],
+["1684",39.9612,-82.9988,""],
+["1686",33.6131,-112.3246,""],
+["1687",40.6687,-74.1143,""],
+["1688",40.664,-74.2107,""],
+["1689",40.7357,-74.1724,""],
+["1696",30.2577,-91.0993,""],
+["1698",53.9166,-122.753,""],
+["1699",53.9166,-122.753,""],
+["1700",53.9166,-122.753,""],
+["1708",41.1565,-92.6374,""],
+["1715",54.3151,-130.321,""],
+["1718",39.7392,-104.9847,""],
+["1719",43.7072,-88.9901,""],
+["1722",42.9509,-123.3642,""],
+["1724",42.9978,-84.1766,""],
+["1728",36.757,-90.3929,""],
+["1729",33.4418,-94.0377,""],
+["1730",42.2917,-85.5872,""],
+["1731",42.3173,-85.1782,""],
+["1732",42.7325,-84.5555,""],
+["1739",42.3714,-83.4702,""],
+["1742",47.6597,-117.4291,""],
+["1744",40.5034,-75.7013,""],
+["1746",54.7804,-127.1743,""],
+["1749",56.2499,-120.8529,""],
+["1751",51.3,-116.9689,""],
+["1752",49.7333,-114.8853,""],
+["1753",42.0083,-91.6441,""],
+["1758",52.1415,-122.1445,""],
+["1759",43.1706,-78.6903,""],
+["1763",41.6639,-83.5552,""],
+["1765",42.3314,-83.0457,""],
+["1774",37.76,-89.0773,""],
+["1777",45.5946,-121.1787,""],
+["1778",52.1324,-106.6689,""],
+["1780",45.5088,-73.5878,""],
+["1783",37.7399,-121.4262,""],
+["1785",34.953,-120.4357,""],
+["1788",39.9524,-75.1636,""],
+["1789",37.5483,-121.9886,""],
+["1795",32.7831,-96.8067,""],
+["1796",33.0151,-96.5389,""],
+["1798",32.814,-96.9489,""],
+["1803",47.6062,-122.3321,""],
+["1812",29.7633,-95.3633,""],
+["1815",46.49,-80.99,""],
+["1823",44.6365,-123.1059,""],
+["1825",35.9606,-83.9207,""],
+["1826",45.2501,-74.1325,""],
+["1827",33.6259,-97.1333,""],
+["1828",37.0299,-76.3452,""],
+["1829",43.1548,-77.6156,""],
+["1831",41.3556,-72.0995,""],
+["1832",38.6785,-121.7733,""],
+["1841",43.2917,-84.6075,""],
+["1848",41.0162,-72.1592,""],
+["1849",42.7256,-77.8742,""],
+["1852",35.7512,-86.93,""],
+["1855",46.7208,-92.1041,""],
+["1860",42.8865,-78.8784,""],
+["1862",36.819,-76.2749,""],
+["1864",43.2501,-79.8496,""],
+["1868",45.5234,-122.6762,""],
+["1869",44.9281,-74.8919,""],
+["1870",42.2626,-71.8023,""],
+["1872",41.6765,-71.9151,""],
+["1878",29.7633,-95.3633,""],
+["1882",41.6639,-83.5552,""],
+["1885",47.4271,-92.9377,""],
+["1891",38.2776,-85.7372,""],
+["1896",45.8399,-119.7006,""],
+["1899",40.7245,-81.5221,""],
+["1903",30.0208,-90.8298,""],
+["1906",38.2542,-85.7594,""],
+["1911",40.2115,-74.7879,""],
+["1912",32.8407,-83.6324,""],
+["1919",32.0835,-81.0998,""],
+["1921",35.1495,-90.049,""],
+["1925",41.865,-80.7898,""],
+["1926",41.865,-80.7898,""],
+["1930",32.8407,-83.6324,""],
+["1931",30.4433,-91.1875,""],
+["1932",33.471,-81.9748,""],
+["1935",29.7633,-95.3633,""],
+["1936",29.7633,-95.3633,""],
+["1937",29.7633,-95.3633,""],
+["1938",32.7831,-96.8067,""],
+["1940",38.2542,-85.7594,""],
+["1942",38.2542,-85.7594,""],
+["1943",38.2542,-85.7594,""],
+["1944",38.4079,-78.6236,""],
+["1947",37.694,-85.8591,""],
+["1948",37.1092,-87.882,""],
+["1949",37.3281,-87.4989,""],
+["1951",36.8656,-87.4912,""],
+["1953",37.0334,-88.35,""],
+["1955",36.7417,-88.6367,""],
+["1957",42.0592,-83.3908,""],
+["1962",41.6259,-87.1334,""],
+["1963",41.6259,-87.1334,""],
+["1967",40.7584,-82.5155,""],
+["1968",40.8687,-82.3182,""],
+["1971",32.3096,-90.139,""],
+["1973",33.5386,-112.186,""],
+["1974",38.7014,-90.1487,""],
+["1975",40.9267,-81.6304,""],
+["1976",39.7392,-104.9847,""],
+["1977",39.7392,-104.9847,""],
+["1978",39.7392,-104.9847,""],
+["1979",39.7392,-104.9847,""],
+["1980",39.7392,-104.9847,""],
+["1981",39.7392,-104.9847,""],
+["1982",29.7633,-95.3633,""],
+["1984",35.3733,-119.0187,""],
+["1985",39.8403,-88.9548,""],
+["1986",39.8403,-88.9548,""],
+["1987",30.2421,-93.2507,""],
+["1988",42.3314,-83.0457,""],
+["1990",44.5365,-122.907,""],
+["1991",32.8546,-79.9748,""],
+["1992",39.7684,-86.158,""],
+["1993",38.3856,-81.8362,""],
+["1994",40.3248,-79.8923,""],
+["1995",53.5501,-113.4687,""],
+["1996",40.7089,-84.3536,""],
+["1997",42.5531,-87.9334,""],
+["1999",35.1465,-90.1845,""],
+["2003",39.5139,-121.5578,""],
+["2007",41.85,-87.65,""],
+["2008",47.6062,-122.3321,""],
+["2009",54.7669,-111.9686,""],
+["2011",39.0997,-94.5786,""],
+["2012",30.0538,-90.5517,""],
+["2013",41.85,-87.65,""],
+["2014",41.85,-87.65,""],
+["2016",30.6944,-88.043,""],
+["2017",30.6944,-88.043,""],
+["2018",30.6944,-88.043,""],
+["2019",30.6944,-88.043,""],
+["2024",37.7666,-120.8471,""],
+["2025",25.7743,-80.1937,""],
+["2028",41.8847,-88.204,""],
+["2029",41.8847,-88.204,""],
+["2033",30.8785,-96.593,""],
+["2035",30.3322,-81.6556,""],
+["2037",32.3293,-96.6253,""],
+["2039",40.1795,-74.8552,""],
+["2040",35.9606,-83.9207,""],
+["2044",42.3314,-83.0457,""],
+["2046",39.1142,-94.6275,""],
+["2048",39.1271,-84.5144,""],
+["2049",39.9612,-82.9988,""],
+["2051",42.3314,-83.0457,""],
+["2052",42.3314,-83.0457,""],
+["2053",32.2988,-90.1848,""],
+["2054",41.6639,-83.5552,""],
+["2055",41.6639,-83.5552,""],
+["2056",41.6639,-83.5552,""],
+["2059",40.7357,-74.1724,""],
+["2060",40.664,-74.2107,""],
+["2061",40.7282,-74.0776,""],
+["2063",41.85,-87.65,""],
+["2064",49.1063,-122.8251,""],
+["2065",49.2497,-123.1193,""],
+["2066",40.857,-74.0215,""],
+["2067",40.857,-74.0215,""],
+["2069",40.2403,-79.5767,""],
+["2070",55.1303,-120.9942,""],
+["2071",30.3322,-81.6556,""],
+["2072",30.3322,-81.6556,""],
+["2073",30.3322,-81.6556,""],
+["2074",41.1428,-102.978,""],
+["2075",34.1335,-109.2883,""],
+["2076",35.1495,-90.049,""],
+["2077",42.7103,-92.583,""],
+["2078",42.6733,-91.9135,""],
+["2079",32.5538,-83.8874,""],
+["2080",32.4582,-83.7316,""],
+["2082",30.8333,-83.2803,""],
+["2084",30.8333,-83.2803,""],
+["2085",30.8333,-83.2803,""],
+["2087",44.0886,-87.6576,""],
+["2089",37.7742,-87.1133,""],
+["2091",40.3,-90.061,""],
+["2092",40.5675,-89.6407,""],
+["2093",40.5675,-89.6407,""],
+["2094",42.5612,-71.5898,""],
+["2097",42.3314,-83.0457,""],
+["2098",42.3314,-83.0457,""],
+["2099",31.7587,-106.4869,""],
+["2100",40.9478,-90.3712,""],
+["2101",50.4501,-104.6178,""],
+["2102",49.8844,-97.147,""],
+["2104",42.1015,-72.5898,""],
+["2105",41.4333,-96.4981,""],
+["2106",41.1675,-90.0426,""],
+["2109",39.7686,-94.8466,""],
+["2110",35.7479,-95.3697,""],
+["2112",41.9239,-89.0687,""],
+["2113",34.6059,-86.9833,""],
+["2115",38.6723,-90.1698,""],
+["2116",38.6245,-90.1509,""],
+["2125",43.1536,-93.201,""],
+["2126",41.85,-87.65,""],
+["2127",51.2167,-102.4677,""],
+["2131",41.85,-87.65,""],
+["2132",44.6215,-123.9385,""],
+["2134",45.6187,-123.1143,""],
+["2135",45.4312,-122.7715,""],
+["2136",45.5229,-122.9898,""],
+["2138",45.5234,-122.6762,""],
+["2140",45.5234,-122.6762,""],
+["2141",45.5234,-122.6762,""],
+["2146",32.6781,-117.0992,""],
+["2148",32.3476,-97.3867,""],
+["2156",32.2862,-104.0958,""],
+["2160",41.7003,-86.5095,""],
+["2162",41.85,-87.65,""],
+["2163",39.2904,-76.6122,""],
+["2164",39.2904,-76.6122,""],
+["2165",39.2904,-76.6122,""],
+["2166",41.85,-87.65,""],
+["2167",41.85,-87.65,""],
+["2168",41.223,-111.9738,""],
+["2169",41.157,-83.4169,""],
+["2170",41.3948,-75.7066,""],
+["2171",41.3948,-75.7066,""],
+["2172",41.85,-87.65,""],
+["2173",38.6273,-90.1979,""],
+["2174",38.6273,-90.1979,""],
+["2176",38.028,-121.8847,""],
+["2178",41.85,-87.65,""],
+["2179",48.382,-89.2502,""],
+["2181",29.9547,-90.0751,""],
+["2182",39.9524,-75.1636,""],
+["2187",43.7677,-94.1658,""],
+["2190",39.4667,-87.4139,""],
+["2191",39.4667,-87.4139,""],
+["2192",39.0997,-94.5786,""],
+["2193",39.0997,-94.5786,""],
+["2194",39.0997,-94.5786,""],
+["2195",39.0997,-94.5786,""],
+["2196",39.0997,-94.5786,""],
+["2197",39.1142,-94.6275,""],
+["2198",39.1142,-94.6275,""],
+["2199",47.3352,-116.8885,""],
+["2202",47.6597,-117.4291,""],
+["2205",41.2906,-95.9181,""],
+["2207",34.4451,-92.1832,""],
+["2211",31.5785,-84.1557,""],
+["2212",47.6597,-117.4291,""],
+["2213",39.5296,-119.8138,""],
+["2214",41.85,-87.65,""],
+["2217",29.8852,-93.9423,""],
+["2218",40.4034,-79.8684,""],
+["2219",40.3479,-79.8642,""],
+["2221",45.1388,-94.7781,""],
+["2224",46.8083,-100.7837,""],
+["2225",46.5083,-99.7712,""],
+["2228",47.9808,-102.4902,""],
+["2233",44.6427,-63.5769,""],
+["2235",30.1011,-90.9941,""],
+["2236",39.1698,-91.8829,""],
+["2237",37.8044,-122.2708,""],
+["2242",29.4241,-98.4936,""],
+["2243",44.5537,-70.5509,""],
+["2244",39.2904,-76.6122,""],
+["2246",47.3553,-68.3217,""],
+["2247",47.1632,-67.9246,""],
+["2248",47.1573,-67.9353,""],
+["2250",37.3429,-77.9806,""],
+["2252",37.2279,-77.4019,""],
+["2253",37.2279,-77.4019,""],
+["2255",37.2279,-77.4019,""],
+["2256",37.036,-77.0952,""],
+["2258",37.3043,-77.2872,""],
+["2259",37.3568,-77.4416,""],
+["2260",32.3643,-88.7037,""],
+["2262",41.6033,-98.9262,""],
+["2266",40.7143,-74.006,""],
+["2268",45.4001,-71.8991,""],
+["2270",44.9364,-72.2051,""],
+["2274",43.1334,-72.444,""],
+["2275",36.7284,-76.585,""],
+["2277",36.7284,-76.585,""],
+["2283",33.471,-81.9748,""],
+["2284",42.0987,-75.918,""],
+["2285",32.814,-96.9489,""],
+["2287",34.0922,-117.4351,""],
+["2288",43.0481,-76.1474,""],
+["2289",43.0581,-76.2074,""],
+["2291",38.6245,-90.1509,""],
+["2292",38.6245,-90.1509,""],
+["2293",37.9358,-122.3478,""],
+["2294",39.2992,-87.9925,""],
+["2295",38.6245,-90.1509,""],
+["2296",38.6245,-90.1509,""],
+["2297",42.3173,-85.1782,""],
+["2300",45.2501,-74.1325,""],
+["2301",30.4433,-91.1875,""],
+["2302",30.4433,-91.1875,""],
+["2303",41.0531,-82.7263,""],
+["2304",41.1656,-80.8576,""],
+["2305",33.5207,-86.8025,""],
+["2306",40.5887,-83.1285,""],
+["2307",40.7876,-82.7366,""],
+["2308",40.5887,-83.1285,""],
+["2311",39.9404,-82.0132,""],
+["2312",39.1142,-94.6275,""],
+["2314",46.1262,-67.8403,""],
+["2315",43.6884,-70.7937,""],
+["2316",35.0456,-85.3097,""],
+["2317",45.8334,-64.1987,""],
+["2318",33.9657,-81.074,""],
+["2321",36.7477,-119.7724,""],
+["2322",29.7633,-95.3633,""],
+["2323",41.5834,-87.5,""],
+["2324",46.2652,-96.6059,""],
+["2330",31.0982,-97.3428,""],
+["2331",40.0793,-75.3016,""],
+["2332",40.1023,-75.2743,""],
+["2333",29.8852,-93.9423,""],
+["2334",42.3314,-83.0457,""],
+["2336",39.0997,-94.5786,""],
+["2337",39.608,-119.2518,""],
+["2338",39.5349,-119.7527,""],
+["2339",47.6062,-122.3321,""],
+["2341",35.0456,-85.3097,""],
+["2343",36.5484,-82.5618,""],
+["2345",33.4018,-86.9544,""],
+["2346",33.4018,-86.9544,""],
+["2347",33.4018,-86.9544,""],
+["2351",39.0053,-87.7392,""],
+["2352",40.0179,-79.5895,""],
+["2353",41.4048,-81.7229,""],
+["2354",34.9843,-80.4492,""],
+["2355",44.98,-93.2638,""],
+["2356",44.798,-93.5269,""],
+["2357",44.7791,-93.3363,""],
+["2358",30.2421,-93.2507,""],
+["2359",41.4995,-81.6954,""],
+["2361",40.7608,-111.8911,""],
+["2362",40.7608,-111.8911,""],
+["2363",40.899,-74.0926,""],
+["2364",32.4824,-96.9945,""],
+["2365",40.8568,-74.1285,""],
+["2367",41.154,-75.2805,""],
+["2368",32.9126,-96.6389,""],
+["2369",41.4995,-81.6954,""],
+["2370",41.4995,-81.6954,""],
+["2371",41.4995,-81.6954,""],
+["2372",41.5009,-90.4443,""],
+["2373",41.5095,-90.5787,""],
+["2374",41.5095,-90.5787,""],
+["2375",41.5095,-90.5787,""],
+["2376",38.1302,-121.2725,""],
+["2377",37.9577,-121.2908,""],
+["2382",44.3569,-91.4204,""],
+["2384",42.2529,-73.791,""],
+["2386",39.9587,-75.9194,""],
+["2387",43.3901,-123.3126,""],
+["2388",41.85,-87.65,""],
+["2389",35.9606,-83.9207,""],
+["2391",38.6273,-90.1979,""],
+["2392",32.516,-93.7321,""],
+["2393",31.9438,-94.2441,""],
+["2394",31.9438,-94.2441,""],
+["2395",32.0377,-93.7002,""],
+["2396",32.0377,-93.7002,""],
+["2399",32.4788,-94.0596,""],
+["2401",41.6611,-91.5302,""],
+["2403",41.5889,-91.0168,""],
+["2404",41.85,-87.65,""],
+["2405",41.85,-87.65,""],
+["2407",39.7392,-104.9847,""],
+["2408",41.85,-87.65,""],
+["2410",33.4859,-86.9119,""],
+["2411",44.1501,-79.8663,""],
+["2414",36.1321,-78.7567,""],
+["2415",36.3107,-78.5908,""],
+["2417",34.998,-78.3233,""],
+["2419",31.5785,-84.1557,""],
+["2420",43.0389,-87.9065,""],
+["2421",43.7508,-87.7145,""],
+["2423",33.5207,-86.8025,""],
+["2424",41.5061,-87.6356,""],
+["2427",53.8834,-119.1359,""],
+["2428",42.3001,-83.0165,""],
+["2429",42.3001,-83.0165,""],
+["2430",34.2979,-83.8241,""],
+["2431",34.2529,-83.5615,""],
+["2432",52.1324,-106.6689,""],
+["2433",39.9612,-82.9988,""],
+["2434",40.0931,-83.018,""],
+["2435",39.9612,-82.9988,""],
+["2436",40.2364,-83.3671,""],
+["2437",41.1962,-84.9197,""],
+["2438",34.7049,-81.2143,""],
+["2439",34.7049,-81.2143,""],
+["2440",34.5518,-80.5837,""],
+["2442",32.8779,-85.1833,""],
+["2444",38.4048,-82.6004,""],
+["2445",39.1271,-84.5144,""],
+["2446",28.7091,-100.4995,""],
+["2447",28.7091,-100.4995,""],
+["2448",41.7606,-88.3201,""],
+["2449",41.3456,-88.8426,""],
+["2450",41.3456,-88.8426,""],
+["2451",41.8847,-88.204,""],
+["2452",41.85,-87.65,""],
+["2455",38.8108,-94.9272,""],
+["2457",35.934,-84.5524,""],
+["2458",35.8656,-84.6849,""],
+["2459",36.3008,-119.7829,""],
+["2460",36.3302,-119.2921,""],
+["2461",41.1573,-85.4883,""],
+["2462",40.8306,-84.9291,""],
+["2463",32.7696,-104.3889,""],
+["2464",46.7208,-92.1041,""],
+["2465",46.7208,-92.1041,""],
+["2466",46.7208,-92.1041,""],
+["2470",32.8601,-97.3639,""],
+["2471",46.7833,-92.1066,""],
+["2472",46.7833,-92.1066,""],
+["2473",46.7833,-92.1066,""],
+["2474",46.7208,-92.1041,""],
+["2475",46.7208,-92.1041,""],
+["2476",36.5298,-87.3594,""],
+["2477",36.5298,-87.3594,""],
+["2478",36.9903,-86.4436,""],
+["2480",38.9459,-84.6805,""],
+["2481",32.0204,-102.3802,""],
+["2482",27.5064,-99.5075,""],
+["2483",27.5064,-99.5075,""],
+["2484",27.5064,-99.5075,""],
+["2486",31.7587,-106.4869,""],
+["2487",31.7587,-106.4869,""],
+["2488",42.2223,-83.3966,""],
+["2489",31.3404,-110.9343,""],
+["2490",29.4241,-98.4936,""],
+["2493",38.2321,-81.5376,""],
+["2495",39.2807,-80.3445,""],
+["2508",42.904,-78.6923,""],
+["2509",42.8865,-78.8784,""],
+["2510",42.8256,-78.8234,""],
+["2511",34.0522,-118.2437,""],
+["2512",34.0522,-118.2437,""],
+["2513",34.0522,-118.2437,""],
+["2520",46.49,-80.99,""],
+["2521",41.3081,-72.9282,""],
+["2522",41.5623,-72.6506,""],
+["2523",44.3106,-69.7795,""],
+["2524",49.4992,-98.0016,""],
+["2525",49.1047,-97.5596,""],
+["2528",29.7633,-95.3633,""],
+["2529",29.7633,-95.3633,""],
+["2530",29.7633,-95.3633,""],
+["2531",30.0799,-95.4172,""],
+["2532",43.5168,-79.8829,""],
+["2535",37.4852,-122.2364,""],
+["2536",37.3394,-121.895,""],
+["2537",41.0534,-73.5387,""],
+["2538",37.9748,-87.5559,""],
+["2539",37.9748,-87.5559,""],
+["2540",41.5252,-88.0834,""],
+["2542",41.3573,-88.4212,""],
+["2543",41.6475,-88.0895,""],
+["2544",41.3573,-88.4212,""],
+["2550",41.6736,-88.0017,""],
+["2552",39.4667,-87.4139,""],
+["2554",30.6744,-96.37,""],
+["2558",42.2639,-88.8443,""],
+["2559",41.9142,-88.3087,""],
+["2560",34.9476,-85.7144,""],
+["2562",44.2333,-95.6192,""],
+["2563",39.4667,-87.4139,""],
+["2565",42.6606,-84.073,""],
+["2566",42.667,-84.1741,""],
+["2567",40.3217,-80.6098,""],
+["2570",40.3276,-80.5959,""],
+["2571",40.419,-80.5895,""],
+["2573",40.1484,-79.8878,""],
+["2575",43.6034,-84.0697,""],
+["2576",43.5945,-83.8889,""],
+["2577",43.5945,-83.8889,""],
+["2578",43.8536,-83.965,""],
+["2579",38.7304,-82.8555,""],
+["2583",41.2619,-95.8608,""],
+["2584",41.2619,-95.8608,""],
+["2585",38.2542,-85.7594,""],
+["2587",34.09,-117.8903,""],
+["2588",33.9792,-118.0328,""],
+["2590",39.0997,-94.5786,""],
+["2591",48.382,-89.2502,""],
+["2592",48.382,-89.2502,""],
+["2593",48.382,-89.2502,""],
+["2594",48.382,-89.2502,""],
+["2595",48.382,-89.2502,""],
+["2596",48.382,-89.2502,""],
+["2597",48.382,-89.2502,""],
+["2598",39.3678,-94.3622,""],
+["2599",39.0997,-94.5786,""],
+["2600",36.8524,-121.4016,""],
+["2601",36.6777,-121.6555,""],
+["2603",26.2379,-80.1248,""],
+["2604",27.4467,-80.3256,""],
+["2606",26.7753,-80.0581,""],
+["2607",28.6122,-80.8076,""],
+["2608",36.9102,-121.7569,""],
+["2609",42.4039,-96.3586,""],
+["2610",42.5,-96.4003,""],
+["2611",42.5,-96.4003,""],
+["2612",42.5,-96.4003,""],
+["2613",42.5,-96.4003,""],
+["2614",41.0037,-80.347,""],
+["2616",32.7763,-79.9327,""],
+["2617",46.0077,-122.8444,""],
+["2618",46.7162,-122.9543,""],
+["2619",35.054,-93.3935,""],
+["2621",34.7695,-92.2671,""],
+["2622",37.9841,-120.3821,""],
+["2624",47.474,-122.261,""],
+["2625",35.0456,-85.3097,""],
+["2626",47.2529,-122.4443,""],
+["2627",47.1718,-122.5185,""],
+["2628",41.4531,-90.5721,""],
+["2632",35.222,-101.8313,""],
+["2633",35.222,-101.8313,""],
+["2634",41.7075,-86.895,""],
+["2635",42.1673,-85.847,""],
+["2636",41.6077,-86.7139,""],
+["2637",33.689,-86.6833,""],
+["2638",42.9787,-82.4041,""],
+["2639",53.5501,-113.4687,""],
+["2640",45.7916,-97.7509,""],
+["2641",44.5291,-94.7208,""],
+["2642",44.543,-94.3664,""],
+["2643",42.9958,-96.4853,""],
+["2645",43.8261,-96.7062,""],
+["2647",44.0061,-97.114,""],
+["2648",43.5437,-96.728,""],
+["2649",46.089,-122.9359,""],
+["2650",43.2841,-92.811,""],
+["2651",42.4928,-92.343,""],
+["2652",32.3062,-87.7981,""],
+["2653",31.6749,-88.6462,""],
+["2656",49.2068,-122.9109,""],
+["2660",41.85,-87.65,""],
+["2661",44.3236,-96.9265,""],
+["2662",42.4795,-79.3339,""],
+["2663",41.4995,-81.6954,""],
+["2664",41.3684,-82.1077,""],
+["2665",40.1484,-79.8878,""],
+["2666",40.3934,-82.4857,""],
+["2667",40.0312,-81.5885,""],
+["2668",47.5949,-115.3383,""],
+["2671",39.8965,-80.1792,""],
+["2672",26.9342,-80.0942,""],
+["2675",28.3047,-81.4167,""],
+["2676",40.7143,-74.006,""],
+["2677",40.7326,-73.4454,""],
+["2679",34.9994,-117.6498,""],
+["2680",34.5361,-117.2912,""],
+["2681",39.9277,-122.1792,""],
+["2683",53.2668,-113.552,""],
+["2684",53.2668,-113.8187,""],
+["2685",53.5501,-113.4687,""],
+["2686",53.5501,-113.4687,""],
+["2687",53.5501,-113.4687,""],
+["2688",34.5137,-102.883,""],
+["2690",41.85,-87.65,""],
+["2691",40.8612,-79.8953,""],
+["2693",41.9476,-80.5542,""],
+["2694",40.5217,-79.8423,""],
+["2696",40.4406,-79.9959,""],
+["2697",40.5698,-79.7648,""],
+["2698",40.174,-80.2462,""],
+["2699",40.8612,-79.8953,""],
+["2700",40.7945,-80.1367,""],
+["2702",33.8353,-117.9145,""],
+["2703",33.3944,-104.5249,""],
+["2704",45.9173,-119.3425,""],
+["2706",40.6001,-80.2248,""],
+["2707",33.4484,-112.074,""],
+["2708",33.4484,-112.074,""],
+["2709",33.4223,-111.8226,""],
+["2710",47.2529,-122.4443,""],
+["2711",47.2529,-122.4443,""],
+["2712",47.2529,-122.4443,""],
+["2714",47.2529,-122.4443,""],
+["2715",30.3322,-81.6556,""],
+["2716",27.9475,-82.4584,""],
+["2717",27.7709,-82.6793,""],
+["2719",41.6005,-93.6091,""],
+["2720",41.6005,-93.6091,""],
+["2721",41.6005,-93.6091,""],
+["2722",41.6442,-93.4647,""],
+["2724",41.6883,-93.7911,""],
+["2725",41.5772,-93.7113,""],
+["2726",41.6005,-93.6091,""],
+["2727",29.9547,-90.0751,""],
+["2728",33.749,-84.388,""],
+["2729",32.8882,-84.3266,""],
+["2733",32.5007,-94.7405,""],
+["2734",32.5007,-94.7405,""],
+["2735",32.5007,-94.7405,""],
+["2736",39.2904,-76.6122,""],
+["2737",39.2904,-76.6122,""],
+["2738",39.2904,-76.6122,""],
+["2739",39.7904,-77.7278,""],
+["2741",35.0527,-78.8784,""],
+["2742",35.0527,-78.8784,""],
+["2743",35.0321,-78.7947,""],
+["2745",29.9147,-90.054,""],
+["2746",34.8529,-80.9112,""],
+["2747",36.0999,-80.2442,""],
+["2748",36.0999,-80.2442,""],
+["2749",36.2404,-80.2934,""],
+["2750",41.1148,-74.1496,""],
+["2751",40.2234,-76.9536,""],
+["2752",35.1168,-80.7237,""],
+["2753",34.9885,-80.367,""],
+["2754",39.8248,-79.7545,""],
+["2755",32.746,-96.9978,""],
+["2758",37.634,-79.4503,""],
+["2759",40.1998,-76.7311,""],
+["2760",40.0337,-76.5044,""],
+["2761",40.1573,-76.3069,""],
+["2762",40.1018,-76.0852,""],
+["2763",40.2354,-76.8414,""],
+["2764",41.0989,-81.6446,""],
+["2766",41.2442,-82.6963,""],
+["2768",39.0062,-85.6236,""],
+["2769",38.7328,-86.4736,""],
+["2770",41.9573,-83.6597,""],
+["2771",41.85,-87.65,""],
+["2772",41.85,-87.65,""],
+["2774",34.0007,-81.0348,""],
+["2775",34.0007,-81.0348,""],
+["2776",34.2093,-81.5332,""],
+["2779",42.7283,-111.5324,""],
+["2780",41.5737,-75.5019,""],
+["2781",43.4554,-76.5105,""],
+["2783",42.1015,-72.5898,""],
+["2784",42.1015,-72.5898,""],
+["2785",42.1251,-72.7495,""],
+["2786",42.1251,-72.7495,""],
+["2787",42.1251,-72.7495,""],
+["2788",42.2043,-72.6162,""],
+["2789",42.2043,-72.6162,""],
+["2790",53.2724,-110.0226,""],
+["2793",53.3541,-110.8585,""],
+["2794",52.3168,-106.5679,""],
+["2795",51.5501,-108.0014,""],
+["2796",50.4001,-105.5345,""],
+["2798",49.6334,-105.9845,""],
+["2803",44.0247,-88.5426,""],
+["2804",30.6944,-88.043,""],
+["2805",30.6944,-88.043,""],
+["2807",50.7237,-121.2821,""],
+["2808",42.8509,-72.5579,""],
+["2810",39.7992,-88.2831,""],
+["2811",39.8628,-88.1623,""],
+["2812",39.4064,-88.7901,""],
+["2814",42.3314,-83.0457,""],
+["2815",42.3314,-83.0457,""],
+["2817",42.6828,-89.0187,""],
+["2818",42.6828,-89.0187,""],
+["2821",42.7803,-89.2993,""],
+["2822",42.6011,-89.6385,""],
+["2825",37.6922,-97.3375,""],
+["2826",37.6922,-97.3375,""],
+["2828",37.8172,-96.8623,""],
+["2832",37.0373,-95.6164,""],
+["2833",37.3403,-95.2611,""],
+["2835",34.8118,-88.19,""],
+["2838",48.2763,-117.7155,""],
+["2840",42.0597,-93.8802,""],
+["2841",42.0178,-95.3553,""],
+["2843",33.629,-91.3996,""],
+["2844",41.14,-104.8203,""],
+["2847",42.869,-76.9777,""],
+["2848",42.9826,-77.4089,""],
+["2850",46.2857,-119.2845,""],
+["2851",46.2857,-119.2845,""],
+["2852",46.6021,-120.5059,""],
+["2853",46.6635,-118.8611,""],
+["2855",41.4225,-87.9859,""],
+["2856",34.0556,-117.1825,""],
+["2857",33.7839,-116.9586,""],
+["2859",35.9746,-77.9655,""],
+["2860",37.5538,-77.4603,""],
+["2862",37.2153,-93.2982,""],
+["2865",37.2153,-93.2982,""],
+["2866",37.2153,-93.2982,""],
+["2868",37.1465,-94.463,""],
+["2869",36.9709,-93.718,""],
+["2870",36.9709,-93.718,""],
+["2872",38.6533,-94.3488,""],
+["2873",38.3686,-93.7783,""],
+["2875",34.2581,-88.7046,""],
+["2876",34.2581,-88.7046,""],
+["2878",34.1943,-88.7198,""],
+["2879",45.0419,-93.7891,""],
+["2880",37.3638,-79.2897,""],
+["2881",36.586,-79.395,""],
+["2883",37.4218,-77.4375,""],
+["2885",43.1905,-112.345,""],
+["2887",42.9441,-112.8383,""],
+["2889",40.2842,-84.1555,""],
+["2890",40.2145,-84.6369,""],
+["2891",40.1028,-84.633,""],
+["2893",42.4975,-94.168,""],
+["2894",42.4975,-94.168,""],
+["2898",42.345,-95.4717,""],
+["2900",38.2542,-85.7594,""],
+["2901",38.2542,-85.7594,""],
+["2902",38.7014,-90.1487,""],
+["2903",38.7014,-90.1487,""],
+["2904",35.9606,-83.9207,""],
+["2905",41.1306,-85.1289,""],
+["2907",41.0706,-85.0144,""],
+["2909",41.1573,-85.4883,""],
+["2910",41.1306,-85.1289,""],
+["2911",41.1306,-85.1289,""],
+["2912",41.4731,-87.0611,""],
+["2913",47.2633,-101.778,""],
+["2914",49.6992,-123.1563,""],
+["2915",35.1495,-90.049,""],
+["2916",35.1495,-90.049,""],
+["2917",34.9618,-89.8295,""],
+["2918",41.5759,-87.1762,""],
+["2919",41.5934,-87.3464,""],
+["2920",41.5934,-87.3464,""],
+["2921",41.5934,-87.3464,""],
+["2922",41.85,-87.65,""],
+["2925",45.2629,-122.6926,""],
+["2926",41.6392,-87.4548,""],
+["2927",41.6392,-87.4548,""],
+["2928",41.6392,-87.4548,""],
+["2930",41.6798,-87.4945,""],
+["2931",41.6798,-87.4945,""],
+["2932",35.9606,-83.9207,""],
+["2933",35.9606,-83.9207,""],
+["2934",37.9577,-121.2908,""],
+["2935",32.7948,-116.9625,""],
+["2936",32.7157,-117.1647,""],
+["2937",29.9547,-90.0751,""],
+["2938",29.9547,-90.0751,""],
+["2940",38.4783,-107.8762,""],
+["2941",39.4519,-108.0529,""],
+["2942",39.5505,-107.3248,""],
+["2943",41.6639,-83.5552,""],
+["2945",41.5628,-83.6538,""],
+["2946",34.9249,-81.0251,""],
+["2947",34.7049,-81.2143,""],
+["2948",34.7049,-81.2143,""],
+["2950",41.4098,-85.8456,""],
+["2951",41.4098,-85.8456,""],
+["2955",41.2845,-84.3558,""],
+["2957",41.3923,-84.1252,""],
+["2959",41.1253,-84.8533,""],
+["2960",41.2845,-84.3558,""],
+["2961",38.4496,-78.8689,""],
+["2962",41.4514,-83.3658,""],
+["2963",41.6098,-83.5644,""],
+["2964",41.6639,-83.5552,""],
+["2965",47.3143,-116.5627,""],
+["2966",50.4501,-104.6178,""],
+["2967",50.4501,-104.6178,""],
+["2970",50.4501,-104.6178,""],
+["2971",40.8273,-83.2813,""],
+["2973",51.2668,-105.9845,""],
+["2974",50.4501,-104.6178,""],
+["2975",50.4501,-104.6178,""],
+["2977",41.85,-87.65,""],
+["2978",41.85,-87.65,""],
+["2979",41.5261,-87.8892,""],
+["2980",41.5261,-87.8892,""],
+["2981",41.85,-87.65,""],
+["2982",41.85,-87.65,""],
+["2983",41.927,-73.9974,""],
+["2984",34.7352,-79.3489,""],
+["2985",53.8216,-101.2449,""],
+["2990",41.4298,-84.8714,""],
+["2991",41.432,-85.02,""],
+["2992",43.0945,-79.0567,""],
+["2993",41.2737,-82.8416,""],
+["2994",41.395,-82.5552,""],
+["2995",45.5234,-122.6762,""],
+["2996",45.5234,-122.6762,""],
+["2997",36.7959,-89.9579,""],
+["2998",45.463,-91.104,""],
+["2999",41.7398,-87.5542,""],
+["3000",41.7398,-87.5542,""],
+["3002",38.3173,-88.9031,""],
+["3003",38.3173,-88.9031,""],
+["3004",38.3173,-88.9031,""],
+["3005",41.7795,-87.5995,""],
+["3006",38.4342,-89.5504,""],
+["3007",40.8273,-83.2813,""],
+["3008",29.7633,-95.3633,""],
+["3009",29.7633,-95.3633,""],
+["3010",29.7633,-95.3633,""],
+["3011",29.7633,-95.3633,""],
+["3012",29.7633,-95.3633,""],
+["3013",29.7633,-95.3633,""],
+["3014",29.7761,-95.1146,""],
+["3015",29.7761,-95.1146,""],
+["3016",29.7633,-95.3633,""],
+["3017",29.7633,-95.3633,""],
+["3018",29.7633,-95.3633,""],
+["3019",40.8437,-81.764,""],
+["3021",41.3503,-83.1219,""],
+["3022",40.5887,-83.1285,""],
+["3026",38.0934,-88.5356,""],
+["3028",47.5324,-92.6235,""],
+["3029",48.1987,-122.1251,""],
+["3031",47.4829,-122.2171,""],
+["3032",32.5404,-82.9038,""],
+["3033",38.7014,-90.1487,""],
+["3034",39.8251,-75.2835,""],
+["3035",35.7487,-96.6581,""],
+["3036",35.9987,-96.1142,""],
+["3037",36.1398,-96.1089,""],
+["3038",36.154,-95.9928,""],
+["3039",36.154,-95.9928,""],
+["3040",36.0229,-95.9683,""],
+["3043",34.1069,-117.9353,""],
+["3045",42.3314,-83.0457,""],
+["3046",42.3314,-83.0457,""],
+["3049",44.3836,-89.8174,""],
+["3050",44.3125,-89.9043,""],
+["3051",44.3125,-89.9043,""],
+["3053",43.8014,-91.2396,""],
+["3054",42.0945,-90.1568,""],
+["3055",43.9786,-90.504,""],
+["3057",45.7809,-122.5334,""],
+["3058",45.5826,-122.3534,""],
+["3060",35.4676,-97.5164,""],
+["3061",40.6187,-80.5773,""],
+["3064",41.2619,-95.8608,""],
+["3067",43.1536,-93.201,""],
+["3069",42.9852,-93.1919,""],
+["3070",43.1811,-95.8561,""],
+["3071",43.2625,-93.6372,""],
+["3072",40.7282,-74.0776,""],
+["3073",40.7282,-74.0776,""],
+["3074",31.2137,-82.3557,""],
+["3076",35.042,-89.6645,""],
+["3081",43.4926,-70.4534,""],
+["3082",43.677,-70.3712,""],
+["3083",41.7606,-88.3201,""],
+["3084",41.6628,-88.537,""],
+["3085",41.8089,-88.0112,""],
+["3086",40.4592,-90.6718,""],
+["3087",41.5472,-89.1176,""],
+["3088",40.9478,-90.3712,""],
+["3089",38.7292,-89.8832,""],
+["3102",34.0522,-118.2437,""],
+["3103",34.0522,-118.2437,""],
+["3104",34.0522,-118.2437,""],
+["3105",34.0522,-118.2437,""],
+["3106",34.0522,-118.2437,""],
+["3107",41.9476,-80.5542,""],
+["3108",42.2156,-79.8342,""],
+["3109",41.75,-81.274,""],
+["3110",41.6639,-83.5552,""],
+["3111",41.6639,-83.5552,""],
+["3112",41.6639,-83.5552,""],
+["3114",38.5805,-121.5302,""],
+["3115",38.6785,-121.7733,""],
+["3116",43.7094,-98.0298,""],
+["3117",43.9036,-99.8618,""],
+["3118",29.4241,-98.4936,""],
+["3119",29.4241,-98.4936,""],
+["3120",41.157,-83.4169,""],
+["3122",41.0776,-84.7272,""],
+["3123",35.222,-101.8313,""],
+["3124",35.222,-101.8313,""],
+["3125",35.222,-101.8313,""],
+["3126",35.222,-101.8313,""],
+["3127",35.222,-101.8313,""],
+["3128",35.222,-101.8313,""],
+["3129",35.222,-101.8313,""],
+["3130",45.565,-94.3183,""],
+["3131",45.4719,-94.3408,""],
+["3132",45.5608,-94.1625,""],
+["3133",45.5608,-94.1625,""],
+["3134",38.2324,-122.6367,""],
+["3135",39.926,-75.1196,""],
+["3137",39.8676,-75.0946,""],
+["3138",40.8445,-74.2996,""],
+["3140",40.0712,-74.8649,""],
+["3141",35.6204,-80.9865,""],
+["3142",35.6204,-80.9865,""],
+["3143",34.1954,-79.7626,""],
+["3144",34.4166,-79.3712,""],
+["3145",34.1954,-79.7626,""],
+["3146",34.1954,-79.7626,""],
+["3147",33.871,-79.7554,""],
+["3149",34.2999,-79.8762,""],
+["3150",34.374,-80.0734,""],
+["3151",34.2182,-80.2484,""],
+["3152",41.3126,-81.4401,""],
+["3153",41.4995,-81.6954,""],
+["3154",32.5007,-94.7405,""],
+["3156",34.0522,-118.2437,""],
+["3157",34.0522,-118.2437,""],
+["3158",34.0522,-118.2437,""],
+["3159",33.8959,-118.2201,""],
+["3160",34.0522,-118.2437,""],
+["3161",45.7054,-121.5215,""],
+["3163",37.3394,-121.895,""],
+["3164",41.0814,-81.519,""],
+["3165",41.2392,-81.3459,""],
+["3168",41.1576,-81.2421,""],
+["3169",41.3898,-81.4412,""],
+["3170",38.6711,-96.9425,""],
+["3171",38.3708,-97.6642,""],
+["3172",38.3708,-97.6642,""],
+["3174",42.3314,-83.0457,""],
+["3175",42.7926,-73.6812,""],
+["3177",43.0906,-73.4987,""],
+["3178",42.6526,-73.7562,""],
+["3179",47.6732,-117.2394,""],
+["3180",43.0653,-76.473,""],
+["3181",43.2867,-78.7103,""],
+["3182",42.9981,-78.1875,""],
+["3183",43.1548,-77.6156,""],
+["3184",43.3229,-76.4172,""],
+["3185",32.631,-97.2892,""],
+["3188",47.9253,-97.0328,""],
+["3189",47.93,-97.0245,""],
+["3191",47.498,-97.3245,""],
+["3192",47.4039,-97.062,""],
+["3193",48.7744,-96.9464,""],
+["3195",33.5207,-86.8025,""],
+["3196",37.7623,-84.8433,""],
+["3198",36.0726,-79.792,""],
+["3202",46.4425,-95.1361,""],
+["3203",35.0832,-80.8923,""],
+["3205",35.4107,-80.8428,""],
+["3206",38.8003,-90.6265,""],
+["3207",41.85,-87.65,""],
+["3211",35.5843,-78.8,""],
+["3212",35.0527,-78.8784,""],
+["3213",35.7113,-78.6142,""],
+["3214",38.9606,-89.0937,""],
+["3215",41.4528,-82.1824,""],
+["3216",49.8844,-97.147,""],
+["3218",50.1436,-96.8845,""],
+["3222",49.8844,-97.147,""],
+["3223",41.6639,-83.5552,""],
+["3224",40.4167,-86.8753,""],
+["3226",40.4864,-86.1336,""],
+["3227",40.7545,-86.3567,""],
+["3229",27.5214,-82.5723,""],
+["3230",27.5214,-82.5723,""],
+["3231",30.4521,-91.2101,""],
+["3232",30.4521,-91.2101,""],
+["3233",43.2501,-79.8496,""],
+["3234",43.2501,-79.8496,""],
+["3235",43.2501,-79.8496,""],
+["3236",43.2501,-79.8496,""],
+["3237",43.2501,-79.8496,""],
+["3239",42.1584,-72.3287,""],
+["3240",42.4229,-72.1051,""],
+["3241",42.2126,-72.3454,""],
+["3242",42.1043,-72.319,""],
+["3244",41.4298,-72.082,""],
+["3245",41.7107,-72.2081,""],
+["3246",41.6998,-72.157,""],
+["3248",32.7254,-97.3208,""],
+["3249",32.7254,-97.3208,""],
+["3250",32.7254,-97.3208,""],
+["3251",32.7254,-97.3208,""],
+["3252",32.7254,-97.3208,""],
+["3253",32.9537,-96.8903,""],
+["3255",32.0851,-98.342,""],
+["3256",31.8974,-98.6037,""],
+["3257",32.2137,-98.6706,""],
+["3258",38.4148,-81.844,""],
+["3261",35.1315,-79.4295,""],
+["3263",36.1881,-94.5405,""],
+["3264",36.6506,-94.4436,""],
+["3265",46.6522,-96.4198,""],
+["3266",39.0997,-94.5786,""],
+["3269",44.98,-93.2638,""],
+["3270",44.798,-93.5269,""],
+["3271",44.9444,-93.0933,""],
+["3272",44.7791,-93.3363,""],
+["3273",44.7791,-93.3363,""],
+["3274",44.8927,-93.0349,""],
+["3275",45.5234,-122.6762,""],
+["3276",45.5234,-122.6762,""],
+["3277",30.2131,-93.2044,""],
+["3278",30.2131,-93.2044,""],
+["3282",30.2421,-93.2507,""],
+["3283",30.2421,-93.2507,""],
+["3284",30.2421,-93.2507,""],
+["3285",40.0846,-74.9449,""],
+["3286",47.2529,-122.4443,""],
+["3287",47.2529,-122.4443,""],
+["3288",47.2529,-122.4443,""],
+["3289",47.2529,-122.4443,""],
+["3290",39.4862,-75.0257,""],
+["3292",53.5501,-113.4687,""],
+["3293",54.1501,-115.6855,""],
+["3294",40.7282,-74.0776,""],
+["3295",40.3357,-75.9269,""],
+["3297",40.2454,-75.6496,""],
+["3298",40.1798,-76.1788,""],
+["3299",40.3409,-76.4113,""],
+["3300",47.3809,-122.2348,""],
+["3301",40.2115,-74.7879,""],
+["3302",44.3633,-98.2143,""],
+["3304",44.708,-100.0598,""],
+["3306",44.0805,-103.231,""],
+["3307",44.6714,-103.8521,""],
+["3309",44.0805,-103.231,""],
+["3311",41.9667,-92.5769,""],
+["3315",45.4475,-98.0987,""],
+["3316",45.4647,-98.4865,""],
+["3317",45.4647,-98.4865,""],
+["3318",38.8339,-104.8214,""],
+["3319",38.8339,-104.8214,""],
+["3320",38.8339,-104.8214,""],
+["3321",38.6822,-104.7008,""],
+["3322",38.6822,-104.7008,""],
+["3323",38.2544,-104.6091,""],
+["3324",38.2544,-104.6091,""],
+["3328",38.2544,-104.6091,""],
+["3329",38.2544,-104.6091,""],
+["3332",37.6242,-104.7803,""],
+["3333",37.6242,-104.7803,""],
+["3334",29.7633,-95.3633,""],
+["3335",46.7162,-122.9543,""],
+["3336",47.0034,-123.4088,""],
+["3337",46.6621,-122.964,""],
+["3338",46.9754,-123.8157,""],
+["3339",47.2151,-123.1007,""],
+["3340",34.2284,-92.0032,""],
+["3342",34.2284,-92.0032,""],
+["3343",29.7633,-95.3633,""],
+["3345",45.7833,-108.5007,""],
+["3349",44.32,-91.9149,""],
+["3350",41.4528,-82.1824,""],
+["3351",29.7633,-95.3633,""],
+["3352",40.9526,-83.3824,""],
+["3353",40.9526,-83.3824,""],
+["3354",38.9108,-94.3822,""],
+["3356",39.0997,-94.5786,""],
+["3357",39.0997,-94.5786,""],
+["3358",39.0997,-94.5786,""],
+["3359",32.0835,-81.0998,""],
+["3360",32.0835,-81.0998,""],
+["3361",32.296,-81.2354,""],
+["3362",32.804,-81.9493,""],
+["3363",32.0835,-81.0998,""],
+["3364",32.0835,-81.0998,""],
+["3365",32.0835,-81.0998,""],
+["3367",43.1548,-77.6156,""],
+["3368",43.1548,-77.6156,""],
+["3369",42.9731,-77.8528,""],
+["3370",40.2859,-76.6502,""],
+["3371",40.309,-76.5933,""],
+["3372",40.3295,-76.5152,""],
+["3373",40.7989,-81.3785,""],
+["3374",42.0003,-80.3181,""],
+["3376",46.6412,-67.9095,""],
+["3377",46.6812,-68.0159,""],
+["3378",35.0456,-85.3097,""],
+["3379",35.0456,-85.3097,""],
+["3380",34.7998,-87.6773,""],
+["3381",35.1998,-87.0308,""],
+["3382",35.1495,-90.049,""],
+["3383",35.1495,-90.049,""],
+["3384",35.1495,-90.049,""],
+["3385",35.1495,-90.049,""],
+["3386",35.1495,-90.049,""],
+["3387",35.1495,-90.049,""],
+["3388",35.1495,-90.049,""],
+["3389",35.1495,-90.049,""],
+["3390",40.6857,-76.1955,""],
+["3391",36.819,-76.2749,""],
+["3392",36.819,-76.2749,""],
+["3393",39.4184,-92.4382,""],
+["3394",39.1698,-91.8829,""],
+["3396",39.2103,-92.138,""],
+["3398",39.1698,-91.8829,""],
+["3399",38.6245,-90.1509,""],
+["3400",29.7633,-95.3633,""],
+["3401",36.2027,-120.1029,""],
+["3402",39.9524,-75.1636,""],
+["3403",39.9524,-75.1636,""],
+["3405",34.0633,-117.6509,""],
+["3408",37.8362,-87.59,""],
+["3409",37.0945,-88.0803,""],
+["3410",37.402,-86.8758,""],
+["3412",39.2904,-76.6122,""],
+["3413",39.2904,-76.6122,""],
+["3414",45.5234,-122.6762,""],
+["3415",45.5234,-122.6762,""],
+["3416",34.0607,-86.7675,""],
+["3417",35.4492,-86.7889,""],
+["3418",41.5934,-87.3464,""],
+["3419",46.8083,-100.7837,""],
+["3420",38.6273,-90.1979,""],
+["3421",33.6221,-84.3691,""],
+["3423",33.6534,-84.4494,""],
+["3424",34.7695,-92.2671,""],
+["3425",34.7465,-92.2896,""],
+["3426",34.7465,-92.2896,""],
+["3427",35.1495,-90.049,""],
+["3428",35.1495,-90.049,""],
+["3429",35.1495,-90.049,""],
+["3430",35.1495,-90.049,""],
+["3431",29.4241,-98.4936,""],
+["3432",29.4241,-98.4936,""],
+["3433",49.1664,-123.94,""],
+["3434",42.2279,-72.0467,""],
+["3435",42.0029,-71.5148,""],
+["3436",42.0501,-71.8801,""],
+["3437",33.5386,-112.186,""],
+["3438",51.0501,-114.0853,""],
+["3439",51.3237,-113.6047,""],
+["3440",44.5236,-89.5746,""],
+["3441",44.4508,-89.2848,""],
+["3442",44.4564,-89.544,""],
+["3443",39.1142,-94.6275,""],
+["3444",44.9444,-93.0933,""],
+["3445",44.9444,-93.0933,""],
+["3446",44.9444,-93.0933,""],
+["3447",44.8664,-93.0005,""],
+["3448",44.8664,-93.0005,""],
+["3450",38.2542,-85.7594,""],
+["3451",38.2542,-85.7594,""],
+["3452",38.4076,-85.3788,""],
+["3453",36.0345,-89.3856,""],
+["3454",36.9648,-89.0892,""],
+["3455",37.0834,-88.6,""],
+["3456",36.5042,-88.8742,""],
+["3457",37.0834,-88.6,""],
+["3458",37.0834,-88.6,""],
+["3459",42.6012,-76.1805,""],
+["3461",37.6391,-120.9969,""],
+["3462",37.6391,-120.9969,""],
+["3466",42.786,-112.8544,""],
+["3467",42.6191,-113.6772,""],
+["3468",42.7757,-114.7042,""],
+["3469",42.5357,-113.7928,""],
+["3472",42.5991,-114.7595,""],
+["3473",41.557,-83.6272,""],
+["3474",41.4506,-83.4874,""],
+["3475",43.5556,-73.4037,""],
+["3476",43.3095,-73.644,""],
+["3477",43.8487,-73.4235,""],
+["3478",43.6106,-72.9726,""],
+["3480",29.7633,-95.3633,""],
+["3481",29.7633,-95.3633,""],
+["3482",40.5887,-83.1285,""],
+["3484",41.5236,-90.5776,""],
+["3485",41.5236,-90.5776,""],
+["3487",41.4245,-91.0432,""],
+["3488",41.4564,-90.7235,""],
+["3489",41.6581,-90.5846,""],
+["3490",35.6048,-91.2818,""],
+["3491",35.6384,-91.2651,""],
+["3492",35.7017,-91.4415,""],
+["3493",35.7698,-91.641,""],
+["3495",41.979,-76.5155,""],
+["3497",42.6261,-83.0335,""],
+["3498",40.0893,-75.396,""],
+["3499",40.2645,-75.8041,""],
+["3500",40.2415,-75.2838,""],
+["3501",45.0655,-93.2019,""],
+["3502",45.0861,-93.2633,""],
+["3503",45.0061,-93.1566,""],
+["3504",45.16,-92.9933,""],
+["3505",44.9986,-93.2058,""],
+["3506",45.123,-92.5366,""],
+["3507",38.4531,-85.6702,""],
+["3508",49.2068,-122.9109,""],
+["3510",41.4245,-91.0432,""],
+["3511",41.4245,-91.0432,""],
+["3512",41.4245,-91.0432,""],
+["3513",41.4245,-91.0432,""],
+["3514",41.02,-92.4113,""],
+["3515",41.2992,-91.6929,""],
+["3516",43.8114,-88.4834,""],
+["3517",43.775,-88.4388,""],
+["3518",43.5914,-88.4437,""],
+["3520",44.0247,-88.5426,""],
+["3521",44.278,-88.272,""],
+["3522",44.358,-89.0859,""],
+["3523",43.0125,-83.6875,""],
+["3524",42.9573,-83.8305,""],
+["3525",43.0125,-83.6875,""],
+["3526",39.2681,-84.4133,""],
+["3528",39.1451,-84.3744,""],
+["3529",38.949,-83.4057,""],
+["3530",32.8601,-97.3639,""],
+["3532",32.7254,-97.3208,""],
+["3534",33.2959,-97.7989,""],
+["3535",32.7254,-97.3208,""],
+["3537",31.8024,-97.0917,""],
+["3538",35.6528,-97.4781,""],
+["3542",44.1668,-77.3828,""],
+["3543",43.9598,-78.1651,""],
+["3544",44.2298,-76.481,""],
+["3547",44.5192,-88.0198,""],
+["3548",46.5168,-84.3333,""],
+["3549",44.5386,-87.704,""],
+["3550",44.3478,-87.8273,""],
+["3551",44.5436,-88.0882,""],
+["3552",44.4489,-88.0604,""],
+["3553",44.3258,-88.1629,""],
+["3554",39.9356,-91.4099,""],
+["3555",39.9356,-91.4099,""],
+["3556",39.7084,-91.3585,""],
+["3557",36.819,-76.2749,""],
+["3558",36.8468,-76.2852,""],
+["3559",36.8468,-76.2852,""],
+["3560",36.2946,-76.2511,""],
+["3561",36.8468,-76.2852,""],
+["3562",44.9281,-74.8919,""],
+["3563",44.7514,-74.9944,""],
+["3564",44.5956,-75.1691,""],
+["3565",44.6942,-75.4863,""],
+["3566",45.2501,-74.1325,""],
+["3567",41.5845,-84.6055,""],
+["3571",41.4098,-85.8456,""],
+["3572",41.7309,-84.9327,""],
+["3573",41.8395,-84.748,""],
+["3574",41.9201,-84.6305,""],
+["3575",41.9403,-85.0005,""],
+["3577",37.5538,-77.4603,""],
+["3578",39.7684,-86.158,""],
+["3579",39.7684,-86.158,""],
+["3580",39.722,-86.09,""],
+["3581",39.5214,-85.7769,""],
+["3582",44.1668,-77.3828,""],
+["3583",43.9598,-78.1651,""],
+["3585",39.7684,-86.158,""],
+["3586",39.7684,-86.158,""],
+["3587",39.7684,-86.158,""],
+["3588",39.7684,-86.158,""],
+["3589",39.722,-86.09,""],
+["3590",39.722,-86.09,""],
+["3591",40.0362,-75.5138,""],
+["3592",39.9524,-75.1636,""],
+["3593",38.4732,-77.9967,""],
+["3594",38.8048,-77.0469,""],
+["3595",35.5457,-80.6109,""],
+["3596",40.7282,-74.0776,""],
+["3598",41.0334,-74.6385,""],
+["3599",40.9762,-74.0263,""],
+["3600",40.7282,-74.0776,""],
+["3601",44.4469,-95.7883,""],
+["3602",35.7113,-78.6142,""],
+["3603",35.3849,-77.9928,""],
+["3604",49.2497,-123.1193,""],
+["3605",38.8612,-90.0976,""],
+["3606",38.8612,-90.0976,""],
+["3607",38.8612,-90.0976,""],
+["3608",38.8906,-90.1843,""],
+["3609",38.8906,-90.1843,""],
+["3610",38.8906,-90.1843,""],
+["3611",38.8906,-90.1843,""],
+["3612",38.8906,-90.1843,""],
+["3614",33.1963,-80.0143,""],
+["3616",41.3042,-82.9752,""],
+["3617",38.6273,-90.1979,""],
+["3618",38.7131,-90.4298,""],
+["3619",42.1016,-102.8722,""],
+["3621",37.2153,-93.2982,""],
+["3622",52.4168,-108.7014,""],
+["3624",52.4168,-108.7014,""],
+["3625",52.3501,-110.2683,""],
+["3628",40.1164,-88.2434,""],
+["3629",40.1106,-88.2073,""],
+["3630",40.1164,-88.2434,""],
+["3633",40.2115,-74.7879,""],
+["3634",40.1007,-74.8518,""],
+["3635",40.0873,-74.9035,""],
+["3636",40.1923,-74.8888,""],
+["3637",40.4562,-74.4432,""],
+["3638",32.5538,-83.8874,""],
+["3639",40.3162,-74.5138,""],
+["3640",40.1965,-74.1685,""],
+["3641",40.9584,-75.9746,""],
+["3642",40.9587,-75.996,""],
+["3645",46.1382,-122.9382,""],
+["3646",47.6597,-117.4291,""],
+["3647",41.12,-87.8611,""],
+["3648",41.2506,-87.8314,""],
+["3649",41.12,-87.8611,""],
+["3650",41.12,-87.8611,""],
+["3651",41.0945,-88.4251,""],
+["3652",41.2542,-89.3423,""],
+["3654",41.443,-87.6836,""],
+["3655",41.12,-87.8611,""],
+["3656",45.2668,-72.1491,""],
+["3657",46.8739,-96.7695,""],
+["3658",40.6662,-89.5801,""],
+["3659",40.6662,-89.5801,""],
+["3660",40.7417,-88.7198,""],
+["3661",40.6936,-89.589,""],
+["3662",40.6936,-89.589,""],
+["3663",40.6503,-89.6521,""],
+["3666",40.5834,-90.9693,""],
+["3667",32.3123,-106.7783,""],
+["3670",33.4418,-94.0377,""],
+["3671",33.4423,-94.1308,""],
+["3672",33.4598,-94.4155,""],
+["3673",33.1487,-94.1502,""],
+["3674",33.1487,-94.1502,""],
+["3675",33.1568,-94.9683,""],
+["3676",40.2795,-86.5108,""],
+["3677",40.2795,-86.5108,""],
+["3678",40.0484,-86.4692,""],
+["3680",40.2823,-86.0411,""],
+["3682",40.7667,-87.9923,""],
+["3683",40.7667,-87.9923,""],
+["3684",40.7692,-87.5639,""],
+["3687",40.7762,-87.7364,""],
+["3689",40.1536,-88.9645,""],
+["3690",32.9185,-80.022,""],
+["3691",32.8546,-79.9748,""],
+["3692",32.8546,-79.9748,""],
+["3693",41.6005,-93.6091,""],
+["3697",33.2468,-84.2641,""],
+["3698",33.5832,-84.3394,""],
+["3699",33.2468,-84.2641,""],
+["3700",33.0546,-84.1557,""],
+["3701",33.0343,-83.9382,""],
+["3702",33.9843,-88.4881,""],
+["3703",34.274,-88.4092,""],
+["3705",33.9843,-88.4881,""],
+["3706",35.1595,-84.8766,""],
+["3707",33.4359,-86.1058,""],
+["3708",33.4359,-86.1058,""],
+["3710",33.4957,-88.4273,""],
+["3711",33.4957,-88.4273,""],
+["3712",33.4957,-88.4273,""],
+["3713",33.8251,-88.5437,""],
+["3715",36.0595,-102.5132,""],
+["3716",36.0595,-102.5132,""],
+["3717",34.9387,-104.6825,""],
+["3718",36.86,-101.2135,""],
+["3719",39.0997,-94.5786,""],
+["3720",39.0997,-94.5786,""],
+["3721",39.0997,-94.5786,""],
+["3722",39.0997,-94.5786,""],
+["3723",39.1775,-94.613,""],
+["3725",46.1382,-122.9382,""],
+["3729",29.7633,-95.3633,""],
+["3730",32.3643,-88.7037,""],
+["3731",32.3526,-90.8779,""],
+["3732",38.033,-122.2669,""],
+["3734",39.0723,-89.7273,""],
+["3735",39.5203,-89.049,""],
+["3736",39.8403,-88.9548,""],
+["3737",35.7565,-83.9705,""],
+["3738",35.7895,-83.9738,""],
+["3741",31.0982,-97.3428,""],
+["3742",31.4441,-97.4092,""],
+["3743",30.8532,-96.9769,""],
+["3744",42.4406,-76.4966,""],
+["3745",41.5387,-75.9466,""],
+["3746",41.1695,-75.8774,""],
+["3748",32.7831,-96.8067,""],
+["3752",40.2987,-83.068,""],
+["3754",40.8084,-82.9755,""],
+["3755",40.7608,-111.8911,""],
+["3756",39.6295,-79.9559,""],
+["3758",46.3237,-117.9724,""],
+["3760",46.2396,-119.1006,""],
+["3761",43.2834,-80.4497,""],
+["3762",43.1334,-80.7497,""],
+["3763",43.5459,-80.256,""],
+["3764",43.3601,-80.3127,""],
+["3765",43.5459,-80.256,""],
+["3767",44.5403,-69.722,""],
+["3769",42.2917,-85.5872,""],
+["3770",42.2917,-85.5872,""],
+["3771",41.7214,-85.8175,""],
+["3772",29.7633,-95.3633,""],
+["3773",29.7633,-95.3633,""],
+["3774",29.7633,-95.3633,""],
+["3775",39.0997,-94.5786,""],
+["3776",39.0997,-94.5786,""],
+["3777",39.0997,-94.5786,""],
+["3778",29.7633,-95.3633,""],
+["3779",29.7633,-95.3633,""],
+["3780",29.7633,-95.3633,""],
+["3781",35.7826,-80.8873,""],
+["3782",35.7826,-80.8873,""],
+["3783",35.9218,-81.1765,""],
+["3784",29.7633,-95.3633,""],
+["3786",38.3969,-113.0108,""],
+["3788",39.3522,-112.5772,""],
+["3790",37.6775,-113.0619,""],
+["3791",40.8324,-115.7631,""],
+["3792",40.8324,-115.7631,""],
+["3794",40.6421,-116.9343,""],
+["3795",40.6421,-116.9343,""],
+["3796",40.973,-117.7357,""],
+["3799",40.7426,-84.1052,""],
+["3800",40.7426,-84.1052,""],
+["3801",40.7089,-84.3536,""],
+["3802",40.4798,-84.6283,""],
+["3803",36.9485,-81.0848,""],
+["3805",37.1298,-80.4089,""],
+["3806",34.0775,-117.6898,""],
+["3807",34.0553,-117.7523,""],
+["3808",34.0122,-117.6889,""],
+["3809",40.7426,-84.1052,""],
+["3810",40.7426,-84.1052,""],
+["3811",40.7426,-84.1052,""],
+["3812",40.7426,-84.1052,""],
+["3813",40.7426,-84.1052,""],
+["3814",40.4395,-84.0402,""],
+["3816",40.7426,-84.1052,""],
+["3817",40.7426,-84.1052,""],
+["3818",40.7426,-84.1052,""],
+["3819",36.3084,-95.3169,""],
+["3820",43.8195,-84.7686,""],
+["3822",40.7426,-84.1052,""],
+["3823",44.252,-85.4012,""],
+["3825",40.7426,-84.1052,""],
+["3828",40.8434,-84.3416,""],
+["3829",40.8695,-84.5841,""],
+["3831",42.2814,-83.3863,""],
+["3832",42.2814,-83.3863,""],
+["3833",42.3684,-83.3527,""],
+["3834",41.0334,-82.0121,""],
+["3835",40.7967,-81.5215,""],
+["3836",40.7967,-81.5215,""],
+["3837",40.5206,-81.474,""],
+["3839",30.5256,-89.6779,""],
+["3840",40.2503,-103.7999,""],
+["3842",41.2683,-110.9632,""],
+["3844",41.2813,-111.9883,""],
+["3845",41.1108,-112.026,""],
+["3846",44.9429,-123.0351,""],
+["3847",44.9429,-123.0351,""],
+["3848",41.7075,-86.895,""],
+["3850",41.85,-87.65,""],
+["3851",34.6059,-86.9833,""],
+["3852",34.6059,-86.9833,""],
+["3853",34.6068,-87.0884,""],
+["3854",40.8075,-91.1129,""],
+["3856",41.0086,-91.9627,""],
+["3857",41.02,-92.4113,""],
+["3858",29.9322,-90.3665,""],
+["3859",40.9584,-75.9746,""],
+["3860",45.0787,-123.4859,""],
+["3861",42.4374,-122.832,""],
+["3863",47.3737,-68.3251,""],
+["3865",47.1632,-67.9246,""],
+["3866",40.7989,-81.3785,""],
+["3868",40.8759,-81.4023,""],
+["3869",40.7989,-81.3785,""],
+["3870",40.7989,-81.3785,""],
+["3871",40.5728,-81.0857,""],
+["3873",44.7631,-85.6206,""],
+["3874",43.9001,-78.8496,""],
+["3875",43.9001,-78.8496,""],
+["3876",43.9168,-78.6829,""],
+["3878",43.9001,-78.8496,""],
+["3879",30.2241,-92.0198,""],
+["3880",30.0035,-91.8187,""],
+["3881",30.2735,-91.8993,""],
+["3883",29.7274,-90.599,""],
+["3884",45.0834,-74.1659,""],
+["3885",45.3134,-73.8725,""],
+["3886",45.3134,-73.8725,""],
+["3887",45.2834,-74.2325,""],
+["3888",45.4112,-75.6981,""],
+["3889",45.0181,-74.7281,""],
+["3890",45.4112,-75.6981,""],
+["3892",39.3373,-85.4836,""],
+["3893",38.7359,-85.38,""],
+["3894",39.0062,-85.6236,""],
+["3895",29.9919,-81.6782,""],
+["3896",51.0501,-114.0853,""],
+["3897",42.1389,-83.2416,""],
+["3899",45.5834,-70.8823,""],
+["3901",44.0979,-70.2312,""],
+["3902",44.2237,-70.5134,""],
+["3903",39.5401,-82.4071,""],
+["3905",45.6668,-72.1491,""],
+["3906",45.5668,-71.9991,""],
+["3908",36.6084,-83.7166,""],
+["3910",30.3322,-81.6556,""],
+["3911",30.3322,-81.6556,""],
+["3912",30.3322,-81.6556,""],
+["3914",39.0348,-76.9075,""],
+["3915",49.8844,-97.147,""],
+["3916",49.8844,-97.147,""],
+["3917",49.8844,-97.147,""],
+["3918",50.1436,-96.8845,""],
+["3919",44.0521,-123.0867,""],
+["3920",44.0521,-123.0867,""],
+["3921",44.0521,-123.0867,""],
+["3922",44.2193,-123.2057,""],
+["3923",43.3665,-124.2179,""],
+["3924",44.0462,-123.022,""],
+["3925",44.2193,-123.2057,""],
+["3926",31.5785,-84.1557,""],
+["3928",31.1799,-83.7891,""],
+["3929",31.2313,-84.2105,""],
+["3930",31.128,-84.153,""],
+["3931",31.1799,-83.7891,""],
+["3933",33.749,-84.388,""],
+["3935",36.9959,-85.9119,""],
+["3936",36.3884,-86.4467,""],
+["3937",42.9834,-79.2496,""],
+["3938",42.9834,-79.2496,""],
+["3939",42.9001,-79.2329,""],
+["3940",43.1001,-79.0663,""],
+["3944",45.5152,-73.4682,""],
+["3945",45.6308,-72.957,""],
+["3946",45.5088,-73.5878,""],
+["3947",45.3668,-73.5492,""],
+["3948",45.3071,-73.2626,""],
+["3950",46.3411,-72.4322,""],
+["3951",41.6398,-81.4065,""],
+["3952",40.4406,-79.9959,""],
+["3954",40.4656,-80.0656,""],
+["3956",40.6015,-79.7598,""],
+["3957",49.7464,-112.9325,""],
+["3958",49.7,-112.8186,""],
+["3960",49.7167,-113.4186,""],
+["3962",49.8668,-111.3684,""],
+["3966",38.6412,-83.7444,""],
+["3967",38.7209,-82.9582,""],
+["3968",39.3331,-82.9824,""],
+["3969",33.9172,-118.012,""],
+["3970",39.7439,-84.6366,""],
+["3972",33.5801,-85.0766,""],
+["3975",41.5284,-87.4236,""],
+["3976",27.9475,-82.4584,""],
+["3977",27.9475,-82.4584,""],
+["3978",28.5555,-82.3899,""],
+["3979",27.9475,-82.4584,""],
+["3980",26.1223,-80.1434,""],
+["3981",26.3184,-80.0998,""],
+["3982",25.7743,-80.1937,""],
+["3983",25.7743,-80.1937,""],
+["3984",25.7743,-80.1937,""],
+["3992",40.4678,-84.1805,""],
+["3993",31.8024,-97.0917,""],
+["3994",33.1507,-96.8236,""],
+["3995",33.6357,-96.6089,""],
+["3996",33.6357,-96.6089,""],
+["3997",33.1976,-96.6153,""],
+["3998",33.2362,-96.8011,""],
+["3999",39.0597,-94.8836,""],
+["4000",41.0814,-81.519,""],
+["4001",41.0814,-81.519,""],
+["4002",39.0483,-95.678,""],
+["4003",38.9717,-95.2352,""],
+["4004",39.0483,-95.678,""],
+["4005",39.0286,-96.8314,""],
+["4006",39.0483,-95.678,""],
+["4007",45.1219,-95.0433,""],
+["4008",33.5207,-86.8025,""],
+["4009",39.0611,-94.8197,""],
+["4010",42.2249,-121.7817,""],
+["4011",42.2249,-121.7817,""],
+["4012",42.2249,-121.7817,""],
+["4013",42.2249,-121.7817,""],
+["4015",41.4871,-120.5435,""],
+["4023",49.8469,-99.9531,""],
+["4024",49.8469,-99.9531,""],
+["4025",49.8469,-99.9531,""],
+["4026",49.8469,-99.9531,""],
+["4028",49.8469,-99.9531,""],
+["4032",49.8689,-99.3602,""],
+["4014",43.479,-121.684,""],
+["4016",41.9674,-121.918,""],
+["4027",49.8333,-101.5167,""],
+["4029",50.43,-101.62,""],
+["4030",49.92,-101.05,""],
+["4031",50.3833,-102.5667,""]
 ],
 "trains":[
 {"rr":"BNSF","ty":"Domestic Intermodal (Q)","s":"ALTLAC1-##A","sym":"Q-ALTLAC1-##A","nm":"","o":"1556","d":"1007","r":["1556","1904","3530","1394","1716","1501","1040","1135","1252","1029","1102","1254","1007"],"f":"2000-01-01","x":"2099-12-31","g":[[0,"1102","Set Out San Bernardino Autoracks and IM; Pick Up Baretables if needed.","San Bernardino"],[0,"1135","FUEL","Belen"],[0,"1040","Set Out Clovis; Pick Up San Bernardino Autos.","Clovis"],[2,"Domestic Containers for San Bernardino and Los Angeles Hobart"],[2,"Power: 2x0 or minimum HPT, whichever is higher. DPU between 7,000 and 8,000 feet."],[2,"Notes: May carry Loaded Autoracks Clovis-San Bernardino. Clovis block carries Glendale and Albuquerque traffic. May move Baretables between San Berdarndino and Hobart."],[2,"Blocks:"],[2,"     1) Clovis (Glendale and Albuquerque)"],[2,"     2) San Bernardino IM"],[2,"     3) Los Angeles Hobart IM"],[3],[2,"Last updated: 7/17/2025"]]},
@@ -20430,11 +23079,49 @@ function fullSym(t){
 // t.w = yards this train "works": every @@ yard tagged in its instructions.
 // Not a subset of the route — some trains are told to work a yard they do not
 // list as a stop, so it counts toward "touches this location" in its own right.
+// t.ww narrows that to yards with real CAR work for the routing graph: a tag
+// whose text only says the TRAIN is serviced there (fuel, crew) is where the
+// graph would otherwise board cars onto unit trains at fuel stops.
+// t.op = operator identity. Same as the roster code except on the two
+// multi-operator rosters, where the real railroad is the type's reporting
+// mark (IHB, AMTK, …). The UI keeps one SHORTLINE/PASSENGER pill; routing
+// semantics (interchanges, home road, carload pool) speak operator.
+const SERVICE_RE=/^\s*(train\s+)?(service|fuel|crew)( ?(point|stop|change|check))?s?\W*$/i;
 DATA.trains.forEach((t,i) => {
   t.i = i; t.fs = fullSym(t);
-  t.w = [];
-  t.g.forEach(g=>{ if(g[0]===SEG_YARD && !t.w.includes(g[1])) t.w.push(g[1]); });
+  const rrm = RR[t.rr];
+  t.op = (rrm && rrm.m) ? (rrm.px[t.ty] || t.ty) : t.rr;
+  t.w = []; t.wn = {};
+  t.g.forEach(g=>{
+    if(g[0]===SEG_YARD){
+      if(!t.w.includes(g[1])) t.w.push(g[1]);
+      if(g[2]) (t.wn[g[1]]=t.wn[g[1]]||[]).push(g[2]);
+    }
+  });
+  t.ww = t.w.filter(y=>{ const n=t.wn[y]; return !(n && n.every(x=>SERVICE_RE.test(x))); });
+  t.icl = t.g.filter(g=>g[0]===SEG_IC && g[2]!==undefined).map(g=>g[2]);
 });
+
+// interchange agreements (interchange_data/): partner table + exchange points
+const IXP = DATA.ixp || {};
+const IXY = {};        // "A|B" -> Set of agreed exchange yard ids (both ways)
+const IXOPYARD = new Set();   // "op|yard": op has an agreed exchange point here
+(DATA.ix||[]).forEach(([a,b,y])=>{
+  (IXY[a+"|"+b]=IXY[a+"|"+b]||new Set()).add(y);
+  (IXY[b+"|"+a]=IXY[b+"|"+a]||new Set()).add(y);
+  IXOPYARD.add(a+"|"+y); IXOPYARD.add(b+"|"+y);
+});
+const ixPartners =(a,b)=>(IXP[a]&&IXP[a].p.includes(b))||(IXP[b]&&IXP[b].p.includes(a));
+const ixPreferred=(a,b)=>(IXP[a]&&IXP[a].f.includes(b))||(IXP[b]&&IXP[b].f.includes(a));
+// Shortline-only marks. A mark that is also a Class I roster code is not
+// shortline-only: the game lists "Iowa Northern (CN)" under CN's mark, and
+// those trains interchange as CN itself.
+const SLOPS=new Set();
+{
+  const classI=new Set(DATA.rrs.filter(r=>!r.m).map(r=>r.c));
+  DATA.trains.forEach(t=>{ const r=RR[t.rr];
+    if(r&&r.m&&!r.pax&&!classI.has(t.op)) SLOPS.add(t.op); });
+}
 
 // MIM families: one interface map hosts several yard identities plus its
 // virtual off-map destinations. FAM maps every id in a family to the family.
@@ -20448,6 +23135,23 @@ const FAM = {};
 // geography: id -> [lat, lon, railroads-text], where the map author recorded it
 const GEO = {};
 (DATA.geo||[]).forEach(g=>{ GEO[g[0]] = [g[1], g[2], g[3]]; });
+
+// One interface map is one physical place, so every family member aliases to
+// its mother map for routing. Vids included: vid traffic round-trips through
+// the mother map with the same consist, so cars at vid zones sit in the same
+// classification pool as everything else on the map (Zach's ruling).
+const mapOf = id => FAM[id] ? FAM[id].mo : id;
+const famIds = id => FAM[id] ? [FAM[id].mo, ...FAM[id].ms.map(m=>m[0])] : [id];
+const geoOf = id => {
+  if(GEO[id]) return GEO[id];
+  const f=FAM[id];
+  if(f){ if(GEO[f.mo]) return GEO[f.mo];
+         for(const m of f.ms) if(GEO[m[0]]) return GEO[m[0]]; }
+  return null;
+};
+const opIxAt =(op,id)=>famIds(id).some(fy=>IXOPYARD.has(op+"|"+fy));
+const ixHasAt=(yset,id)=>famIds(id).some(fy=>yset.has(fy));
+
 
 // how many trains touch each location (for the picker)
 const locCount = {};
@@ -20596,6 +23300,7 @@ function openMenu(q){
 }
 function choose(o){
   if(!o) return;
+  rstate.res=null;      // picking a location always leaves the route view
   state.loc=o.id; locin.value = o.id+(o.nm?"  "+o.nm:"");
   locmenu.classList.remove("open"); locclear.style.display="";
   mastEl.classList.remove("open");
@@ -20671,6 +23376,7 @@ const countEl=document.getElementById("count");
 const locbar=document.getElementById("locbar");
 
 function render(reset=true){
+  if(rstate.res){ renderRoutes(); return; }
   const base=filteredBase();
   if(reset) syncTypes(base);
   const list = state.type ? base.filter(t=>t.ty===state.type) : base;
@@ -20800,6 +23506,31 @@ function sheetRow(t){
 
 // ---- location details ----
 const MI=3959, RAD=Math.PI/180;
+// Routable work yards. TSAR authors sometimes tag a block's onward pickups on
+// LATER trains into a train's own notes (MALSS carries MSSNP's Mason City /
+// Boone / Grand Island work), which would forge board/alight points the train
+// never visits. A work yard is routable only if it is on the route, or
+// coordinates prove it lies along the train's corridor; unprovable off-route
+// tags stay display-only. Added coordinates promote real ones automatically.
+// Work has direction (Zach's rule): an explicit "pick up"/"add"/"lift" is a
+// door ONTO the train, an explicit "set out"/"drop"/"deliver" is a door OFF
+// it, and nothing else counts — MSSNP only picks up at Mason City, so a car
+// cannot alight there; the Mason City block is built at Boone by MNPSS and
+// set out on arrival. Origin (board) and destination (alight) stay implicit.
+// Keep in sync with PICKUP_RE/SETOUT_RE in the Python build, whose report
+// audit is the drift alarm for this vocabulary.
+const PICKUP_RE=/\b(pi+cks?[\s-]?up|lift|add|takes?\s+outbound)\b/i, // "picks up", "Piick Up" typo, "takes outbound traffic"
+      SETOUT_RE=/\b(set[\s-]?(?:out|off)|drop|deliver)\b|^\s*cars?\s+for\b/i; // "Set Off" is NS house style; anchored "Cars for X" delivers
+DATA.trains.forEach(t=>{
+  t.wr=t.ww.filter(y=>{
+    if(y===t.o||y===t.d||t.r.includes(y)) return true;
+    const go=geoOf(t.o), gd=geoOf(t.d), gy=geoOf(y);
+    if(!go||!gd||!gy) return false;
+    return distMi(go,gy)+distMi(gy,gd) <= Math.max(distMi(go,gd),50)*1.2;
+  });
+  t.wb=t.wr.filter(y=>(t.wn[y]||[]).some(n=>PICKUP_RE.test(n)));   // boardable
+  t.wa=t.wr.filter(y=>(t.wn[y]||[]).some(n=>SETOUT_RE.test(n)));   // alightable
+});
 function distMi(a,b){
   const s=Math.sin((b[0]-a[0])*RAD/2)**2 +
           Math.cos(a[0]*RAD)*Math.cos(b[0]*RAD)*Math.sin((b[1]-a[1])*RAD/2)**2;
@@ -20955,6 +23686,7 @@ function reveal(uid){
 // partner train, then scroll to it and open it.
 function jumpTo(uid){
   const t=DATA.trains[uid]; if(!t) return;
+  rstate.res=null;      // interchange links leave the route view too
   if(!state.rrs.has(t.rr)){ state.rrs.add(t.rr); paintPill(t.rr); }
   state.type="";
   state.loc=""; state.locmode=""; state.view="cards"; locin.value=""; locclear.style.display="none";
@@ -20971,6 +23703,534 @@ function gotoLoc(id){
 }
 
 function debounce(fn,ms){let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>fn(...a),ms);};}
+
+// ---- car routing (beta) ----
+// A car boards where a train originates or explicitly picks up, rides
+// forward in route order, alights where it explicitly sets out or
+// terminates; trains hand off wherever drop and pickup share a physical map
+// (same MIM family — the yardmaster classifies across yard identities) and
+// at resolved *IC* links. A flat 5-train search runs first; an operator-level
+// planner then covers what it cannot afford (see OPGRAPH below). Chains rank
+// by (starts on the origin's home road, fewest interchanges, fewest trains,
+// least geographic wandering) and collapse into corridors — one entry per
+// distinct railroad + transfer-map sequence. The TSAR text at each hand-off
+// is quoted verbatim: the graph proposes, the player judges.
+// freight capability set of a train, from the per-roster classification
+// table ("carload+intermodal" for mixed service). Multi rosters: shortline
+// operators haul carload, passenger is passenger.
+function fclasses(t){
+  const r=RR[t.rr]; if(!r) return ["carload"];
+  if(r.m) return r.pax ? ["passenger"] : ["carload"];
+  return (r.fc[t.ty] || "nonrev").split("+");
+}
+const rstate={from:null,to:null,res:null};
+const rfin=document.getElementById("rfin"), rtin=document.getElementById("rtin");
+const rgo=document.getElementById("rgo"), rclear=document.getElementById("rclear");
+const rcartype=document.getElementById("rcartype");
+
+function wirePicker(inp,menu,key){
+  let ropts=[];
+  function open(q){
+    q=q.trim().toLowerCase();
+    ropts=pickList.filter(o=>!q||o.id.includes(q)||o.nm.toLowerCase().includes(q)).slice(0,60);
+    menu.innerHTML=ropts.map((o,i)=>
+      `<div class="opt" data-i="${i}"><span class="lid">${o.id}</span>`+
+      `<span class="lnm ${o.nm?'':'unk'}">${o.nm?esc(o.nm):'unnamed'}</span>`+
+      `<span class="cnt">${o.c} trains</span></div>`).join("")
+      || `<div class="opt"><span class="lnm unk">no match</span></div>`;
+    menu.classList.add("open");
+    menu.querySelectorAll(".opt").forEach(el=>{ el.onclick=()=>{
+      const o=ropts[+el.dataset.i]; if(!o) return;
+      rstate[key]=o; inp.value=o.id+(o.nm?"  "+o.nm:"");
+      menu.classList.remove("open"); routeNow();
+    };});
+  }
+  inp.onfocus=()=>open(inp.value);
+  inp.oninput=()=>{ rstate[key]=null; open(inp.value); syncRouteBtns(); };
+  document.addEventListener("click",e=>{ if(!inp.parentElement.contains(e.target)) menu.classList.remove("open"); });
+}
+wirePicker(rfin,document.getElementById("rfmenu"),"from");
+wirePicker(rtin,document.getElementById("rtmenu"),"to");
+rcartype.onchange=()=>{ if(rstate.res) routeNow(); };
+// The route finder is a beta: the bar stays collapsed behind this toggle so
+// the public page reads as the train finder it always was. The choice is
+// remembered per browser, like favorites.
+const rtoggle=document.getElementById("rtoggle"), routebar=document.getElementById("routebar");
+function setRouter(open){
+  routebar.classList.toggle("open",open);
+  rtoggle.textContent="Route a car (beta) "+(open?"▾":"▸");
+  try{ localStorage.setItem("fym.router",open?"1":"0"); }catch(e){}
+}
+rtoggle.onclick=()=>setRouter(!routebar.classList.contains("open"));
+(function(){ let v="0"; try{ v=localStorage.getItem("fym.router")||"0"; }catch(e){} if(v==="1") setRouter(true); })();
+rgo.onclick=()=>routeNow();
+rclear.onclick=()=>{ rstate.from=rstate.to=rstate.res=null; rfin.value=""; rtin.value="";
+  syncRouteBtns(); render(); };
+function syncRouteBtns(){
+  rgo.style.display=(rstate.from&&rstate.to)?"":"none";
+  rclear.style.display=(rfin.value||rtin.value)?"":"none";
+}
+function routeNow(){
+  syncRouteBtns();
+  if(!(rstate.from&&rstate.to)||rstate.from.id===rstate.to.id) return;
+  rstate.res=findRoutes(rstate.from.id,rstate.to.id,rcartype.value);
+  render();
+}
+
+// a car may ride a train between two of its yards only in route order
+const orderOk=(t,y1,y2)=>{
+  const i1=t.r.indexOf(y1), i2=t.r.indexOf(y2);
+  return (i1<0||i2<0)?true:i2>i1;
+};
+
+// ---- operator-level planner ----
+// The flat search caps at 5 trains, but realistic routings often need 6-8:
+// intermodal moves ramp-to-ramp with a shuttle at every hub, shortlines
+// relay through their families. Searching that deep unconstrained explodes,
+// so: plan railroad-to-railroad first over a small operator graph, then give
+// each operator its own leg search with a generous budget. An edge exists
+// where operator A can explicitly set out on a map where operator B
+// explicitly boards; *IC*-linked or agreement-backed edges beat mere shared
+// presence. The planner only ADDS chains — ranking treats them like any
+// others, so a planned Memphis relay simply outscores a flat-search detour.
+const OPGRAPH=(()=>{
+  const alight={}, board={}, mapsB={}, mapsA={}, icEv={};
+  const revenue=t=>{const cs=fclasses(t);
+    return status(t)==="active"&&!cs.includes("passenger")&&!cs.includes("engines")&&!cs.includes("nonrev");};
+  DATA.trains.forEach(t=>{
+    if(!revenue(t)) return;
+    const bs=new Set(t.wb.map(mapOf)); bs.add(mapOf(t.o));
+    const as=new Set(t.wa.map(mapOf)); if(t.d) as.add(mapOf(t.d));
+    bs.forEach(m=>{ (mapsB[m]=mapsB[m]||new Set()).add(t.op); (board[t.op]=board[t.op]||new Set()).add(m); });
+    as.forEach(m=>{ (mapsA[m]=mapsA[m]||new Set()).add(t.op); (alight[t.op]=alight[t.op]||new Set()).add(m); });
+  });
+  DATA.trains.forEach(t=>t.icl.forEach(uid=>{
+    const u=DATA.trains[uid];
+    if(u&&u.op!==t.op) icEv[t.op+">"+u.op+"@"+mapOf(u.o)]=(icEv[t.op+">"+u.op+"@"+mapOf(u.o)]||0)+1;
+  }));
+  const icPair=new Set(Object.keys(icEv).map(k=>k.split("@")[0]));
+  return {alight,board,mapsA,mapsB,icEv,icPair};
+})();
+
+// Terminal/switching roads (BRC, IHB, KCT, PHL, NOPB...): carriers whose
+// whole located network sits inside one metro (>=3 located maps, <=60 mi
+// across — Chicagoland runs 50: IHB legitimately spans Bensenville to Burns
+// Harbor) AND whose business is connecting other railroads (>=3 distinct
+// partner operators). The partner floor keeps a 40-mile line-haul shortline
+// a road carrier, so its hand-offs still face agreement scrutiny. A road
+// with sparse coordinates stays unclassified (full price), so added geo
+// data only ever improves this.
+const TERMINAL=(()=>{
+  const pts={};
+  DATA.trains.forEach(t=>{
+    if(status(t)!=="active") return;
+    new Set([t.o,t.d,...t.r]).forEach(y=>{
+      const g=y&&geoOf(y);
+      if(g)(pts[t.op]=pts[t.op]||new Map()).set(mapOf(y),g);
+    });
+  });
+  const partners=op=>{
+    const s=new Set();
+    (OPGRAPH.alight[op]||new Set()).forEach(m=>(OPGRAPH.mapsB[m]||new Set()).forEach(b=>{ if(b!==op) s.add(b); }));
+    (OPGRAPH.board[op]||new Set()).forEach(m=>(OPGRAPH.mapsA[m]||new Set()).forEach(a=>{ if(a!==op) s.add(a); }));
+    return s.size;
+  };
+  const s=new Set();
+  Object.entries(pts).forEach(([op,m])=>{
+    const ps=[...m.values()];
+    if(ps.length<3) return;
+    let d=0;
+    for(let i=0;i<ps.length;i++)for(let j=i+1;j<ps.length;j++) d=Math.max(d,distMi(ps[i],ps[j]));
+    if(d<=60&&partners(op)>=3) s.add(op);
+  });
+  return s;
+})();
+
+// maps where a can hand a car to b. Every evidenced exchange (agreement or
+// *IC* link) qualifies; presence-only maps qualify when they sit near the
+// query's corridor — Birmingham's 37th St has zero recorded evidence but
+// zero detour for Birmingham traffic — and cap at 12 when geometry is
+// unknown so ties don't win on iteration order.
+function exchangeMaps(a,b,gS,gD,direct){
+  const A=OPGRAPH.alight[a], B=OPGRAPH.board[b], out=[];
+  if(!A||!B) return out;
+  const yset=IXY[a+"|"+b];
+  A.forEach(m=>{ if(!B.has(m)) return;
+    const ic=OPGRAPH.icEv[a+">"+b+"@"+m]||0;
+    const agr=(yset&&famIds(m).some(y=>yset.has(y)))?1:0;
+    out.push([m, ic*10+agr*5]);
+  });
+  out.sort((x,y)=>y[1]-x[1]);
+  const goals=[];
+  out.forEach(([m,ev])=>{
+    if(ev>0){ goals.push(m); return; }
+    if(direct!=null){
+      const g=geoOf(m);
+      if(g){ if(distMi(gS,g)+distMi(g,gD)<=direct*1.35+80) goals.push(m); return; }
+    }
+    if(goals.length<12) goals.push(m);
+  });
+  return goals;
+}
+
+// cheapest operator sequences from any origin operator to any destination
+// operator. One interchange costs 100, +50 without agreement or *IC*
+// evidence, prohibitive for shortline pairs the agreement table disowns.
+function planPaths(srcOps,dstOps,K){
+  const dstSet=new Set(dstOps), MAXOPS=4;
+  const results=[], seenPath=new Set(), popped={};
+  const nbr={}, edgeMemo={};
+  const neighbors=a=>{
+    if(nbr[a]) return nbr[a];
+    const s=new Set();
+    (OPGRAPH.alight[a]||new Set()).forEach(m=>(OPGRAPH.mapsB[m]||new Set()).forEach(b=>{ if(b!==a) s.add(b); }));
+    return nbr[a]=[...s];
+  };
+  const edgeCost=(a,b)=>{
+    const k=a+">"+b;
+    if(k in edgeMemo) return edgeMemo[k];
+    // 60 each way keeps a terminal bridge (120) close to but never cheaper
+    // than the direct road exchange (100) — at 25 the bridge variants
+    // crowded every direct plan out of the K slots
+    if(TERMINAL.has(a)||TERMINAL.has(b)) return edgeMemo[k]=60;
+    let c=100;
+    if(!ixPartners(a,b)&&!OPGRAPH.icPair.has(a+">"+b)&&!OPGRAPH.icPair.has(b+">"+a)) c+=50;
+    if(!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))) c+=2000;
+    return edgeMemo[k]=c;
+  };
+  const pq=srcOps.map(o=>({cost:0,path:[o]}));
+  let guard=0;
+  while(pq.length&&results.length<K&&guard++<20000){
+    pq.sort((x,y)=>x.cost-y.cost);
+    const cur=pq.shift(), op=cur.path[cur.path.length-1];
+    if(dstSet.has(op)){
+      // dedupe by ROAD sequence: CSX->BHRR->BNSF and CSX->IHB->BNSF are the
+      // same railroad strategy; K slots should hold K distinct strategies,
+      // and the cheapest variant (popped first) represents each
+      const key=cur.path.filter(o=>!TERMINAL.has(o)).join(">");
+      if(!seenPath.has(key)){ seenPath.add(key); results.push(cur.path); }
+    }
+    if(cur.path.length>=MAXOPS) continue;
+    if((popped[op]=(popped[op]||0)+1)>K) continue;
+    neighbors(op).forEach(b=>{
+      if(cur.path.includes(b)) return;
+      pq.push({cost:cur.cost+edgeCost(op,b),path:cur.path.concat([b])});
+    });
+  }
+  return results;
+}
+
+// walk one plan: a staged search where stage s explores only trains of
+// plan[s], from the maps the previous stage delivered to, into the exchange
+// maps of the next hand-off (or the destination map on the last stage).
+function materialize(plan,src,dst,canCarry,seenChain,chains){
+  const dstMap=mapOf(dst), LEG_H=4, PER_MAP=3, CAP=250;
+  const gS=geoOf(src), gD=geoOf(dst);
+  const direct=(gS&&gD)?distMi(gS,gD):null;
+  let frontier=new Map([[mapOf(src),[[]]]]);
+  for(let s=0;s<plan.length;s++){
+    const op=plan[s], last=s===plan.length-1;
+    const goals=last?new Set([dstMap]):new Set(exchangeMaps(op,plan[s+1],gS,gD,direct));
+    if(!goals.size) return;
+    const ix={};
+    DATA.trains.forEach(t=>{
+      if(t.op!==op||status(t)!=="active"||!canCarry(t)) return;
+      const seen=new Set(t.wb); seen.add(t.o);
+      seen.forEach(y=>{ if(y){const m=mapOf(y);(ix[m]=ix[m]||[]).push([t,y]);} });
+    });
+    const next=new Map();
+    const addNext=(m,path)=>{ const a=next.get(m)||[]; if(a.length<PER_MAP){ a.push(path); next.set(m,a); } };
+    // one sub-search per frontier map, each with its own visit budget —
+    // a shared budget lets the busiest hand-off (usually Chicago) starve
+    // quieter gateways like Memphis of the very trains they need
+    frontier.forEach((paths,fm)=>{
+      const q=[], visits={};
+      const push=(path,depth,t,y)=>{
+        const k=t.i+"@"+y, v=visits[k]||0;
+        if(v>=3) return; visits[k]=v+1; q.push([path.concat([[t,y]]),depth]);
+      };
+      (ix[fm]||[]).forEach(([t,y])=>paths.forEach(p=>{
+        if(!p.some(e=>e[0].i===t.i)) push(p,1,t,y);
+      }));
+      for(let qi=0;qi<q.length&&qi<8000;qi++){
+        const [path,depth]=q[qi], [t,by]=path[path.length-1];
+        const drops=t.d?[t.d]:[];
+        t.wa.forEach(y=>{ if(!drops.includes(y)) drops.push(y); });
+        for(const y of drops){
+          const m=mapOf(y);
+          if(m===mapOf(by)||!orderOk(t,by,y)) continue;
+          if(goals.has(m)){
+            if(last){
+              const key=path.map(p=>p[0].i).join(">");
+              if(!seenChain.has(key)&&chains.length<CAP){ seenChain.add(key); chains.push(path); }
+            } else addNext(m,path);
+          }
+        }
+        if(depth>=LEG_H) continue;
+        for(const y of drops){
+          const m=mapOf(y);
+          if(m===mapOf(by)||!orderOk(t,by,y)) continue;
+          for(const [u,yu] of (ix[m]||[])) if(!path.some(e=>e[0].i===u.i)) push(path,depth+1,u,yu);
+        }
+      }
+    });
+    frontier=next;
+    if(!last&&!frontier.size) return;
+  }
+}
+
+function findRoutes(src,dst,carType){
+  // pool by capability: passenger, light power and non-revenue types never
+  // carry a routed car; otherwise a train qualifies when its capability set
+  // includes the selected car type ("any" = any revenue freight service)
+  const canCarry=t=>{
+    const cs=fclasses(t);
+    if(cs.includes("passenger")||cs.includes("engines")||cs.includes("nonrev")) return false;
+    if(carType==="any" || cs.includes(carType)) return true;
+    // locals, yard jobs and transfers are drayage, not line-haul service:
+    // they shuttle whatever the yardmaster hands them (a container reaches
+    // its ramp BECAUSE the transfer job exists), whatever their class says
+    return /\b(local|yard ?job|transfer|switch)\b/i.test(t.ty);
+  };
+  const srcMap=mapOf(src), dstMap=mapOf(dst);
+  if(srcMap===dstMap) return {src,dst,homeRR:null,corridors:[],total:0,truncated:false};
+  const pool=DATA.trains.filter(t=>status(t)==="active"&&canCarry(t));
+  const inPool=new Set(pool.map(t=>t.i));
+  // boarding index by physical map; entries keep the train's own yard id
+  const boardAt={};
+  pool.forEach(t=>{
+    const seen=new Set(t.wb); seen.add(t.o);
+    seen.forEach(y=>{ if(y){const k=mapOf(y);(boardAt[k]=boardAt[k]||[]).push([t,y]);} });
+  });
+  const homeCnt={};
+  pool.forEach(t=>{ if(t.o){ const k=mapOf(t.o), c=homeCnt[k]=homeCnt[k]||{}; c[t.op]=(c[t.op]||0)+1; } });
+  const homeRR=homeCnt[srcMap]?Object.entries(homeCnt[srcMap]).sort((a,b)=>b[1]-a[1])[0][0]:null;
+
+  const arriveAt=t=>{
+    if(t.d&&mapOf(t.d)===dstMap) return t.d;
+    return t.wa.find(y=>mapOf(y)===dstMap);
+  };
+  // Many different prefixes reach the same (train, boarding yard); exploring
+  // each one re-walks an identical suffix. A few per state keeps corridor
+  // variety without the exponential blowup.
+  const MAXH=5, CAP_RES=400, CAP_Q=400000, PER_STATE=4;
+  const chains=[], seenChain=new Set(), visits={};
+  let truncated=false;
+  const push=(q,path,t,y)=>{
+    const k=t.i+"@"+y, v=visits[k]||0;
+    if(v>=PER_STATE) return;
+    visits[k]=v+1; q.push(path.concat([[t,y]]));
+  };
+  const q=[];
+  (boardAt[srcMap]||[]).forEach(([t,y])=>push(q,[],t,y));
+  for(let qi=0;qi<q.length;qi++){
+    if(chains.length>=CAP_RES||q.length>CAP_Q){ truncated=true; break; }
+    const path=q[qi], last=path[path.length-1], t=last[0], by=last[1];
+    const ay=arriveAt(t);
+    if(ay!==undefined&&mapOf(by)!==dstMap&&orderOk(t,by,ay)){
+      const key=path.map(p=>p[0].i).join(">");
+      if(!seenChain.has(key)){ seenChain.add(key); chains.push(path); }
+      continue;
+    }
+    if(path.length>=MAXH) continue;
+    const used=new Set(path.map(p=>p[0].i));
+    const drops=t.d?[t.d]:[];
+    t.wa.forEach(y=>{ if(!drops.includes(y)) drops.push(y); });
+    const dmaps=new Set();
+    for(const y of drops){
+      const m=mapOf(y);
+      if(m===mapOf(by)||dmaps.has(m)||!orderOk(t,by,y)) continue;
+      dmaps.add(m);
+      for(const [u,yu] of (boardAt[m]||[])) if(!used.has(u.i)) push(q,path,u,yu);
+    }
+    for(const uid of t.icl){
+      const u=DATA.trains[uid];
+      if(u&&inPool.has(u.i)&&!used.has(u.i)) push(q,path,u,u.o);
+    }
+  }
+
+  // operator-level pass: plan cheap operator sequences (origin operators ->
+  // operators that can deliver at the destination), then materialize each
+  // with per-operator leg budgets. Adds what the flat search couldn't reach.
+  const before=chains.length;
+  const srcOps=[...(OPGRAPH.mapsB[srcMap]||[])];
+  const dstOps=[...(OPGRAPH.mapsA[dstMap]||[])];
+  const plans=planPaths(srcOps,dstOps,6);
+  plans.forEach(p=>materialize(p,src,dst,canCarry,seenChain,chains));
+  const planned=chains.length-before;
+
+  // Agreement-aware ranking: a hand-off at a known exchange point for that
+  // pair is blessed (more so for a preferred partner); an op-change involving
+  // a shortline that the agreement table says has no such partner is heavily
+  // demoted; Class I <-> Class I hand-offs have no agreement data and stay
+  // neutral. A "foreign" first leg is fine when the origin yard is an agreed
+  // exchange point for that operator (a car AT an interchange yard is exactly
+  // where a partner picks it up). Hand-offs riding a family alias (drop and
+  // pickup are different identities on one map) pay a token +3 so exact-yard
+  // chains keep their edge, and where coordinates are known a corridor pays
+  // 1pt per 25 miles it wanders beyond the direct origin->destination line.
+  // A hand-off with no coordinates is bridged over (its detour is invisible),
+  // so it pays +1: on otherwise-equal scores, verifiable geometry wins.
+  const gS=geoOf(src), gD=geoOf(dst);
+  const direct=(gS&&gD)?distMi(gS,gD):null;
+  const score=res=>{
+    const ops=res.map(p=>p[0].op);
+    let ic=0, adj=0;
+    for(let i=1;i<res.length;i++){
+      const prev=res[i-1][0], y=res[i][1];
+      if(!(prev.d===y||prev.wa.includes(y))) adj+=3;
+    }
+    // terminal roads drop out of interchange counting: NS -> BRC -> UP is
+    // ONE road interchange, judged where the car rejoins a road carrier
+    const road=res.filter(p=>!TERMINAL.has(p[0].op));
+    adj += (res.length-road.length)*10;
+    for(let i=1;i<road.length;i++){
+      const a=road[i-1][0].op, b=road[i][0].op;
+      if(a===b) continue;
+      ic++;
+      const yset=IXY[a+"|"+b], y=road[i][1];
+      if(yset&&ixHasAt(yset,y)) adj += ixPreferred(a,b)?-30:-15;
+      else if(yset) adj += 10;
+      else if(!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))) adj += 2000;
+    }
+    let geo=0;
+    if(direct!=null){
+      const pts=[gS];
+      for(let i=1;i<res.length;i++){
+        const g=geoOf(res[i][1]);
+        if(g) pts.push(g); else geo+=1;
+      }
+      pts.push(gD);
+      let d=0; for(let i=1;i<pts.length;i++) d+=distMi(pts[i-1],pts[i]);
+      geo+=Math.round(Math.max(0,d-direct)/25);
+    }
+    const first=road.length?road[0][0].op:ops[0];
+    const foreign=(homeRR&&first!==homeRR&&!opIxAt(first,src))?1:0;
+    return foreign*10000+ic*100+res.length+adj+geo;
+  };
+  const corr={};
+  chains.forEach(res=>{
+    const key=res.map(p=>p[0].op).join(",")+"|"+res.map(p=>mapOf(p[1])).join(",");
+    const cur=corr[key];
+    if(!cur) corr[key]={best:res,n:1};
+    else { cur.n++; if(score(res)<score(cur.best)) cur.best=res; }
+  });
+  const corridors=Object.values(corr).sort((a,b)=>score(a.best)-score(b.best));
+  return {src,dst,homeRR,corridors,total:chains.length,truncated,score,
+          planned,plans:plans.map(p=>p.join("→"))};
+}
+
+function renderRoutes(){
+  const R=rstate.res;
+  locbar.className="locbar";
+  countEl.innerHTML=`<b>${R.corridors.length}</b> corridor(s), ${R.total} chain(s)`;
+  wrap.innerHTML="";
+  const hd=document.createElement("div"); hd.className="rhead";
+  hd.innerHTML=`<b>${esc(locLabel(R.src))}</b> → <b>${esc(locLabel(R.dst))}</b>`+
+    ` · <b>${esc(rcartype.options[rcartype.selectedIndex].text)}</b> · `+
+    `candidate routings built only from where active trains originate, terminate and work. `+
+    `The TSARs' own instructions are quoted at each hand-off — judge them before trusting a chain.`+
+    (R.homeRR?` Home road at the origin looks like <b>${esc(R.homeRR)}</b>.`:"")+
+    (R.planned?` Operator-level planning (${R.plans.slice(0,4).map(esc).join(", ")}) added ${R.planned} deep chain(s).`:"")+
+    (R.truncated?` <span class="warn">Search hit its size cap; distant results may be incomplete.</span>`:"");
+  wrap.appendChild(hd);
+  if(!R.corridors.length){
+    const d=document.createElement("div"); d.className="empty";
+    d.innerHTML = mapOf(R.src)===mapOf(R.dst)
+      ? `Origin and destination are identities on the same interface map — `+
+        `no road train needed; the yardmaster classifies the car across.`
+      : `No chain found within 5 trains.`+
+        (rcartype.value!=="any"?`<br>Try car type “Any freight”.`:``);
+    wrap.appendChild(d); return;
+  }
+  R.corridors.slice(0,30).forEach(c=>wrap.appendChild(corridorCard(c)));
+  if(R.corridors.length>30){
+    const d=document.createElement("div"); d.className="rhead";
+    d.textContent=`…and ${R.corridors.length-30} more corridor(s) not shown.`;
+    wrap.appendChild(d);
+  }
+}
+
+function corridorCard(c){
+  const R=rstate.res, res=c.best, ops=res.map(p=>p[0].op);
+  const dstMap=mapOf(R.dst);
+  const roadOps=res.filter(p=>!TERMINAL.has(p[0].op)).map(p=>p[0].op);
+  let ic=0; for(let i=1;i<roadOps.length;i++) if(roadOps[i]!==roadOps[i-1]) ic++;
+  const firstRoad=roadOps[0]||ops[0];
+  const el=document.createElement("div"); el.className="corr";
+  const h=document.createElement("div"); h.className="chead";
+  h.innerHTML=`<b>${res.length} train${res.length>1?"s":""}</b> · ${ic} interchange${ic===1?"":"s"}`+
+    (c.n>1?` · ${c.n} variants`:"")+
+    ((R.homeRR&&firstRoad!==R.homeRR&&!opIxAt(firstRoad,R.src))
+      ?` · <span class="warn">starts on a foreign road</span>`:"");
+  el.appendChild(h);
+  let lastRoad=null;
+  res.forEach((p,i)=>{
+    const t=p[0], by=p[1];
+    const ay=i===res.length-1
+      ?((t.d&&mapOf(t.d)===dstMap)?t.d:(t.wa.find(y=>mapOf(y)===dstMap)||R.dst))
+      :res[i+1][1];
+    if(i>0&&t.op!==res[i-1][0].op){
+      const nl=document.createElement("div");
+      if(TERMINAL.has(t.op)){
+        nl.className="legnote";
+        nl.textContent=`⇄ ${t.op} terminal transfer — metro switching, not a road interchange`;
+        el.appendChild(nl);
+      } else {
+        // judge the road-to-road exchange, looking across any terminal legs
+        const a=lastRoad, b=t.op, yset=a?IXY[a+"|"+b]:null;
+        if(a&&a!==b){
+          if(yset&&ixHasAt(yset,by)){
+            nl.className="legnote ok";
+            nl.textContent=`✓ ${a}–${b} exchange point`+(ixPreferred(a,b)?" (preferred partner)":"");
+            el.appendChild(nl);
+          } else if(!yset&&!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))){
+            nl.className="legnote bad";
+            nl.textContent=`⚠ no agreement between ${a} and ${b} in the interchange data`;
+            el.appendChild(nl);
+          }
+        }
+      }
+    }
+    if(!TERMINAL.has(t.op)) lastRoad=t.op;
+    if(i>0){
+      const prev=res[i-1][0];
+      const pd=(prev.d?[prev.d]:[]).concat(prev.wa);
+      if(!pd.includes(by)&&pd.some(y=>mapOf(y)===mapOf(by))&&FAM[by]){
+        const nl=document.createElement("div"); nl.className="legnote";
+        nl.textContent=`⇄ same-map hand-off — drop and pickup are different `+
+          `identities on the ${locLabel(FAM[by].mo)} map`;
+        el.appendChild(nl);
+      }
+    }
+    const leg=document.createElement("div"); leg.className="leg";
+    leg.innerHTML=
+      `<span class="chev">▸</span>`+
+      `<span class="rr" style="background:${rrColor(t.rr)}">${esc(t.op)}</span>`+
+      `<span class="ssym">${esc(t.fs)}</span>`+
+      `<span class="lty">${esc(t.ty)}</span>`+
+      `<span class="lod">${esc(locLabel(by))} → ${esc(locLabel(ay))}</span>`;
+    el.appendChild(leg);
+    if(i===res.length-1&&ay!==R.dst&&mapOf(ay)===dstMap){
+      const nl=document.createElement("div"); nl.className="legnote ok";
+      nl.textContent=`✓ ${locLabel(ay)} shares its map with ${locLabel(R.dst)}`;
+      el.appendChild(nl);
+    }
+    const notes=[];
+    [by,ay].forEach(y=>famIds(y).forEach(fy=>(t.wn[fy]||[]).forEach(n=>notes.push([fy,n]))));
+    notes.forEach(([y,n])=>{
+      const nl=document.createElement("div"); nl.className="legnote";
+      nl.innerHTML=`@ ${esc(locLabel(y))}: <span class="txt">${esc(n)}</span>`;
+      el.appendChild(nl);
+    });
+    let cardEl=null;
+    leg.onclick=()=>{
+      if(cardEl){ cardEl.remove(); cardEl=null; return; }
+      cardEl=card(t); openCard(cardEl,t,true); leg.after(cardEl);
+    };
+  });
+  return el;
+}
 
 // ---- last-update banner ----
 // DATA.upd is stamped by the build only when a TSAR update actually changed

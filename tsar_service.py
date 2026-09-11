@@ -90,7 +90,7 @@ SEG_YARD, SEG_IC, SEG_TEXT, SEG_BREAK = 0, 1, 2, 3
 # against the reporting mark it names. Unlisted railroads still parse fine; their
 # interchange markers simply render as plain text instead of clickable links.
 RR_REGISTRY = {
-    'PASSENGER': {'name': 'Passenger',  'color': '#7c93a8', 'idx': 0, 'multi': True},
+    'PASSENGER': {'name': 'Passenger',  'color': '#7c93a8', 'idx': 0, 'multi': True, 'pax': True},
     'BNSF':      {'name': 'BNSF',       'color': '#f26a21', 'idx': 1},
     'CN':        {'name': 'CN',         'color': '#e23b3b', 'idx': 2},
     'CPKC':      {'name': 'CPKC',       'color': '#e6484f', 'idx': 3},
@@ -101,6 +101,178 @@ RR_REGISTRY = {
     'SHORTLINE': {'name': 'Shortlines', 'color': '#2dd4a7', 'idx': 8, 'multi': True},
 }
 DEFAULT_COLOR = '#2dd4a7'
+
+# ---------------------------------------------------------------------------
+# Freight classification of every declared train type on the single-railroad
+# rosters. The route finder needs to know what a train can carry, and the
+# type NAMES are each road's own vocabulary ("US Central Division" is CPKC's
+# carload local network), so a keyword match cannot be trusted. Every type a
+# roster declares must appear here; a new type in a TSAR update is an anomaly
+# until it is classified deliberately. Multi-operator rosters are not listed:
+# their "types" are operators (shortlines = carload, passenger = passenger).
+#
+#   carload    - can carry general carload freight (manifests, locals, yard
+#                jobs, transfers)
+#   intermodal - containers/trailers
+#   auto       - autoracks
+#   unit       - single-commodity unit service, no general freight
+#   engines    - light power / helpers, no cars
+#   nonrev     - specials, company moves, placeholders; never route a car
+#
+# A value is one class or a tuple of classes: mixed service like "Manifest/IM"
+# carries both carload and intermodal, and the car-type selector needs the
+# full capability set, not a primary class.
+# ---------------------------------------------------------------------------
+
+FREIGHT_CLASSES = ('carload', 'intermodal', 'auto', 'unit', 'engines', 'nonrev')
+
+FREIGHT_CLASS = {
+    'BNSF': {
+        'Baretable Intermodal (B)':               'intermodal',
+        'Dimensional Special (J)':                'nonrev',      # AMBIGUOUS: high/wide specials do carry revenue loads
+        'Domestic Intermodal (Q)':                'intermodal',
+        'Helpers (K)':                            'engines',
+        'High Priority Domestic Intermodal (Z)':  'intermodal',
+        'High Priority High HPT Manifest (HH)':   'carload',
+        'High Priority Low HPT Manifest (HL)':    'carload',
+        'International Intermodal (S)':           'intermodal',
+        'Light Engines (D)':                      'engines',
+        'Local (L)':                              'carload',
+        'Low Priority Manifest (M)':              'carload',
+        'Road Switcher (R)':                      'carload',
+        'Transfer (T)':                           'carload',
+        'Unit Ag. Empty (X)':                     'unit',
+        'Unit Ag. Loaded (G)':                    'unit',
+        'Unit Coal Empty (E)':                    'unit',
+        'Unit Coal Loaded (C)':                   'unit',
+        'Unit Train (U)':                         'unit',
+        'Vehicle (V)':                            'auto',
+        'Yard Job (Y)':                           'carload',
+    },
+    'CN': {
+        'Actual Blocked Manifest':                'carload',
+        'CPR Origin/Shared Running':              'carload',     # AMBIGUOUS: run-through with CPKC; assumed to carry CN carload
+        'Express Automotive':                     'auto',
+        'Extra Trains':                           'nonrev',      # AMBIGUOUS: extras could be anything
+        'Work Trains':                            'nonrev',
+        'High Priority IM':                       'intermodal',
+        'Locals':                                 'carload',
+        'Manifest':                               'carload',
+        'Quality Intermodal':                     'intermodal',
+        'Roadswitchers':                          'carload',
+        'Transfer Moves':                         'carload',
+        'Uniform Bulk':                           'unit',
+        'Unit Coal':                              'unit',
+        'Unit Grain':                             'unit',
+        'Unit Potash/Phosphate':                  'unit',
+        'Unit Sand/Sulphur':                      'unit',
+        'Yard Jobs':                              'carload',
+    },
+    'CPKC': {
+        'Canada Central Division':                'carload',
+        'Canada East Division':                   'carload',
+        'Canada Pacific Division':                'carload',
+        'Canada Prairies Division':               'carload',
+        'Expedited Merchandise':                  'carload',
+        'Foreign Haulage/Non-Revenue':            'nonrev',      # AMBIGUOUS: name says non-revenue, but "foreign haulage" may carry freight
+        'Mexico North Division':                  'carload',
+        'Overflow and Detours':                   'nonrev',      # AMBIGUOUS: overflow sections may carry revenue freight; zero trains today
+        'Priority IM/Autos/Manifest':             ('carload', 'intermodal', 'auto'),
+        'Regional Freight':                       'carload',
+        'US Central Division':                    'carload',
+        'US East Division':                       'carload',
+        'US Northeastern Division':               'carload',
+        'US South Division':                      'carload',
+        'US West Division':                       'carload',
+        'Unit Autorack':                          'auto',
+        'Unit Bulk':                              'unit',
+        'Unit Coal/Petcoke':                      'unit',
+        'Unit Crude Oil':                         'unit',
+        'Unit Ethanol':                           'unit',
+        'Unit Frac Sand':                         'unit',
+        'Unit Grain':                             'unit',
+        'Unit Molten Sulfur':                     'unit',
+        'Unit Phosphate':                         'unit',
+        'Unit Potash':                            'unit',
+        'Unit Sulphur':                           'unit',
+    },
+    'CSX': {
+        'Auto/IM':                                ('auto', 'intermodal'),
+        'Automotive':                             'auto',
+        'Coal':                                   'unit',
+        'Coal DPU':                               'unit',
+        'DPU Autorack':                           'auto',
+        'DPU IM Priority':                        'intermodal',
+        'DPU Intermodal':                         'intermodal',
+        'DPU Manifest':                           'carload',
+        'E. Coal DPU':                            'unit',
+        'Empty Coal':                             'unit',
+        'Ethanol':                                'unit',
+        'Foreign Movements':                      'nonrev',      # AMBIGUOUS: foreign-road run-throughs; unclear if they take CSX cars
+        'Grain':                                  'unit',
+        'Intermodal':                             'intermodal',
+        'Local':                                  'carload',
+        'Manifest':                               'carload',
+        'Manifest/IM':                            ('carload', 'intermodal'),
+        'Misc. Priority':                         'carload',     # AMBIGUOUS: unclear what it carries; zero trains today
+        'Misc. Unit':                             'unit',
+        'Oil':                                    'unit',
+        'Priority Intermodal':                    'intermodal',
+        'Priorty IM Peak':                        'intermodal',
+        'Yard Job/Local':                         'carload',
+    },
+    'KCS': {
+        'N/A':                                    'nonrev',      # placeholder roster, one dummy train
+    },
+    'NS': {
+        'Aggregates/Sand':                        'unit',
+        'Auto / Manifest Mix':                    ('carload', 'auto'),
+        'Autos':                                  'auto',
+        'Baretable Intermodal':                   'intermodal',
+        'DPU Manifest':                           'carload',
+        'Ethanol/Oil ':                           'unit',        # trailing space is in the game's own TypeInfo
+        'Intermodal':                             'intermodal',
+        'Intermodal/Auto Mix':                    ('intermodal', 'auto'),
+        'Light Engines':                          'engines',
+        'Local':                                  'carload',
+        'Manifest':                               'carload',
+        'Manifest/IM Mix':                        ('carload', 'intermodal'),
+        'Priority Intermodal':                    'intermodal',
+        'Roadrailer':                             'intermodal',  # AMBIGUOUS: trailer trains; no conventional cars, closest fit
+        'Specials/Company Trains':                'nonrev',
+        'Suspended trains':                       'nonrev',
+        'Unit':                                   'unit',
+        'Unit Coal Empty':                        'unit',
+        'Unit Coal Loaded':                       'unit',
+        'Unit Grain Empty':                       'unit',
+        'Unit Grain Loaded':                      'unit',
+        'Yard Job':                               'carload',
+    },
+    'UP': {
+        'Auto':                                   'auto',
+        'Bulk Unit':                              'unit',
+        'Coal':                                   'unit',
+        'Expedited Z':                            'intermodal',
+        'Grain Byproducts':                       'unit',
+        'Grain Empties':                          'unit',
+        'Grain Loads':                            'unit',
+        'Grain Meal':                             'unit',
+        'Grain Reposition':                       'unit',
+        'Grain Shuttle':                          'unit',
+        'Intermodal I':                           'intermodal',
+        'Light Engines':                          'engines',
+        'Local':                                  'carload',
+        'Manifest':                               'carload',
+        'Quality Intermodal':                     'intermodal',
+        'Quality Manifest':                       'carload',
+        'Rock':                                   'unit',
+        'Special':                                'nonrev',
+        'Unit':                                   'unit',
+        'Unit Ethanol':                           'unit',
+        'Work, MofW':                             'nonrev',
+        'Yard':                                   'carload',
+    },
+}
 
 
 class Anomalies:
@@ -142,6 +314,8 @@ def rr_meta(code):
         # A "multi" file lists one operator per type rather than one train type
         # per type: TSAR_Shortline.ini and TSAR_Passenger.ini.
         'multi': bool(m.get('multi')),
+        # Passenger operators are excluded from freight-routing pools.
+        'pax':   bool(m.get('pax')),
     }
 
 
@@ -378,6 +552,95 @@ def save_location_store(path, store):
 
 
 # ---------------------------------------------------------------------------
+# interchange agreements (interchange_data/)
+#
+# Shortline_interchange.txt is a hand-maintained table of each shortline's
+# reporting mark, connecting partners and preferred partner(s).
+# derived_exchange_points.csv maps (shortline, partner) pairs to the map ids
+# where both do work — machine-derived, then hand-curated, like locations.csv.
+# The file legitimately lists railroads the game does not model, so rows
+# naming operators absent from the rosters are skipped and counted, not
+# flagged; a yard id that exists nowhere in the data IS an anomaly (ids are
+# ground truth), as is a structurally unreadable CSV row.
+# ---------------------------------------------------------------------------
+
+IX_FOLDER = 'interchange_data'
+IX_TABLE = 'Shortline_interchange.txt'
+IX_POINTS = 'derived_exchange_points.csv'
+IX_ALIASES = {'CP': 'CPKC'}          # file spellings -> roster spellings
+IX_MARK_RE = re.compile(r'[A-Z0-9]{2,6}')
+
+
+def load_interchange_data(folder, railroads, loc_ids, anom):
+    """Returns (pairs, points) for the payload:
+    pairs  {mark: {'p': [partner marks], 'f': [preferred marks]}}
+    points [[shortline, partner, yard_id], ...]
+    Both restricted to operators that exist in the parsed rosters."""
+    ops = set()
+    for rr in railroads:
+        if rr['meta']['multi']:
+            if not rr['meta']['pax']:
+                ops.update(p for p in rr['prefixes'].values() if p)
+        else:
+            ops.add(rr['code'])
+
+    pairs, unknown_marks = {}, set()
+    table = os.path.join(folder, IX_TABLE)
+    if os.path.isfile(table):
+        with open(table, encoding='utf-8', errors='replace') as fh:
+            for line in fh:
+                cells = [c.strip() for c in line.strip().strip('|').split('|')]
+                if len(cells) < 3 or cells[0] in ('Shortline', '') \
+                        or set(cells[0]) <= set('- '):
+                    continue
+                mark = cells[0].split()[0]        # "RJCK (TN MS)" -> RJCK
+                if mark not in ops:
+                    unknown_marks.add(mark)
+                    continue
+                conn = [IX_ALIASES.get(p, p) for p in IX_MARK_RE.findall(cells[2])]
+                pref = [IX_ALIASES.get(p, p)
+                        for p in (cells[3].split() if len(cells) > 3 else [])]
+                cur = pairs.setdefault(mark, {'p': [], 'f': []})
+                for p in conn:
+                    if p != mark and p not in cur['p']:
+                        cur['p'].append(p)
+                for p in pref:
+                    if p != mark and p not in cur['f']:
+                        cur['f'].append(p)
+
+    points, skipped_rows = [], 0
+    csv_path = os.path.join(folder, IX_POINTS)
+    if os.path.isfile(csv_path):
+        with open(csv_path, encoding='utf-8', errors='replace', newline='') as fh:
+            for row in csv.reader(fh):
+                if not row or row[0].strip() in ('shortline', ''):
+                    continue
+                if len(row) < 3:
+                    anom.add("interchange CSV row with fewer than 3 columns",
+                             repr(row)[:70])
+                    continue
+                sl = IX_ALIASES.get(row[0].strip(), row[0].strip())
+                pt = IX_ALIASES.get(row[1].strip(), row[1].strip())
+                yid = row[2].strip()
+                if sl not in ops or pt not in ops:
+                    skipped_rows += 1
+                    continue
+                if yid not in loc_ids:
+                    anom.add("interchange CSV yard id not present in any roster",
+                             f"{yid} ({sl}-{pt})")
+                    continue
+                if [sl, pt, yid] not in points:
+                    points.append([sl, pt, yid])
+
+    if pairs or points:
+        print(f"  interchange data: {len(pairs)} shortline(s) matched, "
+              f"{len(points)} exchange point rows kept "
+              f"({len(unknown_marks)} mark(s) and {skipped_rows} row(s) name "
+              f"operators the game does not model)")
+    return pairs, points
+
+
+# ---------------------------------------------------------------------------
 # build
 # ---------------------------------------------------------------------------
 
@@ -463,8 +726,13 @@ def build_payload(railroads, names):
         'n':  rr['meta']['name'],
         'k':  rr['meta']['color'],
         'm':  1 if rr['meta']['multi'] else 0,
+        'pax': 1 if rr['meta']['pax'] else 0,
         'ty': sorted(rr['types']),
         'px': {t: p for t, p in rr['prefixes'].items() if p},
+        # capability set per type, '+'-joined ("carload+intermodal")
+        'fc': {} if rr['meta']['multi'] else
+              {ty: cls if isinstance(cls, str) else '+'.join(cls)
+               for ty, cls in FREIGHT_CLASS.get(rr['code'], {}).items()},
     } for rr in railroads]
 
     payload = {'gen': date.today().isoformat(), 'rrs': roads,
@@ -484,6 +752,8 @@ def dump_payload(payload):
            '"upd":' + j(payload.get('upd')) + ',',
            '"rrs":[', ',\n'.join(j(r) for r in payload['rrs']), '],',
            '"locs":[', ',\n'.join(j(l) for l in payload['locs']), '],',
+           '"ixp":' + j(payload.get('ixp', {})) + ',',
+           '"ix":[', ',\n'.join(j(r) for r in payload.get('ix', [])), '],',
            '"mims":[', ',\n'.join(j(f) for f in payload.get('mims', [])), '],',
            '"geo":[', ',\n'.join(j(g) for g in payload.get('geo', [])), '],',
            '"trains":[', ',\n'.join(j(t) for t in payload['trains']), ']}']
@@ -491,6 +761,41 @@ def dump_payload(payload):
     # structure — it just stops a note containing "</script>" from ending the
     # inline script block early.
     return '\n'.join(out).replace('</', '<\\/')
+
+
+# The route finder boards cars only where a note explicitly picks up and
+# alights only where one explicitly sets out (HTML_TEMPLATE mirrors these
+# regexes — keep both copies in sync). This audit is the drift alarm for that
+# vocabulary: unclassified work-looking notes are stored in the build report
+# and diffed on the next build, so a TSAR update that phrases car work in a
+# new way is caught by `make site`, not by a silently missing route.
+PICKUP_RE = re.compile(r'\b(pi+cks?[\s-]?up|lift|add|takes?\s+outbound)\b', re.I)
+SETOUT_RE = re.compile(
+    r'\b(set[\s-]?(?:out|off)|drop|deliver)\b'
+    r'|^\s*cars?\s+for\b',  # anchored: bare "Cars for X" delivers; mid-text
+    re.I)                   # "pick up cars for Y" must stay a pickup only
+SERVICE_NOTE_RE = re.compile(
+    r'^\s*(train\s+)?(service|fuel|crew)( ?(point|stop|change|check))?s?\W*$', re.I)
+WORKISH_RE = re.compile(r'\b(block|cars?|traffic|loads?|empties|interchange)\b', re.I)
+
+
+def audit_directions(payload):
+    """-> ({'pickup': n, 'setout': n, 'unclassified_work': n}, sorted texts)."""
+    pick = seto = 0
+    unclassified = set()
+    for t in payload['trains']:
+        for g in t['g']:
+            if g[0] != SEG_YARD or len(g) < 3 or not g[2]:
+                continue
+            p = bool(PICKUP_RE.search(g[2]))
+            s = bool(SETOUT_RE.search(g[2]))
+            pick += p
+            seto += s
+            if not p and not s and not SERVICE_NOTE_RE.match(g[2]) \
+                    and WORKISH_RE.search(g[2]):
+                unclassified.add(g[2].strip())
+    counts = {'pickup': pick, 'setout': seto, 'unclassified_work': len(unclassified)}
+    return counts, sorted(unclassified)
 
 
 # Per-train fingerprints let the next build say WHICH trains a TSAR update
@@ -546,14 +851,18 @@ def train_changes(old, new):
 
 def collect_report(payload, railroads, ic_total, ic_linked, store):
     named = sum(1 for L in payload['locs'] if L['nm'])
+    dir_counts, dir_notes = audit_directions(payload)
+    dir_counts['notes'] = dir_notes
     return {
         'fingerprints': roster_fingerprints(railroads),
+        'directions': dir_counts,
         'built':  datetime.now().replace(microsecond=0).isoformat(),
         'trains': len(payload['trains']),
         'locations': {'total': len(payload['locs']), 'named': named,
                       'manual': sum(1 for v in store.values() if v[1] == 'manual'),
                       'map':    sum(1 for v in store.values() if v[1] == 'map')},
         'interchange': {'markers': ic_total, 'linked': ic_linked},
+        'fingerprints': roster_fingerprints(railroads),
         'railroads': {
             rr['code']: {
                 'trains': len(rr['trains']),
@@ -611,6 +920,20 @@ def diff_report(old, new, changes=None):
     ow, nw = old.get('locations', {}).get('named'), new['locations']['named']
     if ow is not None and ow != nw:
         print(f"    {'locations':10s} {ow:6,} -> {nw:6,} named  ({nw - ow:+,})")
+
+    # Direction-vocabulary drift: work-looking notes the router's verb grammar
+    # cannot classify. New ones mean an author phrased car work a new way —
+    # each is a yard the route finder silently cannot use until the grammar
+    # (PICKUP_RE/SETOUT_RE here and in HTML_TEMPLATE) learns the phrasing.
+    seen = set(old.get('directions', {}).get('notes', []))
+    fresh = [n for n in new['directions']['notes'] if n not in seen]
+    if fresh:
+        print(f"    {len(fresh)} NEW unclassified work note(s) — extend the "
+              f"direction grammar or confirm they are not car work:")
+        for n in fresh[:15]:
+            print(f"      | {n[:100]}")
+        if len(fresh) > 15:
+            print(f"      ... and {len(fresh) - 15} more (see {REPORT_NAME})")
 
 
 # ---------------------------------------------------------------------------
@@ -704,12 +1027,37 @@ def build(files, out, title, loc_path, use_cache=True, subset=False):
               f"{len(rr['types']):3d} {'operators' if rr['meta']['multi'] else 'types':9s} "
               f"({os.path.basename(f)})")
 
+    # Every declared type on a single-railroad roster must have a freight
+    # classification, the table must not go stale, and every class named in
+    # it must be a real class — all three directions loud.
+    for rr in railroads:
+        if rr['meta']['multi']:
+            continue
+        table = FREIGHT_CLASS.get(rr['code'], {})
+        for ty in rr['types']:
+            if ty not in table:
+                anom.add("train type has no freight classification "
+                         "(add to FREIGHT_CLASS)", f"{ty!r} in {rr['code']}")
+        for ty, cls in table.items():
+            if ty not in rr['types']:
+                anom.add("FREIGHT_CLASS lists a type the roster no longer "
+                         "declares", f"{ty!r} in {rr['code']}")
+            for c in ((cls,) if isinstance(cls, str) else cls):
+                if c not in FREIGHT_CLASSES:
+                    anom.add("FREIGHT_CLASS names an unknown class",
+                             f"{c!r} for {ty!r} in {rr['code']}")
+
     scraped = scrape_location_names(railroads)
     store = load_location_store(loc_path) if use_cache else {}
     store, added, changed = merge_location_store(store, scraped)
     names = {lid: nm for lid, (nm, _) in store.items()}
 
     payload, ic_total, ic_linked = build_payload(railroads, names)
+
+    loc_ids = {l['id'] for l in payload['locs']}
+    pairs, points = load_interchange_data(IX_FOLDER, railroads, loc_ids, anom)
+    payload['ixp'] = pairs
+    payload['ix'] = points
 
     payload['mims'] = load_mims(MIMS_PATH, names, anom)
     if payload['mims']:
@@ -769,6 +1117,9 @@ def build(files, out, title, loc_path, use_cache=True, subset=False):
     rate = ic_linked / ic_total if ic_total else 1.0
     print(f"  {ic_linked:,}/{ic_total:,} interchange markers linked "
           f"({rate:.0%}) to a train")
+    d = new['directions']
+    print(f"  work-note directions: {d['pickup']:,} pickup / {d['setout']:,} "
+          f"setout / {d['unclassified_work']:,} work-looking unclassified")
     if ic_total and rate < IC_LINK_FLOOR:
         anom.add(f"only {rate:.0%} of interchange markers resolve — the game may "
                  f"have renumbered its rosters (RR_REGISTRY 'idx' values)")
@@ -891,6 +1242,44 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .dpanel .drow{padding:3px 0;font-size:13px}
 .dpanel .dim{color:var(--muted)}
 .dpanel .ext{color:var(--future)}
+
+/* ---- last-update banner ---- */
+.updbar{margin:6px 20px;font-size:12px;color:var(--muted)}
+.updbar .rrcode{color:var(--ink);font-weight:600}
+.updpanel{display:none;margin-top:6px;padding:10px 14px;border:1px solid var(--line);
+  border-radius:8px;background:var(--panel)}
+.updpanel.open{display:block}
+.updpanel h5{margin:6px 0 3px;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim)}
+.updpanel .syms{display:flex;flex-wrap:wrap;gap:4px 12px;font-family:var(--mono);font-size:12px}
+.updpanel .gone{color:var(--dim);text-decoration:line-through}
+
+/* ---- car routing ---- */
+.rtogglebar{margin:6px 20px;font-size:12px}
+.routebar{margin:0 20px 6px;padding:10px 14px;border:1px solid var(--line);border-left:3px solid var(--future);
+  border-radius:8px;background:var(--panel);display:none;align-items:center;gap:12px;flex-wrap:wrap}
+.routebar.open{display:flex}
+.routebar .rtitle{font-weight:600}
+.routebar .beta{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--future);
+  border:1px solid var(--future);border-radius:4px;padding:1px 5px;margin-left:8px}
+.routebar .rchk{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+.gobtn{background:var(--accent);color:#0e1116;border:0;border-radius:7px;padding:8px 12px;
+  cursor:pointer;font-weight:600}
+.rhead{max-width:1180px;margin:10px auto;color:var(--muted);font-size:13px;line-height:1.5}
+.rhead b{color:var(--ink)}
+.warn{color:#f0b429}
+.corr{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin:10px auto;
+  max-width:1180px;padding:10px 14px}
+.chead{font-size:12px;color:var(--muted);margin-bottom:6px}
+.chead b{color:var(--ink)}
+.leg{display:flex;gap:10px;align-items:baseline;padding:6px 4px;cursor:pointer;border-radius:6px}
+.leg:hover{background:var(--panel2)}
+.leg .chev{color:var(--dim);font-size:10px}
+.leg .lty{font-size:11px;color:var(--dim)}
+.leg .lod{font-size:12px;color:var(--muted)}
+.legnote{margin:0 0 4px 46px;font-size:12px;color:var(--muted)}
+.legnote .txt{color:var(--ink)}
+.legnote.ok{color:var(--accent)}
+.legnote.bad{color:#f0b429}
 
 /* ---- yard sheet ---- */
 .srow{display:grid;grid-template-columns:44px 88px 170px minmax(200px,1fr) 2fr;gap:12px;
@@ -1051,6 +1440,30 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
   <div class="updpanel" id="updpanel"></div>
 </div>
 
+<div class="rtogglebar"><button class="jump" id="rtoggle">Route a car (beta) ▸</button></div>
+<div class="routebar" id="routebar">
+  <span class="rtitle">Route a car<span class="beta">beta</span></span>
+  <div class="combo">
+    <input class="inp" id="rfin" placeholder="from yard…" autocomplete="off">
+    <div class="menu" id="rfmenu"></div>
+  </div>
+  <span style="color:var(--dim)">→</span>
+  <div class="combo">
+    <input class="inp" id="rtin" placeholder="to yard…" autocomplete="off">
+    <div class="menu" id="rtmenu"></div>
+  </div>
+  <label class="rchk">car type
+    <select class="inp" id="rcartype" style="min-width:0;padding:6px 8px">
+      <option value="carload">Manifest car</option>
+      <option value="intermodal">Container / trailer</option>
+      <option value="auto">Autorack</option>
+      <option value="any">Any freight</option>
+    </select>
+  </label>
+  <button class="gobtn" id="rgo" style="display:none">find routes</button>
+  <button class="clearbtn" id="rclear" style="display:none">clear ✕</button>
+</div>
+
 <div class="locbar" id="locbar"></div>
 <main class="wrap" id="wrap"></main>
 
@@ -1084,11 +1497,49 @@ function fullSym(t){
 // t.w = yards this train "works": every @@ yard tagged in its instructions.
 // Not a subset of the route — some trains are told to work a yard they do not
 // list as a stop, so it counts toward "touches this location" in its own right.
+// t.ww narrows that to yards with real CAR work for the routing graph: a tag
+// whose text only says the TRAIN is serviced there (fuel, crew) is where the
+// graph would otherwise board cars onto unit trains at fuel stops.
+// t.op = operator identity. Same as the roster code except on the two
+// multi-operator rosters, where the real railroad is the type's reporting
+// mark (IHB, AMTK, …). The UI keeps one SHORTLINE/PASSENGER pill; routing
+// semantics (interchanges, home road, carload pool) speak operator.
+const SERVICE_RE=/^\s*(train\s+)?(service|fuel|crew)( ?(point|stop|change|check))?s?\W*$/i;
 DATA.trains.forEach((t,i) => {
   t.i = i; t.fs = fullSym(t);
-  t.w = [];
-  t.g.forEach(g=>{ if(g[0]===SEG_YARD && !t.w.includes(g[1])) t.w.push(g[1]); });
+  const rrm = RR[t.rr];
+  t.op = (rrm && rrm.m) ? (rrm.px[t.ty] || t.ty) : t.rr;
+  t.w = []; t.wn = {};
+  t.g.forEach(g=>{
+    if(g[0]===SEG_YARD){
+      if(!t.w.includes(g[1])) t.w.push(g[1]);
+      if(g[2]) (t.wn[g[1]]=t.wn[g[1]]||[]).push(g[2]);
+    }
+  });
+  t.ww = t.w.filter(y=>{ const n=t.wn[y]; return !(n && n.every(x=>SERVICE_RE.test(x))); });
+  t.icl = t.g.filter(g=>g[0]===SEG_IC && g[2]!==undefined).map(g=>g[2]);
 });
+
+// interchange agreements (interchange_data/): partner table + exchange points
+const IXP = DATA.ixp || {};
+const IXY = {};        // "A|B" -> Set of agreed exchange yard ids (both ways)
+const IXOPYARD = new Set();   // "op|yard": op has an agreed exchange point here
+(DATA.ix||[]).forEach(([a,b,y])=>{
+  (IXY[a+"|"+b]=IXY[a+"|"+b]||new Set()).add(y);
+  (IXY[b+"|"+a]=IXY[b+"|"+a]||new Set()).add(y);
+  IXOPYARD.add(a+"|"+y); IXOPYARD.add(b+"|"+y);
+});
+const ixPartners =(a,b)=>(IXP[a]&&IXP[a].p.includes(b))||(IXP[b]&&IXP[b].p.includes(a));
+const ixPreferred=(a,b)=>(IXP[a]&&IXP[a].f.includes(b))||(IXP[b]&&IXP[b].f.includes(a));
+// Shortline-only marks. A mark that is also a Class I roster code is not
+// shortline-only: the game lists "Iowa Northern (CN)" under CN's mark, and
+// those trains interchange as CN itself.
+const SLOPS=new Set();
+{
+  const classI=new Set(DATA.rrs.filter(r=>!r.m).map(r=>r.c));
+  DATA.trains.forEach(t=>{ const r=RR[t.rr];
+    if(r&&r.m&&!r.pax&&!classI.has(t.op)) SLOPS.add(t.op); });
+}
 
 // MIM families: one interface map hosts several yard identities plus its
 // virtual off-map destinations. FAM maps every id in a family to the family.
@@ -1102,6 +1553,23 @@ const FAM = {};
 // geography: id -> [lat, lon, railroads-text], where the map author recorded it
 const GEO = {};
 (DATA.geo||[]).forEach(g=>{ GEO[g[0]] = [g[1], g[2], g[3]]; });
+
+// One interface map is one physical place, so every family member aliases to
+// its mother map for routing. Vids included: vid traffic round-trips through
+// the mother map with the same consist, so cars at vid zones sit in the same
+// classification pool as everything else on the map (Zach's ruling).
+const mapOf = id => FAM[id] ? FAM[id].mo : id;
+const famIds = id => FAM[id] ? [FAM[id].mo, ...FAM[id].ms.map(m=>m[0])] : [id];
+const geoOf = id => {
+  if(GEO[id]) return GEO[id];
+  const f=FAM[id];
+  if(f){ if(GEO[f.mo]) return GEO[f.mo];
+         for(const m of f.ms) if(GEO[m[0]]) return GEO[m[0]]; }
+  return null;
+};
+const opIxAt =(op,id)=>famIds(id).some(fy=>IXOPYARD.has(op+"|"+fy));
+const ixHasAt=(yset,id)=>famIds(id).some(fy=>yset.has(fy));
+
 
 // how many trains touch each location (for the picker)
 const locCount = {};
@@ -1250,6 +1718,7 @@ function openMenu(q){
 }
 function choose(o){
   if(!o) return;
+  rstate.res=null;      // picking a location always leaves the route view
   state.loc=o.id; locin.value = o.id+(o.nm?"  "+o.nm:"");
   locmenu.classList.remove("open"); locclear.style.display="";
   mastEl.classList.remove("open");
@@ -1325,6 +1794,7 @@ const countEl=document.getElementById("count");
 const locbar=document.getElementById("locbar");
 
 function render(reset=true){
+  if(rstate.res){ renderRoutes(); return; }
   const base=filteredBase();
   if(reset) syncTypes(base);
   const list = state.type ? base.filter(t=>t.ty===state.type) : base;
@@ -1454,6 +1924,31 @@ function sheetRow(t){
 
 // ---- location details ----
 const MI=3959, RAD=Math.PI/180;
+// Routable work yards. TSAR authors sometimes tag a block's onward pickups on
+// LATER trains into a train's own notes (MALSS carries MSSNP's Mason City /
+// Boone / Grand Island work), which would forge board/alight points the train
+// never visits. A work yard is routable only if it is on the route, or
+// coordinates prove it lies along the train's corridor; unprovable off-route
+// tags stay display-only. Added coordinates promote real ones automatically.
+// Work has direction (Zach's rule): an explicit "pick up"/"add"/"lift" is a
+// door ONTO the train, an explicit "set out"/"drop"/"deliver" is a door OFF
+// it, and nothing else counts — MSSNP only picks up at Mason City, so a car
+// cannot alight there; the Mason City block is built at Boone by MNPSS and
+// set out on arrival. Origin (board) and destination (alight) stay implicit.
+// Keep in sync with PICKUP_RE/SETOUT_RE in the Python build, whose report
+// audit is the drift alarm for this vocabulary.
+const PICKUP_RE=/\b(pi+cks?[\s-]?up|lift|add|takes?\s+outbound)\b/i, // "picks up", "Piick Up" typo, "takes outbound traffic"
+      SETOUT_RE=/\b(set[\s-]?(?:out|off)|drop|deliver)\b|^\s*cars?\s+for\b/i; // "Set Off" is NS house style; anchored "Cars for X" delivers
+DATA.trains.forEach(t=>{
+  t.wr=t.ww.filter(y=>{
+    if(y===t.o||y===t.d||t.r.includes(y)) return true;
+    const go=geoOf(t.o), gd=geoOf(t.d), gy=geoOf(y);
+    if(!go||!gd||!gy) return false;
+    return distMi(go,gy)+distMi(gy,gd) <= Math.max(distMi(go,gd),50)*1.2;
+  });
+  t.wb=t.wr.filter(y=>(t.wn[y]||[]).some(n=>PICKUP_RE.test(n)));   // boardable
+  t.wa=t.wr.filter(y=>(t.wn[y]||[]).some(n=>SETOUT_RE.test(n)));   // alightable
+});
 function distMi(a,b){
   const s=Math.sin((b[0]-a[0])*RAD/2)**2 +
           Math.cos(a[0]*RAD)*Math.cos(b[0]*RAD)*Math.sin((b[1]-a[1])*RAD/2)**2;
@@ -1609,6 +2104,7 @@ function reveal(uid){
 // partner train, then scroll to it and open it.
 function jumpTo(uid){
   const t=DATA.trains[uid]; if(!t) return;
+  rstate.res=null;      // interchange links leave the route view too
   if(!state.rrs.has(t.rr)){ state.rrs.add(t.rr); paintPill(t.rr); }
   state.type="";
   state.loc=""; state.locmode=""; state.view="cards"; locin.value=""; locclear.style.display="none";
@@ -1625,6 +2121,534 @@ function gotoLoc(id){
 }
 
 function debounce(fn,ms){let h;return(...a)=>{clearTimeout(h);h=setTimeout(()=>fn(...a),ms);};}
+
+// ---- car routing (beta) ----
+// A car boards where a train originates or explicitly picks up, rides
+// forward in route order, alights where it explicitly sets out or
+// terminates; trains hand off wherever drop and pickup share a physical map
+// (same MIM family — the yardmaster classifies across yard identities) and
+// at resolved *IC* links. A flat 5-train search runs first; an operator-level
+// planner then covers what it cannot afford (see OPGRAPH below). Chains rank
+// by (starts on the origin's home road, fewest interchanges, fewest trains,
+// least geographic wandering) and collapse into corridors — one entry per
+// distinct railroad + transfer-map sequence. The TSAR text at each hand-off
+// is quoted verbatim: the graph proposes, the player judges.
+// freight capability set of a train, from the per-roster classification
+// table ("carload+intermodal" for mixed service). Multi rosters: shortline
+// operators haul carload, passenger is passenger.
+function fclasses(t){
+  const r=RR[t.rr]; if(!r) return ["carload"];
+  if(r.m) return r.pax ? ["passenger"] : ["carload"];
+  return (r.fc[t.ty] || "nonrev").split("+");
+}
+const rstate={from:null,to:null,res:null};
+const rfin=document.getElementById("rfin"), rtin=document.getElementById("rtin");
+const rgo=document.getElementById("rgo"), rclear=document.getElementById("rclear");
+const rcartype=document.getElementById("rcartype");
+
+function wirePicker(inp,menu,key){
+  let ropts=[];
+  function open(q){
+    q=q.trim().toLowerCase();
+    ropts=pickList.filter(o=>!q||o.id.includes(q)||o.nm.toLowerCase().includes(q)).slice(0,60);
+    menu.innerHTML=ropts.map((o,i)=>
+      `<div class="opt" data-i="${i}"><span class="lid">${o.id}</span>`+
+      `<span class="lnm ${o.nm?'':'unk'}">${o.nm?esc(o.nm):'unnamed'}</span>`+
+      `<span class="cnt">${o.c} trains</span></div>`).join("")
+      || `<div class="opt"><span class="lnm unk">no match</span></div>`;
+    menu.classList.add("open");
+    menu.querySelectorAll(".opt").forEach(el=>{ el.onclick=()=>{
+      const o=ropts[+el.dataset.i]; if(!o) return;
+      rstate[key]=o; inp.value=o.id+(o.nm?"  "+o.nm:"");
+      menu.classList.remove("open"); routeNow();
+    };});
+  }
+  inp.onfocus=()=>open(inp.value);
+  inp.oninput=()=>{ rstate[key]=null; open(inp.value); syncRouteBtns(); };
+  document.addEventListener("click",e=>{ if(!inp.parentElement.contains(e.target)) menu.classList.remove("open"); });
+}
+wirePicker(rfin,document.getElementById("rfmenu"),"from");
+wirePicker(rtin,document.getElementById("rtmenu"),"to");
+rcartype.onchange=()=>{ if(rstate.res) routeNow(); };
+// The route finder is a beta: the bar stays collapsed behind this toggle so
+// the public page reads as the train finder it always was. The choice is
+// remembered per browser, like favorites.
+const rtoggle=document.getElementById("rtoggle"), routebar=document.getElementById("routebar");
+function setRouter(open){
+  routebar.classList.toggle("open",open);
+  rtoggle.textContent="Route a car (beta) "+(open?"▾":"▸");
+  try{ localStorage.setItem("fym.router",open?"1":"0"); }catch(e){}
+}
+rtoggle.onclick=()=>setRouter(!routebar.classList.contains("open"));
+(function(){ let v="0"; try{ v=localStorage.getItem("fym.router")||"0"; }catch(e){} if(v==="1") setRouter(true); })();
+rgo.onclick=()=>routeNow();
+rclear.onclick=()=>{ rstate.from=rstate.to=rstate.res=null; rfin.value=""; rtin.value="";
+  syncRouteBtns(); render(); };
+function syncRouteBtns(){
+  rgo.style.display=(rstate.from&&rstate.to)?"":"none";
+  rclear.style.display=(rfin.value||rtin.value)?"":"none";
+}
+function routeNow(){
+  syncRouteBtns();
+  if(!(rstate.from&&rstate.to)||rstate.from.id===rstate.to.id) return;
+  rstate.res=findRoutes(rstate.from.id,rstate.to.id,rcartype.value);
+  render();
+}
+
+// a car may ride a train between two of its yards only in route order
+const orderOk=(t,y1,y2)=>{
+  const i1=t.r.indexOf(y1), i2=t.r.indexOf(y2);
+  return (i1<0||i2<0)?true:i2>i1;
+};
+
+// ---- operator-level planner ----
+// The flat search caps at 5 trains, but realistic routings often need 6-8:
+// intermodal moves ramp-to-ramp with a shuttle at every hub, shortlines
+// relay through their families. Searching that deep unconstrained explodes,
+// so: plan railroad-to-railroad first over a small operator graph, then give
+// each operator its own leg search with a generous budget. An edge exists
+// where operator A can explicitly set out on a map where operator B
+// explicitly boards; *IC*-linked or agreement-backed edges beat mere shared
+// presence. The planner only ADDS chains — ranking treats them like any
+// others, so a planned Memphis relay simply outscores a flat-search detour.
+const OPGRAPH=(()=>{
+  const alight={}, board={}, mapsB={}, mapsA={}, icEv={};
+  const revenue=t=>{const cs=fclasses(t);
+    return status(t)==="active"&&!cs.includes("passenger")&&!cs.includes("engines")&&!cs.includes("nonrev");};
+  DATA.trains.forEach(t=>{
+    if(!revenue(t)) return;
+    const bs=new Set(t.wb.map(mapOf)); bs.add(mapOf(t.o));
+    const as=new Set(t.wa.map(mapOf)); if(t.d) as.add(mapOf(t.d));
+    bs.forEach(m=>{ (mapsB[m]=mapsB[m]||new Set()).add(t.op); (board[t.op]=board[t.op]||new Set()).add(m); });
+    as.forEach(m=>{ (mapsA[m]=mapsA[m]||new Set()).add(t.op); (alight[t.op]=alight[t.op]||new Set()).add(m); });
+  });
+  DATA.trains.forEach(t=>t.icl.forEach(uid=>{
+    const u=DATA.trains[uid];
+    if(u&&u.op!==t.op) icEv[t.op+">"+u.op+"@"+mapOf(u.o)]=(icEv[t.op+">"+u.op+"@"+mapOf(u.o)]||0)+1;
+  }));
+  const icPair=new Set(Object.keys(icEv).map(k=>k.split("@")[0]));
+  return {alight,board,mapsA,mapsB,icEv,icPair};
+})();
+
+// Terminal/switching roads (BRC, IHB, KCT, PHL, NOPB...): carriers whose
+// whole located network sits inside one metro (>=3 located maps, <=60 mi
+// across — Chicagoland runs 50: IHB legitimately spans Bensenville to Burns
+// Harbor) AND whose business is connecting other railroads (>=3 distinct
+// partner operators). The partner floor keeps a 40-mile line-haul shortline
+// a road carrier, so its hand-offs still face agreement scrutiny. A road
+// with sparse coordinates stays unclassified (full price), so added geo
+// data only ever improves this.
+const TERMINAL=(()=>{
+  const pts={};
+  DATA.trains.forEach(t=>{
+    if(status(t)!=="active") return;
+    new Set([t.o,t.d,...t.r]).forEach(y=>{
+      const g=y&&geoOf(y);
+      if(g)(pts[t.op]=pts[t.op]||new Map()).set(mapOf(y),g);
+    });
+  });
+  const partners=op=>{
+    const s=new Set();
+    (OPGRAPH.alight[op]||new Set()).forEach(m=>(OPGRAPH.mapsB[m]||new Set()).forEach(b=>{ if(b!==op) s.add(b); }));
+    (OPGRAPH.board[op]||new Set()).forEach(m=>(OPGRAPH.mapsA[m]||new Set()).forEach(a=>{ if(a!==op) s.add(a); }));
+    return s.size;
+  };
+  const s=new Set();
+  Object.entries(pts).forEach(([op,m])=>{
+    const ps=[...m.values()];
+    if(ps.length<3) return;
+    let d=0;
+    for(let i=0;i<ps.length;i++)for(let j=i+1;j<ps.length;j++) d=Math.max(d,distMi(ps[i],ps[j]));
+    if(d<=60&&partners(op)>=3) s.add(op);
+  });
+  return s;
+})();
+
+// maps where a can hand a car to b. Every evidenced exchange (agreement or
+// *IC* link) qualifies; presence-only maps qualify when they sit near the
+// query's corridor — Birmingham's 37th St has zero recorded evidence but
+// zero detour for Birmingham traffic — and cap at 12 when geometry is
+// unknown so ties don't win on iteration order.
+function exchangeMaps(a,b,gS,gD,direct){
+  const A=OPGRAPH.alight[a], B=OPGRAPH.board[b], out=[];
+  if(!A||!B) return out;
+  const yset=IXY[a+"|"+b];
+  A.forEach(m=>{ if(!B.has(m)) return;
+    const ic=OPGRAPH.icEv[a+">"+b+"@"+m]||0;
+    const agr=(yset&&famIds(m).some(y=>yset.has(y)))?1:0;
+    out.push([m, ic*10+agr*5]);
+  });
+  out.sort((x,y)=>y[1]-x[1]);
+  const goals=[];
+  out.forEach(([m,ev])=>{
+    if(ev>0){ goals.push(m); return; }
+    if(direct!=null){
+      const g=geoOf(m);
+      if(g){ if(distMi(gS,g)+distMi(g,gD)<=direct*1.35+80) goals.push(m); return; }
+    }
+    if(goals.length<12) goals.push(m);
+  });
+  return goals;
+}
+
+// cheapest operator sequences from any origin operator to any destination
+// operator. One interchange costs 100, +50 without agreement or *IC*
+// evidence, prohibitive for shortline pairs the agreement table disowns.
+function planPaths(srcOps,dstOps,K){
+  const dstSet=new Set(dstOps), MAXOPS=4;
+  const results=[], seenPath=new Set(), popped={};
+  const nbr={}, edgeMemo={};
+  const neighbors=a=>{
+    if(nbr[a]) return nbr[a];
+    const s=new Set();
+    (OPGRAPH.alight[a]||new Set()).forEach(m=>(OPGRAPH.mapsB[m]||new Set()).forEach(b=>{ if(b!==a) s.add(b); }));
+    return nbr[a]=[...s];
+  };
+  const edgeCost=(a,b)=>{
+    const k=a+">"+b;
+    if(k in edgeMemo) return edgeMemo[k];
+    // 60 each way keeps a terminal bridge (120) close to but never cheaper
+    // than the direct road exchange (100) — at 25 the bridge variants
+    // crowded every direct plan out of the K slots
+    if(TERMINAL.has(a)||TERMINAL.has(b)) return edgeMemo[k]=60;
+    let c=100;
+    if(!ixPartners(a,b)&&!OPGRAPH.icPair.has(a+">"+b)&&!OPGRAPH.icPair.has(b+">"+a)) c+=50;
+    if(!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))) c+=2000;
+    return edgeMemo[k]=c;
+  };
+  const pq=srcOps.map(o=>({cost:0,path:[o]}));
+  let guard=0;
+  while(pq.length&&results.length<K&&guard++<20000){
+    pq.sort((x,y)=>x.cost-y.cost);
+    const cur=pq.shift(), op=cur.path[cur.path.length-1];
+    if(dstSet.has(op)){
+      // dedupe by ROAD sequence: CSX->BHRR->BNSF and CSX->IHB->BNSF are the
+      // same railroad strategy; K slots should hold K distinct strategies,
+      // and the cheapest variant (popped first) represents each
+      const key=cur.path.filter(o=>!TERMINAL.has(o)).join(">");
+      if(!seenPath.has(key)){ seenPath.add(key); results.push(cur.path); }
+    }
+    if(cur.path.length>=MAXOPS) continue;
+    if((popped[op]=(popped[op]||0)+1)>K) continue;
+    neighbors(op).forEach(b=>{
+      if(cur.path.includes(b)) return;
+      pq.push({cost:cur.cost+edgeCost(op,b),path:cur.path.concat([b])});
+    });
+  }
+  return results;
+}
+
+// walk one plan: a staged search where stage s explores only trains of
+// plan[s], from the maps the previous stage delivered to, into the exchange
+// maps of the next hand-off (or the destination map on the last stage).
+function materialize(plan,src,dst,canCarry,seenChain,chains){
+  const dstMap=mapOf(dst), LEG_H=4, PER_MAP=3, CAP=250;
+  const gS=geoOf(src), gD=geoOf(dst);
+  const direct=(gS&&gD)?distMi(gS,gD):null;
+  let frontier=new Map([[mapOf(src),[[]]]]);
+  for(let s=0;s<plan.length;s++){
+    const op=plan[s], last=s===plan.length-1;
+    const goals=last?new Set([dstMap]):new Set(exchangeMaps(op,plan[s+1],gS,gD,direct));
+    if(!goals.size) return;
+    const ix={};
+    DATA.trains.forEach(t=>{
+      if(t.op!==op||status(t)!=="active"||!canCarry(t)) return;
+      const seen=new Set(t.wb); seen.add(t.o);
+      seen.forEach(y=>{ if(y){const m=mapOf(y);(ix[m]=ix[m]||[]).push([t,y]);} });
+    });
+    const next=new Map();
+    const addNext=(m,path)=>{ const a=next.get(m)||[]; if(a.length<PER_MAP){ a.push(path); next.set(m,a); } };
+    // one sub-search per frontier map, each with its own visit budget —
+    // a shared budget lets the busiest hand-off (usually Chicago) starve
+    // quieter gateways like Memphis of the very trains they need
+    frontier.forEach((paths,fm)=>{
+      const q=[], visits={};
+      const push=(path,depth,t,y)=>{
+        const k=t.i+"@"+y, v=visits[k]||0;
+        if(v>=3) return; visits[k]=v+1; q.push([path.concat([[t,y]]),depth]);
+      };
+      (ix[fm]||[]).forEach(([t,y])=>paths.forEach(p=>{
+        if(!p.some(e=>e[0].i===t.i)) push(p,1,t,y);
+      }));
+      for(let qi=0;qi<q.length&&qi<8000;qi++){
+        const [path,depth]=q[qi], [t,by]=path[path.length-1];
+        const drops=t.d?[t.d]:[];
+        t.wa.forEach(y=>{ if(!drops.includes(y)) drops.push(y); });
+        for(const y of drops){
+          const m=mapOf(y);
+          if(m===mapOf(by)||!orderOk(t,by,y)) continue;
+          if(goals.has(m)){
+            if(last){
+              const key=path.map(p=>p[0].i).join(">");
+              if(!seenChain.has(key)&&chains.length<CAP){ seenChain.add(key); chains.push(path); }
+            } else addNext(m,path);
+          }
+        }
+        if(depth>=LEG_H) continue;
+        for(const y of drops){
+          const m=mapOf(y);
+          if(m===mapOf(by)||!orderOk(t,by,y)) continue;
+          for(const [u,yu] of (ix[m]||[])) if(!path.some(e=>e[0].i===u.i)) push(path,depth+1,u,yu);
+        }
+      }
+    });
+    frontier=next;
+    if(!last&&!frontier.size) return;
+  }
+}
+
+function findRoutes(src,dst,carType){
+  // pool by capability: passenger, light power and non-revenue types never
+  // carry a routed car; otherwise a train qualifies when its capability set
+  // includes the selected car type ("any" = any revenue freight service)
+  const canCarry=t=>{
+    const cs=fclasses(t);
+    if(cs.includes("passenger")||cs.includes("engines")||cs.includes("nonrev")) return false;
+    if(carType==="any" || cs.includes(carType)) return true;
+    // locals, yard jobs and transfers are drayage, not line-haul service:
+    // they shuttle whatever the yardmaster hands them (a container reaches
+    // its ramp BECAUSE the transfer job exists), whatever their class says
+    return /\b(local|yard ?job|transfer|switch)\b/i.test(t.ty);
+  };
+  const srcMap=mapOf(src), dstMap=mapOf(dst);
+  if(srcMap===dstMap) return {src,dst,homeRR:null,corridors:[],total:0,truncated:false};
+  const pool=DATA.trains.filter(t=>status(t)==="active"&&canCarry(t));
+  const inPool=new Set(pool.map(t=>t.i));
+  // boarding index by physical map; entries keep the train's own yard id
+  const boardAt={};
+  pool.forEach(t=>{
+    const seen=new Set(t.wb); seen.add(t.o);
+    seen.forEach(y=>{ if(y){const k=mapOf(y);(boardAt[k]=boardAt[k]||[]).push([t,y]);} });
+  });
+  const homeCnt={};
+  pool.forEach(t=>{ if(t.o){ const k=mapOf(t.o), c=homeCnt[k]=homeCnt[k]||{}; c[t.op]=(c[t.op]||0)+1; } });
+  const homeRR=homeCnt[srcMap]?Object.entries(homeCnt[srcMap]).sort((a,b)=>b[1]-a[1])[0][0]:null;
+
+  const arriveAt=t=>{
+    if(t.d&&mapOf(t.d)===dstMap) return t.d;
+    return t.wa.find(y=>mapOf(y)===dstMap);
+  };
+  // Many different prefixes reach the same (train, boarding yard); exploring
+  // each one re-walks an identical suffix. A few per state keeps corridor
+  // variety without the exponential blowup.
+  const MAXH=5, CAP_RES=400, CAP_Q=400000, PER_STATE=4;
+  const chains=[], seenChain=new Set(), visits={};
+  let truncated=false;
+  const push=(q,path,t,y)=>{
+    const k=t.i+"@"+y, v=visits[k]||0;
+    if(v>=PER_STATE) return;
+    visits[k]=v+1; q.push(path.concat([[t,y]]));
+  };
+  const q=[];
+  (boardAt[srcMap]||[]).forEach(([t,y])=>push(q,[],t,y));
+  for(let qi=0;qi<q.length;qi++){
+    if(chains.length>=CAP_RES||q.length>CAP_Q){ truncated=true; break; }
+    const path=q[qi], last=path[path.length-1], t=last[0], by=last[1];
+    const ay=arriveAt(t);
+    if(ay!==undefined&&mapOf(by)!==dstMap&&orderOk(t,by,ay)){
+      const key=path.map(p=>p[0].i).join(">");
+      if(!seenChain.has(key)){ seenChain.add(key); chains.push(path); }
+      continue;
+    }
+    if(path.length>=MAXH) continue;
+    const used=new Set(path.map(p=>p[0].i));
+    const drops=t.d?[t.d]:[];
+    t.wa.forEach(y=>{ if(!drops.includes(y)) drops.push(y); });
+    const dmaps=new Set();
+    for(const y of drops){
+      const m=mapOf(y);
+      if(m===mapOf(by)||dmaps.has(m)||!orderOk(t,by,y)) continue;
+      dmaps.add(m);
+      for(const [u,yu] of (boardAt[m]||[])) if(!used.has(u.i)) push(q,path,u,yu);
+    }
+    for(const uid of t.icl){
+      const u=DATA.trains[uid];
+      if(u&&inPool.has(u.i)&&!used.has(u.i)) push(q,path,u,u.o);
+    }
+  }
+
+  // operator-level pass: plan cheap operator sequences (origin operators ->
+  // operators that can deliver at the destination), then materialize each
+  // with per-operator leg budgets. Adds what the flat search couldn't reach.
+  const before=chains.length;
+  const srcOps=[...(OPGRAPH.mapsB[srcMap]||[])];
+  const dstOps=[...(OPGRAPH.mapsA[dstMap]||[])];
+  const plans=planPaths(srcOps,dstOps,6);
+  plans.forEach(p=>materialize(p,src,dst,canCarry,seenChain,chains));
+  const planned=chains.length-before;
+
+  // Agreement-aware ranking: a hand-off at a known exchange point for that
+  // pair is blessed (more so for a preferred partner); an op-change involving
+  // a shortline that the agreement table says has no such partner is heavily
+  // demoted; Class I <-> Class I hand-offs have no agreement data and stay
+  // neutral. A "foreign" first leg is fine when the origin yard is an agreed
+  // exchange point for that operator (a car AT an interchange yard is exactly
+  // where a partner picks it up). Hand-offs riding a family alias (drop and
+  // pickup are different identities on one map) pay a token +3 so exact-yard
+  // chains keep their edge, and where coordinates are known a corridor pays
+  // 1pt per 25 miles it wanders beyond the direct origin->destination line.
+  // A hand-off with no coordinates is bridged over (its detour is invisible),
+  // so it pays +1: on otherwise-equal scores, verifiable geometry wins.
+  const gS=geoOf(src), gD=geoOf(dst);
+  const direct=(gS&&gD)?distMi(gS,gD):null;
+  const score=res=>{
+    const ops=res.map(p=>p[0].op);
+    let ic=0, adj=0;
+    for(let i=1;i<res.length;i++){
+      const prev=res[i-1][0], y=res[i][1];
+      if(!(prev.d===y||prev.wa.includes(y))) adj+=3;
+    }
+    // terminal roads drop out of interchange counting: NS -> BRC -> UP is
+    // ONE road interchange, judged where the car rejoins a road carrier
+    const road=res.filter(p=>!TERMINAL.has(p[0].op));
+    adj += (res.length-road.length)*10;
+    for(let i=1;i<road.length;i++){
+      const a=road[i-1][0].op, b=road[i][0].op;
+      if(a===b) continue;
+      ic++;
+      const yset=IXY[a+"|"+b], y=road[i][1];
+      if(yset&&ixHasAt(yset,y)) adj += ixPreferred(a,b)?-30:-15;
+      else if(yset) adj += 10;
+      else if(!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))) adj += 2000;
+    }
+    let geo=0;
+    if(direct!=null){
+      const pts=[gS];
+      for(let i=1;i<res.length;i++){
+        const g=geoOf(res[i][1]);
+        if(g) pts.push(g); else geo+=1;
+      }
+      pts.push(gD);
+      let d=0; for(let i=1;i<pts.length;i++) d+=distMi(pts[i-1],pts[i]);
+      geo+=Math.round(Math.max(0,d-direct)/25);
+    }
+    const first=road.length?road[0][0].op:ops[0];
+    const foreign=(homeRR&&first!==homeRR&&!opIxAt(first,src))?1:0;
+    return foreign*10000+ic*100+res.length+adj+geo;
+  };
+  const corr={};
+  chains.forEach(res=>{
+    const key=res.map(p=>p[0].op).join(",")+"|"+res.map(p=>mapOf(p[1])).join(",");
+    const cur=corr[key];
+    if(!cur) corr[key]={best:res,n:1};
+    else { cur.n++; if(score(res)<score(cur.best)) cur.best=res; }
+  });
+  const corridors=Object.values(corr).sort((a,b)=>score(a.best)-score(b.best));
+  return {src,dst,homeRR,corridors,total:chains.length,truncated,score,
+          planned,plans:plans.map(p=>p.join("→"))};
+}
+
+function renderRoutes(){
+  const R=rstate.res;
+  locbar.className="locbar";
+  countEl.innerHTML=`<b>${R.corridors.length}</b> corridor(s), ${R.total} chain(s)`;
+  wrap.innerHTML="";
+  const hd=document.createElement("div"); hd.className="rhead";
+  hd.innerHTML=`<b>${esc(locLabel(R.src))}</b> → <b>${esc(locLabel(R.dst))}</b>`+
+    ` · <b>${esc(rcartype.options[rcartype.selectedIndex].text)}</b> · `+
+    `candidate routings built only from where active trains originate, terminate and work. `+
+    `The TSARs' own instructions are quoted at each hand-off — judge them before trusting a chain.`+
+    (R.homeRR?` Home road at the origin looks like <b>${esc(R.homeRR)}</b>.`:"")+
+    (R.planned?` Operator-level planning (${R.plans.slice(0,4).map(esc).join(", ")}) added ${R.planned} deep chain(s).`:"")+
+    (R.truncated?` <span class="warn">Search hit its size cap; distant results may be incomplete.</span>`:"");
+  wrap.appendChild(hd);
+  if(!R.corridors.length){
+    const d=document.createElement("div"); d.className="empty";
+    d.innerHTML = mapOf(R.src)===mapOf(R.dst)
+      ? `Origin and destination are identities on the same interface map — `+
+        `no road train needed; the yardmaster classifies the car across.`
+      : `No chain found within 5 trains.`+
+        (rcartype.value!=="any"?`<br>Try car type “Any freight”.`:``);
+    wrap.appendChild(d); return;
+  }
+  R.corridors.slice(0,30).forEach(c=>wrap.appendChild(corridorCard(c)));
+  if(R.corridors.length>30){
+    const d=document.createElement("div"); d.className="rhead";
+    d.textContent=`…and ${R.corridors.length-30} more corridor(s) not shown.`;
+    wrap.appendChild(d);
+  }
+}
+
+function corridorCard(c){
+  const R=rstate.res, res=c.best, ops=res.map(p=>p[0].op);
+  const dstMap=mapOf(R.dst);
+  const roadOps=res.filter(p=>!TERMINAL.has(p[0].op)).map(p=>p[0].op);
+  let ic=0; for(let i=1;i<roadOps.length;i++) if(roadOps[i]!==roadOps[i-1]) ic++;
+  const firstRoad=roadOps[0]||ops[0];
+  const el=document.createElement("div"); el.className="corr";
+  const h=document.createElement("div"); h.className="chead";
+  h.innerHTML=`<b>${res.length} train${res.length>1?"s":""}</b> · ${ic} interchange${ic===1?"":"s"}`+
+    (c.n>1?` · ${c.n} variants`:"")+
+    ((R.homeRR&&firstRoad!==R.homeRR&&!opIxAt(firstRoad,R.src))
+      ?` · <span class="warn">starts on a foreign road</span>`:"");
+  el.appendChild(h);
+  let lastRoad=null;
+  res.forEach((p,i)=>{
+    const t=p[0], by=p[1];
+    const ay=i===res.length-1
+      ?((t.d&&mapOf(t.d)===dstMap)?t.d:(t.wa.find(y=>mapOf(y)===dstMap)||R.dst))
+      :res[i+1][1];
+    if(i>0&&t.op!==res[i-1][0].op){
+      const nl=document.createElement("div");
+      if(TERMINAL.has(t.op)){
+        nl.className="legnote";
+        nl.textContent=`⇄ ${t.op} terminal transfer — metro switching, not a road interchange`;
+        el.appendChild(nl);
+      } else {
+        // judge the road-to-road exchange, looking across any terminal legs
+        const a=lastRoad, b=t.op, yset=a?IXY[a+"|"+b]:null;
+        if(a&&a!==b){
+          if(yset&&ixHasAt(yset,by)){
+            nl.className="legnote ok";
+            nl.textContent=`✓ ${a}–${b} exchange point`+(ixPreferred(a,b)?" (preferred partner)":"");
+            el.appendChild(nl);
+          } else if(!yset&&!ixPartners(a,b)&&(SLOPS.has(a)||SLOPS.has(b))){
+            nl.className="legnote bad";
+            nl.textContent=`⚠ no agreement between ${a} and ${b} in the interchange data`;
+            el.appendChild(nl);
+          }
+        }
+      }
+    }
+    if(!TERMINAL.has(t.op)) lastRoad=t.op;
+    if(i>0){
+      const prev=res[i-1][0];
+      const pd=(prev.d?[prev.d]:[]).concat(prev.wa);
+      if(!pd.includes(by)&&pd.some(y=>mapOf(y)===mapOf(by))&&FAM[by]){
+        const nl=document.createElement("div"); nl.className="legnote";
+        nl.textContent=`⇄ same-map hand-off — drop and pickup are different `+
+          `identities on the ${locLabel(FAM[by].mo)} map`;
+        el.appendChild(nl);
+      }
+    }
+    const leg=document.createElement("div"); leg.className="leg";
+    leg.innerHTML=
+      `<span class="chev">▸</span>`+
+      `<span class="rr" style="background:${rrColor(t.rr)}">${esc(t.op)}</span>`+
+      `<span class="ssym">${esc(t.fs)}</span>`+
+      `<span class="lty">${esc(t.ty)}</span>`+
+      `<span class="lod">${esc(locLabel(by))} → ${esc(locLabel(ay))}</span>`;
+    el.appendChild(leg);
+    if(i===res.length-1&&ay!==R.dst&&mapOf(ay)===dstMap){
+      const nl=document.createElement("div"); nl.className="legnote ok";
+      nl.textContent=`✓ ${locLabel(ay)} shares its map with ${locLabel(R.dst)}`;
+      el.appendChild(nl);
+    }
+    const notes=[];
+    [by,ay].forEach(y=>famIds(y).forEach(fy=>(t.wn[fy]||[]).forEach(n=>notes.push([fy,n]))));
+    notes.forEach(([y,n])=>{
+      const nl=document.createElement("div"); nl.className="legnote";
+      nl.innerHTML=`@ ${esc(locLabel(y))}: <span class="txt">${esc(n)}</span>`;
+      el.appendChild(nl);
+    });
+    let cardEl=null;
+    leg.onclick=()=>{
+      if(cardEl){ cardEl.remove(); cardEl=null; return; }
+      cardEl=card(t); openCard(cardEl,t,true); leg.after(cardEl);
+    };
+  });
+  return el;
+}
 
 // ---- last-update banner ----
 // DATA.upd is stamped by the build only when a TSAR update actually changed
