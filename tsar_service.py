@@ -3050,8 +3050,12 @@ function wireJoin(el,L){
 // "DisplaySetups" lines are per-operator views of the slots; a car is only
 // matched against the view the yard's own operator uses. Names are personal
 // shorthand and never used for matching.
-const RR_IDS={"505":"CPKC","511":"UP","533":"CN","683":"IATR",      // proven from "ic to X" sorts
-              "503":"CSX?","509":"NS?","518":"BNSF?"};              // provisional, from sort labels
+// Proven 2026-09-11 by a scratch sort ticked in picker order (Coalhurst
+// 3957): the game's railroad table starts 518 533 505 503 509 511 = BNSF CN
+// CPKC CSXT NS UP; railroad_ids.csv holds every id's picker position and
+// fills in marks as the picker list is transcribed. IATR from an "ic to
+// IATR" sort.
+const RR_IDS={"518":"BNSF","533":"CN","505":"CPKC","503":"CSX","509":"NS","511":"UP","683":"IATR"};
 function parseSorts(namText,setText){
   const names=namText.split(/\r?\n/).slice(1);
   const lines=setText.split(/\r?\n/), S={groups:{},slots:{}};
