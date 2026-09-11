@@ -99,16 +99,25 @@ following, all parsed in JS inside `HTML_TEMPLATE` (section "player folder"):
   Assigned yards are auto-added to favorites. The file enumerates every
   map id the game knows, so diffing it against `locations.csv` is the
   new-id alarm.
-- `FYMLocoCars6.ini` — `TypeID=` / `Name=` blocks, the car type names.
+- `FYMLocoCars6.ini` — `TypeID=` / `Name=` blocks, the car type names, and
+  `[Engine Models]` rows `EM<n>,<model>,…` for locomotives. (Its
+  `[Railroads]` section is `RailroadID=n` / `Mark=`; the sort files'
+  railroad tokens are `n + 499` — see `railroad_ids.csv` notes.)
 - `yards/<id>.wag` — the yard's inventory: `[TrainNumber=n]` cut blocks
   (`TrainName=`, `TrainCreator=`) each followed by `[CarID=n]` car blocks
-  (`CarName=`, `TypeID=`, `TypeGroup=` F/E, `DestinationID=` where field
+  (`CarName=`, `TypeID=` — first colon field only; cabooses (`TypeGroup=C`)
+  and engines append three `&H` paint colours — `TypeGroup=` F car / C
+  caboose / `E:0:0:0:<engine model>:<n>` locomotive, `DestinationID=` where field
   1 is the next yard (id 1000 = "unassigned", a word, never a link),
   `IsLoaded=` 7 loaded / 6 empty, then `StartHistory`
   rows `yard#code#mm/dd/yyyy#train#player#n`; codes 10 arrived, 20
   departed, 40 loaded, 41 unloaded, 30/50/60 service and shop, 00 created).
   `parseWag` must reproduce the Python-derived figures for Fostoria 1091
   (714 cars, 46 cuts, 303 loaded, 385 empty, 194 staying, 107 idle > 1 y).
+
+Locomotives are their own area at the top of the yard view (model from
+`[Engine Models]`), never sorted, joined to a train, or grouped by cut or
+destination; the header's car count excludes them.
 
 **Car-to-train join** (`yardJoin` in the same section): for each car's
 destination, the active trains that board at this yard (originate or

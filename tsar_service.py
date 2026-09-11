@@ -2819,7 +2819,7 @@ loadFavs(); paintFavs();
 const STALE_DAYS=365;
 const UNASSIGNED="1000";   // the game's "no destination yet" id — not a place
 const GAME={kind:null, root:null, files:null, stored:null, my:new Set(), visited:new Set(),
-            types:{}, parent:{}, states:{}, stateId:{}, wags:{}, saved:{}};
+            types:{}, parent:{}, models:{}, states:{}, stateId:{}, wags:{}, saved:{}};
 const HAS_PICKER=!!window.showDirectoryPicker;
 const gamebtn=document.getElementById("gamebtn"), gameoff=document.getElementById("gameoff"),
       gamedir=document.getElementById("gamedir"), gamenote=document.getElementById("gamenote");
@@ -2890,8 +2890,12 @@ function parseWag(text){
       const eq=l.indexOf("="); if(eq<0) continue;
       const k=l.slice(0,eq), v=l.slice(eq+1);
       if(k==="CarName") car.name=v;
-      else if(k==="TypeID") car.tid=v;
-      else if(k==="TypeGroup") car.grp=v.split(":")[0];
+      // cabooses (C) and engines (E) append their paint as "&H" colours:
+      // "TypeID=3:&HC82824:&HFFFFFF:&HFFFFFF"; the type id is the first field
+      else if(k==="TypeID") car.tid=v.split(":")[0];
+      // engines: "TypeGroup=E:0:0:0:<engine model>:<n>", model = EM<n> in
+      // FYMLocoCars6.ini [Engine Models]
+      else if(k==="TypeGroup"){ const g=v.split(":"); car.grp=g[0]; if(g[0]==="E") car.model=g[4]||""; }
       else if(k==="DestinationID"){ const d=v.split(":"); car.dest=d[0]||""; car.ind=d[2]||""; car.dest2=d[10]||""; }
       else if(k==="IsLoaded") car.loaded=v;
       else if(k==="Originator") car.orig=v;
@@ -2937,6 +2941,7 @@ async function loadGame(){
       if(l.startsWith("TypeID=")) id=l.slice(7).trim();
       else if(l.startsWith("ParentTypeID=")&&id) GAME.parent[id]=l.slice(13).trim();
       else if(l.startsWith("Name=")&&id) GAME.types[id]=l.slice(5).trim();
+      else if(/^EM\d+,/.test(l)){ const f=l.split(","); GAME.models[f[0].slice(2)]=f[1].trim(); }
     });
   }catch(e){}
   try{ GAME.visited=new Set((await gameList("yards")).filter(n=>n.endsWith(".wag")).map(n=>n.slice(0,-4))); }
@@ -2956,7 +2961,7 @@ async function loadGame(){
 }
 async function disconnectGame(){
   await idbDel("game");
-  Object.assign(GAME,{kind:null,root:null,files:null,stored:null,my:new Set(),visited:new Set(),types:{},parent:{},states:{},stateId:{},wags:{},saved:{}});
+  Object.assign(GAME,{kind:null,root:null,files:null,stored:null,my:new Set(),visited:new Set(),types:{},parent:{},models:{},states:{},stateId:{},wags:{},saved:{}});
   if(state.view==="myyard") state.view="cards";
   paintGameBtn(); render();
 }
@@ -3209,7 +3214,7 @@ function yardSorts(w,L){
   }
   const group=S.groups[chosen];
   const perCar=new Map(); const bySlot={};
-  w.cars.forEach(c=>{ const b=sortFor(S,group,c); if(b){ perCar.set(c,b); (bySlot[b.k]=bySlot[b.k]||[]).push(c); } });
+  w.cars.forEach(c=>{ if(c.grp==="E") return; const b=sortFor(S,group,c); if(b){ perCar.set(c,b); (bySlot[b.k]=bySlot[b.k]||[]).push(c); } });
   const Lm=mapOf(L);
   const atL=DATA.trains.filter(t=>status(t)==="active"&&(mapOf(t.o)===Lm||t.wb.some(y=>mapOf(y)===Lm)));
   const trains={}; Object.keys(bySlot).forEach(k=>{ trains[k]=sortTrains(S.slots[k],L,atL); });
@@ -3222,16 +3227,17 @@ let yardGroup="sort", yardOrder="file";
 function sortRank(SV,c){ const b=SV&&SV.perCar.get(c); return b?SV.group.indexOf(b.k):Infinity; }
 function carRow(c,L){
   const w=GAME.wags[L], SV=w.sortView, b=SV&&SV.perCar.get(c), sl=b&&w.sorts.slots[b.k];
-  const swatch=sl&&sl.color?`<span class="yswatch" style="background:${sl.color}" title="${esc(cleanSortName(sl.name))}"></span>`
+  const eng=c.grp==="E";
+  const swatch=eng?`<span></span>`:sl&&sl.color?`<span class="yswatch" style="background:${sl.color}" title="${esc(cleanSortName(sl.name))}"></span>`
     :`<span class="yswatch none" title="${sl?"sort has no colour":"no sort matches"}"></span>`;
-  const lb=c.loaded==="7"?["L","loaded","ld-loaded"]:c.loaded==="6"?["E","empty","ld-empty"]:["·","load state "+c.loaded,"ld-other"];
+  const lb=eng?["·","locomotive","ld-other"]:c.loaded==="7"?["L","loaded","ld-loaded"]:c.loaded==="6"?["E","empty","ld-empty"]:["·","load state "+c.loaded,"ld-other"];
   const stale=c.dwell!==null&&c.dwell>STALE_DAYS;
   const dest=!c.dest?"":c.dest===L?`<span class="dim">here</span>`
     :c.dest===UNASSIGNED?`<span class="dim">unassigned</span>`
     :`<button class="odlink" data-loc="${c.dest}">${esc(locLabel(c.dest))}</button>`;
-  const type=c.grp==="E"?"Locomotive":(GAME.types[c.tid]||"#"+c.tid);
+  const type=eng?(GAME.models[c.model]||"Locomotive"):(GAME.types[c.tid]||"#"+c.tid);
   const tip=c.last?`${c.last.date} ${EV[c.last.code]||"event "+c.last.code}${c.last.train&&c.last.train!=="^"?" · "+c.last.train:""}`:"no dated history";
-  const hits=(c.dest&&c.dest!==L&&c.dest!==UNASSIGNED)?GAME.wags[L].join.forCar(c):null;
+  const hits=(!eng&&c.dest&&c.dest!==L&&c.dest!==UNASSIGNED)?GAME.wags[L].join.forCar(c):null;
   let via=!hits?"":hits.length?trainChip(hits[0])+(hits.length>1?`<span class="dim"> +${hits.length-1}</span>`:""):"";
   if(hits&&!hits.length){
     const SV=GAME.wags[L].sortView, b=SV&&SV.perCar.get(c), st=b&&SV.trains[b.k];
@@ -3248,15 +3254,17 @@ function yardPanel(L){
   let h=`<h4>${GAME.my.has(L)?"My yard":"Visited yard"} <span class="dim">· ${esc(locLabel(L))}</span></h4>`;
   if(!w.ok){ el.innerHTML=h+`<div class="drow dim">Could not read this yard's inventory (${esc(w.error||"unrecognised .wag format")}).</div>`; return el; }
   const J=yardJoin(w,L);
+  // locomotives sit in their own area: never sorted, never joined to a train
+  const engines=w.cars.filter(c=>c.grp==="E"), cars=w.cars.filter(c=>c.grp!=="E");
   let direct=0, none=0;
-  w.cars.forEach(c=>{ const hs=(c.dest&&c.dest!==L&&c.dest!==UNASSIGNED)?J.forCar(c):null; if(hs){ if(hs.length) direct++; else none++; } });
+  cars.forEach(c=>{ const hs=(c.dest&&c.dest!==L&&c.dest!==UNASSIGNED)?J.forCar(c):null; if(hs){ if(hs.length) direct++; else none++; } });
   const SV=yardSorts(w,L);
   if(yardGroup==="sort"&&!SV) yardGroup="dest";
-  h+=`<div class="drow">${w.cars.length} cars in ${w.cuts.length} cuts · <b>${w.loaded}</b> loaded / <b>${w.empty}</b> empty`+
+  h+=`<div class="drow">${cars.length} cars${engines.length?` and ${engines.length} locomotive${engines.length===1?"":"s"}`:""} in ${w.cuts.length} cuts · <b>${w.loaded}</b> loaded / <b>${w.empty}</b> empty`+
     (w.stale?` · <span class="stale">${w.stale} idle over a year</span>`:"")+(w.saved?` · saved ${fmtDate(w.saved)}`:"")+
     `</div><div class="drow dim"><b>${direct}</b> outbound cars have a direct train from here · `+
     `<b class="${none?"stale":""}">${none}</b> need a connection (★ = this yard's instructions name the destination)`+
-    (SV?` · <b>${SV.perCar.size}</b> of ${w.cars.length} cars fall into ${Object.keys(SV.bySlot).length} of your sorts`:` · no sort files for this yard`)+
+    (SV?` · <b>${SV.perCar.size}</b> of ${cars.length} cars fall into ${Object.keys(SV.bySlot).length} of your sorts`:` · no sort files for this yard`)+
     ` <label class="dim" style="margin-left:12px">group by <select class="inp" id="ygroup" style="padding:4px 8px;min-width:0">`+
     (SV?`<option value="sort"${yardGroup==="sort"?" selected":""}>sort</option>`:"")+
     `<option value="cut"${yardGroup==="cut"?" selected":""}>cut</option><option value="dest"${yardGroup==="dest"?" selected":""}>destination</option></select></label>`+
@@ -3268,15 +3276,19 @@ function yardPanel(L){
   if(yardGroup==="sort"){
     const S=w.sorts;
     groups=SV.group.filter(k=>SV.bySlot[k]).map(k=>{ const sl=S.slots[k]; return {title:cleanSortName(sl.name), sub:sortDef(sl), slot:k, cars:SV.bySlot[k]}; });
-    const unsorted=w.cars.filter(c=>!SV.perCar.has(c));
+    const unsorted=cars.filter(c=>!SV.perCar.has(c));
     if(unsorted.length) groups.push({title:"no sort matches", sub:"", cars:unsorted, nosort:true});
   }
-  else if(yardGroup==="cut") groups=w.cuts.map(c=>({title:c.name||"(unnamed cut)", sub:c.creator?"built by "+c.creator:"", cars:c.cars}));
+  else if(yardGroup==="cut") groups=w.cuts.map(c=>({title:c.name||"(unnamed cut)", sub:c.creator?"built by "+c.creator:"", cars:c.cars.filter(c=>c.grp!=="E")})).filter(g=>g.cars.length);
   else {
-    const m={}; w.cars.forEach(c=>{ (m[c.dest]=m[c.dest]||[]).push(c); });
+    const m={}; cars.forEach(c=>{ (m[c.dest]=m[c.dest]||[]).push(c); });
     groups=Object.keys(m).sort((a,b)=>m[b].length-m[a].length).map(d=>({
       title:d===L?"staying here":d===UNASSIGNED?"unassigned":locLabel(d),
       dest:(d!==L&&d!==UNASSIGNED)?d:"", cars:m[d]}));
+  }
+  if(engines.length){
+    const models={}; engines.forEach(c=>{ const m=GAME.models[c.model]||"Locomotive"; models[m]=(models[m]||0)+1; });
+    groups.unshift({title:"Locomotives", sub:Object.keys(models).sort().map(m=>models[m]>1?models[m]+"× "+m:m).join(", "), cars:engines, loco:true});
   }
   // within each group, cars in the yard's own sort order (screen order of
   // the sorts; unsorted cars last); a stable sort keeps file order for ties
@@ -3302,7 +3314,7 @@ function yardPanel(L){
     }).join(" ");
   };
   h+=groups.map(g=>`<h5 class="ygh">${g.dest?`<button class="sib" data-loc="${g.dest}">${esc(g.title)}</button>`:esc(g.title)}`+
-    `<span class="dim">${g.cars.length} car${g.cars.length===1?"":"s"}${g.sub&&!g.slot?" · "+esc(g.sub):""}</span>${groupTrains(g)}</h5>`+
+    `<span class="dim">${g.cars.length} ${g.loco?"locomotive":"car"}${g.cars.length===1?"":"s"}${g.sub&&!g.slot?" · "+esc(g.sub):""}</span>${groupTrains(g)}</h5>`+
     (g.slot?`<div class="ydef">${esc(g.sub)}</div>`:"")+
     g.cars.map(c=>carRow(c,L)).join("")).join("");
   el.innerHTML=h;
