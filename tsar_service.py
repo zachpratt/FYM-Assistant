@@ -756,6 +756,7 @@ def dump_payload(payload):
            '"ix":[', ',\n'.join(j(r) for r in payload.get('ix', [])), '],',
            '"mims":[', ',\n'.join(j(f) for f in payload.get('mims', [])), '],',
            '"geo":[', ',\n'.join(j(g) for g in payload.get('geo', [])), '],',
+           '"rrids":' + j(payload.get('rrids', {})) + ',',
            '"trains":[', ',\n'.join(j(t) for t in payload['trains']), ']}']
     # '/' only ever occurs inside a JSON string, so this cannot corrupt the
     # structure — it just stops a note containing "</script>" from ending the
@@ -987,6 +988,30 @@ def load_mims(path, names, anom):
 # ---------------------------------------------------------------------------
 
 GEO_PATH = 'geo.csv'
+RRIDS_PATH = 'railroad_ids.csv'
+
+
+def load_rrids(path, anom):
+    """railroad_ids.csv -> {game railroad id: reporting mark}.
+
+    The game's sort files name railroads by an internal id (500..~818) that
+    exists in no readable game file. The table was recovered on 2026-09-11
+    by ticking every railroad, in picker order, into a scratch sort (the .set
+    keeps tick order) and transcribing the picker; see railroad_ids.csv.
+    CSXT is the game's mark for CSX."""
+    out = {}
+    if not path or not os.path.isfile(path):
+        return out
+    with open(path, encoding='utf-8', newline='') as fh:
+        for row in csv.reader(fh):
+            if not row or row[0] == 'id':
+                continue
+            if len(row) < 3 or not row[0].isdigit():
+                anom.append(('railroad_ids', f'malformed row {row!r}'))
+                continue
+            if row[2]:
+                out[row[0]] = 'CSX' if row[2] == 'CSXT' else row[2]
+    return out
 
 
 def load_geo(path, names, anom):
@@ -1068,6 +1093,9 @@ def build(files, out, title, loc_path, use_cache=True, subset=False):
     payload['geo'] = load_geo(GEO_PATH, names, anom)
     if payload['geo']:
         print(f"  geography: {len(payload['geo'])} located identities")
+    payload['rrids'] = load_rrids(RRIDS_PATH, anom)
+    if payload['rrids']:
+        print(f"  railroad ids: {len(payload['rrids'])} named")
 
     report_path = os.path.join(os.path.dirname(os.path.abspath(out)), REPORT_NAME)
     old = None
@@ -3050,12 +3078,10 @@ function wireJoin(el,L){
 // "DisplaySetups" lines are per-operator views of the slots; a car is only
 // matched against the view the yard's own operator uses. Names are personal
 // shorthand and never used for matching.
-// Proven 2026-09-11 by a scratch sort ticked in picker order (Coalhurst
-// 3957): the game's railroad table starts 518 533 505 503 509 511 = BNSF CN
-// CPKC CSXT NS UP; railroad_ids.csv holds every id's picker position and
-// fills in marks as the picker list is transcribed. IATR from an "ic to
-// IATR" sort.
-const RR_IDS={"518":"BNSF","533":"CN","505":"CPKC","503":"CSX","509":"NS","511":"UP","683":"IATR"};
+// The game's railroad id -> reporting mark table, baked from railroad_ids.csv
+// (recovered 2026-09-11: a scratch sort ticked in picker order keeps tick
+// order in the .set, and the picker is alphabetical by mark, Class I first).
+const RR_IDS=DATA.rrids||{};
 function parseSorts(namText,setText){
   const names=namText.split(/\r?\n/).slice(1);
   const lines=setText.split(/\r?\n/), S={groups:{},slots:{}};
@@ -3116,7 +3142,7 @@ function sortFor(S,group,c){
     if(c.dest&&sl.inds.has(c.dest+"#"+c.ind)) pri=0;
     else if(c.dest&&sl.ids.has(c.dest)) pri=1;
     else if(c.dest&&c.dest!==UNASSIGNED&&sl.states.has(stateOf(c.dest))) pri=2;
-    else if(c.dest&&c.dest!==UNASSIGNED&&sl.rr.some(([r,st])=>{ const m=RR_IDS[r]; return m&&roadsAt(c.dest).has(m.replace("?",""))&&(st==="0"||st===stateOf(c.dest)); })) pri=3;
+    else if(c.dest&&c.dest!==UNASSIGNED&&sl.rr.some(([r,st])=>{ const m=RR_IDS[r]; return m&&roadsAt(c.dest).has(m)&&(st==="0"||st===stateOf(c.dest)); })) pri=3;
     else if(sl.flags.has("62")) pri=4;
     if(pri!==null&&(best===null||pri<best.pri||(pri===best.pri&&order<best.order))) best={pri,order,k};
   });
@@ -3140,7 +3166,7 @@ function sortTrains(sl,L,atL){
     const stHits=new Set(ends.map(stateOf).filter(x=>x&&sl.states.has(x)));
     if(stHits.size){ sc+=stHits.size; why.push("ends in "+[...stHits].map(x=>GAME.states[x]).join(" ")); }
     const op=t.op||t.rr;
-    sl.rr.forEach(([r,st])=>{ const m=(RR_IDS[r]||"").replace("?",""); if(m&&m===op&&(st==="0"||ends.some(y=>stateOf(y)===st))){ sc+=2; why.push(m+" train"); } });
+    sl.rr.forEach(([r,st])=>{ const m=RR_IDS[r]; if(m&&m===op&&(st==="0"||ends.some(y=>stateOf(y)===st))){ sc+=2; why.push(m+" train"); } });
     return {t,sc,why:why.join(", ")};
   }).filter(x=>x.sc>0).sort((a,b)=>b.sc-a.sc||(a.t.fs<b.t.fs?-1:1));
   const seen=new Set(), uniq=scored.filter(x=>{ const k=x.t.rr+"|"+x.t.fs; if(seen.has(k)) return false; seen.add(k); return true; });

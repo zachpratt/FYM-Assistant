@@ -26,3 +26,7 @@ sample_yard_data/
 # Community-made state connection diagrams (Robert Verheus). Reference
 # material for transcription, not ours to redistribute.
 connections/
+
+# Screenshots of the game's railroad picker, used once to transcribe railroad_ids.csv.
+# Game UI, not ours to redistribute.
+Railroad_screenshots/

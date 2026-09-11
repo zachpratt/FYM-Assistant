@@ -138,9 +138,12 @@ above everything on screen. The `DisplaySetups` list is the on-screen
 order top to bottom. The view is the named display carrying the yard's
 dominant operator, else "all sorts" (slot order), overridable per yard.
 Railroad ids are the game's own table (500..~818, not the Shortline
-roster's `_id`, not alphabetical); `.set` stores railroads in the order
-they were ticked, so a scratch sort ticked in picker order yields the
-id→mark table (pending Zach). A sort's
+roster's `_id`, not alphabetical). RECOVERED 2026-09-11: `.set` stores
+railroads in tick order, Zach ticked the whole picker (alphabetical by
+mark, Class I first) into a scratch sort, and the picker was transcribed
+from screenshots → `railroad_ids.csv` (247 rows, committed; the build
+bakes it in as `DATA.rrids`, CSXT→CSX). Anchors check out: 683 IATR, 545
+BRC, 535 NOPB, 532 CFE. Re-derive only if the game adds railroads. A sort's
 trains are scored by token coverage over trains boarding here; same-map
 sibling ids (Payne on the Fostoria map) match by exact id. Industry-only
 sorts are local spots, not blocks.
