@@ -2,8 +2,13 @@
 __pycache__/
 *.pyc
 
-# The game's roster files are not ours to redistribute. They live here locally
-# as the drop-in folder for updates, but are never committed.
+# Mirror of the Dropbox game folder written by game_sync.py (rosters, map
+# bundles, trains, car inventories). The game's data, never committed here;
+# it carries its OWN private git repo so successive syncs can be diffed.
+game_data/
+
+# Legacy hand-copied drop-in folder for rosters (pre game_sync.py). Not ours
+# to redistribute, never committed.
 TSARs/
 
 # Game screenshots used to transcribe the map-ID -> name table into

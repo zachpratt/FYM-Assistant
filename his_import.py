@@ -12,7 +12,8 @@ Only structural facts are extracted. Descriptions, author names, version
 history and the YM (yardmaster) field are deliberately left behind: Zach is
 holding off on republishing the map authors' prose and personal fields.
 
-Usage:  python3 his_import.py <folder-of-his-files>  [-o geo.csv]
+Usage:  python3 his_import.py [folder-of-his-files]  [-o geo.csv]
+        (default folder: game_data/yards, the mirror written by game_sync.py)
 """
 import argparse
 import csv
@@ -66,7 +67,9 @@ def parse_his(path):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument('folder', help='folder containing <id>.his files')
+    ap.add_argument('folder', nargs='?', default=os.path.join('game_data', 'yards'),
+                    help='folder containing <id>.his files (default: game_data/yards, '
+                         'the Dropbox mirror written by game_sync.py)')
     ap.add_argument('-l', '--locations', default='locations.csv')
     ap.add_argument('-o', '--out', default='geo.csv')
     a = ap.parse_args()
@@ -81,7 +84,7 @@ def main():
     files = sorted(glob.glob(os.path.join(a.folder, '*.his')),
                    key=lambda p: int(os.path.basename(p).split('.')[0]))
     if not files:
-        raise SystemExit(f'no .his files in {a.folder}')
+        raise SystemExit(f'no .his files in {a.folder} (run `make sync` first, or pass a folder)')
 
     def sane(lat, lon):
         return 14 < lat < 72 and -170 < lon < -50    # North America incl. AK/MX

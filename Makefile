@@ -1,6 +1,13 @@
-.PHONY: site check clean
+.PHONY: site check serve clean sync update
 
-# Rebuild docs/index.html from whatever is currently in TSARs/.
+# Mirror the Dropbox game folder into game_data/ and snapshot it (see game_sync.py).
+sync:
+	python3 game_sync.py
+
+# The update loop in one go: sync, then a strict rebuild.
+update: sync check
+
+# Rebuild docs/index.html from game_data/TSARs (or the legacy TSARs/ folder).
 site:
 	python3 tsar_service.py
 

@@ -17,7 +17,8 @@ Rules, validated against the complete 920-map corpus (2026-07-30):
     a small box is a virtual destination ('vid')
   - known map-author mislabelings are excluded outright (EXCLUDED below)
 
-Usage:  python3 mim_import.py <folder-of-yrd-files>  [-o mims.csv]
+Usage:  python3 mim_import.py [folder-of-yrd-files]  [-o mims.csv]
+        (default folder: game_data/yards, the mirror written by game_sync.py)
 
 The .yrd inputs are the game's data and are never committed; this script's
 output, mims.csv, is (same split as TSARs/ vs locations.csv). Map updates
@@ -85,14 +86,16 @@ def parse_yrd(path):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument('folder', help='folder containing <id>.yrd files')
+    ap.add_argument('folder', nargs='?', default=os.path.join('game_data', 'yards'),
+                    help='folder containing <id>.yrd files (default: game_data/yards, '
+                         'the Dropbox mirror written by game_sync.py)')
     ap.add_argument('-o', '--out', default='mims.csv')
     a = ap.parse_args()
 
     files = sorted(glob.glob(os.path.join(a.folder, '*.yrd')),
                    key=lambda p: int(os.path.basename(p).split('.')[0]))
     if not files:
-        raise SystemExit(f'no .yrd files in {a.folder}')
+        raise SystemExit(f'no .yrd files in {a.folder} (run `make sync` first, or pass a folder)')
 
     mothers = {os.path.basename(p).split('.')[0] for p in files}
     claims = {}

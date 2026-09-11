@@ -12,14 +12,21 @@ time, no dependencies. You can also just open `docs/index.html` locally.
 ## Updating after the game publishes new TSARs
 
 ```
-1. drop the new TSAR_*.ini files into TSARs/   (replacing the old ones)
-2. make site
-3. git commit -am "TSAR update" && git push
+1. make update          # mirror the Dropbox game folder, then a strict rebuild
+2. git commit -am "TSAR update" && git push
 ```
 
 GitHub Pages republishes from `docs/` on `main` within about a minute.
 
-Step 2 takes well under a second and prints two things worth reading before you
+`make update` is `make sync` (`game_sync.py`: rsync the useful, non-image part
+of the game folder into `game_data/` and commit a snapshot into a private git
+repo inside it, so `git -C game_data log --stat` shows what the game changed)
+followed by `make check`. The game folder defaults to
+`~/Dropbox/Freight Yard Manager`; set `FYM_GAME_DIR` on a machine where it
+lives elsewhere. Without a game folder you can still drop `TSAR_*.ini` files
+into `TSARs/` and run `make site`.
+
+The build step takes well under a second and prints two things worth reading before you
 commit — what changed since the last build, and anything about the file format it
 did not recognise:
 
@@ -64,17 +71,19 @@ rebuild. Adding a row for an id that the notes never mention works too.
 ## Layout
 
 ```
-TSARs/            the game's TSAR_<RAILROAD>.ini files (input, not committed)
+game_data/        mirror of the game folder written by game_sync.py (input, not committed)
+TSARs/            legacy drop-in folder for TSAR_<RAILROAD>.ini files (input, not committed)
+game_sync.py      rsync + snapshot of the Dropbox game folder
 tsar_service.py   the interpreter and site generator
 locations.csv     accumulated location names, hand-editable
 docs/index.html   the generated site (what GitHub Pages serves)
 docs/build-report.json   per-build stats, used to diff the next build
 ```
 
-`TSARs/` is gitignored — the game's roster files aren't ours to redistribute, so
-this repo holds the interpreter and the generated site but not the source data.
-Put your own copies of the `.ini` files in `TSARs/` and `make site` will build
-from them.
+`game_data/` and `TSARs/` are gitignored — the game's files aren't ours to
+redistribute, so this repo holds the interpreter and the generated site but not
+the source data. Put your own copies of the `.ini` files in `TSARs/` and
+`make site` will build from them.
 
 ## Notes on the file format
 

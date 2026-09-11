@@ -13,7 +13,9 @@ from `docs/` on `main` (https://zachpratt.github.io/FYM-Assistant/), so
 ## Commands
 
 ```
-make site      # rebuild docs/index.html from TSARs/  (~0.2s)
+make sync      # mirror ~/Dropbox/Freight Yard Manager into game_data/ + snapshot commit
+make update    # sync, then check
+make site      # rebuild docs/index.html from game_data/TSARs (else TSARs/)  (~0.2s)
 make check     # same build, exits non-zero on unrecognised input (--strict)
 make serve     # build + serve at localhost:8000 (Chrome blocks file://)
 ```
@@ -21,10 +23,13 @@ make serve     # build + serve at localhost:8000 (Chrome blocks file://)
 `python3 tsar_service.py --help` for the full CLI (`--only UP,BNSF` builds a
 subset; positional file args work too).
 
-The TSAR update loop: replace files in `TSARs/` → `make site` → read the two
-printed blocks (roster diff vs previous build, format-check anomalies) →
-commit → push. The diff is what catches a truncated download; the anomaly pass
-is what catches the game changing its format.
+The TSAR update loop: `make update` (game_sync.py rsyncs the game folder into
+`game_data/`, commits a snapshot in game_data's own private git repo, then
+builds strict) → read the printed blocks (what the sync changed, roster diff vs
+previous build, format-check anomalies) → commit → push. `git -C game_data
+log --stat` / `diff` is the history of the game folder itself. The roster diff
+is what catches a truncated download; the anomaly pass is what catches the
+game changing its format.
 
 ## Architecture
 
@@ -80,9 +85,12 @@ build diffs against it.
 
 ## Repo boundaries
 
-- `TSARs/` and `sample_yard_data/` are **gitignored deliberately** — the
-  game's data, not ours to redistribute. TSARs/ must exist locally to build.
-  Never commit them or work around the ignore.
+- `game_data/` (the Dropbox mirror; TSARs/, yards/, trains/, …) plus the
+  legacy `TSARs/` and `sample_yard_data/` drop-in folders are **gitignored
+  deliberately** — the game's data, not ours to redistribute. Never commit
+  them or work around the ignore. `game_data/` has its own nested git repo;
+  never push it anywhere. Folder discovery skips `TSAR_Tutorial.ini` and
+  `TSAR_KCS.ini` (placeholder roster), and game_sync.py excludes both.
 - `docs/`, `locations.csv` and `mims.csv` are **committed deliberately**
   (Pages serves `docs/`; the name store and the MIM-family table must persist
   across updates). Don't gitignore them. `mims.csv` is derived from the

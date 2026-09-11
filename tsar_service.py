@@ -22,11 +22,11 @@ change to the game's format gets noticed rather than silently shipped.
 
 USAGE
 -----
-    python tsar_service.py                       # reads ./TSARs, writes docs/index.html
+    python tsar_service.py                       # reads game_data/TSARs (else ./TSARs), writes docs/index.html
     python tsar_service.py -f TSARs -o docs/index.html
     python tsar_service.py TSARs/TSAR_UP.ini TSARs/TSAR_BNSF.ini
 
-    -f, --folder DIR      Folder of TSAR_*.ini files   (default: ./TSARs)
+    -f, --folder DIR      Folder of TSAR_*.ini files   (default: game_data/TSARs, else ./TSARs)
     -o, --out FILE        Output HTML file             (default: docs/index.html)
     -l, --locations FILE  Location name store, CSV id,name,source
                                                        (default: locations.csv)
@@ -1688,7 +1688,13 @@ def main():
     ap = argparse.ArgumentParser(
         description="Build a static train-finder site from TSAR .ini files.")
     ap.add_argument('files', nargs='*', help='TSAR_<RR>.ini files (default: everything in --folder)')
-    ap.add_argument('-f', '--folder', default='TSARs', help='folder of TSAR_*.ini files')
+    # game_sync.py mirrors the Dropbox game folder into game_data/; the
+    # bare TSARs/ folder is the older hand-copied layout and still works.
+    default_folder = os.path.join('game_data', 'TSARs')
+    if not os.path.isdir(default_folder):
+        default_folder = 'TSARs'
+    ap.add_argument('-f', '--folder', default=default_folder,
+                    help='folder of TSAR_*.ini files (default: game_data/TSARs, else TSARs)')
     ap.add_argument('-o', '--out', default=os.path.join('docs', 'index.html'))
     ap.add_argument('-l', '--locations', default='locations.csv',
                     help='location name store, CSV of id,name,source')
@@ -1704,11 +1710,12 @@ def main():
     if not files:
         if not os.path.isdir(a.folder):
             sys.exit(f"no files given and folder not found: {a.folder}")
-        # The game ships a TSAR_Tutorial.ini with dummy trains; it is not a
-        # real roster, so folder discovery skips it (naming it explicitly on
-        # the command line still builds it).
+        # The game ships TSAR_Tutorial.ini (dummy trains) and TSAR_KCS.ini
+        # (a placeholder with one dummy train); neither is a real roster, so
+        # folder discovery skips them (naming one explicitly on the command
+        # line still builds it).
         files = sorted(f for f in glob.glob(os.path.join(a.folder, '*.ini'))
-                       if railroad_from_filename(f) != 'TUTORIAL')
+                       if railroad_from_filename(f) not in ('TUTORIAL', 'KCS'))
         if not files:
             sys.exit(f"no .ini files in {a.folder}")
     for f in files:
@@ -1721,7 +1728,7 @@ def main():
         if not files:
             sys.exit(f"--only {a.only} matched none of the available files")
 
-    print(f"Building train site from {len(files)} file(s)…")
+    print(f"Building train site from {len(files)} file(s) in {os.path.dirname(files[0]) or '.'}…")
     n = build(files, a.out, a.title, a.locations,
               use_cache=not a.no_location_cache, subset=bool(a.only))
     if n and a.strict:
