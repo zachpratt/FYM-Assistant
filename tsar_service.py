@@ -1285,9 +1285,11 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .mypanel .myrow{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
 .stale{color:var(--future)}
 .ygh{margin:14px 0 4px;font-size:13px;font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
-.yrow{display:grid;grid-template-columns:140px minmax(120px,1fr) 24px minmax(140px,1fr) minmax(110px,.8fr) 56px;gap:8px;
+.yrow{display:grid;grid-template-columns:12px 140px minmax(120px,1fr) 24px minmax(140px,1fr) minmax(110px,.8fr) 56px;gap:8px;
   padding:4px 0;font-size:13px;border-top:1px solid var(--line);align-items:center}
 .yrow .ycar{font-family:var(--mono);color:var(--ink)}
+.yswatch{display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid rgba(0,0,0,.25);box-sizing:border-box}
+.yswatch.none{background:transparent;border-style:dashed;border-color:var(--line)}
 .yrow .ytype{color:var(--muted)}
 .yrow .ydwell{text-align:right;font-family:var(--mono);font-size:12px}
 .yrow .yvia .jump,.ytrains .jump{font-family:var(--mono);font-size:12px}
@@ -1432,10 +1434,10 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
   .node{padding:8px 10px;font-size:13px}
   .sib{padding:7px 12px;font-size:13px}
   .locbar{margin:0 8px 6px;padding:8px 10px;gap:8px}
-  .yrow{grid-template-columns:1fr auto auto}
+  .yrow{grid-template-columns:12px 1fr auto auto}
   .yrow .ytype{display:none}
-  .yrow .ydest{grid-column:1/2}
-  .yrow .yvia{grid-column:2/-1;text-align:right}
+  .yrow .ydest{grid-column:2/3}
+  .yrow .yvia{grid-column:3/-1;text-align:right}
   .locbar .seg button{padding:8px 10px}
   .locnote{display:none}
   .wrap{padding:8px 8px 60px}
@@ -2915,7 +2917,11 @@ async function wagFor(id){
   try{ const w=parseWag(await gameText("yards/"+id+".wag")); w.saved=GAME.saved["yards/"+id+".wag"]; GAME.wags[id]=w; }
   catch(e){ GAME.wags[id]={ok:false,error:String(e.message||e),cars:[],cuts:[]}; }
   // the yardmaster's sort plan lives beside the inventory (.nam names, .set tokens)
-  try{ GAME.wags[id].sorts=parseSorts(await gameText("yards/"+id+".nam"), await gameText("yards/"+id+".set")); }
+  try{
+    // .hcf (hump colours) is optional: without it the swatches are blank
+    let hcf=""; try{ hcf=await gameText("yards/"+id+".hcf"); }catch(e){}
+    GAME.wags[id].sorts=parseSorts(await gameText("yards/"+id+".nam"), await gameText("yards/"+id+".set"), hcf);
+  }
   catch(e){ GAME.wags[id].sorts=null; }
   return GAME.wags[id];
 }
@@ -3077,19 +3083,22 @@ function wireJoin(el,L){
 // followed by a state id or 0 (any state); 60 = bad orders; 62 = catch-all.
 // "DisplaySetups" lines are per-operator views of the slots; a car is only
 // matched against the view the yard's own operator uses. Names are personal
-// shorthand and never used for matching.
+// shorthand and never used for matching. .hcf: "V1.0", "<HumpColours>", then
+// line k+3 is the "r:g:b" colour of slot k (the game's default palette unless
+// the yardmaster recoloured a sort).
 // The game's railroad id -> reporting mark table, baked from railroad_ids.csv
 // (recovered 2026-09-11: a scratch sort ticked in picker order keeps tick
 // order in the .set, and the picker is alphabetical by mark, Class I first).
 const RR_IDS=DATA.rrids||{};
-function parseSorts(namText,setText){
+function parseSorts(namText,setText,hcfText){
   const names=namText.split(/\r?\n/).slice(1);
+  const colors=(hcfText||"").split(/\r?\n/).slice(2).map(l=>{ const m=l.match(/^(\d+):(\d+):(\d+)$/); return m?`rgb(${m[1]},${m[2]},${m[3]})`:""; });
   const lines=setText.split(/\r?\n/), S={groups:{},slots:{}};
   lines.forEach(l=>{ const m=l.match(/^(.*?):(True|False):(True|False)::([\d,]+)$/); if(m) S.groups[m[1]]=m[4].split(",").map(Number); });
   const start=lines.indexOf("SortData"); if(start<0) return S;
   lines.slice(start+1,start+251).forEach((line,k)=>{
     const toks=line.split(":").filter(t=>t!==""); if(!toks.length||toks[0]==="0") return;
-    const sl={n:k+1,name:names[k]||"Sort #"+(k+1),ids:new Set(),states:new Set(),inds:new Set(),rr:[],flags:new Set(),raw:[]};
+    const sl={n:k+1,name:names[k]||"Sort #"+(k+1),color:colors[k]||"",ids:new Set(),states:new Set(),inds:new Set(),rr:[],flags:new Set(),raw:[]};
     const it=toks.slice(1); let i=0;
     while(i<it.length){
       const t=it[i];
@@ -3204,8 +3213,13 @@ function yardSorts(w,L){
   return w.sortView;
 }
 
-let yardGroup="sort";
+let yardGroup="sort", yardOrder="file";
+// where a car's sort sits in the on-screen list (Infinity = no sort matched)
+function sortRank(SV,c){ const b=SV&&SV.perCar.get(c); return b?SV.group.indexOf(b.k):Infinity; }
 function carRow(c,L){
+  const w=GAME.wags[L], SV=w.sortView, b=SV&&SV.perCar.get(c), sl=b&&w.sorts.slots[b.k];
+  const swatch=sl&&sl.color?`<span class="yswatch" style="background:${sl.color}" title="${esc(cleanSortName(sl.name))}"></span>`
+    :`<span class="yswatch none" title="${sl?"sort has no colour":"no sort matches"}"></span>`;
   const lb=c.loaded==="7"?["L","loaded","ld-loaded"]:c.loaded==="6"?["E","empty","ld-empty"]:["·","load state "+c.loaded,"ld-other"];
   const stale=c.dwell!==null&&c.dwell>STALE_DAYS;
   const dest=!c.dest?"":c.dest===L?`<span class="dim">here</span>`
@@ -3220,7 +3234,7 @@ function carRow(c,L){
     via=st&&st.hits.length?`<span class="dim" title="via the ${esc(cleanSortName(SV.chosen?GAME.wags[L].sorts.slots[b.k].name:""))} sort">↳ </span>`+trainChip(st.hits[0])
        :`<span class="stale">no direct train</span>`;
   }
-  return `<div class="yrow${stale?" stale":""}"><span class="ycar">${esc(c.name||"")}</span><span class="ytype">${esc(type)}</span>`+
+  return `<div class="yrow${stale?" stale":""}">${swatch}<span class="ycar">${esc(c.name||"")}</span><span class="ytype">${esc(type)}</span>`+
     `<span class="lbadge ${lb[2]}" title="${lb[1]}">${lb[0]}</span><span class="ydest">${dest}</span>`+
     `<span class="yvia">${via}</span>`+
     `<span class="ydwell" title="${esc(tip)}">${c.dwell===null?"—":c.dwell+"d"}</span></div>`;
@@ -3242,6 +3256,8 @@ function yardPanel(L){
     ` <label class="dim" style="margin-left:12px">group by <select class="inp" id="ygroup" style="padding:4px 8px;min-width:0">`+
     (SV?`<option value="sort"${yardGroup==="sort"?" selected":""}>sort</option>`:"")+
     `<option value="cut"${yardGroup==="cut"?" selected":""}>cut</option><option value="dest"${yardGroup==="dest"?" selected":""}>destination</option></select></label>`+
+    (SV&&yardGroup!=="sort"?` <label class="dim">order cars by <select class="inp" id="yorder" style="padding:4px 8px;min-width:0">`+
+      `<option value="file"${yardOrder==="file"?" selected":""}>as stored</option><option value="sort"${yardOrder==="sort"?" selected":""}>sort</option></select></label>`:"")+
     (SV&&SV.names.length>1?` <label class="dim">view <select class="inp" id="ysortgroup" style="padding:4px 8px;min-width:0">`+
       SV.names.map(n=>`<option value="${esc(n)}"${n===SV.chosen?" selected":""}>${esc(n)}</option>`).join("")+`</select></label>`:"")+`</div>`;
   let groups;
@@ -3258,6 +3274,10 @@ function yardPanel(L){
       title:d===L?"staying here":d===UNASSIGNED?"unassigned":locLabel(d),
       dest:(d!==L&&d!==UNASSIGNED)?d:"", cars:m[d]}));
   }
+  // within each group, cars in the yard's own sort order (screen order of
+  // the sorts; unsorted cars last); a stable sort keeps file order for ties
+  if(yardOrder==="sort"&&SV&&yardGroup!=="sort")
+    groups.forEach(g=>{ g.cars=g.cars.map((c,i)=>[sortRank(SV,c),i,c]).sort((a,b)=>a[0]-b[0]||a[1]-b[1]).map(x=>x[2]); });
   const groupTrains=g=>{
     if(g.slot){
       const st=SV.trains[g.slot];
@@ -3283,6 +3303,7 @@ function yardPanel(L){
     g.cars.map(c=>carRow(c,L)).join("")).join("");
   el.innerHTML=h;
   el.querySelector("#ygroup").onchange=e=>{ yardGroup=e.target.value; render(); };
+  const yo=el.querySelector("#yorder"); if(yo) yo.onchange=e=>{ yardOrder=e.target.value; render(); };
   const ysg=el.querySelector("#ysortgroup"); if(ysg) ysg.onchange=e=>{ w.sortGroup=e.target.value; w.sortView=null;
     try{ localStorage.setItem("fym.sortview."+L,w.sortGroup); }catch(err){} render(); };
   el.querySelectorAll(".sib,.odlink").forEach(b=>{ b.onclick=()=>gotoLoc(b.dataset.loc); });

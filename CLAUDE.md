@@ -90,8 +90,8 @@ the payload regardless and are worth keeping current:
 "Open my FYM folder" in the header lets a visitor point the page at their
 own Freight Yard Manager folder. Chrome/Edge use `showDirectoryPicker`
 with the handle kept in IndexedDB (`fym` / `handles` / `game`); other
-browsers get a `webkitdirectory` input. The page only ever reads three
-things, all parsed in JS inside `HTML_TEMPLATE` (section "player folder"):
+browsers get a `webkitdirectory` input. The page only ever reads the
+following, all parsed in JS inside `HTML_TEMPLATE` (section "player folder"):
 
 - `FYMMyMaps.ini` — `<id>:<0|1>` per map; flag 1 = assigned to this
   player = **"my yards"** (Zach's ruling; a `.wag` also exists for yards he
@@ -122,7 +122,10 @@ train to the route finder.
 
 **Sorts** (`parseSorts`, `sortFor`, `sortTrains`): `yards/<id>.nam` names
 250 slots, `yards/<id>.set` holds `DisplaySetups` (per-operator views) and
-`SortData`, one `<count>:<tokens…>:` line per slot. Tokens: id ≥ 1000 =
+`SortData`, one `<count>:<tokens…>:` line per slot, and `yards/<id>.hcf`
+("V1.0", "<HumpColours>", then one `r:g:b` line per slot) gives each sort
+its colour, shown as a swatch on every car row and optional as the row
+order within cut/destination groups ("order cars by"). Tokens: id ≥ 1000 =
 destination map; 1..58 = state per `FYMStates.ini`; `-1:60:<map>:<n>` =
 industry n on that map (the car's waybill field 3); 500..999 = railroad id
 followed by a state or 0 (`RR_IDS` holds the few proven ids; the table is
