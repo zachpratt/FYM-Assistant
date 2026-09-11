@@ -100,9 +100,10 @@ following, all parsed in JS inside `HTML_TEMPLATE` (section "player folder"):
   map id the game knows, so diffing it against `locations.csv` is the
   new-id alarm.
 - `FYMLocoCars6.ini` — `TypeID=` / `Name=` blocks, the car type names, and
-  `[Engine Models]` rows `EM<n>,<model>,…` for locomotives. (Its
-  `[Railroads]` section is `RailroadID=n` / `Mark=`; the sort files'
-  railroad tokens are `n + 499` — see `railroad_ids.csv` notes.)
+  `[Engine Models]` rows `EM<n>,<model>,…` for locomotives, and
+  `[Railroads]` (`RailroadID=n` / `Mark=`, 319 rows): the sort files'
+  railroad token is `n + 499`, so an open folder overrides the baked-in
+  `railroad_ids.csv` table (`RR_IDS`; reset on disconnect).
 - `yards/<id>.wag` — the yard's inventory: `[TrainNumber=n]` cut blocks
   (`TrainName=`, `TrainCreator=`) each followed by `[CarID=n]` car blocks
   (`CarName=`, `TypeID=` — first colon field only; cabooses (`TypeGroup=C`)
@@ -138,8 +139,8 @@ its colour, shown as a swatch on every car row and optional as the row
 order within cut/destination groups ("order cars by"). Tokens: id ≥ 1000 =
 destination map; 1..58 = state per `FYMStates.ini`; `-1:60:<map>:<n>` =
 industry n on that map (the car's waybill field 3); 500..999 = railroad id
-followed by a state or 0 (`RR_IDS` holds the few proven ids; the table is
-not in any readable file); 60 = bad orders; 62 = catch-all. Sort NAMES are
+followed by a state or 0 (`RR_IDS`: the folder's `[Railroads]` table when
+open, else `railroad_ids.csv`); 60 = bad orders; 62 = catch-all. Sort NAMES are
 personal shorthand — never match on them (Mason City has "???????" and
 "okokok UP PARSONS"). Zach's rulings (2026-09-11): the game is a cascade —
 a car takes the first sort it matches — but an exact yard (or industry)
@@ -151,12 +152,12 @@ above everything on screen. The `DisplaySetups` list is the on-screen
 order top to bottom. The view is the named display carrying the yard's
 dominant operator, else "all sorts" (slot order), overridable per yard.
 Railroad ids are the game's own table (500..~818, not the Shortline
-roster's `_id`, not alphabetical). RECOVERED 2026-09-11: `.set` stores
-railroads in tick order, Zach ticked the whole picker (alphabetical by
-mark, Class I first) into a scratch sort, and the picker was transcribed
-from screenshots → `railroad_ids.csv` (247 rows, committed; the build
-bakes it in as `DATA.rrids`, CSXT→CSX). Anchors check out: 683 IATR, 545
-BRC, 535 NOPB, 532 CFE. Re-derive only if the game adds railroads. A sort's
+roster's `_id`, not alphabetical). RECOVERED 2026-09-11 by transcribing
+the picker → `railroad_ids.csv` (247 rows, committed; the build bakes it
+in as `DATA.rrids`, CSXT→CSX), then FOUND the same day in
+`FYMLocoCars6.ini` `[Railroads]` as `RailroadID + 499` (all 247 rows
+agree; the folder has 319). The CSV is the no-folder fallback; refresh it
+from the folder table if the game adds railroads. A sort's
 trains are scored by token coverage over trains boarding here; same-map
 sibling ids (Payne on the Fostoria map) match by exact id. Industry-only
 sorts are local spots, not blocks.

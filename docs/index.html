@@ -24491,13 +24491,19 @@ async function loadGame(){
   catch(e){ gameNote("That folder has no FYMMyMaps.ini — pick the Freight Yard Manager folder itself."); await disconnectGame(); return; }
   GAME.my=new Set(mm.split(/\r?\n/).map(l=>l.split(":")).filter(p=>p.length>1&&p[1].trim()==="1").map(p=>p[0].trim()));
   try{
-    let id=null;
+    let id=null, rrid=null; const rr={};
     (await gameText("FYMLocoCars6.ini")).split(/\r?\n/).forEach(l=>{
-      if(l.startsWith("TypeID=")) id=l.slice(7).trim();
+      if(l.startsWith("[")){ id=null; rrid=null; }
+      // [Railroads]: "RailroadID=184" / "Mark=IATR"; the sort files' railroad
+      // token is RailroadID + 499 (checked against every transcribed anchor)
+      else if(l.startsWith("RailroadID=")) rrid=parseInt(l.slice(11),10)+499;
+      else if(l.startsWith("Mark=")&&rrid){ const m=l.slice(5).trim(); rr[rrid]=m==="CSXT"?"CSX":m; rrid=null; }
+      else if(l.startsWith("TypeID=")) id=l.slice(7).trim();
       else if(l.startsWith("ParentTypeID=")&&id) GAME.parent[id]=l.slice(13).trim();
       else if(l.startsWith("Name=")&&id) GAME.types[id]=l.slice(5).trim();
       else if(/^EM\d+,/.test(l)){ const f=l.split(","); GAME.models[f[0].slice(2)]=f[1].trim(); }
     });
+    if(Object.keys(rr).length>=Object.keys(DATA.rrids||{}).length) Object.assign(RR_IDS,rr);
   }catch(e){}
   try{ GAME.visited=new Set((await gameList("yards")).filter(n=>n.endsWith(".wag")).map(n=>n.slice(0,-4))); }
   catch(e){ GAME.visited=new Set(); }
@@ -24517,6 +24523,7 @@ async function loadGame(){
 async function disconnectGame(){
   await idbDel("game");
   Object.assign(GAME,{kind:null,root:null,files:null,stored:null,my:new Set(),visited:new Set(),types:{},parent:{},models:{},states:{},stateId:{},wags:{},saved:{}});
+  resetRrIds();
   if(state.view==="myyard") state.view="cards";
   paintGameBtn(); render();
 }
@@ -24650,7 +24657,10 @@ function wireJoin(el,L){
 // The game's railroad id -> reporting mark table, baked from railroad_ids.csv
 // (recovered 2026-09-11: a scratch sort ticked in picker order keeps tick
 // order in the .set, and the picker is alphabetical by mark, Class I first).
-const RR_IDS=DATA.rrids||{};
+// railroad_ids.csv is the fallback; an open folder's FYMLocoCars6.ini
+// [Railroads] (RailroadID + 499 = sort token) overrides it, see loadGame
+const RR_IDS=Object.assign({},DATA.rrids||{});
+function resetRrIds(){ Object.keys(RR_IDS).forEach(k=>delete RR_IDS[k]); Object.assign(RR_IDS,DATA.rrids||{}); }
 function parseSorts(namText,setText,hcfText){
   const names=namText.split(/\r?\n/).slice(1);
   const colors=(hcfText||"").split(/\r?\n/).slice(2).map(l=>{ const m=l.match(/^(\d+):(\d+):(\d+)$/); return m?`rgb(${m[1]},${m[2]},${m[3]})`:""; });

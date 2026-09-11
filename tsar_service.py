@@ -994,11 +994,13 @@ RRIDS_PATH = 'railroad_ids.csv'
 def load_rrids(path, anom):
     """railroad_ids.csv -> {game railroad id: reporting mark}.
 
-    The game's sort files name railroads by an internal id (500..~818) that
-    exists in no readable game file. The table was recovered on 2026-09-11
-    by ticking every railroad, in picker order, into a scratch sort (the .set
-    keeps tick order) and transcribing the picker; see railroad_ids.csv.
-    CSXT is the game's mark for CSX."""
+    The game's sort files name railroads by an internal id (500..~818).
+    The table was first recovered on 2026-09-11 by ticking every railroad,
+    in picker order, into a scratch sort and transcribing the picker; the
+    same day it turned out to be FYMLocoCars6.ini [Railroads] with
+    RailroadID + 499 (all 247 transcribed rows agree). This CSV is the
+    fallback for visitors with no folder open; the page reads the folder's
+    table when one is. CSXT is the game's mark for CSX."""
     out = {}
     if not path or not os.path.isfile(path):
         return out
@@ -2936,13 +2938,19 @@ async function loadGame(){
   catch(e){ gameNote("That folder has no FYMMyMaps.ini — pick the Freight Yard Manager folder itself."); await disconnectGame(); return; }
   GAME.my=new Set(mm.split(/\r?\n/).map(l=>l.split(":")).filter(p=>p.length>1&&p[1].trim()==="1").map(p=>p[0].trim()));
   try{
-    let id=null;
+    let id=null, rrid=null; const rr={};
     (await gameText("FYMLocoCars6.ini")).split(/\r?\n/).forEach(l=>{
-      if(l.startsWith("TypeID=")) id=l.slice(7).trim();
+      if(l.startsWith("[")){ id=null; rrid=null; }
+      // [Railroads]: "RailroadID=184" / "Mark=IATR"; the sort files' railroad
+      // token is RailroadID + 499 (checked against every transcribed anchor)
+      else if(l.startsWith("RailroadID=")) rrid=parseInt(l.slice(11),10)+499;
+      else if(l.startsWith("Mark=")&&rrid){ const m=l.slice(5).trim(); rr[rrid]=m==="CSXT"?"CSX":m; rrid=null; }
+      else if(l.startsWith("TypeID=")) id=l.slice(7).trim();
       else if(l.startsWith("ParentTypeID=")&&id) GAME.parent[id]=l.slice(13).trim();
       else if(l.startsWith("Name=")&&id) GAME.types[id]=l.slice(5).trim();
       else if(/^EM\d+,/.test(l)){ const f=l.split(","); GAME.models[f[0].slice(2)]=f[1].trim(); }
     });
+    if(Object.keys(rr).length>=Object.keys(DATA.rrids||{}).length) Object.assign(RR_IDS,rr);
   }catch(e){}
   try{ GAME.visited=new Set((await gameList("yards")).filter(n=>n.endsWith(".wag")).map(n=>n.slice(0,-4))); }
   catch(e){ GAME.visited=new Set(); }
@@ -2962,6 +2970,7 @@ async function loadGame(){
 async function disconnectGame(){
   await idbDel("game");
   Object.assign(GAME,{kind:null,root:null,files:null,stored:null,my:new Set(),visited:new Set(),types:{},parent:{},models:{},states:{},stateId:{},wags:{},saved:{}});
+  resetRrIds();
   if(state.view==="myyard") state.view="cards";
   paintGameBtn(); render();
 }
@@ -3095,7 +3104,10 @@ function wireJoin(el,L){
 // The game's railroad id -> reporting mark table, baked from railroad_ids.csv
 // (recovered 2026-09-11: a scratch sort ticked in picker order keeps tick
 // order in the .set, and the picker is alphabetical by mark, Class I first).
-const RR_IDS=DATA.rrids||{};
+// railroad_ids.csv is the fallback; an open folder's FYMLocoCars6.ini
+// [Railroads] (RailroadID + 499 = sort token) overrides it, see loadGame
+const RR_IDS=Object.assign({},DATA.rrids||{});
+function resetRrIds(){ Object.keys(RR_IDS).forEach(k=>delete RR_IDS[k]); Object.assign(RR_IDS,DATA.rrids||{}); }
 function parseSorts(namText,setText,hcfText){
   const names=namText.split(/\r?\n/).slice(1);
   const colors=(hcfText||"").split(/\r?\n/).slice(2).map(l=>{ const m=l.match(/^(\d+):(\d+):(\d+)$/); return m?`rgb(${m[1]},${m[2]},${m[3]})`:""; });
