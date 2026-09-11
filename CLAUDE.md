@@ -128,7 +128,9 @@ same function the route finder uses, so the two never disagree. Car class
 comes from `TypeID`/`ParentTypeID` (5, 6, 19 intermodal; 7 autorack; else
 carload). A ★ marks a train whose instructions at this yard name the
 destination's city. "Find a route ▸" hands a destination with no direct
-train to the route finder.
+train to the route finder. Trains are suggested only in group headings
+(sort, destination); the per-car train column was dropped 2026-09-11 at
+Zach's request because the per-car inference was not trustworthy enough.
 
 **Sorts** (`parseSorts`, `sortFor`, `sortTrains`): `yards/<id>.nam` names
 250 slots, `yards/<id>.set` holds `DisplaySetups` (per-operator views,

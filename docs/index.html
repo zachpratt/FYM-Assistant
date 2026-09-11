@@ -115,14 +115,14 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .mypanel .myrow{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
 .stale{color:var(--future)}
 .ygh{margin:14px 0 4px;font-size:13px;font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
-.yrow{display:grid;grid-template-columns:12px 140px minmax(120px,1fr) 24px minmax(140px,1fr) minmax(110px,.8fr) 56px;gap:8px;
+.yrow{display:grid;grid-template-columns:12px 140px minmax(120px,1fr) 24px minmax(140px,1fr) 56px;gap:8px;
   padding:4px 0;font-size:13px;border-top:1px solid var(--line);align-items:center}
 .yrow .ycar{font-family:var(--mono);color:var(--ink)}
 .yswatch{display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid rgba(0,0,0,.25);box-sizing:border-box}
 .yswatch.none{background:transparent;border-style:dashed;border-color:var(--line)}
 .yrow .ytype{color:var(--muted)}
 .yrow .ydwell{text-align:right;font-family:var(--mono);font-size:12px}
-.yrow .yvia .jump,.ytrains .jump{font-family:var(--mono);font-size:12px}
+.ytrains .jump{font-family:var(--mono);font-size:12px}
 .ytrains{display:inline-flex;gap:8px;flex-wrap:wrap;align-items:baseline;margin-left:6px}
 .ydef{font-size:12px;color:var(--dim);margin:-2px 0 4px}
 .yrow.stale .ydwell{color:var(--future);font-weight:600}
@@ -266,8 +266,7 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
   .locbar{margin:0 8px 6px;padding:8px 10px;gap:8px}
   .yrow{grid-template-columns:12px 1fr auto auto}
   .yrow .ytype{display:none}
-  .yrow .ydest{grid-column:2/3}
-  .yrow .yvia{grid-column:3/-1;text-align:right}
+  .yrow .ydest{grid-column:2/-1}
   .locbar .seg button{padding:8px 10px}
   .locnote{display:none}
   .wrap{padding:8px 8px 60px}
@@ -24835,16 +24834,11 @@ function carRow(c,L){
     :`<button class="odlink" data-loc="${c.dest}">${esc(locLabel(c.dest))}</button>`;
   const type=eng?(GAME.models[c.model]||"Locomotive"):(GAME.types[c.tid]||"#"+c.tid);
   const tip=c.last?`${c.last.date} ${EV[c.last.code]||"event "+c.last.code}${c.last.train&&c.last.train!=="^"?" · "+c.last.train:""}`:"no dated history";
-  const hits=(!eng&&c.dest&&c.dest!==L&&c.dest!==UNASSIGNED)?GAME.wags[L].join.forCar(c):null;
-  let via=!hits?"":hits.length?trainChip(hits[0])+(hits.length>1?`<span class="dim"> +${hits.length-1}</span>`:""):"";
-  if(hits&&!hits.length){
-    const SV=GAME.wags[L].sortView, b=SV&&SV.perCar.get(c), st=b&&SV.trains[b.k];
-    via=st&&st.hits.length?`<span class="dim" title="via the ${esc(cleanSortName(SV.chosen?GAME.wags[L].sorts.slots[b.k].name:""))} sort">↳ </span>`+trainChip(st.hits[0])
-       :`<span class="stale">no direct train</span>`;
-  }
+  // no per-car train column (dropped 2026-09-11 at Zach's request: the
+  // per-car suggestion was inferred and not trustworthy); trains are only
+  // suggested per group in the heading
   return `<div class="yrow${stale?" stale":""}">${swatch}<span class="ycar">${esc(c.name||"")}</span><span class="ytype">${esc(type)}</span>`+
     `<span class="lbadge ${lb[2]}" title="${lb[1]}">${lb[0]}</span><span class="ydest">${dest}</span>`+
-    `<span class="yvia">${via}</span>`+
     `<span class="ydwell" title="${esc(tip)}">${c.dwell===null?"—":c.dwell+"d"}</span></div>`;
 }
 function yardPanel(L){
