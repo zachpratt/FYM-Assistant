@@ -24608,7 +24608,7 @@ intro.onclick=e=>{ if(e.target===intro) document.getElementById("introok").oncli
 let navRestoring=false, navKey="", navIdx=0;
 const navback=document.getElementById("navback");
 function navState(){
-  return {i:navIdx, loc:state.loc, locmode:state.locmode, view:state.view,
+  return {i:navIdx, loc:state.loc, locmode:state.locmode, view:state.view, sym:state.sym, stat:state.stat,
           rf:rstate.from?rstate.from.id:"", rt:rstate.to?rstate.to.id:"", car:rcartype.value};
 }
 function navHash(s){
@@ -24616,6 +24616,7 @@ function navHash(s){
   if(s.loc) p.push("loc="+s.loc);
   if(s.locmode) p.push("m="+s.locmode);
   if(s.view&&s.view!=="cards") p.push("v="+s.view);
+  if(s.sym) p.push("sym="+encodeURIComponent(s.sym));
   if(s.rf&&s.rt) p.push("route="+s.rf+"-"+s.rt+(s.car&&s.car!=="carload"?"-"+s.car:""));
   return p.length ? "#"+p.join("&") : location.pathname+location.search;
 }
@@ -24626,6 +24627,7 @@ function navFromHash(){
     if(k==="loc"&&KNOWN_LOC.has(v)) s.loc=v;
     else if(k==="m"&&["o","d","w"].includes(v)) s.locmode=v;
     else if(k==="v"&&["sheet","details","myyard"].includes(v)) s.view=v;
+    else if(k==="sym"&&v) s.sym=decodeURIComponent(v);
     else if(k==="route"){ const q=v.split("-"); if(KNOWN_LOC.has(q[0])&&KNOWN_LOC.has(q[1])){ s.rf=q[0]; s.rt=q[1]; s.car=q[2]||"carload"; } }
   });
   return s;
@@ -24653,6 +24655,7 @@ function navApply(s){
     }
     syncRouteBtns();
     state.loc=s.loc&&KNOWN_LOC.has(s.loc)?s.loc:""; state.locmode=s.locmode||""; state.view=s.view||"cards";
+    state.sym=s.sym||""; symin.value=state.sym; setStat(s.stat||"active");
     if(state.loc){ locin.value=state.loc+(LOC[state.loc]?"  "+LOC[state.loc]:""); locclear.style.display=""; }
     else { locin.value=""; locclear.style.display="none"; }
     locmenu.classList.remove("open");
