@@ -64,12 +64,8 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .clearbtn:hover{color:var(--ink)}
 .combo .opt .lid .fv{color:var(--accent);margin-right:3px}
 /* favorites: chips under the Location box + star in the location bar */
-.favs{display:flex;gap:6px;flex-wrap:wrap;align-items:baseline;margin-top:6px}
-.favs .favlbl{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim)}
-.sib.fav{border-color:var(--accent);padding-right:6px}
-.sib.fav .rm{margin-left:6px;color:var(--dim);font-size:11px}
-.sib.fav .rm:hover{color:var(--ink)}
-.star{background:none;border:0;cursor:pointer;font-size:18px;line-height:1;padding:0 2px;color:var(--dim)}
+#favsel{min-width:170px}
+.star{background:none;border:0;cursor:pointer;font-size:18px;line-height:1;padding:0 2px;margin-right:-4px;color:var(--dim)}
 .star.on,.star:hover{color:var(--accent)}
 
 /* ---- location banner ---- */
@@ -230,7 +226,10 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
         <button class="clearbtn" id="locclear" title="clear" style="display:none">clear ✕</button>
       </div>
       <div class="menu" id="locmenu"></div>
-      <div class="favs" id="favs" style="display:none"></div>
+    </div>
+    <div class="field" id="favfield">
+      <label>Favorites</label>
+      <select class="inp" id="favsel"></select>
     </div>
     <div class="field" id="rrfield">
       <label>Railroad</label>
@@ -20491,18 +20490,20 @@ function paintStar(){
   b.title=(on?"remove from":"add to")+" favorites";
 }
 const KNOWN_LOC=new Set(DATA.locs.map(l=>l.id));
-const favsEl=document.getElementById("favs");
+// The Favorites dropdown is always present so the feature is discoverable;
+// with nothing starred its only option says how to add one. Picking a yard
+// focuses it exactly like a route-node click, then the select springs back to
+// its placeholder so the same yard can be picked again after clearing.
+const favsel=document.getElementById("favsel");
 function paintFavs(){
   const ids=favs.filter(id=>KNOWN_LOC.has(id));
-  favsEl.style.display=ids.length?"":"none";
-  favsEl.innerHTML=ids.length ? `<span class="favlbl">favorites</span>`+
-    ids.map(id=>`<button class="sib fav" data-loc="${id}" title="open this yard">${esc(locLabel(id))}`+
-      `<span class="rm" data-rm="${id}" title="remove from favorites">✕</span></button>`).join("") : "";
-  favsEl.querySelectorAll(".fav").forEach(b=>{ b.onclick=()=>gotoLoc(b.dataset.loc); });
-  favsEl.querySelectorAll(".rm").forEach(x=>{
-    x.onclick=e=>{ e.stopPropagation(); toggleFav(x.dataset.rm); };
-  });
+  favsel.innerHTML = ids.length
+    ? `<option value="">${ids.length} saved yard${ids.length>1?"s":""}…</option>`+
+      ids.map(id=>`<option value="${id}">${esc(locLabel(id))} (${locCount[id]||0})</option>`).join("")
+    : `<option value="">none yet — ☆ a yard to save it</option>`;
+  favsel.disabled = !ids.length;
 }
+favsel.onchange=()=>{ const id=favsel.value; favsel.value=""; if(id) gotoLoc(id); };
 
 // ---- build controls ----
 const rrpills = document.getElementById("rrpills");
@@ -20689,9 +20690,9 @@ function render(reset=true){
       ? [["","All"],["o","Orig"],["d","Term"],["w","Works"]]
       : [["","All"],["o","Originates"],["d","Terminates"],["w","Works"]];
     const counts={"":pool.length,o:n.o,d:n.d,w:n.w};
-    locbar.innerHTML=`<span class="lid">#${L}</span>`+
+    locbar.innerHTML=`<button class="star${isFav(L)?' on':''}" id="favstar" title="${isFav(L)?'remove from':'add to'} favorites">${isFav(L)?'★':'☆'}</button>`+
+      `<span class="lid">#${L}</span>`+
       `<span class="big">${LOC[L]?esc(LOC[L]):"Unnamed location"}</span>`+
-      `<button class="star${isFav(L)?' on':''}" id="favstar" title="${isFav(L)?'remove from':'add to'} favorites">${isFav(L)?'★':'☆'}</button>`+
       `<span class="seg" id="locmodeseg">`+
         modeLabels.map(([v,lb])=>`<button data-m="${v}"${v===state.locmode?' class="on"':''}>${lb} (${counts[v]})</button>`).join("")+
       `</span>`+
