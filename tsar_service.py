@@ -3081,8 +3081,9 @@ function wireJoin(el,L){
 // Zach's yards): id >= 1000 = destination map; 1..58 = state (FYMStates.ini);
 // "-1:60:<map>:<n>" = industry n on that map; 500..999 = a railroad, always
 // followed by a state id or 0 (any state); 60 = bad orders; 62 = catch-all.
-// "DisplaySetups" lines are per-operator views of the slots; a car is only
-// matched against the view the yard's own operator uses. Names are personal
+// "DisplaySetups" lines "<name>:<bool>:<bool>:<bound map ids>:<slots>" are
+// per-operator views of the slots (Mason City binds UP to 2124 and CPKC to
+// 2125; CN and IATR are unbound); a car is only matched against one view. Names are personal
 // shorthand and never used for matching. .hcf: "V1.0", "<HumpColours>", then
 // line k+3 is the "r:g:b" colour of slot k (the game's default palette unless
 // the yardmaster recoloured a sort).
@@ -3093,8 +3094,9 @@ const RR_IDS=DATA.rrids||{};
 function parseSorts(namText,setText,hcfText){
   const names=namText.split(/\r?\n/).slice(1);
   const colors=(hcfText||"").split(/\r?\n/).slice(2).map(l=>{ const m=l.match(/^(\d+):(\d+):(\d+)$/); return m?`rgb(${m[1]},${m[2]},${m[3]})`:""; });
-  const lines=setText.split(/\r?\n/), S={groups:{},slots:{}};
-  lines.forEach(l=>{ const m=l.match(/^(.*?):(True|False):(True|False)::([\d,]+)$/); if(m) S.groups[m[1]]=m[4].split(",").map(Number); });
+  const lines=setText.split(/\r?\n/), S={groups:{},bound:{},slots:{}};
+  lines.forEach(l=>{ const m=l.match(/^(.*?):(True|False):(True|False):([\d,]*):([\d,]+)$/);
+    if(m){ S.groups[m[1]]=m[5].split(",").map(Number); S.bound[m[1]]=m[4]?m[4].split(","):[]; } });
   const start=lines.indexOf("SortData"); if(start<0) return S;
   lines.slice(start+1,start+251).forEach((line,k)=>{
     const toks=line.split(":").filter(t=>t!==""); if(!toks.length||toks[0]==="0") return;
@@ -3197,11 +3199,13 @@ function yardSorts(w,L){
   let chosen=w.sortGroup||null;
   try{ chosen=chosen||localStorage.getItem("fym.sortview."+L); }catch(e){}
   if(!chosen||!S.groups[chosen]){
-    // pick the named view carrying the yard's own operator (most trains that
-    // start or end exactly here), else the full list
+    // pick the view bound to this very identity, else the named view carrying
+    // the yard's own operator (most trains that start or end exactly here),
+    // else the full list
     const cnt={}; DATA.trains.forEach(t=>{ if(t.o===L||t.d===L){ const op=t.op||t.rr; cnt[op]=(cnt[op]||0)+1; } });
     const op=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0]||"";
-    chosen=names.find(n=>n!=="all sorts"&&op&&n.toUpperCase().split(/[^A-Z]+/).includes(op.toUpperCase()))||"all sorts";
+    chosen=names.find(n=>(S.bound[n]||[]).includes(String(L)))
+      ||names.find(n=>n!=="all sorts"&&op&&n.toUpperCase().split(/[^A-Z]+/).includes(op.toUpperCase()))||"all sorts";
   }
   const group=S.groups[chosen];
   const perCar=new Map(); const bySlot={};

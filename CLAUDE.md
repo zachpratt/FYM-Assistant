@@ -121,8 +121,9 @@ destination's city. "Find a route ▸" hands a destination with no direct
 train to the route finder.
 
 **Sorts** (`parseSorts`, `sortFor`, `sortTrains`): `yards/<id>.nam` names
-250 slots, `yards/<id>.set` holds `DisplaySetups` (per-operator views) and
-`SortData`, one `<count>:<tokens…>:` line per slot, and `yards/<id>.hcf`
+250 slots, `yards/<id>.set` holds `DisplaySetups` (per-operator views,
+`<name>:<bool>:<bool>:<bound map ids>:<slots>`; a view bound to the yard's
+own id is the default view) and `SortData`, one `<count>:<tokens…>:` line per slot, and `yards/<id>.hcf`
 ("V1.0", "<HumpColours>", then one `r:g:b` line per slot) gives each sort
 its colour, shown as a swatch on every car row and optional as the row
 order within cut/destination groups ("order cars by"). Tokens: id ≥ 1000 =
