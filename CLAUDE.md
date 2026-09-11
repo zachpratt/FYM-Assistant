@@ -128,9 +128,19 @@ industry n on that map (the car's waybill field 3); 500..999 = railroad id
 followed by a state or 0 (`RR_IDS` holds the few proven ids; the table is
 not in any readable file); 60 = bad orders; 62 = catch-all. Sort NAMES are
 personal shorthand — never match on them (Mason City has "???????" and
-"okokok UP PARSONS"). Precedence industry > id > state > railroad >
-catch-all; the view is the named display carrying the yard's dominant
-operator, else "all sorts" (slot order), overridable per yard. A sort's
+"okokok UP PARSONS"). Zach's rulings (2026-09-11): the game is a cascade —
+a car takes the first sort it matches — but an exact yard (or industry)
+match beats a state match wherever it sits, so the implementation is
+precedence industry > id > state > railroad > catch-all with the display
+order breaking ties; the 62 catch-all is evaluated last even when it is
+shown at the top (Fostoria's NS Bellevue), and Bad Orders (60) is pinned
+above everything on screen. The `DisplaySetups` list is the on-screen
+order top to bottom. The view is the named display carrying the yard's
+dominant operator, else "all sorts" (slot order), overridable per yard.
+Railroad ids are the game's own table (500..~818, not the Shortline
+roster's `_id`, not alphabetical); `.set` stores railroads in the order
+they were ticked, so a scratch sort ticked in picker order yields the
+id→mark table (pending Zach). A sort's
 trains are scored by token coverage over trains boarding here; same-map
 sibling ids (Payne on the Fostoria map) match by exact id. Industry-only
 sorts are local spots, not blocks.
