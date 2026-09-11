@@ -1282,7 +1282,7 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .updpanel .gone{color:var(--dim);text-decoration:line-through}
 
 /* ---- car routing ---- */
-.rtogglebar{margin:6px 20px;font-size:12px}
+.rtogglebar{margin:6px 20px;font-size:12px;display:flex;gap:14px}
 .routebar{margin:0 20px 6px;padding:10px 14px;border:1px solid var(--line);border-left:3px solid var(--future);
   border-radius:8px;background:var(--panel);display:none;align-items:center;gap:12px;flex-wrap:wrap}
 .routebar.open{display:flex}
@@ -1497,7 +1497,7 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
   <div class="updpanel" id="updpanel"></div>
 </div>
 
-<div class="rtogglebar"><button class="jump" id="rtoggle">Route a car (beta) ▸</button></div>
+<div class="rtogglebar"><button class="jump" id="navback" style="display:none">◂ back</button><button class="jump" id="rtoggle">Route a car (beta) ▸</button></div>
 <div class="routebar" id="routebar">
   <span class="rtitle">Route a car<span class="beta">beta</span></span>
   <div class="combo">
@@ -3018,7 +3018,80 @@ document.getElementById("helpbtn").onclick=()=>showIntro(true);
 intro.onclick=e=>{ if(e.target===intro) document.getElementById("introok").onclick(); };
 (function(){ let seen="0"; try{ seen=localStorage.getItem("fym.intro")||"0"; }catch(e){} if(seen!=="1") showIntro(true); })();
 
-render();
+// ---- history: Back/Forward walk the locations, views and routes visited ----
+// Every render compares a small navigation key (location, mode, view, route)
+// with the last one; a change pushes a history entry whose hash doubles as a
+// shareable link (#loc=1741&v=myyard, #route=1094-1312). popstate restores
+// the entry without pushing again.
+let navRestoring=false, navKey="", navIdx=0;
+const navback=document.getElementById("navback");
+function navState(){
+  return {i:navIdx, loc:state.loc, locmode:state.locmode, view:state.view,
+          rf:rstate.from?rstate.from.id:"", rt:rstate.to?rstate.to.id:"", car:rcartype.value};
+}
+function navHash(s){
+  const p=[];
+  if(s.loc) p.push("loc="+s.loc);
+  if(s.locmode) p.push("m="+s.locmode);
+  if(s.view&&s.view!=="cards") p.push("v="+s.view);
+  if(s.rf&&s.rt) p.push("route="+s.rf+"-"+s.rt+(s.car&&s.car!=="carload"?"-"+s.car:""));
+  return p.length ? "#"+p.join("&") : location.pathname+location.search;
+}
+function navFromHash(){
+  const s={loc:"",locmode:"",view:"cards",rf:"",rt:"",car:"carload"};
+  location.hash.slice(1).split("&").forEach(kv=>{
+    const [k,v]=kv.split("=");
+    if(k==="loc"&&KNOWN_LOC.has(v)) s.loc=v;
+    else if(k==="m"&&["o","d","w"].includes(v)) s.locmode=v;
+    else if(k==="v"&&["sheet","details","myyard"].includes(v)) s.view=v;
+    else if(k==="route"){ const q=v.split("-"); if(KNOWN_LOC.has(q[0])&&KNOWN_LOC.has(q[1])){ s.rf=q[0]; s.rt=q[1]; s.car=q[2]||"carload"; } }
+  });
+  return s;
+}
+function navSync(){
+  const s=navState(); s.i=0; const key=JSON.stringify(s);
+  if(key===navKey) return;
+  navKey=key;
+  if(navRestoring) return;
+  navIdx=(history.state&&typeof history.state.i==="number"?history.state.i:0)+1;
+  s.i=navIdx;
+  history.pushState(s,"",navHash(s));
+  navback.style.display="";
+}
+function navApply(s){
+  navRestoring=true;
+  try{
+    rstate.res=null; rstate.from=rstate.to=null; rfin.value=""; rtin.value="";
+    if(s.rf&&s.rt&&KNOWN_LOC.has(s.rf)&&KNOWN_LOC.has(s.rt)){
+      rstate.from={id:s.rf,nm:LOC[s.rf]||""}; rstate.to={id:s.rt,nm:LOC[s.rt]||""};
+      rfin.value=s.rf+(LOC[s.rf]?"  "+LOC[s.rf]:""); rtin.value=s.rt+(LOC[s.rt]?"  "+LOC[s.rt]:"");
+      if(s.car&&[...rcartype.options].some(o=>o.value===s.car)) rcartype.value=s.car;
+      setRouter(true);
+      rstate.res=findRoutes(s.rf,s.rt,rcartype.value);
+    }
+    syncRouteBtns();
+    state.loc=s.loc&&KNOWN_LOC.has(s.loc)?s.loc:""; state.locmode=s.locmode||""; state.view=s.view||"cards";
+    if(state.loc){ locin.value=state.loc+(LOC[state.loc]?"  "+LOC[state.loc]:""); locclear.style.display=""; }
+    else { locin.value=""; locclear.style.display="none"; }
+    locmenu.classList.remove("open");
+    navIdx=typeof s.i==="number"?s.i:0;
+    navback.style.display=navIdx>0?"":"none";
+    render();
+  } finally { navRestoring=false; }
+}
+window.addEventListener("popstate",e=>navApply(e.state||navFromHash()));
+navback.onclick=()=>history.back();
+const renderCore=render;
+render=function(reset=true){ renderCore(reset); navSync(); };
+
+// first paint: honour a hash someone shared, and make it the base entry
+(function(){
+  const s=navFromHash(); s.i=0;
+  navRestoring=true;
+  try{ if(s.loc||s.rf) navApply(s); else render(); } finally { navRestoring=false; }
+  navKey=JSON.stringify(Object.assign(navState(),{i:0}));
+  history.replaceState(navState(),"",navHash(navState()));
+})();
 </script>
 </body>
 </html>
