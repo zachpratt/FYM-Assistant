@@ -120,6 +120,21 @@ carload). A ★ marks a train whose instructions at this yard name the
 destination's city. "Find a route ▸" hands a destination with no direct
 train to the route finder.
 
+**Sorts** (`parseSorts`, `sortFor`, `sortTrains`): `yards/<id>.nam` names
+250 slots, `yards/<id>.set` holds `DisplaySetups` (per-operator views) and
+`SortData`, one `<count>:<tokens…>:` line per slot. Tokens: id ≥ 1000 =
+destination map; 1..58 = state per `FYMStates.ini`; `-1:60:<map>:<n>` =
+industry n on that map (the car's waybill field 3); 500..999 = railroad id
+followed by a state or 0 (`RR_IDS` holds the few proven ids; the table is
+not in any readable file); 60 = bad orders; 62 = catch-all. Sort NAMES are
+personal shorthand — never match on them (Mason City has "???????" and
+"okokok UP PARSONS"). Precedence industry > id > state > railroad >
+catch-all; the view is the named display carrying the yard's dominant
+operator, else "all sorts" (slot order), overridable per yard. A sort's
+trains are scored by token coverage over trains boarding here; same-map
+sibling ids (Payne on the Fostoria map) match by exact id. Industry-only
+sorts are local spots, not blocks.
+
 Never write into the folder from the page. The native folder dialog cannot
 be automated: verify the flow by fetching files from `game_data/` while
 serving the repo root and feeding a `Map` of `File`s to `loadGame()`, then
