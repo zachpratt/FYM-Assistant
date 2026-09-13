@@ -2927,8 +2927,9 @@ async function loadGame(){
     let why=gameWhy("FYMMyMaps.ini",e);
     if(!why){
       const {files,dirs}=await gamePeek(), few=a=>a.slice(0,5).join(", ")+(a.length>5?", …":"");
+      const where=GAME.name?`In "${GAME.name}" the browser sees `:`The browser sees `;
       why=`That folder has no FYMMyMaps.ini — pick the Freight Yard Manager folder itself. `+
-          `The browser sees ${dirs.length} folder${dirs.length===1?"":"s"}${dirs.length?" ("+few(dirs)+")":""} and `+
+          where+`${dirs.length} folder${dirs.length===1?"":"s"}${dirs.length?" ("+few(dirs)+")":""} and `+
           `${files.length} file${files.length===1?"":"s"}${files.length?" ("+few(files)+")":""} at the top of it`+
           (dirs.length&&!files.length?" — the folder's files are being hidden from the browser, not missing.":".");
     }
@@ -2975,7 +2976,7 @@ gamebtn.onclick=async()=>{
     let h=GAME.stored;
     if(h && (await h.requestPermission({mode:"read"}))!=="granted") h=null;
     if(!h){ h=await window.showDirectoryPicker({mode:"read"}); await idbSet("game",h); }
-    GAME.kind="handle"; GAME.root=h; GAME.stored=h;
+    GAME.kind="handle"; GAME.root=h; GAME.stored=h; GAME.name=h.name||"";
     gameNote("Reading your folder…");
     await loadGame();
   }catch(e){ if(e.name!=="AbortError") gameNote("Could not open the folder: "+(e.message||e)); }
@@ -2983,7 +2984,7 @@ gamebtn.onclick=async()=>{
 gamedir.onchange=async()=>{
   const files=new Map();
   for(const f of gamedir.files){ files.set(f.webkitRelativePath.split("/").slice(1).join("/"), f); }
-  GAME.kind="files"; GAME.files=files;
+  GAME.kind="files"; GAME.files=files; GAME.name=gamedir.files.length?gamedir.files[0].webkitRelativePath.split("/")[0]:"";
   gameNote("Reading your folder…");
   await loadGame();
   gamedir.value="";
@@ -2994,7 +2995,7 @@ gameoff.onclick=()=>disconnectGame();
     const h=await idbGet("game");
     if(h){
       GAME.stored=h;
-      try{ if((await h.queryPermission({mode:"read"}))==="granted"){ GAME.kind="handle"; GAME.root=h; await loadGame(); return; } }
+      try{ if((await h.queryPermission({mode:"read"}))==="granted"){ GAME.kind="handle"; GAME.root=h; GAME.name=h.name||""; await loadGame(); return; } }
       catch(e){}
     }
   }
