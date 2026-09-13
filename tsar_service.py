@@ -1486,7 +1486,8 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
     <p><b>Your own yards (optional).</b> <b>Open my FYM folder</b> lets this page read your Freight Yard
       Manager folder: it lists the yards assigned to you and every car sitting in them, where each is
       going and how long it has waited. Read-only, and nothing leaves your browser. Chrome and Edge
-      remember the folder; other browsers ask each visit.</p>
+      remember the folder; other browsers ask each visit. On Windows, Chrome and Edge also ask you
+      once to choose the game's .ini files, because Windows treats .ini as a risky file type.</p>
     <button class="gobtn" id="introok">Got it</button>
   </div>
 </div>
@@ -2783,8 +2784,8 @@ loadFavs(); paintFavs();
 // FYMLocoCars6.ini (car type names) and yards/<id>.wag (a yard's inventory).
 const STALE_DAYS=365;
 const UNASSIGNED="1000";   // the game's "no destination yet" id — not a place
-const GAME={kind:null, root:null, files:null, stored:null, my:new Set(), visited:new Set(),
-            types:{}, wags:{}, saved:{}};
+const GAME={kind:null, root:null, files:null, stored:null, name:"", my:new Set(), visited:new Set(),
+            types:{}, wags:{}, saved:{}, ini:null, needIni:false, iniCached:false};
 const HAS_PICKER=!!window.showDirectoryPicker;
 const gamebtn=document.getElementById("gamebtn"), gameoff=document.getElementById("gameoff"),
       gamedir=document.getElementById("gamedir"), gamenote=document.getElementById("gamenote");
@@ -2814,8 +2815,19 @@ function gameNote(msg,sticky){
 
 // Lookups are exact first, then case-insensitive for root-level files (the
 // game's own casing has varied: FYMMyMaps.ini / FYMmyMaps.ini).
+// Windows Chrome/Edge refuse to hand out .ini files from a directory handle
+// (Safe Browsing rates .ini "dangerous" on Windows; getFileHandle throws
+// TypeError "Name is not allowed" and entries() hides them). Those files come
+// through a one-time showOpenFilePicker instead (pickIni) and live in
+// GAME.ini: name → {h: file handle, text, lastModified}, mirrored in IndexedDB.
+const isNameBlocked=e=>e&&e instanceof TypeError&&/not allowed/i.test(e.message||"");
 async function gameText(path){
   let f;
+  const ie=GAME.kind==="handle"&&GAME.ini&&!path.includes("/")?GAME.ini.get(path.toLowerCase()):null;
+  if(ie){
+    if(ie.h){ try{ if((await ie.h.queryPermission({mode:"read"}))==="granted"){ const g=await ie.h.getFile(); ie.text=await g.text(); ie.lastModified=g.lastModified; ie.fresh=true; } }catch(e){} }
+    if(ie.text!=null){ if(!ie.fresh) GAME.iniCached=true; GAME.saved[path]=ie.lastModified||0; return ie.text; }
+  }
   if(GAME.kind==="handle"){
     const parts=path.split("/"); let d=GAME.root;
     for(const p of parts.slice(0,-1)) d=await d.getDirectoryHandle(p);
@@ -2922,8 +2934,14 @@ async function wagFor(id){
 
 async function loadGame(){
   let mm;
+  GAME.iniCached=false;
   try{ mm=await gameText("FYMMyMaps.ini"); }
   catch(e){
+    if(isNameBlocked(e)){        // Windows Chrome/Edge: folder is fine, .ini files need their own picker
+      GAME.kind=null; GAME.needIni=true; paintGameBtn(); render();
+      gameNote("Windows lets Chrome and Edge read the folder but not its .ini files. Click \"Choose the .ini files\" and select FYMMyMaps.ini, FYMLocoCars6.ini and FYMStates.ini from the Freight Yard Manager folder (Ctrl-click to select all three).",true);
+      return;
+    }
     let why=gameWhy("FYMMyMaps.ini",e);
     if(!why){
       const {files,dirs}=await gamePeek(), few=a=>a.slice(0,5).join(", ")+(a.length>5?", …":"");
@@ -2950,11 +2968,38 @@ async function loadGame(){
   GAME.my.forEach(id=>{ if(KNOWN_LOC.has(id)&&!isFav(id)){ favs.push(id); added++; } });
   if(added){ saveFavs(); paintFavs(); }
   await Promise.all([...GAME.my].map(id=>wagFor(id)));
+  if(GAME.ini) persistIni();
   paintGameBtn(); gameNote(""); render();
 }
+// .ini files chosen through the file picker (Windows Chrome/Edge only)
+async function pickIni(){
+  let hs;
+  try{
+    hs=await window.showOpenFilePicker({multiple:true, id:"fym-ini", startIn:GAME.root||undefined,
+      types:[{description:"FYM settings (.ini)", accept:{"text/plain":[".ini"]}}]});
+  }catch(e){ if(e.name!=="AbortError") gameNote("Could not open the file picker: "+(e.message||e),true); return; }
+  const ini=new Map(GAME.ini||[]);
+  for(const h of hs) ini.set(h.name.toLowerCase(),{h});
+  if(!ini.has("fymmymaps.ini")){ gameNote("FYMMyMaps.ini was not among the files you chose — it is in the Freight Yard Manager folder itself, next to FYMLocoCars6.ini and FYMStates.ini.",true); return; }
+  GAME.ini=ini; GAME.needIni=false; GAME.kind="handle";
+  await idbSet("ini",Object.fromEntries([...ini].map(([k,v])=>[k,v.h])));
+  const missing=["fymlococars6.ini","fymstates.ini"].filter(k=>!ini.has(k));
+  gameNote(missing.length?"Reading your folder… (choose the .ini files again later to add "+missing.join(" and ")+")":"Reading your folder…");
+  await loadGame();
+}
+async function loadIniStore(){
+  const hs=await idbGet("ini"), tx=await idbGet("initext");
+  if(!hs&&!tx){ GAME.ini=null; return; }
+  GAME.ini=new Map();
+  for(const k of new Set([...Object.keys(hs||{}),...Object.keys(tx||{})])) GAME.ini.set(k,Object.assign({},tx&&tx[k]||{},hs&&hs[k]?{h:hs[k]}:{}));
+}
+function persistIni(){
+  const tx={}; for(const [k,v] of GAME.ini) if(v.text!=null) tx[k]={text:v.text,lastModified:v.lastModified||0};
+  if(Object.keys(tx).length) idbSet("initext",tx);
+}
 async function disconnectGame(){
-  await idbDel("game");
-  Object.assign(GAME,{kind:null,root:null,files:null,stored:null,my:new Set(),visited:new Set(),types:{},wags:{},saved:{}});
+  await idbDel("game"); await idbDel("ini"); await idbDel("initext");
+  Object.assign(GAME,{kind:null,root:null,files:null,stored:null,name:"",ini:null,needIni:false,iniCached:false,my:new Set(),visited:new Set(),types:{},wags:{},saved:{}});
   if(state.view==="myyard") state.view="cards";
   paintGameBtn(); render();
 }
@@ -2962,6 +3007,9 @@ function paintGameBtn(){
   const n=GAME.my.size;
   if(GAME.kind){
     gamebtn.textContent=(NARROW.matches?"FYM ✓ ":"FYM folder ✓ · ")+n+" yard"+(n===1?"":"s");
+    gamebtn.classList.add("on"); gameoff.style.display="";
+  } else if(GAME.needIni){
+    gamebtn.textContent=NARROW.matches?"Choose .ini files":"Choose the .ini files";
     gamebtn.classList.add("on"); gameoff.style.display="";
   } else {
     gamebtn.textContent=GAME.stored?(NARROW.matches?"Reconnect FYM":"Reconnect my FYM folder")
@@ -2971,11 +3019,13 @@ function paintGameBtn(){
 }
 gamebtn.onclick=async()=>{
   if(GAME.kind){ locclear.onclick(); return; }         // connected: back to the landing view
+  if(GAME.needIni){ await pickIni(); return; }
   if(!HAS_PICKER){ gamedir.click(); return; }
   try{
     let h=GAME.stored;
     if(h && (await h.requestPermission({mode:"read"}))!=="granted") h=null;
-    if(!h){ h=await window.showDirectoryPicker({mode:"read"}); await idbSet("game",h); }
+    if(!h){ h=await window.showDirectoryPicker({mode:"read"}); await idbSet("game",h); await idbDel("ini"); await idbDel("initext"); GAME.ini=null; }
+    else { await loadIniStore(); if(GAME.ini) for(const v of GAME.ini.values()) if(v.h&&v.text==null){ try{ await v.h.requestPermission({mode:"read"}); }catch(e){} } }
     GAME.kind="handle"; GAME.root=h; GAME.stored=h; GAME.name=h.name||"";
     gameNote("Reading your folder…");
     await loadGame();
@@ -2995,7 +3045,7 @@ gameoff.onclick=()=>disconnectGame();
     const h=await idbGet("game");
     if(h){
       GAME.stored=h;
-      try{ if((await h.queryPermission({mode:"read"}))==="granted"){ GAME.kind="handle"; GAME.root=h; GAME.name=h.name||""; await loadGame(); return; } }
+      try{ if((await h.queryPermission({mode:"read"}))==="granted"){ await loadIniStore(); GAME.kind="handle"; GAME.root=h; GAME.name=h.name||""; await loadGame(); return; } }
       catch(e){}
     }
   }
@@ -3008,6 +3058,10 @@ function myYardsPanel(){
   const ids=[...GAME.my].filter(id=>KNOWN_LOC.has(id)).sort((a,b)=>locLabel(a).localeCompare(locLabel(b)));
   let h=`<h4>My yards <span class="dim">· ${ids.length} assigned in FYMMyMaps.ini</span></h4>`;
   if(!ids.length) h+=`<div class="drow dim">No yards are flagged as yours in FYMMyMaps.ini.</div>`;
+  if(GAME.ini){
+    const mm=GAME.ini.get("fymmymaps.ini"), when=mm&&mm.lastModified?fmtDate(mm.lastModified):"";
+    h+=`<div class="drow dim">.ini files ${GAME.iniCached?"from the copy kept in this browser":"read from the folder"}${when?" (saved "+when+")":""} · <button class="sib" onclick="pickIni()">choose them again</button></div>`;
+  }
   h+=ids.map(id=>{
     const w=GAME.wags[id];
     const st=!w ? "no inventory file yet" : !w.ok ? "unrecognised .wag" :
@@ -3016,7 +3070,7 @@ function myYardsPanel(){
     return `<div class="drow myrow"><button class="sib" data-loc="${id}">${esc(locLabel(id))}</button><span class="dim">${st}</span></div>`;
   }).join("");
   el.innerHTML=h;
-  el.querySelectorAll(".sib").forEach(b=>{ b.onclick=()=>{ state.view="myyard"; gotoLoc(b.dataset.loc); }; });
+  el.querySelectorAll(".sib[data-loc]").forEach(b=>{ b.onclick=()=>{ state.view="myyard"; gotoLoc(b.dataset.loc); }; });
   return el;
 }
 let yardGroup="cut";

@@ -110,6 +110,22 @@ things, all parsed in JS inside `HTML_TEMPLATE` (section "player folder"):
   `parseWag` must reproduce the Python-derived figures for Fostoria 1091
   (714 cars, 46 cuts, 303 loaded, 385 empty, 194 staying, 107 idle > 1 y).
 
+**Windows Chrome/Edge cannot read `.ini` files through a directory handle**
+(found 2026-09-13). Chromium's File System Access API rejects any name
+whose extension Safe Browsing rates DANGEROUS on the current platform
+(`FileSystemAccessManagerImpl::IsSafePathComponent`), and `.ini` is
+DANGEROUS on Windows only: `getFileHandle("FYMMyMaps.ini")` throws
+TypeError "Name is not allowed" and `entries()` silently drops the file.
+`.wag/.nam/.set/.hcf/.json/.zip` are unaffected and macOS never hits it. The
+page detects that TypeError, keeps the folder handle, and asks once for the
+`.ini` files through `showOpenFilePicker` (`pickIni`; the open picker has no
+such filter, only saves prompt). Their handles go to IndexedDB `ini` and
+their text to `initext`, so a reconnect reads them fresh while permission
+is granted and otherwise uses the cached copy (the landing panel says
+which; "choose them again" re-picks). Simulate on a Mac with a fake
+directory handle that throws that TypeError for `.ini` names and a stubbed
+`showOpenFilePicker`.
+
 Never write into the folder from the page. The native folder dialog cannot
 be automated: verify the flow by fetching files from `game_data/` while
 serving the repo root and feeding a `Map` of `File`s to `loadGame()`, then
