@@ -2843,22 +2843,58 @@ const idbDel=key=>idb((db,res)=>{ const t=db.transaction("handles","readwrite");
   t.objectStore("handles").delete(key); t.oncomplete=()=>res(true); t.onerror=()=>res(null); });
 
 let noteTimer;
-function gameNote(msg){
+function gameNote(msg,sticky){
   gamenote.textContent=msg; gamenote.style.display=msg?"":"none";
-  clearTimeout(noteTimer); if(msg) noteTimer=setTimeout(()=>{ gamenote.style.display="none"; },8000);
+  clearTimeout(noteTimer); if(msg&&!sticky) noteTimer=setTimeout(()=>{ gamenote.style.display="none"; },8000);
 }
 
+// Lookups are exact first, then case-insensitive for root-level files (the
+// game's own casing has varied: FYMMyMaps.ini / FYMmyMaps.ini).
 async function gameText(path){
   let f;
   if(GAME.kind==="handle"){
     const parts=path.split("/"); let d=GAME.root;
     for(const p of parts.slice(0,-1)) d=await d.getDirectoryHandle(p);
-    f=await (await d.getFileHandle(parts[parts.length-1])).getFile();
+    let fh;
+    try{ fh=await d.getFileHandle(parts[parts.length-1]); }
+    catch(e){
+      if(e.name!=="NotFoundError"||parts.length>1) throw e;
+      const want=path.toLowerCase();
+      for await (const [name,h] of d.entries()) if(h.kind==="file"&&name.toLowerCase()===want){ fh=h; break; }
+      if(!fh) throw e;
+    }
+    f=await fh.getFile();
   } else {
-    f=GAME.files.get(path); if(!f) throw new Error("missing "+path);
+    f=GAME.files.get(path);
+    if(!f&&!path.includes("/")){ const want=path.toLowerCase(); for(const [k,v] of GAME.files) if(k.toLowerCase()===want){ f=v; break; } }
+    if(!f){ const e=new Error("missing "+path); e.name="NotFoundError"; throw e; }
   }
   GAME.saved[path]=f.lastModified;
   return await f.text();
+}
+// What the browser can see at the top of the folder — shown when the
+// expected files are missing, so a folder-picker or cloud-sync quirk can be
+// told apart from picking the wrong folder.
+async function gamePeek(){
+  const files=[], dirs=[];
+  try{
+    if(GAME.kind==="handle"){
+      for await (const [name,h] of GAME.root.entries()) (h.kind==="file"?files:dirs).push(name);
+    } else {
+      const seen=new Set();
+      for(const k of GAME.files.keys()){ const i=k.indexOf("/"); if(i<0) files.push(k); else seen.add(k.slice(0,i)); }
+      dirs.push(...seen);
+    }
+  }catch(e){}
+  files.sort(); dirs.sort();
+  return {files,dirs};
+}
+function gameWhy(path,e){
+  const name=(e&&e.name)||"", msg=(e&&e.message)||String(e);
+  if(name==="NotFoundError"||/^missing /.test(msg)) return null;   // caller describes the folder
+  if(name==="NotReadableError"||name==="NotAllowedError"||name==="SecurityError")
+    return `The browser could not read ${path} (${name}: ${msg}). If the game is running, close it and try again; if Dropbox shows the file as online-only, make it available offline first.`;
+  return `Could not read ${path}: ${name?name+": ":""}${msg}`;
 }
 async function gameList(dir){
   if(GAME.kind==="handle"){
@@ -2934,7 +2970,17 @@ async function wagFor(id){
 async function loadGame(){
   let mm;
   try{ mm=await gameText("FYMMyMaps.ini"); }
-  catch(e){ gameNote("That folder has no FYMMyMaps.ini — pick the Freight Yard Manager folder itself."); await disconnectGame(); return; }
+  catch(e){
+    let why=gameWhy("FYMMyMaps.ini",e);
+    if(!why){
+      const {files,dirs}=await gamePeek(), few=a=>a.slice(0,5).join(", ")+(a.length>5?", …":"");
+      why=`That folder has no FYMMyMaps.ini — pick the Freight Yard Manager folder itself. `+
+          `The browser sees ${dirs.length} folder${dirs.length===1?"":"s"}${dirs.length?" ("+few(dirs)+")":""} and `+
+          `${files.length} file${files.length===1?"":"s"}${files.length?" ("+few(files)+")":""} at the top of it`+
+          (dirs.length&&!files.length?" — the folder's files are being hidden from the browser, not missing.":".");
+    }
+    gameNote(why,true); await disconnectGame(); return;
+  }
   GAME.my=new Set(mm.split(/\r?\n/).map(l=>l.split(":")).filter(p=>p.length>1&&p[1].trim()==="1").map(p=>p[0].trim()));
   try{
     let id=null, rrid=null; const rr={};
