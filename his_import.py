@@ -117,12 +117,24 @@ def main():
             if tid not in geo or name is not None:
                 geo[tid] = (fixed[0], fixed[1], rr)
 
+    # geo.csv also carries rows other tools add (geo_import.py's source=city
+    # rows, hand rows): keep every non-derived row and replace only ours.
+    kept = []
+    if os.path.isfile(a.out):
+        with open(a.out, newline='') as fh:
+            for row in csv.DictReader(fh):
+                if row.get('source') != 'derived':
+                    kept.append(row)
     with open(a.out, 'w', newline='') as fh:
         w = csv.writer(fh)
         w.writerow(['id', 'lat', 'lon', 'rr', 'source'])
         for tid in sorted(geo, key=int):
             lat, lon, rr = geo[tid]
             w.writerow([tid, lat, lon, rr, 'derived'])
+        for row in kept:
+            w.writerow([row['id'], row['lat'], row['lon'], row.get('rr', ''), row['source']])
+    if kept:
+        print(f'kept {len(kept)} non-derived row(s) already in {a.out}')
 
     print(f'{len(files)} .his files -> {len(geo)} located identities in {a.out}')
     if unresolved:

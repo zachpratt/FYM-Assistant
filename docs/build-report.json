@@ -1,5 +1,5 @@
 {
- "built": "2026-09-13T15:22:49",
+ "built": "2026-09-13T17:07:49",
  "directions": {
   "notes": [
    "Abolished East Thunder symbol, store/assign cars as appropriate",
@@ -16220,8 +16220,8 @@
  },
  "locations": {
   "manual": 0,
-  "map": 3027,
-  "named": 2853,
+  "map": 3032,
+  "named": 2857,
   "total": 2857
  },
  "railroads": {
