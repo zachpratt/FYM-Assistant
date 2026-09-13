@@ -1345,6 +1345,7 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .introcard .gobtn{margin-top:8px}
 .setup{margin:10px 0 4px;border:1px solid var(--line);border-radius:9px;padding:6px 12px 8px}
 .step{display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}
+.step[hidden]{display:none}
 .step .gobtn{margin-top:0}
 .step .dim{font-size:12px}
 .stepno{flex:0 0 22px;width:22px;height:22px;border-radius:50%;border:1px solid var(--line);
@@ -1537,6 +1538,7 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
       <button class="hbtn" id="gamebtn">Open my FYM folder</button>
       <button class="clearbtn" id="gameoff" title="forget this folder" style="display:none">disconnect ✕</button>
       <input type="file" id="gamedir" webkitdirectory style="display:none">
+      <input type="file" id="inifile" accept=".ini" style="display:none">
     </span>
     <button class="hbtn help" id="helpbtn" title="how this site works">?</button>
     <div class="count" id="count"></div>
@@ -3130,6 +3132,7 @@ async function loadGame(){
 // FYMMyMaps.ini chosen through the file picker (Windows Chrome/Edge only);
 // the game-wide .ini tables are baked into the page, so this is the one file.
 async function pickIni(){
+  if(!window.showOpenFilePicker){ document.getElementById("inifile").click(); return; }   // no picker API: plain file input
   let hs;
   try{
     hs=await window.showOpenFilePicker({multiple:false, id:"fym-ini", startIn:GAME.root||undefined,
@@ -3143,6 +3146,17 @@ async function pickIni(){
   gameNote("Reading your folder…");
   await loadGame();
 }
+// plain-input fallback for the .ini step: the File's text is kept, not a handle
+document.getElementById("inifile").onchange=async()=>{
+  const inp=document.getElementById("inifile"), f=inp.files[0]; inp.value="";
+  if(!f) return;
+  if(f.name.toLowerCase()!=="fymmymaps.ini"){ gameNote("That was not FYMMyMaps.ini — it sits in the Freight Yard Manager folder itself, next to the TSARs and yards folders.",true); return; }
+  const ini=new Map(GAME.ini||[]);
+  ini.set("fymmymaps.ini",{text:await f.text(),lastModified:f.lastModified});
+  GAME.ini=ini; GAME.needIni=false; GAME.kind="handle"; GAME.skipIni=false; await idbDel("skipini");
+  gameNote("Reading your folder…");
+  await loadGame();
+};
 async function loadIniStore(){
   GAME.skipIni=!!(await idbGet("skipini"));
   const hs=await idbGet("ini"), tx=await idbGet("initext");
