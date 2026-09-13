@@ -12,7 +12,7 @@ time, no dependencies. You can also just open `docs/index.html` locally.
 ## Updating after the game publishes new TSARs
 
 ```
-1. make update          # mirror the Dropbox game folder, then a strict rebuild
+1. make update          # mirror the Dropbox game folder, refresh the map tables, strict rebuild
 2. git commit -am "TSAR update" && git push
 ```
 

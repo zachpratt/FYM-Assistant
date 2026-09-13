@@ -1,11 +1,16 @@
-.PHONY: site check serve clean sync update
+.PHONY: site check serve clean sync tables update
 
 # Mirror the Dropbox game folder into game_data/ and snapshot it (see game_sync.py).
 sync:
 	python3 game_sync.py
 
-# The update loop in one go: sync, then a strict rebuild.
-update: sync check
+# Map-derived tables (mims.csv, geo.csv) if the sync changed any map file,
+# then names for new location ids from the game's revision notes.
+tables:
+	python3 map_tables.py
+
+# The update loop in one go: sync, tables, then a strict rebuild.
+update: sync tables check
 
 # Rebuild docs/index.html from game_data/TSARs (or the legacy TSARs/ folder).
 site:

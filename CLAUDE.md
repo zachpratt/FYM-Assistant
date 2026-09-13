@@ -14,7 +14,8 @@ from `docs/` on `main` (https://zachpratt.github.io/FYM-Assistant/), so
 
 ```
 make sync      # mirror ~/Dropbox/Freight Yard Manager into game_data/ + snapshot commit
-make update    # sync, then check
+make tables    # regenerate mims.csv/geo.csv if maps changed; name new ids from MapRNotes.rtf
+make update    # sync, tables, then check
 make site      # rebuild docs/index.html from game_data/TSARs (else TSARs/)  (~0.2s)
 make check     # same build, exits non-zero on unrecognised input (--strict)
 make serve     # build + serve at localhost:8000 (Chrome blocks file://)
@@ -23,10 +24,16 @@ make serve     # build + serve at localhost:8000 (Chrome blocks file://)
 `python3 tsar_service.py --help` for the full CLI (`--only UP,BNSF` builds a
 subset; positional file args work too).
 
-The TSAR update loop: `make update` (game_sync.py rsyncs the game folder into
-`game_data/`, commits a snapshot in game_data's own private git repo, then
-builds strict) → read the printed blocks (what the sync changed, roster diff vs
-previous build, format-check anomalies) → commit → push. `git -C game_data
+The update loop: `make update` (game_sync.py rsyncs the game folder into
+`game_data/` and commits a snapshot in game_data's own private git repo;
+map_tables.py reruns mim_import.py + his_import.py only if a `.yrd`/`.his`
+changed since the mirror commit stamped in `game_data/.git/map_tables_head`,
+then names any id in FYMMyMaps.ini or mims.csv that locations.csv lacks from
+the game's own revision notes `MapRNotes.rtf` (source=map; an id the notes
+do not name is printed and left for a hand row, so strict still stops on
+it); then a strict build) → read the printed blocks (what the sync changed,
+map tables, new names, roster diff vs previous build, format-check
+anomalies) → `git add -A` → commit → push. `git -C game_data
 log --stat` / `diff` is the history of the game folder itself. The roster diff
 is what catches a truncated download; the anomaly pass is what catches the
 game changing its format.
@@ -247,8 +254,11 @@ have Zach click the real button once.
 - `docs/`, `locations.csv` and `mims.csv` are **committed deliberately**
   (Pages serves `docs/`; the name store and the MIM-family table must persist
   across updates). Don't gitignore them. `mims.csv` is derived from the
-  game's `.yrd` map files by `mim_import.py` — rerun only when maps change
-  (rare); the build merely reads it.
+  game's `.yrd` map files by `mim_import.py` and `geo.csv`'s derived rows
+  from the `.his` files by `his_import.py` (which keeps every non-derived
+  row: geo_import.py's city rows and hand rows such as South St. Paul UP
+  1658, whose map lost its coordinates in 2026-09); `make update` reruns
+  both only when maps changed, and the build merely reads them.
 - Game screenshots for the future map-ID extraction effort should also stay
   uncommitted.
 

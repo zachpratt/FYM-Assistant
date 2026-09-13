@@ -128,11 +128,10 @@ def main():
     with open(a.out, 'w', newline='') as fh:
         w = csv.writer(fh)
         w.writerow(['id', 'lat', 'lon', 'rr', 'source'])
-        for tid in sorted(geo, key=int):
-            lat, lon, rr = geo[tid]
-            w.writerow([tid, lat, lon, rr, 'derived'])
-        for row in kept:
-            w.writerow([row['id'], row['lat'], row['lon'], row.get('rr', ''), row['source']])
+        rows = [[tid, lat, lon, rr, 'derived'] for tid, (lat, lon, rr) in geo.items()]
+        rows += [[r['id'], r['lat'], r['lon'], r.get('rr', ''), r['source']] for r in kept]
+        rows.sort(key=lambda r: (int(r[0]), r[4] != 'derived'))
+        w.writerows(rows)
     if kept:
         print(f'kept {len(kept)} non-derived row(s) already in {a.out}')
 
