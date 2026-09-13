@@ -805,6 +805,7 @@ def dump_payload(payload):
            '"mims":[', ',\n'.join(j(f) for f in payload.get('mims', [])), '],',
            '"geo":[', ',\n'.join(j(g) for g in payload.get('geo', [])), '],',
            '"game":' + j(payload.get('game', {})) + ',',
+           '"rrids":' + j(payload.get('rrids', {})) + ',',
            '"trains":[', ',\n'.join(j(t) for t in payload['trains']), ']}']
     # '/' only ever occurs inside a JSON string, so this cannot corrupt the
     # structure — it just stops a note containing "</script>" from ending the
@@ -1036,6 +1037,32 @@ def load_mims(path, names, anom):
 # ---------------------------------------------------------------------------
 
 GEO_PATH = 'geo.csv'
+RRIDS_PATH = 'railroad_ids.csv'
+
+
+def load_rrids(path, anom):
+    """railroad_ids.csv -> {game railroad id: reporting mark}.
+
+    The game's sort files name railroads by an internal id (500..~818).
+    The table was first recovered on 2026-09-11 by ticking every railroad,
+    in picker order, into a scratch sort and transcribing the picker; the
+    same day it turned out to be FYMLocoCars6.ini [Railroads] with
+    RailroadID + 499 (all 247 transcribed rows agree). This CSV is the
+    fallback for visitors with no folder open; the page reads the folder's
+    table when one is. CSXT is the game's mark for CSX."""
+    out = {}
+    if not path or not os.path.isfile(path):
+        return out
+    with open(path, encoding='utf-8', newline='') as fh:
+        for row in csv.reader(fh):
+            if not row or row[0] == 'id':
+                continue
+            if len(row) < 3 or not row[0].isdigit():
+                anom.append(('railroad_ids', f'malformed row {row!r}'))
+                continue
+            if row[2]:
+                out[row[0]] = 'CSX' if row[2] == 'CSXT' else row[2]
+    return out
 
 
 def load_geo(path, names, anom):
@@ -1127,6 +1154,9 @@ def build(files, out, title, loc_path, use_cache=True, subset=False):
     else:
         print("  game tables: FYMLocoCars6.ini / FYMStates.ini not found beside the TSARs folder "
               "(car type names will come only from a visitor's own folder)")
+    payload['rrids'] = load_rrids(RRIDS_PATH, anom)
+    if payload['rrids']:
+        print(f"  railroad ids: {len(payload['rrids'])} named")
 
     report_path = os.path.join(os.path.dirname(os.path.abspath(out)), REPORT_NAME)
     old = None
@@ -1328,11 +1358,16 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .mypanel .myrow{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
 .stale{color:var(--future)}
 .ygh{margin:14px 0 4px;font-size:13px;font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
-.yrow{display:grid;grid-template-columns:140px minmax(120px,1fr) 24px minmax(140px,1fr) 56px;gap:8px;
+.yrow{display:grid;grid-template-columns:12px 140px minmax(120px,1fr) 24px minmax(140px,1fr) 56px;gap:8px;
   padding:4px 0;font-size:13px;border-top:1px solid var(--line);align-items:center}
 .yrow .ycar{font-family:var(--mono);color:var(--ink)}
+.yswatch{display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid rgba(0,0,0,.25);box-sizing:border-box}
+.yswatch.none{background:transparent;border-style:dashed;border-color:var(--line)}
 .yrow .ytype{color:var(--muted)}
 .yrow .ydwell{text-align:right;font-family:var(--mono);font-size:12px}
+.ytrains .jump{font-family:var(--mono);font-size:12px}
+.ytrains{display:inline-flex;gap:8px;flex-wrap:wrap;align-items:baseline;margin-left:6px}
+.ydef{font-size:12px;color:var(--dim);margin:-2px 0 4px}
 .yrow.stale .ydwell{color:var(--future);font-weight:600}
 .lbadge{display:inline-block;width:20px;text-align:center;border-radius:4px;font-size:11px;font-weight:700;
   padding:1px 0;background:var(--chip);color:var(--muted)}
@@ -1472,9 +1507,9 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
   .node{padding:8px 10px;font-size:13px}
   .sib{padding:7px 12px;font-size:13px}
   .locbar{margin:0 8px 6px;padding:8px 10px;gap:8px}
-  .yrow{grid-template-columns:1fr auto auto}
+  .yrow{grid-template-columns:12px 1fr auto auto}
   .yrow .ytype{display:none}
-  .yrow .ydest{grid-column:1/-1}
+  .yrow .ydest{grid-column:2/-1}
   .locbar .seg button{padding:8px 10px}
   .locnote{display:none}
   .wrap{padding:8px 8px 60px}
@@ -2550,19 +2585,20 @@ function materialize(plan,src,dst,canCarry,seenChain,chains){
   }
 }
 
+function carries(t,carType){
+  const cs=fclasses(t);
+  if(cs.includes("passenger")||cs.includes("engines")||cs.includes("nonrev")) return false;
+  if(carType==="any" || cs.includes(carType)) return true;
+  // locals, yard jobs and transfers are drayage, not line-haul service:
+  // they shuttle whatever the yardmaster hands them (a container reaches
+  // its ramp BECAUSE the transfer job exists), whatever their class says
+  return /\b(local|yard ?job|transfer|switch)\b/i.test(t.ty);
+}
 function findRoutes(src,dst,carType){
   // pool by capability: passenger, light power and non-revenue types never
   // carry a routed car; otherwise a train qualifies when its capability set
   // includes the selected car type ("any" = any revenue freight service)
-  const canCarry=t=>{
-    const cs=fclasses(t);
-    if(cs.includes("passenger")||cs.includes("engines")||cs.includes("nonrev")) return false;
-    if(carType==="any" || cs.includes(carType)) return true;
-    // locals, yard jobs and transfers are drayage, not line-haul service:
-    // they shuttle whatever the yardmaster hands them (a container reaches
-    // its ramp BECAUSE the transfer job exists), whatever their class says
-    return /\b(local|yard ?job|transfer|switch)\b/i.test(t.ty);
-  };
+  const canCarry=t=>carries(t,carType);
   const srcMap=mapOf(src), dstMap=mapOf(dst);
   if(srcMap===dstMap) return {src,dst,homeRR:null,corridors:[],total:0,truncated:false};
   const pool=DATA.trains.filter(t=>status(t)==="active"&&canCarry(t));
@@ -2866,9 +2902,11 @@ const UNASSIGNED="1000";   // the game's "no destination yet" id — not a place
 // Game-wide tables baked in at build time; a readable folder copy overrides
 // them (a player whose game is newer than the build still gets the names).
 const BAKED=DATA.game||{};
-const bakedTables=()=>({types:{...(BAKED.types||{})}});
+const bakedTables=()=>({types:{...(BAKED.types||{})}, parent:{...(BAKED.parent||{})}, models:{...(BAKED.models||{})},
+  states:{...(BAKED.states||{})}, stateId:Object.fromEntries(Object.entries(BAKED.states||{}).map(([n,ab])=>[ab,n]))});
 const GAME={kind:null, root:null, files:null, stored:null, name:"", my:new Set(), visited:new Set(),
-            ...bakedTables(), wags:{}, saved:{}, ini:null, needIni:false, iniCached:false, skipIni:false, mySource:"file"};
+            ...bakedTables(), wags:{}, saved:{},
+            ini:null, needIni:false, iniCached:false, skipIni:false, mySource:"file"};
 const HAS_PICKER=!!window.showDirectoryPicker;
 const gamebtn=document.getElementById("gamebtn"), gameoff=document.getElementById("gameoff"),
       gamedir=document.getElementById("gamedir"), gamenote=document.getElementById("gamenote");
@@ -2987,9 +3025,13 @@ function parseWag(text){
       const eq=l.indexOf("="); if(eq<0) continue;
       const k=l.slice(0,eq), v=l.slice(eq+1);
       if(k==="CarName") car.name=v;
-      else if(k==="TypeID") car.tid=v;
-      else if(k==="TypeGroup") car.grp=v.split(":")[0];
-      else if(k==="DestinationID"){ const d=v.split(":"); car.dest=d[0]||""; car.dest2=d[10]||""; }
+      // cabooses (C) and engines (E) append their paint as "&H" colours:
+      // "TypeID=3:&HC82824:&HFFFFFF:&HFFFFFF"; the type id is the first field
+      else if(k==="TypeID") car.tid=v.split(":")[0];
+      // engines: "TypeGroup=E:0:0:0:<engine model>:<n>", model = EM<n> in
+      // FYMLocoCars6.ini [Engine Models]
+      else if(k==="TypeGroup"){ const g=v.split(":"); car.grp=g[0]; if(g[0]==="E") car.model=g[4]||""; }
+      else if(k==="DestinationID"){ const d=v.split(":"); car.dest=d[0]||""; car.ind=d[2]||""; car.dest2=d[10]||""; }
       else if(k==="IsLoaded") car.loaded=v;
       else if(k==="Originator") car.orig=v;
       continue;
@@ -3013,6 +3055,13 @@ async function wagFor(id){
   if(!GAME.visited.has(id)) return null;
   try{ const w=parseWag(await gameText("yards/"+id+".wag")); w.saved=GAME.saved["yards/"+id+".wag"]; GAME.wags[id]=w; }
   catch(e){ GAME.wags[id]={ok:false,error:String(e.message||e),cars:[],cuts:[]}; }
+  // the yardmaster's sort plan lives beside the inventory (.nam names, .set tokens)
+  try{
+    // .hcf (hump colours) is optional: without it the swatches are blank
+    let hcf=""; try{ hcf=await gameText("yards/"+id+".hcf"); }catch(e){}
+    GAME.wags[id].sorts=parseSorts(await gameText("yards/"+id+".nam"), await gameText("yards/"+id+".set"), hcf);
+  }
+  catch(e){ GAME.wags[id].sorts=null; }
   return GAME.wags[id];
 }
 
@@ -3040,16 +3089,31 @@ async function loadGame(){
   GAME.mySource=mm?"file":"favs";
   GAME.my=mm?new Set(mm.split(/\r?\n/).map(l=>l.split(":")).filter(p=>p.length>1&&p[1].trim()==="1").map(p=>p[0].trim())):new Set();
   try{
-    let id=null;
+    let id=null, rrid=null; const rr={};
     const txt=await gameText("FYMLocoCars6.ini");
-    GAME.types={};
+    GAME.types={}; GAME.parent={}; GAME.models={};
     txt.split(/\r?\n/).forEach(l=>{
-      if(l.startsWith("TypeID=")) id=l.slice(7).trim();
+      if(l.startsWith("[")){ id=null; rrid=null; }
+      // [Railroads]: "RailroadID=184" / "Mark=IATR"; the sort files' railroad
+      // token is RailroadID + 499 (checked against every transcribed anchor)
+      else if(l.startsWith("RailroadID=")) rrid=parseInt(l.slice(11),10)+499;
+      else if(l.startsWith("Mark=")&&rrid){ const m=l.slice(5).trim(); rr[rrid]=m==="CSXT"?"CSX":m; rrid=null; }
+      else if(l.startsWith("TypeID=")) id=l.slice(7).trim();
+      else if(l.startsWith("ParentTypeID=")&&id) GAME.parent[id]=l.slice(13).trim();
       else if(l.startsWith("Name=")&&id) GAME.types[id]=l.slice(5).trim();
+      else if(/^EM\d+,/.test(l)){ const f=l.split(","); GAME.models[f[0].slice(2)]=f[1].trim(); }
     });
+    if(Object.keys(rr).length>=Object.keys(DATA.rrids||{}).length) Object.assign(RR_IDS,rr);
   }catch(e){}
   try{ GAME.visited=new Set((await gameList("yards")).filter(n=>n.endsWith(".wag")).map(n=>n.slice(0,-4))); }
   catch(e){ GAME.visited=new Set(); }
+  try{   // FYMStates.ini: StateN=XX:colour:region:Name — sort tokens 1..58 are these N
+    const txt=await gameText("FYMStates.ini");
+    GAME.states={}; GAME.stateId={};
+    txt.split(/\r?\n/).forEach(l=>{
+      const m=l.match(/^State(\d+)=([A-Z]+):/); if(m){ GAME.states[m[1]]=m[2]; GAME.stateId[m[2]]=m[1]; }
+    });
+  }catch(e){ GAME.states={}; GAME.stateId={}; }
   // assigned yards become favorites; nothing already starred is removed.
   // Without FYMMyMaps.ini it runs the other way: the starred yards that have
   // an inventory file here are the player's list.
@@ -3093,6 +3157,7 @@ function persistIni(){
 async function disconnectGame(){
   await idbDel("game"); await idbDel("ini"); await idbDel("initext"); await idbDel("skipini");
   Object.assign(GAME,bakedTables(),{kind:null,root:null,files:null,stored:null,name:"",ini:null,needIni:false,iniCached:false,skipIni:false,mySource:"file",my:new Set(),visited:new Set(),wags:{},saved:{}});
+  resetRrIds();
   if(state.view==="myyard") state.view="cards";
   paintGameBtn(); render();
 }
@@ -3204,16 +3269,261 @@ function myYardsPanel(){
   el.querySelectorAll(".sib[data-loc]").forEach(b=>{ b.onclick=()=>{ state.view="myyard"; gotoLoc(b.dataset.loc); }; });
   return el;
 }
-let yardGroup="cut";
+// ---- car-to-train join ----
+// For a yard L and a destination D: active trains that board at L (originate
+// there or explicitly pick up) and reach D's map (terminate, explicitly set
+// out, or pass through), filtered by the car's class. Same boarding /
+// alighting / capability rules as the route finder, so the two agree.
+const IM_TYPES=new Set(["5","6","19"]), AUTO_TYPES=new Set(["7"]);
+function carClass(c){
+  const ids=[c.tid, GAME.parent[c.tid]];
+  if(ids.some(i=>IM_TYPES.has(i))) return "intermodal";
+  if(ids.some(i=>AUTO_TYPES.has(i))) return "auto";
+  return "carload";
+}
+const cityOf=id=>(LOC[id]||"").split(",")[0].replace(/\b(Yard|Jct\.?|Junction)\b/gi,"").trim();
+// Train suggestions in the yard view (which train takes a sort or a
+// destination group) are built but not shown: Zach judged the routing not
+// trustworthy enough yet (2026-09-13, merging car-trains). Flip to show.
+const YARD_TRAINS=false;
+function yardJoin(w,L){
+  if(w.join && w.join.L===L) return w.join;
+  const Lm=mapOf(L);
+  const atL=DATA.trains.filter(t=>status(t)==="active" && (mapOf(t.o)===Lm || t.wb.some(y=>mapOf(y)===Lm)));
+  const byDest={};
+  w.cars.forEach(c=>{
+    const D=c.dest; if(!D||D===L||D===UNASSIGNED) return;
+    const cls=carClass(c), key=D+"|"+cls;
+    if(byDest[key]) return;
+    const Dm=mapOf(D), city=cityOf(D).toLowerCase();
+    const hits=[];
+    atL.forEach(t=>{
+      if(!carries(t,cls)) return;
+      const how=mapOf(t.d)===Dm?"terminates":t.wa.some(y=>mapOf(y)===Dm)?"sets out":t.r.some(y=>mapOf(y)===Dm)?"passes":"";
+      if(!how) return;
+      const board=mapOf(t.o)===Lm?"originates":"picks up";
+      const notes=[].concat(...famIds(L).map(y=>t.wn[y]||[]));
+      const mention=city.length>2 && notes.some(n=>n.toLowerCase().includes(city));
+      hits.push({t,how,board,mention});
+    });
+    const rank=h=>(h.mention?0:4)+(h.how==="terminates"?0:h.how==="sets out"?1:2)+(h.board==="originates"?0:0.5);
+    hits.sort((a,b)=>rank(a)-rank(b) || (a.t.fs<b.t.fs?-1:1));
+    byDest[key]=hits;
+  });
+  w.join={L, byDest, forCar:c=>byDest[c.dest+"|"+carClass(c)]||null};
+  return w.join;
+}
+function trainChip(h){
+  return `<button class="jump" data-jump="${h.t.i}" title="${esc(h.t.rr+" "+h.t.fs+" · "+h.board+" here, "+h.how+" there"+(h.mention?" · instructions here name that destination":""))}">${h.mention?"★ ":""}${esc(h.t.fs)}</button>`;
+}
+function wireJoin(el,L){
+  el.querySelectorAll("[data-jump]").forEach(b=>{ b.onclick=e=>{ e.stopPropagation(); jumpTo(+b.dataset.jump); }; });
+  el.querySelectorAll("[data-route]").forEach(b=>{ b.onclick=()=>{
+    const D=b.dataset.route;
+    rstate.from={id:L,nm:LOC[L]||""}; rstate.to={id:D,nm:LOC[D]||""};
+    rfin.value=L+(LOC[L]?"  "+LOC[L]:""); rtin.value=D+(LOC[D]?"  "+LOC[D]:"");
+    if([...rcartype.options].some(o=>o.value===b.dataset.cls)) rcartype.value=b.dataset.cls;
+    setRouter(true); routeNow(); window.scrollTo({top:0,behavior:"smooth"});
+  }; });
+}
+
+// ---- sorts: the yardmaster's own blocking plan ----
+// .nam: line k+1 names sort slot k (250 slots). .set: after "SortData", one
+// line per slot, "<token count>:<tokens…>:". Token grammar (decoded from
+// Zach's yards): id >= 1000 = destination map; 1..58 = state (FYMStates.ini);
+// "-1:60:<map>:<n>" = industry n on that map; 500..999 = a railroad, always
+// followed by a state id or 0 (any state); 60 = bad orders; 62 = catch-all.
+// "DisplaySetups" lines "<name>:<bool>:<bool>:<bound map ids>:<slots>" are
+// per-operator views of the slots (Mason City binds UP to 2124 and CPKC to
+// 2125; CN and IATR are unbound); a car is only matched against one view. Names are personal
+// shorthand and never used for matching. .hcf: "V1.0", "<HumpColours>", then
+// line k+3 is the "r:g:b" colour of slot k (the game's default palette unless
+// the yardmaster recoloured a sort).
+// The game's railroad id -> reporting mark table, baked from railroad_ids.csv
+// (recovered 2026-09-11: a scratch sort ticked in picker order keeps tick
+// order in the .set, and the picker is alphabetical by mark, Class I first).
+// railroad_ids.csv is the fallback; an open folder's FYMLocoCars6.ini
+// [Railroads] (RailroadID + 499 = sort token) overrides it, see loadGame
+const RR_IDS=Object.assign({},DATA.rrids||{},(DATA.game&&DATA.game.rr)||{});   // csv fallback, then the game's own [Railroads] table baked by the build
+function resetRrIds(){ Object.keys(RR_IDS).forEach(k=>delete RR_IDS[k]); Object.assign(RR_IDS,DATA.rrids||{}); }
+function parseSorts(namText,setText,hcfText){
+  const names=namText.split(/\r?\n/).slice(1);
+  const colors=(hcfText||"").split(/\r?\n/).slice(2).map(l=>{ const m=l.match(/^(\d+):(\d+):(\d+)$/); return m?`rgb(${m[1]},${m[2]},${m[3]})`:""; });
+  const lines=setText.split(/\r?\n/), S={groups:{},bound:{},slots:{}};
+  lines.forEach(l=>{ const m=l.match(/^(.*?):(True|False):(True|False):([\d,]*):([\d,]+)$/);
+    if(m){ S.groups[m[1]]=m[5].split(",").map(Number); S.bound[m[1]]=m[4]?m[4].split(","):[]; } });
+  const start=lines.indexOf("SortData"); if(start<0) return S;
+  lines.slice(start+1,start+251).forEach((line,k)=>{
+    const toks=line.split(":").filter(t=>t!==""); if(!toks.length||toks[0]==="0") return;
+    const sl={n:k+1,name:names[k]||"Sort #"+(k+1),color:colors[k]||"",ids:new Set(),states:new Set(),inds:new Set(),rr:[],flags:new Set(),raw:[]};
+    const it=toks.slice(1); let i=0;
+    while(i<it.length){
+      const t=it[i];
+      if(t==="-1"||t==="-3"||t==="-2"){
+        if(t==="-1"&&it[i+1]==="60") sl.inds.add(it[i+2]+"#"+it[i+3]); else sl.raw.push(it.slice(i,i+4).join(":"));
+        i+=4; continue;
+      }
+      const v=+t;
+      if(v>=1000) sl.ids.add(t);
+      else if(v>=500){ sl.rr.push([t,it[i+1]||"0"]); i+=2; continue; }
+      else if(v>=1&&v<=58) sl.states.add(t);
+      else sl.flags.add(t);
+      i++;
+    }
+    S.slots[k+1]=sl;
+  });
+  return S;
+}
+const cleanSortName=n=>n.replace(/[^A-Za-z0-9&/,.'()#+-]+/g," ").replace(/\s+/g," ").trim()||"(unnamed sort)";
+const stateOf=id=>GAME.stateId[((LOC[id]||"").split(",").pop()||"").trim().toUpperCase()]||null;
+// roads that actually serve a map, from the rosters: every train that
+// originates, terminates or works there
+let ROADS_AT=null;
+function roadsAt(id){
+  if(!ROADS_AT){
+    ROADS_AT={};
+    DATA.trains.forEach(t=>{ [t.o,t.d].concat(t.w).forEach(y=>{ if(y){ const k=mapOf(y); (ROADS_AT[k]=ROADS_AT[k]||new Set()).add(t.op||t.rr); } }); });
+  }
+  return ROADS_AT[mapOf(id)]||new Set();
+}
+function rrLabel(rr){ const m=RR_IDS[rr]; return m?m:"railroad #"+rr; }
+function sortDef(sl){
+  const p=[];
+  if(sl.inds.size) p.push([...sl.inds].map(x=>{ const [m,n]=x.split("#"); return "industry "+n+(m?" on "+(LOC[m]?locLabel(m).split(",")[0]:"#"+m):""); }).slice(0,3).join(", ")+(sl.inds.size>3?" +"+(sl.inds.size-3):""));
+  if(sl.ids.size) p.push([...sl.ids].slice(0,3).map(locLabel).join(", ")+(sl.ids.size>3?" +"+(sl.ids.size-3)+" more":""));
+  if(sl.states.size) p.push("states "+[...sl.states].map(x=>GAME.states[x]||"#"+x).join(" "));
+  if(sl.rr.length) p.push(sl.rr.map(([r,st])=>rrLabel(r)+(st!=="0"?" in "+(GAME.states[st]||"#"+st):"")).slice(0,4).join(", ")+(sl.rr.length>4?" +"+(sl.rr.length-4):""));
+  if(sl.flags.has("62")) p.push("everything else");
+  if(sl.flags.has("60")) p.push("bad orders");
+  if(sl.raw.length) p.push(sl.raw.length+" unknown token"+(sl.raw.length>1?"s":""));
+  return p.join(" · ")||"(empty)";
+}
+// which sort a car falls into, within one display group; precedence
+// industry > map id > state > railroad(+state) > catch-all
+function sortFor(S,group,c){
+  let best=null;
+  group.forEach((k,order)=>{
+    const sl=S.slots[k]; if(!sl) return;
+    let pri=null;
+    if(c.dest&&sl.inds.has(c.dest+"#"+c.ind)) pri=0;
+    else if(c.dest&&sl.ids.has(c.dest)) pri=1;
+    else if(c.dest&&c.dest!==UNASSIGNED&&sl.states.has(stateOf(c.dest))) pri=2;
+    else if(c.dest&&c.dest!==UNASSIGNED&&sl.rr.some(([r,st])=>{ const m=RR_IDS[r]; return m&&roadsAt(c.dest).has(m)&&(st==="0"||st===stateOf(c.dest)); })) pri=3;
+    else if(sl.flags.has("62")) pri=4;
+    if(pri!==null&&(best===null||pri<best.pri||(pri===best.pri&&order<best.order))) best={pri,order,k};
+  });
+  return best;
+}
+// trains from this yard that carry a sort's block. In order of trust:
+// "symbol" — the sort is named with the symbol of a train boarding here
+// (Pekin's MBNAS, LPD01); "vote" — the block's own cars, each with a
+// class-gated direct train, elect the train most of them would take;
+// "tokens" — the sort's definition scored against the train's stops;
+// "name" — a place word in the sort name, last resort. Every path is gated
+// by carries(): a unit coal train never carries a manifest block.
+const symCore=fs=>fs.toUpperCase().replace(/-##[A-Z]?$/,"").replace(/^[A-Z]{2,5} (?=\S)/,"").trim();
+function sortTrains(sl,L,atL,cars,J){
+  const Lm=mapOf(L);
+  // an industry-only sort is a local spot, not a block for a train
+  if(sl.inds.size&&!sl.ids.size&&!sl.states.size&&!sl.rr.length&&!sl.flags.has("62")) return {hits:[],how:"local",local:true};
+  const classes=[...new Set((cars||[]).map(carClass))]; if(!classes.length) classes.push("carload");
+  atL=atL.filter(t=>classes.some(cls=>carries(t,cls)));
+  const dedupe=xs=>{ const seen=new Set(); return xs.filter(x=>{ const k=x.t.rr+"|"+x.t.fs; if(seen.has(k)) return false; seen.add(k); return true; }); };
+  // 1. the sort names a train symbol outright: the whole symbol core, or
+  // its leading token when that token is 4+ characters and no other symbol
+  // boarding here starts with it (Pekin's "1900 PEOR" = IMRR 1900 Powerton)
+  const nm=" "+cleanSortName(sl.name).toUpperCase().replace(/[^A-Z0-9]+/g," ")+" ";
+  const lead=fs=>symCore(fs).split(/[^A-Z0-9]+/)[0]||"";
+  const leadCount={}; dedupe(atL.map(t=>({t}))).forEach(x=>{ const k=lead(x.t.fs); leadCount[k]=(leadCount[k]||0)+1; });
+  const bySym=dedupe(atL.filter(t=>{
+    const c=symCore(t.fs).replace(/[^A-Z0-9]+/g," "), k=lead(t.fs);
+    return (c.length>=3&&nm.includes(" "+c+" ")) || (k.length>=4&&leadCount[k]===1&&nm.includes(" "+k+" "));
+  }).map(t=>({t,sc:10,why:"named in the sort"})));
+  if(bySym.length) return {hits:bySym.slice(0,4),how:"symbol"};
+  // 2. the block's cars vote with their direct trains — only when enough of
+  // the block has one (at least two cars and a fifth of the outbound cars)
+  if(cars&&J){
+    const votes={}, ref={}; let voters=0, outbound=0;
+    cars.forEach(c=>{ if(!c.dest||c.dest===L||c.dest===UNASSIGNED) return; outbound++;
+      const hs=J.forCar(c); if(!hs||!hs.length) return; voters++;
+      hs.slice(0,3).forEach((h,i)=>{ const k=h.t.rr+"|"+h.t.fs; votes[k]=(votes[k]||0)+(i?1:2); ref[k]=h.t; }); });
+    const won=Object.keys(votes).sort((a,b)=>votes[b]-votes[a]||(a<b?-1:1));
+    if(won.length&&voters>=2&&voters*5>=outbound)
+      return {hits:won.slice(0,4).map(k=>({t:ref[k],sc:votes[k],why:Math.min(voters,Math.round(votes[k]/2))+" of "+voters+" cars in this block have it as a direct train"})),how:"vote",voters};
+  }
+  // 3. the sort's definition against the train's stops
+  const scored=atL.map(t=>{
+    // a sort's id can be a sibling yard on this very map (Payne is on the
+    // Fostoria map): match those by exact yard id, others by map family
+    const stops=[t.d].concat(t.wa).concat(t.r).filter(Boolean);
+    const exact=new Set(stops), reach=new Set(stops.map(mapOf)); reach.delete(Lm);
+    const ends=[t.d].concat(t.wa).filter(Boolean);
+    let sc=0, why=[];
+    const idHits=[...sl.ids].filter(id=>exact.has(id)||(mapOf(id)!==Lm&&reach.has(mapOf(id))));
+    if(idHits.length){ sc+=3*idHits.length+(mapOf(t.d)&&sl.ids.has(t.d)?2:0); why.push((sl.ids.has(t.d)?"terminates ":"reaches ")+locLabel(idHits[0])); }
+    const stHits=new Set(ends.map(stateOf).filter(x=>x&&sl.states.has(x)));
+    if(stHits.size){ sc+=stHits.size; why.push("ends in "+[...stHits].map(x=>GAME.states[x]).join(" ")); }
+    const op=t.op||t.rr;
+    sl.rr.forEach(([r,st])=>{ const m=RR_IDS[r]; if(m&&m===op&&(st==="0"||ends.some(y=>stateOf(y)===st))){ sc+=2; why.push(m+" train"); } });
+    return {t,sc,why:why.join(", ")};
+  }).filter(x=>x.sc>0).sort((a,b)=>b.sc-a.sc||(a.t.fs<b.t.fs?-1:1));
+  const uniq=dedupe(scored);
+  if(uniq.length) return {hits:uniq.slice(0,4),how:"tokens"};
+  // 4. fallback: a catch-all or state-only sort whose name carries a place
+  const own=new Set(famIds(L).map(y=>(LOC[y]||"").toUpperCase()).join(" ").split(/[^A-Z]+/));
+  const words=cleanSortName(sl.name).toUpperCase().split(/[^A-Z]+/).filter(w=>w.length>=4&&!own.has(w)&&!/^(SORT|EXIT|EXITS|LOCAL|EMPTIES|LOADS|SWITCHER|NORTH|SOUTH|EAST|WEST|YARD|TRASH|DELIVERY)$/.test(w));
+  const byName=atL.map(t=>{ const nm=[t.d].concat(t.wa).map(y=>(LOC[y]||"").toUpperCase()).join(" "); const hit=words.find(w=>nm.includes(w)); return hit?{t,sc:1,why:"name matches "+hit}:null; }).filter(Boolean);
+  return {hits:byName.slice(0,4),how:"name"};
+}
+function yardSorts(w,L){
+  if(!w.sorts||!Object.keys(w.sorts.slots).length) return null;
+  if(w.sortView&&w.sortView.L===L) return w.sortView;
+  const S=w.sorts;
+  // the game's default view is every slot in number order; DisplaySetups are
+  // extra per-operator views, and a yard's UP sorts may sit in none of them
+  if(!S.groups["all sorts"]) S.groups["all sorts"]=Object.keys(S.slots).map(Number).sort((a,b)=>a-b);
+  const names=Object.keys(S.groups);
+  let chosen=w.sortGroup||null;
+  try{ chosen=chosen||localStorage.getItem("fym.sortview."+L); }catch(e){}
+  if(!chosen||!S.groups[chosen]){
+    // pick the view bound to this very identity, else the named view carrying
+    // the yard's own operator (most trains that start or end exactly here),
+    // else the full list
+    const cnt={}; DATA.trains.forEach(t=>{ if(t.o===L||t.d===L){ const op=t.op||t.rr; cnt[op]=(cnt[op]||0)+1; } });
+    const op=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0]||"";
+    chosen=names.find(n=>(S.bound[n]||[]).includes(String(L)))
+      ||names.find(n=>n!=="all sorts"&&op&&n.toUpperCase().split(/[^A-Z]+/).includes(op.toUpperCase()))||"all sorts";
+  }
+  const group=S.groups[chosen];
+  const perCar=new Map(); const bySlot={};
+  w.cars.forEach(c=>{ if(c.grp==="E") return; const b=sortFor(S,group,c); if(b){ perCar.set(c,b); (bySlot[b.k]=bySlot[b.k]||[]).push(c); } });
+  const Lm=mapOf(L);
+  const atL=DATA.trains.filter(t=>status(t)==="active"&&(mapOf(t.o)===Lm||t.wb.some(y=>mapOf(y)===Lm)));
+  const J=yardJoin(w,L);
+  const trains={}; if(YARD_TRAINS) Object.keys(bySlot).forEach(k=>{ trains[k]=sortTrains(S.slots[k],L,atL,bySlot[k],J); });
+  w.sortView={L,chosen,names,group,perCar,bySlot,trains};
+  return w.sortView;
+}
+
+let yardGroup="sort", yardOrder="file";
+// where a car's sort sits in the on-screen list (Infinity = no sort matched)
+function sortRank(SV,c){ const b=SV&&SV.perCar.get(c); return b?SV.group.indexOf(b.k):Infinity; }
 function carRow(c,L){
-  const lb=c.loaded==="7"?["L","loaded","ld-loaded"]:c.loaded==="6"?["E","empty","ld-empty"]:["·","load state "+c.loaded,"ld-other"];
+  const w=GAME.wags[L], SV=w.sortView, b=SV&&SV.perCar.get(c), sl=b&&w.sorts.slots[b.k];
+  const eng=c.grp==="E";
+  const swatch=eng?`<span></span>`:sl&&sl.color?`<span class="yswatch" style="background:${sl.color}" title="${esc(cleanSortName(sl.name))}"></span>`
+    :`<span class="yswatch none" title="${sl?"sort has no colour":"no sort matches"}"></span>`;
+  const lb=eng?["·","locomotive","ld-other"]:c.loaded==="7"?["L","loaded","ld-loaded"]:c.loaded==="6"?["E","empty","ld-empty"]:["·","load state "+c.loaded,"ld-other"];
   const stale=c.dwell!==null&&c.dwell>STALE_DAYS;
   const dest=!c.dest?"":c.dest===L?`<span class="dim">here</span>`
     :c.dest===UNASSIGNED?`<span class="dim">unassigned</span>`
     :`<button class="odlink" data-loc="${c.dest}">${esc(locLabel(c.dest))}</button>`;
-  const type=c.grp==="E"?"Locomotive":(GAME.types[c.tid]||"#"+c.tid);
+  const type=eng?(GAME.models[c.model]||"Locomotive"):(GAME.types[c.tid]||"#"+c.tid);
   const tip=c.last?`${c.last.date} ${EV[c.last.code]||"event "+c.last.code}${c.last.train&&c.last.train!=="^"?" · "+c.last.train:""}`:"no dated history";
-  return `<div class="yrow${stale?" stale":""}"><span class="ycar">${esc(c.name||"")}</span><span class="ytype">${esc(type)}</span>`+
+  // no per-car train column (dropped 2026-09-11 at Zach's request: the
+  // per-car suggestion was inferred and not trustworthy); trains are only
+  // suggested per group in the heading
+  return `<div class="yrow${stale?" stale":""}">${swatch}<span class="ycar">${esc(c.name||"")}</span><span class="ytype">${esc(type)}</span>`+
     `<span class="lbadge ${lb[2]}" title="${lb[1]}">${lb[0]}</span><span class="ydest">${dest}</span>`+
     `<span class="ydwell" title="${esc(tip)}">${c.dwell===null?"—":c.dwell+"d"}</span></div>`;
 }
@@ -3221,24 +3531,80 @@ function yardPanel(L){
   const w=GAME.wags[L], el=document.createElement("div"); el.className="dpanel yardpanel";
   let h=`<h4>${GAME.my.has(L)?"My yard":"Visited yard"} <span class="dim">· ${esc(locLabel(L))}</span></h4>`;
   if(!w.ok){ el.innerHTML=h+`<div class="drow dim">Could not read this yard's inventory (${esc(w.error||"unrecognised .wag format")}).</div>`; return el; }
-  h+=`<div class="drow">${w.cars.length} cars in ${w.cuts.length} cuts · <b>${w.loaded}</b> loaded / <b>${w.empty}</b> empty`+
+  const J=yardJoin(w,L);
+  // locomotives sit in their own area: never sorted, never joined to a train
+  const engines=w.cars.filter(c=>c.grp==="E"), cars=w.cars.filter(c=>c.grp!=="E");
+  let direct=0, none=0;
+  cars.forEach(c=>{ const hs=(c.dest&&c.dest!==L&&c.dest!==UNASSIGNED)?J.forCar(c):null; if(hs){ if(hs.length) direct++; else none++; } });
+  const SV=yardSorts(w,L);
+  if(yardGroup==="sort"&&!SV) yardGroup="dest";
+  h+=`<div class="drow">${cars.length} cars${engines.length?` and ${engines.length} locomotive${engines.length===1?"":"s"}`:""} in ${w.cuts.length} cuts · <b>${w.loaded}</b> loaded / <b>${w.empty}</b> empty`+
     (w.stale?` · <span class="stale">${w.stale} idle over a year</span>`:"")+(w.saved?` · saved ${fmtDate(w.saved)}`:"")+
+    `</div><div class="drow dim">`+
+    (YARD_TRAINS?`<b>${direct}</b> outbound cars have a direct train from here · `+
+      `<b class="${none?"stale":""}">${none}</b> need a connection (★ = this yard's instructions name the destination) · `:"")+
+    (SV?`<b>${SV.perCar.size}</b> of ${cars.length} cars fall into ${Object.keys(SV.bySlot).length} of your sorts`:`no sort files for this yard`)+
     ` <label class="dim" style="margin-left:12px">group by <select class="inp" id="ygroup" style="padding:4px 8px;min-width:0">`+
-    `<option value="cut"${yardGroup==="cut"?" selected":""}>cut</option><option value="dest"${yardGroup==="dest"?" selected":""}>destination</option></select></label></div>`;
+    (SV?`<option value="sort"${yardGroup==="sort"?" selected":""}>sort</option>`:"")+
+    `<option value="cut"${yardGroup==="cut"?" selected":""}>cut</option><option value="dest"${yardGroup==="dest"?" selected":""}>destination</option></select></label>`+
+    (SV&&yardGroup!=="sort"?` <label class="dim">order cars by <select class="inp" id="yorder" style="padding:4px 8px;min-width:0">`+
+      `<option value="file"${yardOrder==="file"?" selected":""}>as stored</option><option value="sort"${yardOrder==="sort"?" selected":""}>sort</option></select></label>`:"")+
+    (SV&&SV.names.length>1?` <label class="dim">view <select class="inp" id="ysortgroup" style="padding:4px 8px;min-width:0">`+
+      SV.names.map(n=>`<option value="${esc(n)}"${n===SV.chosen?" selected":""}>${esc(n)}</option>`).join("")+`</select></label>`:"")+`</div>`;
   let groups;
-  if(yardGroup==="cut") groups=w.cuts.map(c=>({title:c.name||"(unnamed cut)", sub:c.creator?"built by "+c.creator:"", cars:c.cars}));
+  if(yardGroup==="sort"){
+    const S=w.sorts;
+    groups=SV.group.filter(k=>SV.bySlot[k]).map(k=>{ const sl=S.slots[k]; return {title:cleanSortName(sl.name), sub:sortDef(sl), slot:k, cars:SV.bySlot[k]}; });
+    const unsorted=cars.filter(c=>!SV.perCar.has(c));
+    if(unsorted.length) groups.push({title:"no sort matches", sub:"", cars:unsorted, nosort:true});
+  }
+  else if(yardGroup==="cut") groups=w.cuts.map(c=>({title:c.name||"(unnamed cut)", sub:c.creator?"built by "+c.creator:"", cars:c.cars.filter(c=>c.grp!=="E")})).filter(g=>g.cars.length);
   else {
-    const m={}; w.cars.forEach(c=>{ (m[c.dest]=m[c.dest]||[]).push(c); });
+    const m={}; cars.forEach(c=>{ (m[c.dest]=m[c.dest]||[]).push(c); });
     groups=Object.keys(m).sort((a,b)=>m[b].length-m[a].length).map(d=>({
       title:d===L?"staying here":d===UNASSIGNED?"unassigned":locLabel(d),
       dest:(d!==L&&d!==UNASSIGNED)?d:"", cars:m[d]}));
   }
+  if(engines.length){
+    const models={}; engines.forEach(c=>{ const m=GAME.models[c.model]||"Locomotive"; models[m]=(models[m]||0)+1; });
+    groups.unshift({title:"Locomotives", sub:Object.keys(models).sort().map(m=>models[m]>1?models[m]+"× "+m:m).join(", "), cars:engines, loco:true});
+  }
+  // within each group, cars in the yard's own sort order (screen order of
+  // the sorts; unsorted cars last); a stable sort keeps file order for ties
+  if(yardOrder==="sort"&&SV&&yardGroup!=="sort")
+    groups.forEach(g=>{ g.cars=g.cars.map((c,i)=>[sortRank(SV,c),i,c]).sort((a,b)=>a[0]-b[0]||a[1]-b[1]).map(x=>x[2]); });
+  const groupTrains=g=>{
+    if(!YARD_TRAINS) return "";
+    if(g.slot){
+      const st=SV.trains[g.slot];
+      if(st&&st.local) return `<span class="ytrains"><span class="dim">local industry spot</span></span>`;
+      if(!st||!st.hits.length) return `<span class="ytrains"><span class="stale">no train from here covers this sort</span></span>`;
+      const HOW={vote:["by its cars: ","the train most of this block's cars would take direct"],tokens:["inferred: ","scored on the sort's destinations, states and railroads"],name:["by name: ","matched on a place word in the sort name only"]};
+      return `<span class="ytrains">${HOW[st.how]?`<span class="dim" title="${HOW[st.how][1]}">${HOW[st.how][0]}</span>`:""}`+
+        st.hits.map(x=>`<button class="jump" data-jump="${x.t.i}" title="${esc(x.t.rr+" "+x.t.fs+" · "+x.why)}">${esc(x.t.fs)}</button>`).join(" ")+`</span>`;
+    }
+    if(!g.dest) return "";
+    // one chip list per car class present in the group (usually one)
+    const classes=[...new Set(g.cars.map(carClass))];
+    return classes.map(cls=>{
+      const hs=J.byDest[g.dest+"|"+cls]||[];
+      const lbl=classes.length>1?`<span class="dim">${cls}: </span>`:"";
+      if(!hs.length) return `<span class="ytrains">${lbl}<span class="stale">no direct train</span> `+
+        `<button class="jump" data-route="${g.dest}" data-cls="${cls}">find a route ▸</button></span>`;
+      return `<span class="ytrains">${lbl}${hs.slice(0,4).map(trainChip).join(" ")}${hs.length>4?`<span class="dim"> +${hs.length-4} more</span>`:""}</span>`;
+    }).join(" ");
+  };
   h+=groups.map(g=>`<h5 class="ygh">${g.dest?`<button class="sib" data-loc="${g.dest}">${esc(g.title)}</button>`:esc(g.title)}`+
-    `<span class="dim">${g.cars.length} car${g.cars.length===1?"":"s"}${g.sub?" · "+esc(g.sub):""}</span></h5>`+
+    `<span class="dim">${g.cars.length} ${g.loco?"locomotive":"car"}${g.cars.length===1?"":"s"}${g.sub&&!g.slot?" · "+esc(g.sub):""}</span>${groupTrains(g)}</h5>`+
+    (g.slot?`<div class="ydef">${esc(g.sub)}</div>`:"")+
     g.cars.map(c=>carRow(c,L)).join("")).join("");
   el.innerHTML=h;
   el.querySelector("#ygroup").onchange=e=>{ yardGroup=e.target.value; render(); };
+  const yo=el.querySelector("#yorder"); if(yo) yo.onchange=e=>{ yardOrder=e.target.value; render(); };
+  const ysg=el.querySelector("#ysortgroup"); if(ysg) ysg.onchange=e=>{ w.sortGroup=e.target.value; w.sortView=null;
+    try{ localStorage.setItem("fym.sortview."+L,w.sortGroup); }catch(err){} render(); };
   el.querySelectorAll(".sib,.odlink").forEach(b=>{ b.onclick=()=>gotoLoc(b.dataset.loc); });
+  wireJoin(el,L);
   return el;
 }
 

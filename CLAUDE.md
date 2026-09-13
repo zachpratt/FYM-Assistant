@@ -90,8 +90,8 @@ the payload regardless and are worth keeping current:
 "Open my FYM folder" in the header lets a visitor point the page at their
 own Freight Yard Manager folder. Chrome/Edge use `showDirectoryPicker`
 with the handle kept in IndexedDB (`fym` / `handles` / `game`); other
-browsers get a `webkitdirectory` input. The page only ever reads three
-things, all parsed in JS inside `HTML_TEMPLATE` (section "player folder"):
+browsers get a `webkitdirectory` input. The page only ever reads the
+following, all parsed in JS inside `HTML_TEMPLATE` (section "player folder"):
 
 - `FYMMyMaps.ini` — `<id>:<0|1>` per map; flag 1 = assigned to this
   player = **"my yards"** (Zach's ruling; a `.wag` also exists for yards he
@@ -99,16 +99,86 @@ things, all parsed in JS inside `HTML_TEMPLATE` (section "player folder"):
   Assigned yards are auto-added to favorites. The file enumerates every
   map id the game knows, so diffing it against `locations.csv` is the
   new-id alarm.
-- `FYMLocoCars6.ini` — `TypeID=` / `Name=` blocks, the car type names.
+- `FYMLocoCars6.ini` — `TypeID=` / `Name=` blocks, the car type names, and
+  `[Engine Models]` rows `EM<n>,<model>,…` for locomotives, and
+  `[Railroads]` (`RailroadID=n` / `Mark=`, 319 rows): the sort files'
+  railroad token is `n + 499`, so an open folder overrides the baked-in
+  `railroad_ids.csv` table (`RR_IDS`; reset on disconnect).
 - `yards/<id>.wag` — the yard's inventory: `[TrainNumber=n]` cut blocks
   (`TrainName=`, `TrainCreator=`) each followed by `[CarID=n]` car blocks
-  (`CarName=`, `TypeID=`, `TypeGroup=` F/E, `DestinationID=` where field
+  (`CarName=`, `TypeID=` — first colon field only; cabooses (`TypeGroup=C`)
+  and engines append three `&H` paint colours — `TypeGroup=` F car / C
+  caboose / `E:0:0:0:<engine model>:<n>` locomotive, `DestinationID=` where field
   1 is the next yard (id 1000 = "unassigned", a word, never a link),
   `IsLoaded=` 7 loaded / 6 empty, then `StartHistory`
   rows `yard#code#mm/dd/yyyy#train#player#n`; codes 10 arrived, 20
   departed, 40 loaded, 41 unloaded, 30/50/60 service and shop, 00 created).
   `parseWag` must reproduce the Python-derived figures for Fostoria 1091
   (714 cars, 46 cuts, 303 loaded, 385 empty, 194 staying, 107 idle > 1 y).
+
+Locomotives are their own area at the top of the yard view (model from
+`[Engine Models]`), never sorted, joined to a train, or grouped by cut or
+destination; the header's car count excludes them.
+
+**Car-to-train join** (`yardJoin` in the same section) — **built but hidden**
+since the `car-trains` merge on 2026-09-13 (`YARD_TRAINS=false`): Zach wanted
+the sorts live but judged the train suggestions not trustworthy yet, so group
+headings show no train chips, no "find a route" link and no direct/connection
+counts until the flag is flipped. The description below is what the flag
+turns on: for each car's
+destination, the active trains that board at this yard (originate or
+explicit pickup) and reach the destination's map (terminate, explicit
+setout, or pass through), gated by the car's class via `carries()` — the
+same function the route finder uses, so the two never disagree. Car class
+comes from `TypeID`/`ParentTypeID` (5, 6, 19 intermodal; 7 autorack; else
+carload). A ★ marks a train whose instructions at this yard name the
+destination's city. "Find a route ▸" hands a destination with no direct
+train to the route finder. Trains are suggested only in group headings
+(sort, destination); the per-car train column was dropped 2026-09-11 at
+Zach's request because the per-car inference was not trustworthy enough.
+
+**Sorts** (`parseSorts`, `sortFor`, `sortTrains`): `yards/<id>.nam` names
+250 slots, `yards/<id>.set` holds `DisplaySetups` (per-operator views,
+`<name>:<bool>:<bool>:<bound map ids>:<slots>`; a view bound to the yard's
+own id is the default view) and `SortData`, one `<count>:<tokens…>:` line per slot, and `yards/<id>.hcf`
+("V1.0", "<HumpColours>", then one `r:g:b` line per slot) gives each sort
+its colour, shown as a swatch on every car row and optional as the row
+order within cut/destination groups ("order cars by"). Tokens: id ≥ 1000 =
+destination map; 1..58 = state per `FYMStates.ini`; `-1:60:<map>:<n>` =
+industry n on that map (the car's waybill field 3); 500..999 = railroad id
+followed by a state or 0 (`RR_IDS`: the folder's `[Railroads]` table when
+open, else `railroad_ids.csv`); 60 = bad orders; 62 = catch-all. Sort NAMES are
+personal shorthand — never match on them (Mason City has "???????" and
+"okokok UP PARSONS"). Zach's rulings (2026-09-11): the game is a cascade —
+a car takes the first sort it matches — but an exact yard (or industry)
+match beats a state match wherever it sits, so the implementation is
+precedence industry > id > state > railroad > catch-all with the display
+order breaking ties; the 62 catch-all is evaluated last even when it is
+shown at the top (Fostoria's NS Bellevue), and Bad Orders (60) is pinned
+above everything on screen. A sort's TRAIN (`sortTrains`) is chosen in
+trust order, every path gated by `carries()` on the block's car classes so
+a unit/engine/non-revenue train is never suggested: "symbol" — the sort
+name carries a boarding train's symbol core or its unique 4+-char leading
+token (Pekin: MBNAS, LPD01, "1900 PEOR" = IMRR 1900 Powerton); "vote" —
+the block's cars elect the train most of them have direct, needing ≥2
+voters and ≥⅕ of the outbound cars; "tokens" — the definition scored
+against stops; "name" — a place word, last resort. The heading labels
+vote/tokens/name so the reader knows how much to trust it (Zach, 2026-09-11:
+railroad-list sorts at Pekin mean "hand these to the home road's
+manifest", not "that road's trains" — which is why token scoring is below
+the vote). The `DisplaySetups` list is the on-screen
+order top to bottom. The view is the named display carrying the yard's
+dominant operator, else "all sorts" (slot order), overridable per yard.
+Railroad ids are the game's own table (500..~818, not the Shortline
+roster's `_id`, not alphabetical). RECOVERED 2026-09-11 by transcribing
+the picker → `railroad_ids.csv` (247 rows, committed; the build bakes it
+in as `DATA.rrids`, CSXT→CSX), then FOUND the same day in
+`FYMLocoCars6.ini` `[Railroads]` as `RailroadID + 499` (all 247 rows
+agree; the folder has 319). The CSV is the no-folder fallback; refresh it
+from the folder table if the game adds railroads. A sort's
+trains are scored by token coverage over trains boarding here; same-map
+sibling ids (Payne on the Fostoria map) match by exact id. Industry-only
+sorts are local spots, not blocks.
 
 **Windows Chrome/Edge cannot read `.ini` files through a directory handle**
 (found 2026-09-13). Chromium's File System Access API rejects any name
