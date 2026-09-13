@@ -3282,6 +3282,10 @@ function carClass(c){
   return "carload";
 }
 const cityOf=id=>(LOC[id]||"").split(",")[0].replace(/\b(Yard|Jct\.?|Junction)\b/gi,"").trim();
+// Train suggestions in the yard view (which train takes a sort or a
+// destination group) are built but not shown: Zach judged the routing not
+// trustworthy enough yet (2026-09-13, merging car-trains). Flip to show.
+const YARD_TRAINS=false;
 function yardJoin(w,L){
   if(w.join && w.join.L===L) return w.join;
   const Lm=mapOf(L);
@@ -3496,7 +3500,7 @@ function yardSorts(w,L){
   const Lm=mapOf(L);
   const atL=DATA.trains.filter(t=>status(t)==="active"&&(mapOf(t.o)===Lm||t.wb.some(y=>mapOf(y)===Lm)));
   const J=yardJoin(w,L);
-  const trains={}; Object.keys(bySlot).forEach(k=>{ trains[k]=sortTrains(S.slots[k],L,atL,bySlot[k],J); });
+  const trains={}; if(YARD_TRAINS) Object.keys(bySlot).forEach(k=>{ trains[k]=sortTrains(S.slots[k],L,atL,bySlot[k],J); });
   w.sortView={L,chosen,names,group,perCar,bySlot,trains};
   return w.sortView;
 }
@@ -3536,9 +3540,10 @@ function yardPanel(L){
   if(yardGroup==="sort"&&!SV) yardGroup="dest";
   h+=`<div class="drow">${cars.length} cars${engines.length?` and ${engines.length} locomotive${engines.length===1?"":"s"}`:""} in ${w.cuts.length} cuts · <b>${w.loaded}</b> loaded / <b>${w.empty}</b> empty`+
     (w.stale?` · <span class="stale">${w.stale} idle over a year</span>`:"")+(w.saved?` · saved ${fmtDate(w.saved)}`:"")+
-    `</div><div class="drow dim"><b>${direct}</b> outbound cars have a direct train from here · `+
-    `<b class="${none?"stale":""}">${none}</b> need a connection (★ = this yard's instructions name the destination)`+
-    (SV?` · <b>${SV.perCar.size}</b> of ${cars.length} cars fall into ${Object.keys(SV.bySlot).length} of your sorts`:` · no sort files for this yard`)+
+    `</div><div class="drow dim">`+
+    (YARD_TRAINS?`<b>${direct}</b> outbound cars have a direct train from here · `+
+      `<b class="${none?"stale":""}">${none}</b> need a connection (★ = this yard's instructions name the destination) · `:"")+
+    (SV?`<b>${SV.perCar.size}</b> of ${cars.length} cars fall into ${Object.keys(SV.bySlot).length} of your sorts`:`no sort files for this yard`)+
     ` <label class="dim" style="margin-left:12px">group by <select class="inp" id="ygroup" style="padding:4px 8px;min-width:0">`+
     (SV?`<option value="sort"${yardGroup==="sort"?" selected":""}>sort</option>`:"")+
     `<option value="cut"${yardGroup==="cut"?" selected":""}>cut</option><option value="dest"${yardGroup==="dest"?" selected":""}>destination</option></select></label>`+
@@ -3569,6 +3574,7 @@ function yardPanel(L){
   if(yardOrder==="sort"&&SV&&yardGroup!=="sort")
     groups.forEach(g=>{ g.cars=g.cars.map((c,i)=>[sortRank(SV,c),i,c]).sort((a,b)=>a[0]-b[0]||a[1]-b[1]).map(x=>x[2]); });
   const groupTrains=g=>{
+    if(!YARD_TRAINS) return "";
     if(g.slot){
       const st=SV.trains[g.slot];
       if(st&&st.local) return `<span class="ytrains"><span class="dim">local industry spot</span></span>`;
