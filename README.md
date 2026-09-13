@@ -20,8 +20,10 @@ GitHub Pages republishes from `docs/` on `main` within about a minute.
 
 `make update` is `make sync` (`game_sync.py`: rsync the useful, non-image part
 of the game folder into `game_data/` and commit a snapshot into a private git
-repo inside it, so `git -C game_data log --stat` shows what the game changed)
-followed by `make check`. The game folder defaults to
+repo inside it, so `git -C game_data log --stat` shows what the game changed),
+then `make tables` (`map_tables.py`: regenerate `mims.csv` and `geo.csv` only
+if a map file changed, and name any new location id from the game's own
+`MapRNotes.rtf`), then `make check`. The game folder defaults to
 `~/Dropbox/Freight Yard Manager`; set `FYM_GAME_DIR` on a machine where it
 lives elsewhere. Without a game folder you can still drop `TSAR_*.ini` files
 into `TSARs/` and run `make site`.
