@@ -740,6 +740,54 @@ def build_payload(railroads, names):
     return payload, ic_total, ic_linked
 
 
+def load_game_tables(files):
+    """Game-wide tables baked into the page: car type names and parents,
+    engine models, the railroad-id table and the state table, read from the
+    folder above the TSARs (the game_data mirror root). They are the same for
+    every player, and baking them means the page needs only the one personal
+    file (FYMMyMaps.ini) from a visitor's folder — which matters because
+    Windows Chrome/Edge refuse to read any .ini through a folder handle."""
+    if not files:
+        return {}
+    root = os.path.dirname(os.path.dirname(os.path.abspath(files[0])))
+    game = {}
+    path = os.path.join(root, 'FYMLocoCars6.ini')
+    if os.path.isfile(path):
+        types, parent, models, rr = {}, {}, {}, {}
+        tid = rrid = None
+        with open(path, encoding='utf-8', errors='replace') as fh:
+            for raw in fh:
+                line = raw.rstrip('\r\n')
+                if line.startswith('['):
+                    tid = rrid = None
+                elif line.startswith('TypeID='):
+                    tid = line[7:].strip()
+                elif line.startswith('ParentTypeID=') and tid:
+                    parent[tid] = line[13:].strip()
+                elif line.startswith('Name=') and tid:
+                    types[tid] = line[5:].strip()
+                elif line.startswith('RailroadID='):
+                    rrid = int(line[11:]) + 499     # sort-file token = RailroadID + 499
+                elif line.startswith('Mark=') and rrid:
+                    mark = line[5:].strip()
+                    rr[rrid] = 'CSX' if mark == 'CSXT' else mark
+                    rrid = None
+                elif re.match(r'EM\d+,', line):
+                    f = line.split(',')
+                    models[f[0][2:]] = f[1].strip()
+        game.update(types=types, parent=parent, models=models, rr=rr)
+    path = os.path.join(root, 'FYMStates.ini')
+    if os.path.isfile(path):
+        states = {}
+        with open(path, encoding='utf-8', errors='replace') as fh:
+            for line in fh:
+                m = re.match(r'State(\d+)=([A-Z]+):', line)
+                if m:
+                    states[m.group(1)] = m.group(2)
+        game['states'] = states
+    return game
+
+
 def dump_payload(payload):
     """Serialise with one train (and one location) per line.
 
@@ -756,6 +804,7 @@ def dump_payload(payload):
            '"ix":[', ',\n'.join(j(r) for r in payload.get('ix', [])), '],',
            '"mims":[', ',\n'.join(j(f) for f in payload.get('mims', [])), '],',
            '"geo":[', ',\n'.join(j(g) for g in payload.get('geo', [])), '],',
+           '"game":' + j(payload.get('game', {})) + ',',
            '"trains":[', ',\n'.join(j(t) for t in payload['trains']), ']}']
     # '/' only ever occurs inside a JSON string, so this cannot corrupt the
     # structure — it just stops a note containing "</script>" from ending the
@@ -1069,6 +1118,16 @@ def build(files, out, title, loc_path, use_cache=True, subset=False):
     if payload['geo']:
         print(f"  geography: {len(payload['geo'])} located identities")
 
+    payload['game'] = load_game_tables(files)
+    g = payload['game']
+    if g:
+        print(f"  game tables: {len(g.get('types', {}))} car types, "
+              f"{len(g.get('models', {}))} engine models, {len(g.get('rr', {}))} railroads, "
+              f"{len(g.get('states', {}))} states")
+    else:
+        print("  game tables: FYMLocoCars6.ini / FYMStates.ini not found beside the TSARs folder "
+              "(car type names will come only from a visitor's own folder)")
+
     report_path = os.path.join(os.path.dirname(os.path.abspath(out)), REPORT_NAME)
     old = None
     if os.path.isfile(report_path):
@@ -1254,6 +1313,16 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .introcard h3{margin:0 0 10px;font-size:16px}
 .introcard p{margin:8px 0}
 .introcard .gobtn{margin-top:8px}
+.setup{margin:10px 0 4px;border:1px solid var(--line);border-radius:9px;padding:6px 12px 8px}
+.step{display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}
+.step .gobtn{margin-top:0}
+.step .dim{font-size:12px}
+.stepno{flex:0 0 22px;width:22px;height:22px;border-radius:50%;border:1px solid var(--line);
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--dim)}
+.step.done .stepno{background:var(--accent);border-color:var(--accent);color:#0e1116}
+.step.done .stepno::before{content:"✓"}
+.step.done .stepno span{display:none}
+.setupmsg{font-size:12px;color:var(--future);margin-top:4px}
 .mypanel .myrow{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
 .stale{color:var(--future)}
 .ygh{margin:14px 0 4px;font-size:13px;font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
@@ -1483,11 +1552,14 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
       dropdown and float to the top of the location list. They are stored in this browser only.</p>
     <p><b>Route a car (beta).</b> The toggle under the update line opens a from/to search that proposes
       train chains built only from what the rosters say.</p>
-    <p><b>Your own yards (optional).</b> <b>Open my FYM folder</b> lets this page read your Freight Yard
-      Manager folder: it lists the yards assigned to you and every car sitting in them, where each is
-      going and how long it has waited. Read-only, and nothing leaves your browser. Chrome and Edge
-      remember the folder; other browsers ask each visit. On Windows, Chrome and Edge also ask you
-      once to choose the game's .ini files, because Windows treats .ini as a risky file type.</p>
+    <p><b>Your own yards (optional).</b> This page can read your Freight Yard Manager folder and show
+      the yards assigned to you with every car sitting in them, where each is going and how long it
+      has waited. Read-only, and nothing leaves your browser; Chrome and Edge remember the folder.</p>
+    <div class="setup" id="setup">
+      <div class="step" id="sstep1"><span class="stepno"><span>1</span></span><button class="gobtn" id="setupdir">Open my FYM folder</button><span class="dim" id="sstep1t">pick the Freight Yard Manager folder itself</span></div>
+      <div class="step" id="sstep2" hidden><span class="stepno"><span>2</span></span><button class="gobtn" id="setupini">Choose FYMMyMaps.ini</button><span class="dim">Windows lets the browser read the folder but not its .ini files, so this one file is picked on its own. It is remembered with the folder.</span></div>
+      <div class="setupmsg" id="setupmsg" hidden></div>
+    </div>
     <button class="gobtn" id="introok">Got it</button>
   </div>
 </div>
@@ -2784,8 +2856,12 @@ loadFavs(); paintFavs();
 // FYMLocoCars6.ini (car type names) and yards/<id>.wag (a yard's inventory).
 const STALE_DAYS=365;
 const UNASSIGNED="1000";   // the game's "no destination yet" id — not a place
+// Game-wide tables baked in at build time; a readable folder copy overrides
+// them (a player whose game is newer than the build still gets the names).
+const BAKED=DATA.game||{};
+const bakedTables=()=>({types:{...(BAKED.types||{})}});
 const GAME={kind:null, root:null, files:null, stored:null, name:"", my:new Set(), visited:new Set(),
-            types:{}, wags:{}, saved:{}, ini:null, needIni:false, iniCached:false};
+            ...bakedTables(), wags:{}, saved:{}, ini:null, needIni:false, iniCached:false};
 const HAS_PICKER=!!window.showDirectoryPicker;
 const gamebtn=document.getElementById("gamebtn"), gameoff=document.getElementById("gameoff"),
       gamedir=document.getElementById("gamedir"), gamenote=document.getElementById("gamenote");
@@ -2810,7 +2886,8 @@ const idbDel=key=>idb((db,res)=>{ const t=db.transaction("handles","readwrite");
 let noteTimer;
 function gameNote(msg,sticky){
   gamenote.textContent=msg; gamenote.style.display=msg?"":"none";
-  clearTimeout(noteTimer); if(msg&&!sticky) noteTimer=setTimeout(()=>{ gamenote.style.display="none"; },8000);
+  const sm=document.getElementById("setupmsg"); sm.textContent=msg; sm.hidden=!msg;
+  clearTimeout(noteTimer); if(msg&&!sticky) noteTimer=setTimeout(()=>{ gamenote.style.display="none"; sm.hidden=true; },8000);
 }
 
 // Lookups are exact first, then case-insensitive for root-level files (the
@@ -2937,9 +3014,8 @@ async function loadGame(){
   GAME.iniCached=false;
   try{ mm=await gameText("FYMMyMaps.ini"); }
   catch(e){
-    if(isNameBlocked(e)){        // Windows Chrome/Edge: folder is fine, .ini files need their own picker
-      GAME.kind=null; GAME.needIni=true; paintGameBtn(); render();
-      gameNote("Windows lets Chrome and Edge read the folder but not its .ini files. Click \"Choose the .ini files\" and select FYMMyMaps.ini, FYMLocoCars6.ini and FYMStates.ini from the Freight Yard Manager folder (Ctrl-click to select all three).",true);
+    if(isNameBlocked(e)){        // Windows Chrome/Edge: folder is fine, the one personal .ini needs its own picker
+      GAME.kind=null; GAME.needIni=true; paintGameBtn(); render(); gameNote(""); showIntro(true);
       return;
     }
     let why=gameWhy("FYMMyMaps.ini",e);
@@ -2956,7 +3032,9 @@ async function loadGame(){
   GAME.my=new Set(mm.split(/\r?\n/).map(l=>l.split(":")).filter(p=>p.length>1&&p[1].trim()==="1").map(p=>p[0].trim()));
   try{
     let id=null;
-    (await gameText("FYMLocoCars6.ini")).split(/\r?\n/).forEach(l=>{
+    const txt=await gameText("FYMLocoCars6.ini");
+    GAME.types={};
+    txt.split(/\r?\n/).forEach(l=>{
       if(l.startsWith("TypeID=")) id=l.slice(7).trim();
       else if(l.startsWith("Name=")&&id) GAME.types[id]=l.slice(5).trim();
     });
@@ -2971,20 +3049,20 @@ async function loadGame(){
   if(GAME.ini) persistIni();
   paintGameBtn(); gameNote(""); render();
 }
-// .ini files chosen through the file picker (Windows Chrome/Edge only)
+// FYMMyMaps.ini chosen through the file picker (Windows Chrome/Edge only);
+// the game-wide .ini tables are baked into the page, so this is the one file.
 async function pickIni(){
   let hs;
   try{
-    hs=await window.showOpenFilePicker({multiple:true, id:"fym-ini", startIn:GAME.root||undefined,
-      types:[{description:"FYM settings (.ini)", accept:{"text/plain":[".ini"]}}]});
+    hs=await window.showOpenFilePicker({multiple:false, id:"fym-ini", startIn:GAME.root||undefined,
+      types:[{description:"FYMMyMaps.ini", accept:{"text/plain":[".ini"]}}]});
   }catch(e){ if(e.name!=="AbortError") gameNote("Could not open the file picker: "+(e.message||e),true); return; }
   const ini=new Map(GAME.ini||[]);
   for(const h of hs) ini.set(h.name.toLowerCase(),{h});
-  if(!ini.has("fymmymaps.ini")){ gameNote("FYMMyMaps.ini was not among the files you chose — it is in the Freight Yard Manager folder itself, next to FYMLocoCars6.ini and FYMStates.ini.",true); return; }
+  if(!ini.has("fymmymaps.ini")){ gameNote("That was not FYMMyMaps.ini — it sits in the Freight Yard Manager folder itself, next to the TSARs and yards folders.",true); return; }
   GAME.ini=ini; GAME.needIni=false; GAME.kind="handle";
   await idbSet("ini",Object.fromEntries([...ini].map(([k,v])=>[k,v.h])));
-  const missing=["fymlococars6.ini","fymstates.ini"].filter(k=>!ini.has(k));
-  gameNote(missing.length?"Reading your folder… (choose the .ini files again later to add "+missing.join(" and ")+")":"Reading your folder…");
+  gameNote("Reading your folder…");
   await loadGame();
 }
 async function loadIniStore(){
@@ -2999,7 +3077,7 @@ function persistIni(){
 }
 async function disconnectGame(){
   await idbDel("game"); await idbDel("ini"); await idbDel("initext");
-  Object.assign(GAME,{kind:null,root:null,files:null,stored:null,name:"",ini:null,needIni:false,iniCached:false,my:new Set(),visited:new Set(),types:{},wags:{},saved:{}});
+  Object.assign(GAME,bakedTables(),{kind:null,root:null,files:null,stored:null,name:"",ini:null,needIni:false,iniCached:false,my:new Set(),visited:new Set(),wags:{},saved:{}});
   if(state.view==="myyard") state.view="cards";
   paintGameBtn(); render();
 }
@@ -3009,17 +3087,40 @@ function paintGameBtn(){
     gamebtn.textContent=(NARROW.matches?"FYM ✓ ":"FYM folder ✓ · ")+n+" yard"+(n===1?"":"s");
     gamebtn.classList.add("on"); gameoff.style.display="";
   } else if(GAME.needIni){
-    gamebtn.textContent=NARROW.matches?"Choose .ini files":"Choose the .ini files";
+    gamebtn.textContent=NARROW.matches?"Finish setup":"Finish setup ▸";
     gamebtn.classList.add("on"); gameoff.style.display="";
   } else {
     gamebtn.textContent=GAME.stored?(NARROW.matches?"Reconnect FYM":"Reconnect my FYM folder")
                                    :(NARROW.matches?"FYM folder":"Open my FYM folder");
     gamebtn.classList.remove("on"); gameoff.style.display="none";
   }
+  paintSetup();
 }
+// the setup steps inside the intro modal mirror the header button's state
+const setupdir=document.getElementById("setupdir"), setupini=document.getElementById("setupini"),
+      sstep1=document.getElementById("sstep1"), sstep2=document.getElementById("sstep2"),
+      sstep1t=document.getElementById("sstep1t"), setupmsg=document.getElementById("setupmsg");
+function paintSetup(){
+  const n=GAME.my.size;
+  if(GAME.kind){
+    sstep1.classList.add("done"); setupdir.disabled=true; setupdir.textContent="Folder open";
+    sstep1t.textContent=(GAME.name?GAME.name+" · ":"")+n+" yard"+(n===1?"":"s")+" assigned to you"+(n?", added to Favorites":"");
+    sstep2.hidden=true;
+  } else if(GAME.needIni){
+    sstep1.classList.add("done"); setupdir.disabled=true; setupdir.textContent="Folder open";
+    sstep1t.textContent=GAME.name||""; sstep2.hidden=false;
+  } else {
+    sstep1.classList.remove("done"); setupdir.disabled=false;
+    setupdir.textContent=GAME.stored?"Reconnect my FYM folder":"Open my FYM folder";
+    sstep1t.textContent=HAS_PICKER?"pick the Freight Yard Manager folder itself":"pick the Freight Yard Manager folder itself (this browser asks each visit)";
+    sstep2.hidden=true;
+  }
+}
+setupdir.onclick=()=>gamebtn.onclick();
+setupini.onclick=()=>pickIni();
 gamebtn.onclick=async()=>{
   if(GAME.kind){ locclear.onclick(); return; }         // connected: back to the landing view
-  if(GAME.needIni){ await pickIni(); return; }
+  if(GAME.needIni){ showIntro(true); return; }
   if(!HAS_PICKER){ gamedir.click(); return; }
   try{
     let h=GAME.stored;
