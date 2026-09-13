@@ -130,7 +130,13 @@ Two consequences in the design:
   filter, only saves prompt). The intro modal doubles as the setup flow:
   step 1 "Open my FYM folder", step 2 "Choose FYMMyMaps.ini" appears only
   when Windows blocks it, and the header button reads "Finish setup" until
-  it is done. The file handle goes to IndexedDB `ini` and its text to
+  it is done. Step 2 is skippable (Zach, 2026-09-13): the skip is stored
+  with the folder (IndexedDB `skipini`), `GAME.mySource` becomes `"favs"`
+  and "my yards" = the starred yards that have a `.wag` here (`myFromFavs`,
+  kept current by `toggleFav`); nothing is auto-starred in that mode, the
+  landing heading says "starred with an inventory file", and the modal's
+  step 2 stays visible in a "skipped" state so the file can be chosen
+  later, which clears the skip and restores the automatic list. The file handle goes to IndexedDB `ini` and its text to
   `initext`, so a reconnect reads it fresh while permission is granted and
   otherwise uses the cached copy (the landing panel says which; "choose
   them again" re-picks). Simulate on a Mac with a fake directory handle
