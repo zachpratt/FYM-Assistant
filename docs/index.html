@@ -112,6 +112,16 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .introcard h3{margin:0 0 10px;font-size:16px}
 .introcard p{margin:8px 0}
 .introcard .gobtn{margin-top:8px}
+.setup{margin:10px 0 4px;border:1px solid var(--line);border-radius:9px;padding:6px 12px 8px}
+.step{display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}
+.step .gobtn{margin-top:0}
+.step .dim{font-size:12px}
+.stepno{flex:0 0 22px;width:22px;height:22px;border-radius:50%;border:1px solid var(--line);
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--dim)}
+.step.done .stepno{background:var(--accent);border-color:var(--accent);color:#0e1116}
+.step.done .stepno::before{content:"✓"}
+.step.done .stepno span{display:none}
+.setupmsg{font-size:12px;color:var(--future);margin-top:4px}
 .mypanel .myrow{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
 .stale{color:var(--future)}
 .ygh{margin:14px 0 4px;font-size:13px;font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
@@ -346,11 +356,14 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
       dropdown and float to the top of the location list. They are stored in this browser only.</p>
     <p><b>Route a car (beta).</b> The toggle under the update line opens a from/to search that proposes
       train chains built only from what the rosters say.</p>
-    <p><b>Your own yards (optional).</b> <b>Open my FYM folder</b> lets this page read your Freight Yard
-      Manager folder: it lists the yards assigned to you and every car sitting in them, where each is
-      going and how long it has waited. Read-only, and nothing leaves your browser. Chrome and Edge
-      remember the folder; other browsers ask each visit. On Windows, Chrome and Edge also ask you
-      once to choose the game's .ini files, because Windows treats .ini as a risky file type.</p>
+    <p><b>Your own yards (optional).</b> This page can read your Freight Yard Manager folder and show
+      the yards assigned to you with every car sitting in them, where each is going and how long it
+      has waited. Read-only, and nothing leaves your browser; Chrome and Edge remember the folder.</p>
+    <div class="setup" id="setup">
+      <div class="step" id="sstep1"><span class="stepno"><span>1</span></span><button class="gobtn" id="setupdir">Open my FYM folder</button><span class="dim" id="sstep1t">pick the Freight Yard Manager folder itself</span></div>
+      <div class="step" id="sstep2" hidden><span class="stepno"><span>2</span></span><button class="gobtn" id="setupini">Choose FYMMyMaps.ini</button><span class="dim">Windows lets the browser read the folder but not its .ini files, so this one file is picked on its own. It is remembered with the folder.</span></div>
+      <div class="setupmsg" id="setupmsg" hidden></div>
+    </div>
     <button class="gobtn" id="introok">Got it</button>
   </div>
 </div>
@@ -7205,6 +7218,7 @@ const DATA = {"gen":"2026-09-13",
 ["4030",49.92,-101.05,""],
 ["4031",50.3833,-102.5667,""]
 ],
+"game":{"types":{"1":"DummyEntryForLocomotives","3":"Caboose","4":"Passenger","5":"Well, 40' International","94":"Well, 53' Domestic","6":"Spine","7":"Autorack","127":"Autorack, Articulated","8":"Woodchip","9":"Box, 50' Gen. Service","99":"Box, 60' Gen. Service","11":"Coal","133":"Coal","134":"Coal","135":"Coal","12":"Tank, Gen. Service","100":"Tank, Small Gen. Service","101":"Tank, Large Gen. Service","13":"Cov. Hopper, Grain","14":"Open Hopper, Gen. Service","15":"Gondola, Gen. Service","103":"Gondola, High-Sided","16":"Ore Hopper","126":"Ore Hopper, Long","17":"Flat, 60'","102":"Flat, 89'","18":"Flat, 60' Centerbeam","95":"Flat, 73' Centerbeam","19":"Flat, Intermodal","20":"Flat, MOW","21":"Coil, 42'","132":"Coil, 55'","22":"Flat, Bulkhead","23":"Flat, Heavy-Duty","24":"Cov. Hopper, Gen. Service 4-Bay","96":"Cov. Hopper, Gen. Service 2-Bay","97":"Cov. Hopper, Gen. Service 3-Bay","25":"RoadRailer Trailer","26":"Refrigerator, Mechanical","27":"Box, 60' Auto Parts","98":"Box, 86' Auto Parts","28":"Box, 60' Paper","131":"Box, 50' Paper","29":"Tank, Food-Grade","105":"Tank, Large Food-Grade","30":"Tank, Chemical","106":"Tank, Small Chemical","31":"Tank, Pressure","107":"Tank, Large Pressure","108":"Tank, Small Pressure","32":"Tank, Petroleum","109":"Tank, Large Petroleum","110":"Tank, Small Petroleum","33":"Tank, Ethanol","111":"Tank, Large Ethanol","34":"Tank, Corn Syrup","112":"Tank, Small Corn Syrup","35":"Tank, Vegetable Oil","36":"Tank, Slurry","37":"Tank, Acid","113":"Tank, Small Acid","38":"Tank, Molten Sulfur","39":"Open Hopper, Sand","40":"Open Hopper, Petcoke","41":"Open Hopper, Coke 3 Bay","130":"Open Hopper, Coke 4 Bay","42":"Open Hopper, Ballast","43":"Gondola, 52' Steel","104":"Gondola, 66' Steel","44":"Gondola, 52' Scrap","129":"Gondola, 64' Scrap High-Sided","45":"Gondola, Rock","46":"Flat, Garbage","47":"Gondola, 52' Garbage High-Sided","128":"Gondola, 64' Garbage High-Sided","114":"Well, Garbage","49":"Flat, Steel Bulkhead","50":"Cov. Hopper, Food-Grade 4-Bay","115":"Cov. Hopper, Food-Grade 3-Bay","51":"Cov. Hopper, Plastic 4-Bay","52":"Cov. Hopper, Sand 2-Bay","125":"Cov. Hopper, Sand 3-Bay","53":"Cov. Hopper, Lime 3-Bay","54":"Cov. Hopper, Cement 2-Bay","55":"Cov. Hopper, Feed 4-Bay","116":"Cov. Hopper, Feed 3-Bay","56":"Cov. Hopper, Fertilizer 4-Bay","117":"Cov. Hopper, Fertilizer 3-Bay","57":"Cov. Hopper, Mineral 4-Bay","118":"Cov. Hopper, Mineral 3-Bay","119":"Cov. Hopper, Mineral 2-Bay","58":"Cov. Hopper, Fly-Ash 2-Bay","120":"Cov. Hopper, Fly-Ash 3-Bay","59":"Cov. Hopper, Salt 4-Bay","121":"Cov. Hopper, Salt 3-Bay","122":"Cov. Hopper, Salt 2-Bay","60":"Box, 60' Lumber","61":"Cov. Hopper, Chemical 4-Bay","123":"Cov. Hopper, Chemical 3-Bay","124":"Cov. Hopper, Chemical 2-Bay","62":"Flat, 89' Auto Frame"},"parent":{"1":"1","3":"3","4":"4","5":"5","94":"5","6":"6","7":"7","127":"7","8":"8","9":"9","99":"9","11":"11","133":"11","134":"11","135":"11","12":"12","100":"12","101":"12","13":"13","14":"14","15":"15","103":"15","16":"16","126":"16","17":"17","102":"17","18":"18","95":"18","19":"19","20":"20","21":"21","132":"21","22":"22","23":"23","24":"24","96":"24","97":"24","25":"25","26":"26","27":"27","98":"27","28":"28","131":"28","29":"29","105":"29","30":"30","106":"30","31":"31","107":"31","108":"31","32":"32","109":"32","110":"32","33":"33","111":"33","34":"34","112":"34","35":"35","36":"36","37":"37","113":"37","38":"38","39":"39","40":"40","41":"41","130":"41","42":"42","43":"43","104":"43","44":"44","129":"44","45":"45","46":"46","47":"47","128":"47","114":"47","49":"49","50":"50","115":"50","51":"51","52":"52","125":"52","53":"53","54":"54","55":"55","116":"55","56":"56","117":"56","57":"57","118":"57","119":"57","58":"58","120":"58","59":"59","121":"59","122":"59","60":"60","61":"61","123":"61","124":"61","62":"62"},"models":{"26":"ALCO C420","134":"ALCO C424","27":"ALCO C425","125":"ALCO C430","300":"ALCO RS1","132":"ALCO RS3","1":"ALCO RS11","212":"ALCO RS23","133":"ALCO RS27","272":"ALCO RS32","299":"ALCO RS36","130":"ALCO S2","198":"ALCO S2m","305":"Alstom Avelia Liberty Power Car","185":"Alstom PL42-AC","200":"Baldwin VO-1000","107":"Baldwin Steeplecab","127":"Bombardier Acela Exp Power Car","289":"Bombardier ALP45-DP","129":"Bombardier ALP46A","126":"Bombardier HHP-8","81":"Brookville BL20GH","131":"Brookville BL20CG","152":"Brookville BL36PH","128":"EMD AEM-7","288":"EMD BL20-2","208":"EMD CF7","120":"EMD DDAX40","292":"EMD E9A","209":"EMD FP9","38":"EMD FP9A","28":"EMD F125","281":"EMD F40PHR","32":"EMD F40PH-2","33":"EMD F40PH-2C","75":"EMD F40PH-2D","34":"EMD F40PHM-2","35":"EMD F40PH-3","31":"EMD F40PH-3C","36":"EMD F59PH","37":"EMD F59PHI","124":"EMD GMD1","12":"EMD GP7","186":"EMD GP7r","216":"EMD GP7u","206":"EMD GP8","123":"EMD GP9","190":"EMD GP9R","191":"EMD GP9RM","218":"EMD GP9u","264":"EMD GP10","189":"EMD GP11","2":"EMD GP15-1","106":"EMD GP15C","109":"EMD GP15N","4":"EMD GP15T","180":"EMD GP16","137":"EMD GP18","5":"EMD GP20","30":"EMD GP20C","257":"EMD GP20C-ECO","232":"EMD GP20D","219":"EMD GP22ECO","303":"EMD GP22T4","227":"EMD GP23ECO","145":"EMD GP25","207":"EMD GP28","202":"EMD GP28-2","204":"EMD GP28-2P","6":"EMD GP30","228":"EMD GP30u","261":"EMD GP32ECO","254":"EMD GP33ECO","280":"EMD GP34ECO","7":"EMD GP35","247":"EMD GP35-3","214":"EMD GP35R","229":"EMD GP35u","8":"EMD GP38","278":"EMD GP38N","10":"EMD GP38AC","74":"EMD GP38M-2","9":"EMD GP38-2","197":"EMD GP38-2F","279":"EMD GP38-2R","282":"EMD GP38-2S","262":"EMD GP38-2W","155":"EMD GP38-3","174":"EMD GP38-3R","182":"EMD GP38H-3","267":"EMD GP38-4M","230":"EMD GP39M","302":"EMD GP39N","301":"EMD GP39RN","11":"EMD GP39-2","160":"EMD GP39-3","39":"EMD GP40","159":"EMD GP40E","225":"EMD GP40M","114":"EMD GP40M-2","73":"EMD GP40N","158":"EMD GP40X","40":"EMD GP40-2","87":"EMD GP40-2LW","150":"EMD GP40-2R","41":"EMD GP40-2W","210":"EMD GP40PH-2","52":"EMD GP40WH-2","188":"EMD GP40-3","195":"EMD GP40M-3","42":"EMD GP50","43":"EMD GP59","233":"EMD GP59E","255":"EMD GP59ECO","44":"EMD GP60","45":"EMD GP60B","46":"EMD GP60M","112":"EMD GP60M-3","115":"EMD GP62","13":"EMD MP15AC","14":"EMD MP15DC","256":"EMD MP15E","142":"EMD MP15N","15":"EMD MP15T","141":"EMD NW2","70":"EMD SD9","268":"EMD SD9E","269":"EMD SD9M","163":"EMD SD20","222":"EMD SD22ECO","253":"EMD SD30C-ECO","266":"EMD SD32ECO","252":"EMD SD33ECO","17":"EMD SD35","18":"EMD SD38","270":"EMD SD38P","153":"EMD SD38AC","19":"EMD SD38-2","69":"EMD SD38-2S","271":"EMD SD38-3","20":"EMD SD39","226":"EMD SD39-2","47":"EMD SD40","215":"EMD SD40E","297":"EMD SD40E3","113":"EMD SD40N","260":"EMD SD40R","84":"EMD SD40u","48":"EMD SD40-2","248":"EMD SD40-2","49":"EMD SD40-2F","258":"EMD SD40-2R","50":"EMD SD40-2W","285":"EMD SD40-2XR","217":"EMD SD40M-2","156":"EMD SD40-3","273":"EMD SD40-3","51":"EMD SD40T-2","116":"EMD SD40T-3","284":"EMD SD45","164":"EMD SD45R","53":"EMD SD45-2","54":"EMD SD45T-2","55":"EMD SD50","56":"EMD SD50F","181":"EMD SD50M","183":"EMD SD50S","223":"EMD SD50-2","224":"EMD SD50-3","110":"EMD SD59MX","57":"EMD SD60","249":"EMD SD60-3","234":"EMD SD60E","58":"EMD SD60F","59":"EMD SD60I","60":"EMD SD60M","82":"EMD SD62","283":"EMD SD62E","62":"EMD SD70","244":"EMD SD70ACC","63":"EMD SD70ACe","211":"EMD SD70ACe-P6","242":"EMD SD70ACe-T4","243":"EMD SD70ACU","241":"EMD SD70AH","296":"EMD SD70AH-T4","64":"EMD SD70I","16":"EMD SD70ICC","65":"EMD SD70M","154":"EMD SD70M-2","66":"EMD SD70MAC","263":"EMD SD70MACe","67":"EMD SD75M","68":"EMD SD75I","304":"EMD SD75IACC","71":"EMD SD9043AC","136":"EMD SW1","149":"EMD SW7","143":"EMD SW8","151":"EMD SW9","135":"EMD SW10","194":"EMD SW14","146":"EMD SW900","147":"EMD SW900RS","148":"EMD SW900RSM","21":"EMD SW1000","294":"EMD SW1000R","22":"EMD SW1001","23":"EMD SW1200","293":"EMD SW1200RS","24":"EMD SW1500","25":"EMD SW1504","199":"GE 44 Tonner","201":"GE 70 Tonner","76":"GE AC4400CW","250":"GE AC4400CWM","246":"GE AC44C4M","277":"GE AC44C6CF","245":"GE AC44C6M","78":"GE AC6044CW","77":"GE AC6000CW","79":"GE B23-7","88":"GE B23-7R","80":"GE B30-7","196":"GE B30-7 CCRCL","83":"GE B36-7","184":"GE B39-8E","85":"GE C30-7","203":"GE C44ACM","220":"GE C44ACCTE","144":"GE C45ACCTE","291":"GE C45AH","295":"GE CM44AC","86":"GE CM44AH","239":"GE CW44AH","298":"GE DASH 8-32B","91":"GE DASH 8-32BWH","92":"GE DASH 8-40B","94":"GE DASH 8-40BW","95":"GE DASH 8-40C","96":"GE DASH 8-40CM","97":"GE DASH 8-40CW","98":"GE DASH 8-41CW","100":"GE DASH 9-40CW","101":"GE DASH 9-44CW","193":"GE DASH 9-44CW","102":"GE DASH 9-44CWL","121":"GE ES40DC","138":"GE ES44AC","240":"GE ES44AH","221":"GE ES44C4","122":"GE ES44DC","251":"GE ET44AC","237":"GE ET44AH","238":"GE ET44C4","103":"GE P32AC-DM","93":"GE P40DC","104":"GE P42DC","192":"GE SD23T4","105":"GE Super 7-B23","108":"GE U23B","89":"KLW SE10B","259":"KLW SE23B","90":"KLW SE24B","187":"MK MK50-3","117":"MLW M420","118":"MLW M630","119":"MLW M636","213":"MLW RS-18u","29":"MPI GP15D","139":"MPI HSP46","111":"MPI MP14B","179":"MPI MP1500D","166":"MPI MP20C-3","167":"MPI MP20GP","165":"MPI MP2000D","169":"MPI MP36PH-3C","170":"MPI MP36PH-3S","168":"MPI MP40PH-3C","175":"NRE 1GS7B","161":"NRE 2GS14B","171":"NRE 3GS18B","140":"NRE 3GS21B","162":"NRE 3GS21C","286":"Process Loco PL1500-4RS","205":"Progress Rail PR20B","173":"Progress Rail PR24B","172":"Progress Rail PR30B","265":"Progress Rail PR30C","61":"Progress Rail PR43C","177":"Rail Power RP14BD","176":"Rail Power RP15BDF","290":"Rail Power RP20BD","178":"Rail Power RP20SD","3":"Relco L4-1500XD-M","99":"Republic Loco RL1500","236":"SIEMENS ACS64","72":"SIEMENS ALC-42","274":"SIEMENS SC-44","157":"Hump Slug","275":"Road Slug","276":"Yard Slug"},"rr":{"500":"VTR","501":"SLR","502":"SLQ","503":"CSX","504":"KNWA","505":"CPKC","506":"FEC","507":"PAR","508":"KCS","509":"NS","510":"CWRY","511":"UP","512":"CVR","513":"SVTX","514":"INRD","515":"TRRA","516":"SIRR","517":"IAIS","518":"BNSF","519":"PHL","520":"LAJ","521":"NCYR","522":"AR","523":"ACWR","524":"CSI","525":"RPRC","526":"DL","527":"FMID","528":"RBMN","529":"NYSW","530":"ARR","531":"ALS","532":"CFE","533":"CN","534":"IHB","535":"NOPB","536":"MARC","537":"FGLK","538":"ATN","539":"AMTK","540":"CTN","541":"BHRR","542":"OSRR","543":"SB","544":"MRL","545":"BRC","546":"ESPN","547":"METX","548":"LC","549":"PVJR","550":"WNYP","551":"SCAX","552":"GDLK","553":"SRY","554":"TMBL","555":"SVGX","556":"BB","557":"RP","558":"RFCC","559":"NJT","560":"SLE","561":"PW","562":"MNCW","563":"OTR","564":"DMVW","565":"CRNJ","566":"RRVW","567":"OTVR","568":"SEPA","569":"VIA","570":"TVRM","571":"WCE","572":"LIRC","573":"MNBR","574":"MSRW","575":"CRL","576":"CSS","577":"DREI","578":"SJVR","579":"ETL","580":"MNNR","581":"TCWR","582":"CORP","583":"MPLI","584":"GO","585":"URR","586":"VCRR","587":"WE","588":"RWRR","589":"NCRC","590":"DAIR","591":"EE","592":"CFNR","593":"POM","594":"GLC","595":"HESR","596":"LSRC","597":"IR","598":"DLWR","599":"DC","600":"FRR","601":"TPW","602":"AA","603":"CRMI","604":"IORY","605":"CBEC","606":"LS","607":"SMV","608":"ABWR","609":"ABCX","610":"DGNO","611":"TRE","612":"DRIR","613":"MBTA","614":"NECR","615":"FIMX","616":"PNWR","617":"AERC","618":"RSR","619":"LAL","620":"KPRR","621":"ARC","622":"UTAH","623":"UCRY","624":"FWWR","625":"NPBL","626":"CA","627":"CPR","628":"RLHH","629":"OPR","630":"MSTR","631":"PTRA","632":"ABS","633":"EIRR","634":"RJCM","635":"BJRY","636":"OHCR","637":"CUOH","638":"AO","639":"GC","640":"SAPT","641":"TSRR","642":"ASRY","643":"PAL","644":"NYA","645":"EVWR","646":"GITM","647":"WW","648":"GSWR","649":"LRWY","650":"VSOR","651":"ARZC","652":"DT","653":"PSAP","654":"PR","655":"KCT","656":"ISRR","657":"CIND","658":"CCGX","659":"GRW","660":"CAGY","661":"RJCN","662":"NYNJ","663":"AGR","664":"TASD","665":"GTRA","666":"SERA","667":"CHR","668":"TRCX","669":"EFRR","670":"SWP","671":"KXHR","672":"FTRL","673":"NOGC","674":"JXPT","675":"GS","676":"VR","677":"IMRR","678":"TZPR","679":"TCB","680":"CIC","681":"CCT","682":"PTRC","683":"IATR","684":"IANR","685":"OLB","686":"PT","687":"SCIH","688":"NLR","689":"SDIY","690":"ME","691":"MET","692":"TXGN","693":"ETRY","694":"PCC","695":"NOKL","696":"TSU","697":"MER","698":"STMA","699":"LRPA","700":"LVSW","701":"CLC","702":"DQE","703":"KRR","704":"GFRR","705":"HAL","706":"JAIL","707":"NBSR","708":"YSVR","709":"OVRR","710":"LVRB","711":"GRRY","712":"CHB","713":"SL","714":"CWRO","715":"NSR","716":"STE","717":"RCPE","718":"WSOR","719":"SAC","720":"TRC","721":"BSOR","722":"BPRR","723":"HCRY","724":"RLK","725":"CEMR","726":"GWWD","727":"ISW","728":"KAW","729":"PAS","730":"SCXF","731":"SPP","732":"MDS","733":"NCIR","734":"KRL","735":"LRWN","736":"AKMD","737":"FCEN","738":"CRSJ","739":"AVR","740":"PHRR","741":"GOGR","742":"WSS","743":"YVRR","744":"MNJ","745":"MNCR","746":"CMPA","747":"CSP","748":"CJR","749":"CSO","750":"PVRR","751":"GWRS","752":"SORA","753":"ALE","754":"CGR","755":"SKOL","756":"KO","757":"WTA","758":"KFR","759":"BSVY","760":"SRRR","761":"TCRY","762":"CWA","763":"CBRW","764":"CLNA","765":"MNA","766":"RJCW","767":"RJCK","768":"NDW","769":"SSS","770":"LMR","771":"NICD","772":"SLWC","773":"SS","774":"VRRC","775":"SLRS","776":"NWP","777":"SCRF","778":"AB","779":"BKRR","780":"APD","781":"GNRR","782":"COER","783":"LLRR","784":"TIR","785":"CCH","786":"SGLR","787":"PMR","788":"MCER","789":"NNW","790":"RNIR","791":"CW","792":"RRRR","793":"SVHO","794":"RSOR","795":"FVRR","796":"CCET","797":"FOXY","798":"MGRI","799":"NYOG","800":"IN","801":"DRR","802":"KBSR","803":"KJRY","804":"TNER","805":"ITHR","806":"CWW","807":"GJR","808":"CMLR","809":"RJCL","810":"RSL","811":"EJSR","812":"LDRR","813":"CBRL","814":"LMIC","815":"BHS","816":"PCHR","817":"EXO","818":"POHC"},"states":{"1":"AL","2":"AR","3":"AZ","4":"CA","5":"CO","6":"CT","7":"DE","8":"FL","9":"GA","10":"ID","11":"IL","12":"IN","13":"IA","14":"KS","15":"KY","16":"LA","17":"ME","18":"MD","19":"MA","20":"MI","21":"MN","22":"MS","23":"MO","24":"MT","25":"NE","26":"NV","27":"NH","28":"NJ","29":"NM","30":"NY","31":"NC","32":"ND","33":"OH","34":"OK","35":"OR","36":"PA","37":"RI","38":"SC","39":"SD","40":"TN","41":"TX","42":"UT","43":"VT","44":"VA","45":"WA","46":"WV","47":"WI","48":"WY","49":"AB","50":"BC","51":"MB","52":"NB","53":"NF","54":"NS","55":"ON","56":"QC","57":"SK","58":"AK"}},
 "rrids":{"518":"BNSF","533":"CN","505":"CPKC","503":"CSX","509":"NS","511":"UP","602":"AA","778":"AB","609":"ABCX","608":"ABWR","523":"ACWR","617":"AERC","663":"AGR","736":"AKMD","531":"ALS","539":"AMTK","638":"AO","780":"APD","522":"AR","621":"ARC","530":"ARR","642":"ASRY","739":"AVR","556":"BB","541":"BHRR","815":"BHS","635":"BJRY","779":"BKRR","722":"BPRR","545":"BRC","759":"BSVY","626":"CA","660":"CAGY","813":"CBRL","796":"CCET","785":"CCH","681":"CCT","725":"CEMR","532":"CFE","592":"CFNR","754":"CGR","712":"CHB","680":"CIC","657":"CIND","748":"CJR","701":"CLC","764":"CLNA","746":"CMPA","782":"COER","582":"CORP","627":"CPR","575":"CRL","603":"CRMI","565":"CRNJ","738":"CRSJ","524":"CSI","747":"CSP","576":"CSS","540":"CTN","637":"CUOH","512":"CVR","714":"CWRO","510":"CWRY","806":"CWW","590":"DAIR","599":"DC","610":"DGNO","526":"DL","564":"DMVW","702":"DQE","577":"DREI","612":"DRIR","801":"DRR","652":"DT","591":"EE","633":"EIRR","546":"ESPN","579":"ETL","693":"ETRY","645":"EVWR","737":"FCEN","506":"FEC","537":"FGLK","615":"FIMX","527":"FMID","797":"FOXY","795":"FVRR","624":"FWWR","639":"GC","552":"GDLK","704":"GFRR","646":"GITM","807":"GJR","594":"GLC","584":"GO","741":"GOGR","659":"GRW","675":"GS","665":"GTRA","751":"GWRS","726":"GWWD","705":"HAL","723":"HCRY","595":"HESR","517":"IAIS","683":"IATR","534":"IHB","677":"IMRR","800":"IN","514":"INRD","604":"IORY","597":"IR","656":"ISRR","727":"ISW","805":"ITHR","706":"JAIL","674":"JXPT","728":"KAW","802":"KBSR","655":"KCT","803":"KJRY","504":"KNWA","756":"KO","703":"KRR","671":"KXHR","520":"LAJ","548":"LC","812":"LDRR","572":"LIRC","814":"LMIC","770":"LMR","699":"LRPA","735":"LRWN","649":"LRWY","596":"LSRC","700":"LVSW","788":"MCER","732":"MDS","697":"MER","691":"MET","547":"METX","798":"MGRI","765":"MNA","573":"MNBR","580":"MNNR","583":"MPLI","574":"MSRW","630":"MSTR","707":"NBSR","733":"NCIR","589":"NCRC","768":"NDW","614":"NECR","688":"NLR","673":"NOGC","535":"NOPB","625":"NPBL","776":"NWP","644":"NYA","662":"NYNJ","799":"NYOG","529":"NYSW","685":"OLB","629":"OPR","542":"OSRR","567":"OTVR","709":"OVRR","643":"PAL","729":"PAS","816":"PCHR","519":"PHL","740":"PHRR","616":"PNWR","818":"POHC","593":"POM","654":"PR","653":"PSAP","686":"PT","631":"PTRA","682":"PTRC","549":"PVJR","750":"PVRR","561":"PW","528":"RBMN","717":"RCPE","558":"RFCC","767":"RJCK","809":"RJCL","634":"RJCM","766":"RJCW","724":"RLK","790":"RNIR","525":"RPRC","792":"RRRR","566":"RRVW","810":"RSL","794":"RSOR","618":"RSR","588":"RWRR","719":"SAC","640":"SAPT","551":"SCAX","687":"SCIH","777":"SCRF","730":"SCXF","689":"SDIY","666":"SERA","786":"SGLR","578":"SJVR","755":"SKOL","713":"SL","502":"SLQ","501":"SLR","775":"SLRS","772":"SLWC","607":"SMV","752":"SORA","731":"SPP","760":"SRRR","553":"SRY","773":"SS","716":"STE","698":"STMA","555":"SVGX","793":"SVHO","670":"SWP","664":"TASD","679":"TCB","581":"TCWR","554":"TMBL","804":"TNER","601":"TPW","515":"TRRA","641":"TSRR","696":"TSU","570":"TVRM","678":"TZPR","623":"UCRY","585":"URR","569":"VIA","676":"VR","650":"VSOR","500":"VTR","587":"WE","718":"WSOR","742":"WSS","647":"WW"},
 "trains":[
 {"rr":"BNSF","ty":"Domestic Intermodal (Q)","s":"ALTLAC1-##A","sym":"Q-ALTLAC1-##A","nm":"","o":"1556","d":"1007","r":["1556","1904","3530","1394","1716","1501","1040","1135","1252","1029","1102","1254","1007"],"f":"2000-01-01","x":"2099-12-31","g":[[0,"1102","Set Out San Bernardino Autoracks and IM; Pick Up Baretables if needed.","San Bernardino"],[0,"1135","FUEL","Belen"],[0,"1040","Set Out Clovis; Pick Up San Bernardino Autos.","Clovis"],[2,"Domestic Containers for San Bernardino and Los Angeles Hobart"],[2,"Power: 2x0 or minimum HPT, whichever is higher. DPU between 7,000 and 8,000 feet."],[2,"Notes: May carry Loaded Autoracks Clovis-San Bernardino. Clovis block carries Glendale and Albuquerque traffic. May move Baretables between San Berdarndino and Hobart."],[2,"Blocks:"],[2,"     1) Clovis (Glendale and Albuquerque)"],[2,"     2) San Bernardino IM"],[2,"     3) Los Angeles Hobart IM"],[3],[2,"Last updated: 7/17/2025"]]},
@@ -24373,8 +24387,13 @@ loadFavs(); paintFavs();
 // FYMLocoCars6.ini (car type names) and yards/<id>.wag (a yard's inventory).
 const STALE_DAYS=365;
 const UNASSIGNED="1000";   // the game's "no destination yet" id — not a place
+// Game-wide tables baked in at build time; a readable folder copy overrides
+// them (a player whose game is newer than the build still gets the names).
+const BAKED=DATA.game||{};
+const bakedTables=()=>({types:{...(BAKED.types||{})}, parent:{...(BAKED.parent||{})}, models:{...(BAKED.models||{})},
+  states:{...(BAKED.states||{})}, stateId:Object.fromEntries(Object.entries(BAKED.states||{}).map(([n,ab])=>[ab,n]))});
 const GAME={kind:null, root:null, files:null, stored:null, name:"", my:new Set(), visited:new Set(),
-            types:{}, parent:{}, models:{}, states:{}, stateId:{}, wags:{}, saved:{},
+            ...bakedTables(), wags:{}, saved:{},
             ini:null, needIni:false, iniCached:false};
 const HAS_PICKER=!!window.showDirectoryPicker;
 const gamebtn=document.getElementById("gamebtn"), gameoff=document.getElementById("gameoff"),
@@ -24400,7 +24419,8 @@ const idbDel=key=>idb((db,res)=>{ const t=db.transaction("handles","readwrite");
 let noteTimer;
 function gameNote(msg,sticky){
   gamenote.textContent=msg; gamenote.style.display=msg?"":"none";
-  clearTimeout(noteTimer); if(msg&&!sticky) noteTimer=setTimeout(()=>{ gamenote.style.display="none"; },8000);
+  const sm=document.getElementById("setupmsg"); sm.textContent=msg; sm.hidden=!msg;
+  clearTimeout(noteTimer); if(msg&&!sticky) noteTimer=setTimeout(()=>{ gamenote.style.display="none"; sm.hidden=true; },8000);
 }
 
 // Lookups are exact first, then case-insensitive for root-level files (the
@@ -24538,9 +24558,8 @@ async function loadGame(){
   GAME.iniCached=false;
   try{ mm=await gameText("FYMMyMaps.ini"); }
   catch(e){
-    if(isNameBlocked(e)){        // Windows Chrome/Edge: folder is fine, .ini files need their own picker
-      GAME.kind=null; GAME.needIni=true; paintGameBtn(); render();
-      gameNote("Windows lets Chrome and Edge read the folder but not its .ini files. Click \"Choose the .ini files\" and select FYMMyMaps.ini, FYMLocoCars6.ini and FYMStates.ini from the Freight Yard Manager folder (Ctrl-click to select all three).",true);
+    if(isNameBlocked(e)){        // Windows Chrome/Edge: folder is fine, the one personal .ini needs its own picker
+      GAME.kind=null; GAME.needIni=true; paintGameBtn(); render(); gameNote(""); showIntro(true);
       return;
     }
     let why=gameWhy("FYMMyMaps.ini",e);
@@ -24557,7 +24576,9 @@ async function loadGame(){
   GAME.my=new Set(mm.split(/\r?\n/).map(l=>l.split(":")).filter(p=>p.length>1&&p[1].trim()==="1").map(p=>p[0].trim()));
   try{
     let id=null, rrid=null; const rr={};
-    (await gameText("FYMLocoCars6.ini")).split(/\r?\n/).forEach(l=>{
+    const txt=await gameText("FYMLocoCars6.ini");
+    GAME.types={}; GAME.parent={}; GAME.models={};
+    txt.split(/\r?\n/).forEach(l=>{
       if(l.startsWith("[")){ id=null; rrid=null; }
       // [Railroads]: "RailroadID=184" / "Mark=IATR"; the sort files' railroad
       // token is RailroadID + 499 (checked against every transcribed anchor)
@@ -24573,8 +24594,9 @@ async function loadGame(){
   try{ GAME.visited=new Set((await gameList("yards")).filter(n=>n.endsWith(".wag")).map(n=>n.slice(0,-4))); }
   catch(e){ GAME.visited=new Set(); }
   try{   // FYMStates.ini: StateN=XX:colour:region:Name — sort tokens 1..58 are these N
+    const txt=await gameText("FYMStates.ini");
     GAME.states={}; GAME.stateId={};
-    (await gameText("FYMStates.ini")).split(/\r?\n/).forEach(l=>{
+    txt.split(/\r?\n/).forEach(l=>{
       const m=l.match(/^State(\d+)=([A-Z]+):/); if(m){ GAME.states[m[1]]=m[2]; GAME.stateId[m[2]]=m[1]; }
     });
   }catch(e){ GAME.states={}; GAME.stateId={}; }
@@ -24586,20 +24608,20 @@ async function loadGame(){
   if(GAME.ini) persistIni();
   paintGameBtn(); gameNote(""); render();
 }
-// .ini files chosen through the file picker (Windows Chrome/Edge only)
+// FYMMyMaps.ini chosen through the file picker (Windows Chrome/Edge only);
+// the game-wide .ini tables are baked into the page, so this is the one file.
 async function pickIni(){
   let hs;
   try{
-    hs=await window.showOpenFilePicker({multiple:true, id:"fym-ini", startIn:GAME.root||undefined,
-      types:[{description:"FYM settings (.ini)", accept:{"text/plain":[".ini"]}}]});
+    hs=await window.showOpenFilePicker({multiple:false, id:"fym-ini", startIn:GAME.root||undefined,
+      types:[{description:"FYMMyMaps.ini", accept:{"text/plain":[".ini"]}}]});
   }catch(e){ if(e.name!=="AbortError") gameNote("Could not open the file picker: "+(e.message||e),true); return; }
   const ini=new Map(GAME.ini||[]);
   for(const h of hs) ini.set(h.name.toLowerCase(),{h});
-  if(!ini.has("fymmymaps.ini")){ gameNote("FYMMyMaps.ini was not among the files you chose — it is in the Freight Yard Manager folder itself, next to FYMLocoCars6.ini and FYMStates.ini.",true); return; }
+  if(!ini.has("fymmymaps.ini")){ gameNote("That was not FYMMyMaps.ini — it sits in the Freight Yard Manager folder itself, next to the TSARs and yards folders.",true); return; }
   GAME.ini=ini; GAME.needIni=false; GAME.kind="handle";
   await idbSet("ini",Object.fromEntries([...ini].map(([k,v])=>[k,v.h])));
-  const missing=["fymlococars6.ini","fymstates.ini"].filter(k=>!ini.has(k));
-  gameNote(missing.length?"Reading your folder… (choose the .ini files again later to add "+missing.join(" and ")+")":"Reading your folder…");
+  gameNote("Reading your folder…");
   await loadGame();
 }
 async function loadIniStore(){
@@ -24614,7 +24636,7 @@ function persistIni(){
 }
 async function disconnectGame(){
   await idbDel("game"); await idbDel("ini"); await idbDel("initext");
-  Object.assign(GAME,{kind:null,root:null,files:null,stored:null,name:"",ini:null,needIni:false,iniCached:false,my:new Set(),visited:new Set(),types:{},parent:{},models:{},states:{},stateId:{},wags:{},saved:{}});
+  Object.assign(GAME,bakedTables(),{kind:null,root:null,files:null,stored:null,name:"",ini:null,needIni:false,iniCached:false,my:new Set(),visited:new Set(),wags:{},saved:{}});
   resetRrIds();
   if(state.view==="myyard") state.view="cards";
   paintGameBtn(); render();
@@ -24625,17 +24647,40 @@ function paintGameBtn(){
     gamebtn.textContent=(NARROW.matches?"FYM ✓ ":"FYM folder ✓ · ")+n+" yard"+(n===1?"":"s");
     gamebtn.classList.add("on"); gameoff.style.display="";
   } else if(GAME.needIni){
-    gamebtn.textContent=NARROW.matches?"Choose .ini files":"Choose the .ini files";
+    gamebtn.textContent=NARROW.matches?"Finish setup":"Finish setup ▸";
     gamebtn.classList.add("on"); gameoff.style.display="";
   } else {
     gamebtn.textContent=GAME.stored?(NARROW.matches?"Reconnect FYM":"Reconnect my FYM folder")
                                    :(NARROW.matches?"FYM folder":"Open my FYM folder");
     gamebtn.classList.remove("on"); gameoff.style.display="none";
   }
+  paintSetup();
 }
+// the setup steps inside the intro modal mirror the header button's state
+const setupdir=document.getElementById("setupdir"), setupini=document.getElementById("setupini"),
+      sstep1=document.getElementById("sstep1"), sstep2=document.getElementById("sstep2"),
+      sstep1t=document.getElementById("sstep1t"), setupmsg=document.getElementById("setupmsg");
+function paintSetup(){
+  const n=GAME.my.size;
+  if(GAME.kind){
+    sstep1.classList.add("done"); setupdir.disabled=true; setupdir.textContent="Folder open";
+    sstep1t.textContent=(GAME.name?GAME.name+" · ":"")+n+" yard"+(n===1?"":"s")+" assigned to you"+(n?", added to Favorites":"");
+    sstep2.hidden=true;
+  } else if(GAME.needIni){
+    sstep1.classList.add("done"); setupdir.disabled=true; setupdir.textContent="Folder open";
+    sstep1t.textContent=GAME.name||""; sstep2.hidden=false;
+  } else {
+    sstep1.classList.remove("done"); setupdir.disabled=false;
+    setupdir.textContent=GAME.stored?"Reconnect my FYM folder":"Open my FYM folder";
+    sstep1t.textContent=HAS_PICKER?"pick the Freight Yard Manager folder itself":"pick the Freight Yard Manager folder itself (this browser asks each visit)";
+    sstep2.hidden=true;
+  }
+}
+setupdir.onclick=()=>gamebtn.onclick();
+setupini.onclick=()=>pickIni();
 gamebtn.onclick=async()=>{
   if(GAME.kind){ locclear.onclick(); return; }         // connected: back to the landing view
-  if(GAME.needIni){ await pickIni(); return; }
+  if(GAME.needIni){ showIntro(true); return; }
   if(!HAS_PICKER){ gamedir.click(); return; }
   try{
     let h=GAME.stored;
@@ -24760,7 +24805,7 @@ function wireJoin(el,L){
 // order in the .set, and the picker is alphabetical by mark, Class I first).
 // railroad_ids.csv is the fallback; an open folder's FYMLocoCars6.ini
 // [Railroads] (RailroadID + 499 = sort token) overrides it, see loadGame
-const RR_IDS=Object.assign({},DATA.rrids||{});
+const RR_IDS=Object.assign({},DATA.rrids||{},(DATA.game&&DATA.game.rr)||{});   // csv fallback, then the game's own [Railroads] table baked by the build
 function resetRrIds(){ Object.keys(RR_IDS).forEach(k=>delete RR_IDS[k]); Object.assign(RR_IDS,DATA.rrids||{}); }
 function parseSorts(namText,setText,hcfText){
   const names=namText.split(/\r?\n/).slice(1);

@@ -181,15 +181,26 @@ whose extension Safe Browsing rates DANGEROUS on the current platform
 (`FileSystemAccessManagerImpl::IsSafePathComponent`), and `.ini` is
 DANGEROUS on Windows only: `getFileHandle("FYMMyMaps.ini")` throws
 TypeError "Name is not allowed" and `entries()` silently drops the file.
-`.wag/.nam/.set/.hcf/.json/.zip` are unaffected and macOS never hits it. The
-page detects that TypeError, keeps the folder handle, and asks once for the
-`.ini` files through `showOpenFilePicker` (`pickIni`; the open picker has no
-such filter, only saves prompt). Their handles go to IndexedDB `ini` and
-their text to `initext`, so a reconnect reads them fresh while permission
-is granted and otherwise uses the cached copy (the landing panel says
-which; "choose them again" re-picks). Simulate on a Mac with a fake
-directory handle that throws that TypeError for `.ini` names and a stubbed
-`showOpenFilePicker`.
+`.wag/.nam/.set/.hcf/.json/.zip` are unaffected and macOS never hits it.
+Two consequences in the design:
+
+- The game-wide tables are **baked into the page** (`load_game_tables`
+  reads `FYMLocoCars6.ini` and `FYMStates.ini` from the folder above the
+  TSARs, i.e. the mirror root → `DATA.game` = car types, parents, engine
+  models, railroad ids (`RailroadID + 499`) and states). A readable folder
+  copy still overrides them so a player whose game is newer than the build
+  keeps the right names. Only `FYMMyMaps.ini` is personal.
+- On that TypeError the page keeps the folder handle and asks for the one
+  file through `showOpenFilePicker` (`pickIni`; the open picker has no such
+  filter, only saves prompt). The intro modal doubles as the setup flow:
+  step 1 "Open my FYM folder", step 2 "Choose FYMMyMaps.ini" appears only
+  when Windows blocks it, and the header button reads "Finish setup" until
+  it is done. The file handle goes to IndexedDB `ini` and its text to
+  `initext`, so a reconnect reads it fresh while permission is granted and
+  otherwise uses the cached copy (the landing panel says which; "choose
+  them again" re-picks). Simulate on a Mac with a fake directory handle
+  that throws that TypeError for `.ini` names and a stubbed
+  `showOpenFilePicker`.
 
 Never write into the folder from the page. The native folder dialog cannot
 be automated: verify the flow by fetching files from `game_data/` while
