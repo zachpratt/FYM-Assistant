@@ -135,6 +135,64 @@ class Resolver:
         self.locs, self.marks, self.regions, self.aliases = locs, marks, regions, aliases
         self.unresolved = {}
         self.words = [(k, set(k.split()), v) for k, v in locs.items()]
+        self.state_of = {i: st for hits in locs.values() for i, st in hits}
+        self.narrowed = 0
+
+    def is_bare(self, phrase):
+        """a plain place name: no state suffix, no road qualifier, no alias"""
+        p = phrase.strip()
+        if norm(p) in self.aliases or '/' in p:
+            return False
+        if re.search(r'\s[A-Z]{2}$', p) and p.split()[-1] in STATES:
+            return False
+        if re.search(r'\s(UP|BNSF|CSX|NS|CN|CPKC|KCS|PTRA)$', p):
+            return False
+        return True
+
+    def narrow(self, per_phrase):
+        """per_phrase: [(phrase, tokens)] for one block. A bare city that
+        matched namesakes in several states keeps only those in the states
+        the block's other members name, when that leaves any."""
+        context = set()
+        for ph, toks in per_phrase:
+            for t in toks:
+                k, _, rest = t.partition(':')
+                if k == 'st':
+                    context.add(rest)
+                elif k == 'rr' and ':' in rest:
+                    context.update(rest.split(':', 1)[1].split('/'))
+                elif k == 'id' and not self.is_bare(ph):
+                    context.add(self.state_of.get(rest, ''))
+        context.discard('')
+        # a bare name whose namesakes all sit in one state is evidence for the
+        # OTHER members of the block (never for itself)
+        evidence = []
+        for ph, toks in per_phrase:
+            sts = set()
+            if self.is_bare(ph):
+                sts = {self.state_of.get(t[3:], '') for t in toks if t.startswith('id:')} - {''}
+            evidence.append(sts if len(sts) == 1 else set())
+        out = []
+        for n, (ph, toks) in enumerate(per_phrase):
+            ids = [t[3:] for t in toks if t.startswith('id:')]
+            states = {self.state_of.get(i, '') for i in ids}
+            ctx = context | set().union(*(e for m, e in enumerate(evidence) if m != n))
+            if self.is_bare(ph) and ids and ctx and not (states & ctx):
+                # "Arlington" matched only OR/WA namesakes; the block is Texan —
+                # look for the city's yards inside the block's states instead
+                key = norm(ph)
+                hits = [i for k, hh in self.locs.items() if k == key or k.startswith(key + ' ')
+                        for i, st in hh if st in ctx]
+                if hits:
+                    self.narrowed += 1
+                    toks = [t for t in toks if not t.startswith('id:')] + [f'id:{i}' for i in hits[:12]]
+            elif self.is_bare(ph) and len(states) > 1 and ctx:
+                keep = [t for t in toks if not t.startswith('id:') or self.state_of.get(t[3:], '') in ctx]
+                if any(t.startswith('id:') for t in keep) and len(keep) < len(toks):
+                    self.narrowed += 1
+                    toks = keep
+            out += toks
+        return out
 
     def place(self, phrase, state=''):
         """ids for a place phrase: exact, then 'All X yards', then a railroad
@@ -343,8 +401,8 @@ def parse_roster(path, rr, res, locs_by_name, rows):
             name = QUAL.sub('', re.sub(r'^[-\s]+', '', name)).strip()
             toks = []
             if members.strip():
-                for ph in split_members(members):
-                    toks += res.resolve(ph)
+                per_phrase = [(ph, res.resolve(ph)) for ph in split_members(members)]
+                toks = res.narrow(per_phrase)
             else:                                    # "1. Rolla Autos ->MNPDV": the name is the definition
                 toks += res.resolve(name)
             if excl:
@@ -389,6 +447,7 @@ def main():
     print(f'  {ntok:,} member tokens resolved, {nun:,} phrases unresolved; '
           f'{clean:,} entries ({clean * 100 // max(1, len(entries))}%) fully resolved; '
           f'{sum(1 for r in rows if r[9] == "?unparsed")} items unparsed')
+    print(f'  {res.narrowed:,} bare city names narrowed to the states their block names')
     top = sorted(res.unresolved.items(), key=lambda x: -x[1])[:25]
     if top:
         print('  most frequent unresolved phrases:')

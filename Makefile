@@ -8,6 +8,7 @@ sync:
 # then names for new location ids from the game's revision notes.
 tables:
 	python3 map_tables.py
+	python3 blocks_import.py
 
 # The update loop in one go: sync, tables, then a strict rebuild.
 update: sync tables check

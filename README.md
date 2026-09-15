@@ -61,7 +61,8 @@ GitHub Pages republishes from `docs/` on `main` within about a minute.
    the derived rows of `geo.csv` (`his_import.py`). Then name any location id
    that `FYMMyMaps.ini` or `mims.csv` knows but `locations.csv` does not, from
    the game's own revision notes (`MapRNotes.rtf`). An id the notes do not name
-   is printed and left for a hand row, so the strict build stops on it.
+   is printed and left for a hand row, so the strict build stops on it. Then
+   `blocks_import.py` re-reads the block tables in the rosters.
 3. `make check`: the build with `--strict`, which exits non-zero if anything
    about the input was unrecognised.
 
@@ -120,6 +121,13 @@ map_tables.py       map-table refresh + new-id naming, run by make update
 mim_import.py       mims.csv from the game's .yrd map files (co-located yards, vids)
 his_import.py       geo.csv derived rows from the .his map files (coordinates, railroads)
 geo_import.py       geo.csv city rows from an offline GeoNames download (rare, manual)
+blocks_import.py    blocks.csv + block_moves.csv: the block tables and block verbs in the rosters
+sort_sheet.py       a yard's sort sheet from those tables (also baked into the page)
+blocks.csv          block definitions resolved into sort vocabulary
+block_moves.csv     every "@@yard - pick up / set out / create X block" in the rosters
+block_aliases.csv   roster phrases mapped by hand to map ids, states or regions
+regions.csv         partner railroad regions from UP's routing guides, at state level
+junctions.csv       the junction for every UP/partner region pair, from the same guides
 locations.csv       location names, hand-editable
 mims.csv            MIM families: which ids share a map
 geo.csv             coordinates per location (derived from maps, city-level, hand rows)

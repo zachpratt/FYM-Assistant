@@ -14,7 +14,7 @@ from `docs/` on `main` (https://zachpratt.github.io/FYM-Assistant/), so
 
 ```
 make sync      # mirror ~/Dropbox/Freight Yard Manager into game_data/ + snapshot commit
-make tables    # regenerate mims.csv/geo.csv if maps changed; name new ids from MapRNotes.rtf
+make tables    # mims.csv/geo.csv if maps changed; name new ids from MapRNotes.rtf; blocks.csv
 make update    # sync, tables, then check
 make site      # rebuild docs/index.html from game_data/TSARs (else TSARs/)  (~0.2s)
 make check     # same build, exits non-zero on unrecognised input (--strict)
@@ -225,7 +225,7 @@ be automated: verify the flow by fetching files from `game_data/` while
 serving the repo root and feeding a `Map` of `File`s to `loadGame()`, then
 have Zach click the real button once.
 
-## Block definitions (backend only so far)
+## Block definitions and sort sheets (baked; no page view yet)
 
 The UP and BNSF rosters write block tables in their notes ("Blocks leaving
 Des Moines: 1. North Little Rock (LA, AR, ..., NS Region B2) - No CSX";
@@ -251,12 +251,21 @@ sort files are their own shorthand and are never read or compared** (Zach,
 - `sort_sheet.py <id|name>`: a yard's sheet — every train that lifts,
   adds or creates a block there, each block flattened (references followed
   and shown as "via", regions expanded) and tagged specific / by state /
-  by railroad / catch-all. Mason City 2124 is the reference case.
+  by railroad / catch-all. Mason City 2124 is the reference case (Zach
+  approved it 2026-09-15). `Sheet.yard_sheet(id)` is the data API.
+- Baked into the page by `load_sheets` (`make tables` runs
+  `blocks_import.py` so the tables follow every TSAR update): payload
+  `sheets` (yard id → trains with `uid` and `[block index, how]` refs),
+  `blocks` (5,994 distinct definitions, members as `[token, via]`, one per
+  line) and `regions` ("RR:code" → states). +1.5 MB on the page (7.5 →
+  9.0 MB). The page does not read any of it until step 3, which goes on a
+  branch. A bare city in a block is narrowed to the states the block's
+  other members name (Arlington → TX in the Ft Worth block).
 
-Known soft spots: a bare city in a block ("Arlington", "Denison") resolves
-to every state's namesake; hand-off references ("Overflow MITPS Parsons")
-resolve to the block another train hands to that symbol; 27% of entries
-still carry an unresolved phrase.
+Known soft spots: hand-off references ("Overflow MITPS Parsons") resolve
+to the block another train hands to that symbol; 27% of entries still
+carry an unresolved phrase; "All Des Moines yards" expands to every Des
+Moines map (six ids).
 
 ## Domain rules that look like bugs but aren't
 

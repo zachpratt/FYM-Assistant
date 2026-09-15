@@ -125,6 +125,50 @@ class Sheet:
             return 1
         return 2
 
+    def yards(self):
+        """every yard id with a sheet: a train lifts/adds/creates a block there, or a table is written there"""
+        ids = {m['yard_id'] for m in self.moves if m['verb'] in ('pick up', 'add', 'create')}
+        for b in self.blocks:
+            ids.update(i for i in b['yard_ids'].split('|') if i)
+        return sorted(ids, key=int)
+
+    def block_data(self, b, how):
+        toks = self.flatten(b)
+        return {'name': b['block'], 'how': how, 'kind': b['kind'], 'next': b['next_train'],
+                'spec': self.specificity(toks), 'members': [[t, via] for t, via in toks],
+                'unresolved': b['unresolved'], 'yard': b['yard']}
+
+    def yard_sheet(self, yid):
+        """-> [{rr, sym, blocks: [block_data...]}] in roster order; [] when nothing lifts here"""
+        trains = OrderedDict()
+        for m in self.moves:
+            if m['yard_id'] == yid and m['verb'] in ('pick up', 'add', 'create'):
+                trains.setdefault((m['railroad'], m['symbol']), []).append((m['verb'], re.sub(r'^both\s+', '', m['block'])))
+        tables = defaultdict(list)
+        for b in self.blocks:
+            if yid in b['yard_ids'].split('|'):
+                tables[(b['railroad'], b['symbol'])].append(b)
+        for key in tables:
+            trains.setdefault(key, [])
+        out = []
+        for (rr, sym), verbs in trains.items():
+            shown, blocks = set(), []
+            for b in tables.get((rr, sym), []):
+                shown.add(block_key(b['block']))
+                blocks.append(self.block_data(b, b['kind'] + ' here'))
+            for verb, bname in verbs:
+                if block_key(bname) in shown:
+                    continue
+                shown.add(block_key(bname))
+                defs = self.find_def(rr, sym, bname)
+                if defs:
+                    blocks.append(self.block_data(defs[0], f'{verb} here; defined at {defs[0]["yard"]}'))
+                else:
+                    blocks.append({'name': bname, 'how': f'{verb} here', 'kind': 'named', 'next': '', 'spec': None,
+                                   'members': [], 'unresolved': '', 'yard': ''})
+            out.append({'rr': rr, 'sym': sym, 'blocks': blocks})
+        return out
+
     def sheet(self, yid):
         name = self.locs.get(yid, '#' + yid)
         print(f'{name} ({yid}) — sort sheet from the rosters\n')

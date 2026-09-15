@@ -805,6 +805,9 @@ def dump_payload(payload):
            '"mims":[', ',\n'.join(j(f) for f in payload.get('mims', [])), '],',
            '"geo":[', ',\n'.join(j(g) for g in payload.get('geo', [])), '],',
            '"game":' + j(payload.get('game', {})) + ',',
+           '"regions":' + j(payload.get('regions', {})) + ',',
+           '"blocks":[', ',\n'.join(j(b) for b in payload.get('blocks', [])), '],',
+           '"sheets":{', ',\n'.join(j(y) + ':' + j(v) for y, v in sorted(payload.get('sheets', {}).items(), key=lambda kv: int(kv[0]))), '},',
            '"rrids":' + j(payload.get('rrids', {})) + ',',
            '"trains":[', ',\n'.join(j(t) for t in payload['trains']), ']}']
     # '/' only ever occurs inside a JSON string, so this cannot corrupt the
@@ -1027,6 +1030,61 @@ def load_mims(path, names, anom):
 
 
 # ---------------------------------------------------------------------------
+# sort sheets (blocks.csv + block_moves.csv, via sort_sheet.py)
+#
+# What the rosters say each yard should be sorting: for every yard where a
+# train lifts, adds or creates a named block, that train's blocks flattened
+# into sort vocabulary (see blocks_import.py). The TSARs are the only input;
+# a player's own sort files are never read. Baked here so the page can show
+# a yard's sheet without any folder. Nothing in the page reads it yet.
+# ---------------------------------------------------------------------------
+
+def load_sheets(trains, names, anom):
+    """-> (sheets, blocks, regions): sheets[yard id] = [{rr, s, uid, b: [[block
+    index, how], ...]}], blocks = the distinct block definitions those refer to
+    (members as [token, via] pairs), regions = "RR:code" -> "ST;ST" for the
+    region tokens. Empty when the tables have not been generated."""
+    if not (os.path.isfile('blocks.csv') and os.path.isfile('block_moves.csv')):
+        print("  sort sheets: blocks.csv / block_moves.csv not found (run blocks_import.py)")
+        return {}, [], {}
+    try:
+        import sort_sheet
+    except ImportError:
+        return {}, [], {}
+    sheet = sort_sheet.Sheet()
+    by_s = {}
+    for uid, t in enumerate(trains):
+        by_s.setdefault((t['rr'], t['s']), uid)
+    blocks, index, sheets = [], {}, {}
+    unknown_train = set()
+    for yid in sheet.yards():
+        if yid not in names:
+            anom.add("sort sheet yard id is not a known location", yid)
+            continue
+        out = []
+        for tr in sheet.yard_sheet(yid):
+            uid = by_s.get((tr['rr'], tr['sym']))
+            if uid is None:
+                unknown_train.add((tr['rr'], tr['sym']))
+            refs = []
+            for b in tr['blocks']:
+                key = (tr['rr'], tr['sym'], b['yard'], b['name'], b['kind'])
+                if key not in index:
+                    index[key] = len(blocks)
+                    blocks.append({'rr': tr['rr'], 's': tr['sym'], 'y': b['yard'], 'n': b['name'],
+                                   'k': b['kind'], 'nx': b['next'], 'sp': b['spec'],
+                                   'm': b['members'], 'u': b['unresolved']})
+                refs.append([index[key], b['how']])
+            out.append({'rr': tr['rr'], 's': tr['sym'], 'uid': uid, 'b': refs})
+        sheets[yid] = out
+    regions = {f'{rr}:{code}': r['states'] for (rr, code), r in sheet.regions.items()}
+    if unknown_train:
+        print(f"  sort sheets: {len(unknown_train)} train symbol(s) in the block tables have no "
+              f"roster train (retired or renamed), e.g. {sorted(unknown_train)[:3]}")
+    return sheets, blocks, regions
+
+
+# ---------------------------------------------------------------------------
 # location geography (geo.csv)
 #
 # Derived from the game's .his map files by his_import.py: per-identity
@@ -1144,6 +1202,11 @@ def build(files, out, title, loc_path, use_cache=True, subset=False):
     payload['geo'] = load_geo(GEO_PATH, names, anom)
     if payload['geo']:
         print(f"  geography: {len(payload['geo'])} located identities")
+
+    payload['sheets'], payload['blocks'], payload['regions'] = load_sheets(payload['trains'], names, anom)
+    if payload['sheets']:
+        print(f"  sort sheets: {len(payload['sheets'])} yards, {len(payload['blocks'])} block definitions, "
+              f"{sum(len(b['m']) for b in payload['blocks']):,} members")
 
     payload['game'] = load_game_tables(files)
     g = payload['game']
