@@ -225,7 +225,7 @@ be automated: verify the flow by fetching files from `game_data/` while
 serving the repo root and feeding a `Map` of `File`s to `loadGame()`, then
 have Zach click the real button once.
 
-## Block definitions and sort sheets (baked; no page view yet)
+## Block definitions and sort sheets
 
 The UP and BNSF rosters write block tables in their notes ("Blocks leaving
 Des Moines: 1. North Little Rock (LA, AR, ..., NS Region B2) - No CSX";
@@ -258,9 +258,18 @@ sort files are their own shorthand and are never read or compared** (Zach,
   `sheets` (yard id → trains with `uid` and `[block index, how]` refs),
   `blocks` (5,994 distinct definitions, members as `[token, via]`, one per
   line) and `regions` ("RR:code" → states). +1.5 MB on the page (7.5 →
-  9.0 MB). The page does not read any of it until step 3, which goes on a
-  branch. A bare city in a block is narrowed to the states the block's
+  9.0 MB). A bare city in a block is narrowed to the states the block's
   other members name (Arlington → TX in the Ft Worth block).
+- Page (branch `sort-sheets`, 2026-09-15): a **Sorts** view on any location
+  with a sheet (`sortsPanel`; hash `v=sorts`): each train as a jump link
+  with its O→D, then its blocks — name, specificity tag (specific / by
+  state-region / by railroad / catch-all, with the cascade advice in the
+  intro line), how it got there ("created at here", "pick up here; defined
+  at Butler", "named only"), the next train as a jump link, members as chips
+  grouped under the reference they came through ("= MDMNL Parsons").
+  Every card also gets a collapsed **Blocks defined in these notes**
+  section (`trainBlocksHtml`) grouped by yard. Members that name a map no
+  train stops at get their names carried into `locs` by `load_sheets`.
 
 Known soft spots: hand-off references ("Overflow MITPS Parsons") resolve
 to the block another train hands to that symbol; 27% of entries still

@@ -1207,6 +1207,19 @@ def build(files, out, title, loc_path, use_cache=True, subset=False):
     if payload['sheets']:
         print(f"  sort sheets: {len(payload['sheets'])} yards, {len(payload['blocks'])} block definitions, "
               f"{sum(len(b['m']) for b in payload['blocks']):,} members")
+        # a block may name a map no train stops at; the page still needs its name
+        have = {l['id'] for l in payload['locs']}
+        extra = set()
+        for b in payload['blocks']:
+            for tok, _ in b['m']:
+                if tok.startswith('id:'):
+                    extra.add(tok[3:])
+                elif tok.startswith('rr:') and '@' in tok:
+                    extra.add(tok.split('@', 1)[1])
+        extra = sorted(i for i in extra - have if i in names)
+        payload['locs'] += [{'id': i, 'nm': names[i]} for i in extra]
+        if extra:
+            print(f"  sort sheets: {len(extra)} more location names carried for block members")
 
     payload['game'] = load_game_tables(files)
     g = payload['game']
@@ -1432,6 +1445,30 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .ytrains .jump{font-family:var(--mono);font-size:12px}
 .ytrains{display:inline-flex;gap:8px;flex-wrap:wrap;align-items:baseline;margin-left:6px}
 .ydef{font-size:12px;color:var(--dim);margin:-2px 0 4px}
+/* ---- sort sheets ---- */
+.strain{margin:16px 0 4px;font-size:13px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.strain .jump.big{font-family:var(--mono);font-weight:700;font-size:14px}
+.blk{border-left:2px solid var(--line);padding:4px 0 4px 12px;margin:6px 0 6px 4px}
+.bhead{font-size:13px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.bmem{margin:4px 0 0;display:flex;gap:4px 6px;flex-wrap:wrap;align-items:center;font-size:12px}
+.via{color:var(--dim);font-style:italic;flex-basis:100%}
+.mem{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:2px 8px;font-size:12px;color:var(--ink)}
+button.mem{cursor:pointer;font:inherit}
+button.mem:hover,.mem .blk-mem-loc:hover{border-color:var(--accent)}
+.mem .blk-mem-loc{background:none;border:0;padding:0;font:inherit;color:var(--future);cursor:pointer}
+.mem.st{border-style:dashed}
+.mem.rr{color:var(--future)}
+.mem.not{color:var(--future);border-color:var(--future)}
+.mem.cls{font-style:italic;color:var(--dim)}
+.spec{font-size:10px;letter-spacing:.5px;text-transform:uppercase;border-radius:9px;padding:1px 7px;border:1px solid var(--line);color:var(--dim)}
+.spec.s0{border-color:var(--accent);color:var(--accent)}
+.spec.s3{border-style:dashed}
+details.blocks{margin-top:10px}
+details.blocks summary{cursor:pointer;list-style:none}
+details.blocks summary h4{display:inline}
+details.blocks summary::before{content:"▸ ";color:var(--dim)}
+details.blocks[open] summary::before{content:"▾ "}
+.byard{margin:8px 0 2px;font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
 .yrow.stale .ydwell{color:var(--future);font-weight:600}
 .lbadge{display:inline-block;width:20px;text-align:center;border-radius:4px;font-size:11px;font-weight:700;
   padding:1px 0;background:var(--chip);color:var(--muted)}
@@ -2034,6 +2071,7 @@ function render(reset=true){
   if(rstate.res){ renderRoutes(); return; }
   // the inventory view only exists for a yard whose .wag we can read
   if(state.view==="myyard" && !(state.loc && GAME.visited.has(state.loc))) state.view="cards";
+  if(state.view==="sorts" && !(state.loc && SHEETS[state.loc])) state.view="cards";
   const base=filteredBase();
   if(reset) syncTypes(base);
   const list = state.type ? base.filter(t=>t.ty===state.type) : base;
@@ -2064,6 +2102,7 @@ function render(reset=true){
       `</span>`+
       `<span class="seg" id="viewseg">`+
         [["cards","Cards"],["sheet",NARROW.matches?"Sheet":"Yard sheet"],["details","Details"]]
+          .concat(SHEETS[L]?[["sorts","Sorts"]]:[])
           .concat(GAME.visited.has(L)?[["myyard",GAME.my.has(L)?"My yard":"Visited yard"]]:[])
           .map(([v,lb])=>`<button data-v="${v}"${v===state.view?' class="on"':''}>${lb}</button>`).join("")+
       `</span>`+
@@ -2090,6 +2129,12 @@ function render(reset=true){
     document.getElementById("favstar").onclick=()=>toggleFav(L);
   } else locbar.className="locbar";
 
+  // sorts view: what the rosters say this yard should be sorting
+  if(state.loc && state.view==="sorts"){
+    wrap.innerHTML="";
+    wrap.appendChild(sortsPanel(state.loc));
+    return;
+  }
   // details view: facts about the place instead of a train list
   if(state.loc && state.view==="details"){
     wrap.innerHTML="";
@@ -2215,6 +2260,78 @@ function compass(a,b){
   return ["N","NE","E","SE","S","SW","W","NW"][Math.round(deg/45)%8];
 }
 
+// ---- sort sheets: what the rosters say a yard should be sorting ----
+// DATA.sheets[yard] = [{rr, s, uid, b:[[block index, how], ...]}], DATA.blocks =
+// the definitions (members as [token, via]), DATA.regions = "RR:code" -> states.
+// Built by blocks_import.py / sort_sheet.py from the TSAR notes only — a
+// player's own sort files are never read for this.
+const SHEETS=DATA.sheets||{}, BLOCKS=DATA.blocks||[], REGIONS=DATA.regions||{};
+const BLOCKS_BY_TRAIN={};
+BLOCKS.forEach((b,i)=>{ (BLOCKS_BY_TRAIN[b.rr+"|"+b.s]=BLOCKS_BY_TRAIN[b.rr+"|"+b.s]||[]).push(i); });
+const SYM_UID={};
+DATA.trains.forEach((t,i)=>{ const k=t.rr+"|"+t.sym.replace(/[^A-Za-z0-9]/g,"").toUpperCase().replace(/#+$/,""); if(!(k in SYM_UID)) SYM_UID[k]=i; });
+function symUid(rr,sym){ return SYM_UID[rr+"|"+String(sym).replace(/[^A-Za-z0-9]/g,"").toUpperCase().replace(/#+$/,"")]; }
+const SPEC_LABEL=["specific","by state / region","by railroad","catch-all"];
+function memberHtml(tok){
+  const i=tok.indexOf(":"), kind=i<0?tok:tok.slice(0,i), rest=i<0?"":tok.slice(i+1);
+  if(kind==="id") return `<button class="mem blk-mem-loc" data-loc="${esc(rest)}">${esc(locLabel(rest))}</button>`;
+  if(kind==="st") return `<span class="mem st">${esc(rest)}</span>`;
+  if(kind==="rr"){
+    const j=rest.indexOf(":"), mark=j<0?rest:rest.slice(0,j), tail=j<0?"":rest.slice(j+1);
+    if(mark.includes("@")){ const [m,at]=mark.split("@"); return `<span class="mem rr">${esc(m)} at <button class="blk-mem-loc" data-loc="${esc(at)}">${esc(locLabel(at))}</button></span>`; }
+    return `<span class="mem rr">${esc(mark)}${tail?" in "+esc(tail.replace(/\//g,", ")):" (all)"}</span>`;
+  }
+  if(kind==="region"){ const sts=REGIONS[rest]||""; const [rr,code]=rest.split(":"); return `<span class="mem st" title="${esc(sts.replace(/;/g,", "))}">${esc(rr)} region ${esc(String(code).replace(/_/g," "))}${sts?" · "+esc(sts.replace(/;/g,", ")):""}</span>`; }
+  if(kind==="all") return `<span class="mem rr">all ${esc(rest)} traffic</span>`;
+  if(kind==="not") return `<span class="mem not">except ${esc(rest.replace(/^region:/,"").replace(/:/g," "))}</span>`;
+  if(kind==="class") return `<span class="mem cls">${({im:"intermodal",auto:"autoracks",loaded:"loads only",empty:"empties only"})[rest]||esc(rest)}</span>`;
+  if(kind==="catchall") return `<span class="mem cls">everything else</span>`;
+  return `<span class="mem">${esc(tok)}</span>`;
+}
+function blockHtml(b, how){
+  const nx=b.nx?symUid(b.rr,b.nx):undefined;
+  let h=`<div class="blk"><div class="bhead"><b>${esc(b.n)}</b>`+
+    (b.sp!==null&&b.sp!==undefined?` <span class="spec s${b.sp}">${SPEC_LABEL[b.sp]}</span>`:"")+
+    (how?` <span class="dim">${esc(how)}</span>`:"")+
+    (b.nx?` <span class="dim">→ ${nx!==undefined?`<button class="jump" data-jump="${nx}">${esc(b.nx)}</button>`:esc(b.nx)}</span>`:"")+
+    `</div>`;
+  if(!b.m.length&&!b.u) h+=`<div class="bmem dim">named in the notes, not defined anywhere in this train</div>`;
+  // members grouped by the reference they came through
+  const groups=[]; const byVia={};
+  b.m.forEach(([tok,via])=>{ if(tok.startsWith("= ")) return; if(!(via in byVia)){ byVia[via]=[]; groups.push(via); } byVia[via].push(tok); });
+  groups.forEach(via=>{
+    h+=`<div class="bmem">`+(via?`<span class="via">= ${esc(via)}</span> `:"")+byVia[via].map(memberHtml).join(" ")+`</div>`;
+  });
+  if(b.u) h+=`<div class="bmem dim">not resolved: ${esc(b.u)}</div>`;
+  return h+`</div>`;
+}
+function trainBlocksHtml(t){
+  const idx=BLOCKS_BY_TRAIN[t.rr+"|"+t.s]; if(!idx) return "";
+  const byYard=[]; const seen={};
+  idx.forEach(i=>{ const b=BLOCKS[i]; const k=b.k+" "+b.y; if(!(k in seen)){ seen[k]=[]; byYard.push(k); } seen[k].push(i); });
+  return `<details class="blocks"><summary><h4>Blocks defined in these notes · ${idx.length}</h4></summary>`+
+    byYard.map(k=>`<div class="byard">Blocks ${esc(k)}</div>`+seen[k].map(i=>blockHtml(BLOCKS[i],"")).join("")).join("")+`</details>`;
+}
+function sortsPanel(L){
+  const el=document.createElement("div"); el.className="dpanel sorts";
+  const sh=SHEETS[L]||[];
+  let h=`<h4>Sort sheet <span class="dim">· ${esc(locLabel(L))} · from the rosters</span></h4>`+
+    `<div class="drow dim">Every train that lifts or builds a named block here, with each block spelled out the way a sort can say it. `+
+    `Read from the TSAR notes only — never from your own sort files. Blocks tagged <span class="spec s0">specific</span> should sit above `+
+    `<span class="spec s1">by state / region</span> and <span class="spec s2">by railroad</span> ones, and the <span class="spec s3">catch-all</span> last.</div>`;
+  sh.forEach(tr=>{
+    const t=tr.uid!==undefined&&tr.uid!==null?DATA.trains[tr.uid]:null;
+    h+=`<div class="strain"><span class="tag rr">${esc(tr.rr)}</span> `+
+      (t?`<button class="jump big" data-jump="${tr.uid}">${esc(t.fs)}</button> <span class="dim">${esc(locLabel(t.o))} → ${esc(locLabel(t.d))}</span>`:`<b>${esc(tr.s)}</b> <span class="dim">not in the current roster</span>`)+
+      `</div>`;
+    tr.b.forEach(([bi,how])=>{ h+=blockHtml(BLOCKS[bi],how); });
+  });
+  el.innerHTML=h;
+  el.querySelectorAll("[data-jump]").forEach(b=>{ b.onclick=()=>jumpTo(+b.dataset.jump); });
+  el.querySelectorAll(".blk-mem-loc").forEach(b=>{ b.onclick=()=>gotoLoc(b.dataset.loc); });
+  return el;
+}
+
 function detailsPanel(L){
   const el=document.createElement("div"); el.className="dpanel";
   const g=GEO[L], fam=FAM[L];
@@ -2329,7 +2446,9 @@ function buildBody(el,t){
   body.innerHTML=
     `<div class="dates">Effective ${esc(eff)} · Expires ${esc(exp)}</div>`+
     `<h4>Route · ${t.r.length} stop${t.r.length===1?"":"s"}</h4><div class="route">${nodes}</div>`+
-    `<h4>Instructions</h4><div class="instr">${instr}</div>`;
+    `<h4>Instructions</h4><div class="instr">${instr}</div>`+
+    trainBlocksHtml(t);
+  body.querySelectorAll(".blk-mem-loc").forEach(b=>{ b.onclick=e=>{e.stopPropagation(); gotoLoc(b.dataset.loc);}; });
 
   body.querySelectorAll("[data-jump]").forEach(b=>{
     b.onclick=e=>{e.stopPropagation(); jumpTo(+b.dataset.jump);};
@@ -3719,7 +3838,7 @@ function navFromHash(){
     const [k,v]=kv.split("=");
     if(k==="loc"&&KNOWN_LOC.has(v)) s.loc=v;
     else if(k==="m"&&["o","d","w"].includes(v)) s.locmode=v;
-    else if(k==="v"&&["sheet","details","myyard"].includes(v)) s.view=v;
+    else if(k==="v"&&["sheet","details","myyard","sorts"].includes(v)) s.view=v;
     else if(k==="sym"&&v) s.sym=decodeURIComponent(v);
     else if(k==="route"){ const q=v.split("-"); if(KNOWN_LOC.has(q[0])&&KNOWN_LOC.has(q[1])){ s.rf=q[0]; s.rt=q[1]; s.car=q[2]||"carload"; } }
   });

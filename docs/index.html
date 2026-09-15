@@ -138,6 +138,30 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .ytrains .jump{font-family:var(--mono);font-size:12px}
 .ytrains{display:inline-flex;gap:8px;flex-wrap:wrap;align-items:baseline;margin-left:6px}
 .ydef{font-size:12px;color:var(--dim);margin:-2px 0 4px}
+/* ---- sort sheets ---- */
+.strain{margin:16px 0 4px;font-size:13px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.strain .jump.big{font-family:var(--mono);font-weight:700;font-size:14px}
+.blk{border-left:2px solid var(--line);padding:4px 0 4px 12px;margin:6px 0 6px 4px}
+.bhead{font-size:13px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.bmem{margin:4px 0 0;display:flex;gap:4px 6px;flex-wrap:wrap;align-items:center;font-size:12px}
+.via{color:var(--dim);font-style:italic;flex-basis:100%}
+.mem{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:2px 8px;font-size:12px;color:var(--ink)}
+button.mem{cursor:pointer;font:inherit}
+button.mem:hover,.mem .blk-mem-loc:hover{border-color:var(--accent)}
+.mem .blk-mem-loc{background:none;border:0;padding:0;font:inherit;color:var(--future);cursor:pointer}
+.mem.st{border-style:dashed}
+.mem.rr{color:var(--future)}
+.mem.not{color:var(--future);border-color:var(--future)}
+.mem.cls{font-style:italic;color:var(--dim)}
+.spec{font-size:10px;letter-spacing:.5px;text-transform:uppercase;border-radius:9px;padding:1px 7px;border:1px solid var(--line);color:var(--dim)}
+.spec.s0{border-color:var(--accent);color:var(--accent)}
+.spec.s3{border-style:dashed}
+details.blocks{margin-top:10px}
+details.blocks summary{cursor:pointer;list-style:none}
+details.blocks summary h4{display:inline}
+details.blocks summary::before{content:"▸ ";color:var(--dim)}
+details.blocks[open] summary::before{content:"▾ "}
+.byard{margin:8px 0 2px;font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
 .yrow.stale .ydwell{color:var(--future);font-weight:600}
 .lbadge{display:inline-block;width:20px;text-align:center;border-radius:4px;font-size:11px;font-weight:700;
   padding:1px 0;background:var(--chip);color:var(--muted)}
@@ -3278,7 +3302,100 @@ const DATA = {"gen":"2026-09-15",
 {"id":"4034","nm":"Moundsville, WV"},
 {"id":"4035","nm":"Benwood, WV"},
 {"id":"4036","nm":"Laurens, SC"},
-{"id":"4037","nm":"Abbeville, SC"}
+{"id":"4037","nm":"Abbeville, SC"},
+{"id":"1023","nm":"Ft. Worth Tower 55 BNSF, TX"},
+{"id":"1172","nm":"Memphis Leewood UP Yard, TN"},
+{"id":"2053","nm":"Jackson CN Intermodal, MS"},
+{"id":"2090","nm":"Gurley, NE"},
+{"id":"2097","nm":"Detroit Livernois CSX Intermodal, MI"},
+{"id":"2290","nm":"Roseport CPKC, MN"},
+{"id":"2337","nm":"Fernley BNSF, NV"},
+{"id":"2338","nm":"Sparks BNSF, NV"},
+{"id":"2358","nm":"Westlake BNSF, LA"},
+{"id":"2361","nm":"Salt Lake City BNSF, UT"},
+{"id":"2362","nm":"Salt Lake City Centennial BNSF, UT"},
+{"id":"2364","nm":"Midlothian Railport UP, TX"},
+{"id":"2471","nm":"Duluth Rice's Point CN, MN"},
+{"id":"2473","nm":"Duluth Rice's Point UP, MN"},
+{"id":"2517","nm":"Long Beach Terminal A BNSF, CA"},
+{"id":"2621","nm":"North Little Rock Sherry Lead, AR"},
+{"id":"2738","nm":"Baltimore Dundalk Marine Terminal CSX, MD"},
+{"id":"2924","nm":"Seghers, OR"},
+{"id":"2937","nm":"New Orleans Southport Jct., LA"},
+{"id":"2938","nm":"New Orleans East Bridge Jct., LA"},
+{"id":"3008","nm":"Houston Basin Yard BNSF, TX"},
+{"id":"3009","nm":"Houston Basin Yard CPKC, TX"},
+{"id":"3011","nm":"Houston Glass Yard BNSF, TX"},
+{"id":"3012","nm":"Houston Glass Yard CPKC, TX"},
+{"id":"3017","nm":"Houston Market St. Yards BNSF, TX"},
+{"id":"3018","nm":"Houston Market St. Yards CPKC, TX"},
+{"id":"3051","nm":"Nekoosa UP, WI"},
+{"id":"3056","nm":"Vancouver UP, WA"},
+{"id":"3092","nm":"Long Beach Container Terminal UP, CA"},
+{"id":"3093","nm":"Long Beach PCT UP, CA"},
+{"id":"3094","nm":"Long Beach ITS Terminal UP, CA"},
+{"id":"3095","nm":"Long Beach Toyota BNSF, CA"},
+{"id":"3096","nm":"Long Beach Toyota UP, CA"},
+{"id":"3097","nm":"Terminal Island UP, CA"},
+{"id":"3098","nm":"LA TICTF UP, CA"},
+{"id":"3099","nm":"LA Global South UP, CA"},
+{"id":"3100","nm":"LA Pier 400 UP, CA"},
+{"id":"3101","nm":"Long Beach Pier T UP, CA"},
+{"id":"3103","nm":"Los Angeles West Basin UP, CA"},
+{"id":"3104","nm":"Los Angeles TriPac Container, CA"},
+{"id":"3105","nm":"Los Angeles Nissan BNSF, CA"},
+{"id":"3106","nm":"Los Angeles Nissan UP, CA"},
+{"id":"3231","nm":"Port Allen CN, LA"},
+{"id":"3270","nm":"Shakopee TCWR, MN"},
+{"id":"3271","nm":"St. Paul Western Avenue TCWR, MN"},
+{"id":"3272","nm":"Savage CPKC, MN"},
+{"id":"3273","nm":"Savage TCWR, MN"},
+{"id":"3274","nm":"South St. Paul TCWR, MN"},
+{"id":"3275","nm":"Portland Barnes Yard BNSF, OR"},
+{"id":"3276","nm":"Portland Rivergate Yard UP, OR"},
+{"id":"3278","nm":"Lake Charles BNSF, LA"},
+{"id":"3287","nm":"Tacoma Pierce Co. Terminal UP, WA"},
+{"id":"3288","nm":"Tacoma South Intermodal Terminal BNSF, WA"},
+{"id":"3289","nm":"Tacoma Washington United Terminal UP, WA"},
+{"id":"3340","nm":"Pine Bluff BNSF, AR"},
+{"id":"3343","nm":"Houston Pasadena CPKC, TX"},
+{"id":"3382","nm":"Memphis Harrison Yard BNSF, TN"},
+{"id":"3383","nm":"Memphis Harrison Yard CSX, TN"},
+{"id":"3384","nm":"Memphis Harrison Yard NS, TN"},
+{"id":"3385","nm":"Memphis Harrison Yard UP, TN"},
+{"id":"3400","nm":"Houston New South Yard UP, TX"},
+{"id":"3414","nm":"Portland Terminal 4 UP, OR"},
+{"id":"3419","nm":"Bismarck CPKC, ND"},
+{"id":"3420","nm":"North St. Louis Yard TRRA, MO"},
+{"id":"3424","nm":"North Little Rock BNSF, AR"},
+{"id":"3427","nm":"Memphis President's Island BNSF, TN"},
+{"id":"3428","nm":"Memphis President's Island CSX, TN"},
+{"id":"3429","nm":"Memphis President's Island NS, TN"},
+{"id":"3430","nm":"Memphis Presidents Island UP, TN"},
+{"id":"3431","nm":"South San Antonio BNSF, TX"},
+{"id":"3437","nm":"Glendale UP, AZ"},
+{"id":"3443","nm":"Kansas City Fairfax KCT, KS"},
+{"id":"3444","nm":"St. Paul Hoffman Yard TCWR, MN"},
+{"id":"3446","nm":"St. Paul Red Rock TCWR, MN"},
+{"id":"3481","nm":"Houston Vulcan Materials Hub, TX"},
+{"id":"3484","nm":"Davenport Nahant BNSF, IA"},
+{"id":"3485","nm":"Davenport Nahant IAIS, IA"},
+{"id":"3532","nm":"Ft. Worth North UP, TX"},
+{"id":"3537","nm":"West Hearne, TX"},
+{"id":"3555","nm":"Quincy NS, IL"},
+{"id":"3610","nm":"Alton CN, IL"},
+{"id":"3621","nm":"Springfield Yard UP, MO"},
+{"id":"3646","nm":"Spokane Erie St. Yard UP, WA"},
+{"id":"3693","nm":"Des Moines Glake Yard UP, IA"},
+{"id":"3694","nm":"Avon BNSF, IA"},
+{"id":"3695","nm":"Avon IAIS, IA"},
+{"id":"3696","nm":"Avon NS, IA"},
+{"id":"3772","nm":"Houston Bayport BNSF, TX"},
+{"id":"3778","nm":"Houston La Porte Strang Yard BNSF, TX"},
+{"id":"3784","nm":"Houston Englewood Yard BNSF, TX"},
+{"id":"3846","nm":"Salem Labish Siding BNSF, OR"},
+{"id":"3847","nm":"Salem Pringle Yard BNSF, OR"},
+{"id":"4019","nm":"South St. Paul Q Jct TCWR, MN"}
 ],
 "ixp":{"AA":{"p":["CN","CSX","NS","IORY","WE"],"f":["CSX","NS"]},"AB":{"p":["WE"],"f":[]},"ABCX":{"p":["BNSF","CSX","NS"],"f":[]},"ABWR":{"p":["BNSF","CSX","NS"],"f":[]},"ACWR":{"p":["CSX","NS"],"f":[]},"AERC":{"p":["PNWR"],"f":[]},"AGR":{"p":["BNSF","CN","CPKC","CSX","NS"],"f":["BNSF"]},"AKMD":{"p":["BNSF","UP"],"f":[]},"ALS":{"p":["CSX","CPKC","NS","UP","TRRA"],"f":["UP"]},"AO":{"p":["CSX"],"f":[]},"APD":{"p":["CPKC","CSX"],"f":[]},"AR":{"p":["CSX","NS"],"f":[]},"ARC":{"p":["NS"],"f":[]},"ASRY":{"p":["CSX","NS"],"f":[]},"AVR":{"p":["CSX","NS","BPRR","WE"],"f":[]},"BB":{"p":["NS"],"f":[]},"BERX":{"p":["CSX","NS","CPKC","NECR","VTR"],"f":[]},"BHRR":{"p":["BNSF","CSX","NS"],"f":[]},"BHS":{"p":["NS","IHB"],"f":[]},"BJRY":{"p":["BNSF"],"f":[]},"BKRR":{"p":["BERX"],"f":[]},"BPRR":{"p":["CN","CPKC","CSX","NS","WE"],"f":[]},"BRC":{"p":["BNSF","CN","CPKC","CSX","NS","UP"],"f":[]},"BSVY":{"p":["UP"],"f":[]},"CA":{"p":["NS"],"f":[]},"CAGY":{"p":["CPKC","AGR","BNSF","NS","ABS","CSX"],"f":[]},"CBRL":{"p":["UP"],"f":[]},"CCET":{"p":["NS"],"f":[]},"CCH":{"p":["NS"],"f":[]},"CCT":{"p":["BNSF","UP"],"f":[]},"CEMR":{"p":["CN"],"f":[]},"CFE":{"p":["CSX","NS","IHB","IORY"],"f":[]},"CFNR":{"p":["UP"],"f":[]},"CGR":{"p":["CN","CSX","NS","AGR"],"f":[]},"CIC":{"p":["CN","UP","IAIS"],"f":[]},"CIND":{"p":["CSX","NS","IORY"],"f":[]},"CLC":{"p":["LVSW"],"f":[]},"CLNA":{"p":["CSX"],"f":[]},"CMPA":{"p":["CSX"],"f":[]},"COER":{"p":["BNSF","UP"],"f":[]},"CORP":{"p":["UP"],"f":[]},"CPR":{"p":["NS"],"f":[]},"CRL":{"p":["NS","BRC","IAIS","IHB"],"f":["IHB"]},"CRMI":{"p":["CSX","NS"],"f":[]},"CRNJ":{"p":["CSX","NS"],"f":[]},"CRSJ":{"p":["CSX","NS"],"f":[]},"CSI":{"p":["BNSF","UP"],"f":[]},"CSP":{"p":["CPKC"],"f":[]},"CSS":{"p":["CN","BRC","CSX","IHB"],"f":["BRC"]},"CTN":{"p":["CSX","NS"],"f":[]},"CTRW":{"p":["CPKC","CN"],"f":["CN"]},"CVR":{"p":["BNSF"],"f":[]},"CWRO":{"p":["CSX","NS","WE"],"f":[]},"CWRY":{"p":["CSX","NS"],"f":[]},"CWW":{"p":["UP","BNSF"],"f":["UP"]},"DAIR":{"p":["BNSF","CN","UP"],"f":[]},"DC":{"p":["CN","CSX","NS"],"f":[]},"DGNO":{"p":["BNSF","CPKC","UP"],"f":[]},"DL":{"p":["NS"],"f":[]},"DMVW":{"p":["BNSF","CPKC"],"f":["CPKC"]},"DREI":{"p":["CN","CSX","NS","UP"],"f":["CSX"]},"DRIR":{"p":["BNSF","UP"],"f":["UP"]},"DRR":{"p":["NJ"],"f":[]},"DT":{"p":["CN"],"f":[]},"EE":{"p":["BNSF"],"f":[]},"EIRR":{"p":["UP"],"f":[]},"ETL":{"p":["CN","CPKC"],"f":[]},"ESPN":{"p":["NS"],"f":[]},"ETRY":{"p":["CSX","NS"],"f":[]},"EVWR":{"p":["BNSF","CSX","NS","UP"],"f":[]},"FCEN":{"p":["CSX"],"f":[]},"FEC":{"p":["CSX","NS"],"f":[]},"FGLK":{"p":["CSX","NS","NYSW"],"f":[]},"FIMX":{"p":["NS"],"f":[]},"FMID":{"p":["CSX"],"f":[]},"FOXY":{"p":["CN"],"f":[]},"FVRR":{"p":["PAL"],"f":[]},"FWWR":{"p":["BNSF","CPKC","UP"],"f":["BNSF","UP"]},"GC":{"p":["CSX","NS"],"f":[]},"GDLK":{"p":["CN","CSX","NS"],"f":[]},"GFRR":{"p":["CSX","NS"],"f":[]},"GITM":{"p":["CSX","NS"],"f":[]},"GJR":{"p":["CPKC","CN"],"f":[]},"GLC":{"p":["AA","CN"],"f":["AA"]},"GOGR":{"p":["CN"],"f":[]},"GRW":{"p":["CN","CSX","NS","IHB","UP"],"f":[]},"GS":{"p":["NS"],"f":[]},"GTRA":{"p":["CPKC","AGR","BNSF","NS","ABS","CSX"],"f":[]},"GWWD":{"p":["CN"],"f":[]},"HAL":{"p":["NS"],"f":[]},"HCRY":{"p":["CPKC"],"f":[]},"HESR":{"p":["CN","CSX"],"f":[]},"IAIS":{"p":["BNSF","CN","CPKC","UP","IHB"],"f":[]},"IATR":{"p":["CPKC","UP"],"f":[]},"IHB":{"p":["BNSF","CN","CPKC","CSX","NS","UP"],"f":[]},"IMRR":{"p":["BNSF","CN","UP","IAIS","TZPR"],"f":[]},"IN":{"p":["NS"],"f":[]},"INRD":{"p":["CN","CSX","BRC"],"f":[]},"IORY":{"p":["CN","CSX","NS","CFE","CIND","WE"],"f":[]},"IR":{"p":["BNSF","CSX"],"f":["BNSF"]},"ISRR":{"p":["CSX"],"f":[]},"ITHR":{"p":["NS"],"f":[]},"JAIL":{"p":["CN","CSX","NS"],"f":["NS"]},"KAW":{"p":["BNSF","CPKC","NS","UP","KCTL"],"f":["BNSF"]},"KBSR":{"p":["CSX","CN","NS","UP"],"f":[]},"KJRY":{"p":["BNSF","CN","NS","UP"],"f":[]},"KNWA":{"p":["NS"],"f":[]},"KO":{"p":["BNSF","UP","SKOL"],"f":[]},"KRR":{"p":["BNSF","CPKC","UP"],"f":[]},"KXHR":{"p":["CSX","NS"],"f":["NS"]},"LAJ":{"p":["BNSF","UP"],"f":["BNSF"]},"LC":{"p":["CSX","NS"],"f":[]},"LDRR":{"p":["BNSF","UP"],"f":[]},"LIRC":{"p":["CSX","NS"],"f":["CSX"]},"LMIC":{"p":["NS","CSS"],"f":[]},"LMR":{"p":["CN"],"f":[]},"LRPA":{"p":["BNSF","UP"],"f":[]},"LRWN":{"p":["BNSF","UP"],"f":[]},"LRWY":{"p":["NS"],"f":[]},"LSRC":{"p":["CSX"],"f":[]},"LVSW":{"p":["BNSF","UP"],"f":[]},"MCER":{"p":["CSX","NECR"],"f":[]},"MDS":{"p":["CPKC","NS"],"f":[]},"MER":{"p":["TRRA"],"f":[]},"MET":{"p":["BNSF","UP"],"f":[]},"METX":{"p":["CRL"],"f":[]},"MGRI":{"p":["LIRC"],"f":[]},"MNA":{"p":["BNSF","CPKC","UP"],"f":["Springfield","cars","must","go","via","BNSF"]},"MNBR":{"p":["CPKC","CSX","NS"],"f":[]},"MNNR":{"p":["UP","BNSF","CN","CPKC"],"f":[]},"MPLI":{"p":["BNSF","CN","TCWR","CPKC","UP"],"f":[]},"MSRW":{"p":["BNSF"],"f":[]},"MSTR":{"p":["CSX"],"f":[]},"NBSR":{"p":["CN","CPKC","CSX"],"f":[]},"NCIR":{"p":["CSX","NS"],"f":[]},"NCRC":{"p":["BNSF","UP"],"f":["UP"]},"NDW":{"p":["CSX","NS"],"f":[]},"NECR":{"p":["CN","CPKC","CSX","PW","PAS"],"f":[]},"NLR":{"p":["BNSF"],"f":[]},"NOGC":{"p":["UP"],"f":[]},"NOPB":{"p":["BNSF","CN","CPKC","CSX","NS","UP"],"f":[]},"NPBL":{"p":["CSX","NS"],"f":[]},"NYA":{"p":["CSX","NS","PW"],"f":[]},"NYNJ":{"p":["CSNJ","NYA"],"f":[]},"NYOG":{"p":["CSX"],"f":[]},"NYSW":{"p":["CSX","NS"],"f":[]},"OHCR":{"p":["CSX","CUOH","NS","WE"],"f":[]},"OLB":{"p":["BNSF","UP"],"f":[]},"OPR":{"p":["UP"],"f":[]},"OTVR":{"p":["BNSF"],"f":[]},"OVR":{"p":["CPKC"],"f":[]},"OVRR":{"p":["CPKC"],"f":[]},"PAL":{"p":["BNSF","CN","CSX","NS"],"f":[]},"PHL":{"p":["BNSF","UP"],"f":[]},"PCHR":{"p":["CN","CPKC"],"f":[]},"PHRR":{"p":["TRRA","NS"],"f":[]},"PNWR":{"p":["BNSF","UP"],"f":[]},"POHC":{"p":["CSX","NS"],"f":[]},"POM":{"p":["CN","CPKC"],"f":[]},"PR":{"p":["CSX","NS"],"f":[]},"PSAP":{"p":["BNSF","UP"],"f":["Autoracks","go","via","UP"]},"PT":{"p":["UP","BNSF"],"f":[]},"PTRA":{"p":["BNSF","CPKC","UP"],"f":["BNSF","UP"]},"PTRC":{"p":["BNSF","UP"],"f":[]},"PVJR":{"p":["BNSF"],"f":[]},"PVRR":{"p":["CSX","NECR"],"f":[]},"PW":{"p":["CSX","NECR","PAS"],"f":[]},"RBMN":{"p":["NS"],"f":[]},"RCPE":{"p":["BNSF","CPKC","UP"],"f":["CPKC"]},"RFCC":{"p":["CSX","NS"],"f":["NS"]},"RJCK":{"p":["BNSF"],"f":[]},"RJCL":{"p":["CSX","NS"],"f":[]},"RJCM":{"p":["CSX"],"f":[]},"RJCW":{"p":["CSX","NS"],"f":["CSX","only","for","Greenville"]},"RNIR":{"p":["BNSF","UP"],"f":[]},"RPRC":{"p":["BNSF","UP"],"f":[]},"RRRR":{"p":["BNSF","UP"],"f":[]},"RRVW":{"p":["BNSF","CPKC"],"f":[]},"RSL":{"p":["NS","CSX","RJCL"],"f":[]},"RSOR":{"p":["CSX"],"f":[]},"RSR":{"p":["CSX","NS"],"f":[]},"RWRR":{"p":["BNSF","CN","UP"],"f":["BNSF"]},"SAC":{"p":["BNSF","UP"],"f":[]},"SAPT":{"p":["CSX","NS"],"f":[]},"SCIH":{"p":["NS","BRC"],"f":[]},"SCRF":{"p":["CSX"],"f":[]},"SCXF":{"p":["CSX","FEC"],"f":[]},"SDIY":{"p":["BNSF"],"f":[]},"SERA":{"p":["BNSF","UP"],"f":[]},"SGLR":{"p":["CSX"],"f":[]},"SJVR":{"p":["BNSF","UP"],"f":[]},"SKOL":{"p":["BNSF","CPKC","UP"],"f":[]},"SLR":{"p":["CN","CPKC","CSX"],"f":["CN"]},"SMV":{"p":["UP"],"f":[]},"SORA":{"p":["CN","CPKC"],"f":["CN"]},"SPP":{"p":["UP"],"f":[]},"SRRR":{"p":["BNSF","UP"],"f":[]},"SRY":{"p":["BNSF","CN","CPKC"],"f":[]},"SS":{"p":["BNSF","UP","SKOL"],"f":["BNSF"]},"STE":{"p":["BNSF","UP"],"f":[]},"STMA":{"p":["UP"],"f":[]},"SVHO":{"p":["CSX"],"f":[]},"SWP":{"p":["CSX","NS","WE"],"f":[]},"TASD":{"p":["CN","CSX","NS","AGR"],"f":[]},"TCB":{"p":["BNSF","UP"],"f":[]},"TCWR":{"p":["BNSF","CN","CPKC","UP"],"f":[]},"TMBL":{"p":["BNSF","UP"],"f":[]},"TNER":{"p":["UP"],"f":[]},"TPW":{"p":["BNSF","CN","CSX","IAIS","NS","UP"],"f":[]},"TRRA":{"p":["BNSF","CN","CPKC","CSX","NS","UP"],"f":[]},"TSRR":{"p":["CSX"],"f":[]},"TSU":{"p":["UP"],"f":[]},"TVRM":{"p":["CSX","NS"],"f":["NS"]},"TZPR":{"p":["BNSF","CN","CSX","UP","IAIS"],"f":[]},"URR":{"p":["CSX","NS","WE"],"f":[]},"USCX":{"p":["FEC"],"f":[]},"VR":{"p":["CSX","NS"],"f":[]},"VSOR":{"p":["CPKC"],"f":[]},"WE":{"p":["CN","CSX","NS"],"f":[]},"WSOR":{"p":["CN","CPKC","BNSF","UP","BRC"],"f":[]},"WSS":{"p":["CSX","NS"],"f":[]},"WTA":{"p":["BNSF","UP"],"f":[]},"WW":{"p":["CSX","NS"],"f":[]}},
 "ix":[
@@ -30265,6 +30382,7 @@ function render(reset=true){
   if(rstate.res){ renderRoutes(); return; }
   // the inventory view only exists for a yard whose .wag we can read
   if(state.view==="myyard" && !(state.loc && GAME.visited.has(state.loc))) state.view="cards";
+  if(state.view==="sorts" && !(state.loc && SHEETS[state.loc])) state.view="cards";
   const base=filteredBase();
   if(reset) syncTypes(base);
   const list = state.type ? base.filter(t=>t.ty===state.type) : base;
@@ -30295,6 +30413,7 @@ function render(reset=true){
       `</span>`+
       `<span class="seg" id="viewseg">`+
         [["cards","Cards"],["sheet",NARROW.matches?"Sheet":"Yard sheet"],["details","Details"]]
+          .concat(SHEETS[L]?[["sorts","Sorts"]]:[])
           .concat(GAME.visited.has(L)?[["myyard",GAME.my.has(L)?"My yard":"Visited yard"]]:[])
           .map(([v,lb])=>`<button data-v="${v}"${v===state.view?' class="on"':''}>${lb}</button>`).join("")+
       `</span>`+
@@ -30321,6 +30440,12 @@ function render(reset=true){
     document.getElementById("favstar").onclick=()=>toggleFav(L);
   } else locbar.className="locbar";
 
+  // sorts view: what the rosters say this yard should be sorting
+  if(state.loc && state.view==="sorts"){
+    wrap.innerHTML="";
+    wrap.appendChild(sortsPanel(state.loc));
+    return;
+  }
   // details view: facts about the place instead of a train list
   if(state.loc && state.view==="details"){
     wrap.innerHTML="";
@@ -30446,6 +30571,78 @@ function compass(a,b){
   return ["N","NE","E","SE","S","SW","W","NW"][Math.round(deg/45)%8];
 }
 
+// ---- sort sheets: what the rosters say a yard should be sorting ----
+// DATA.sheets[yard] = [{rr, s, uid, b:[[block index, how], ...]}], DATA.blocks =
+// the definitions (members as [token, via]), DATA.regions = "RR:code" -> states.
+// Built by blocks_import.py / sort_sheet.py from the TSAR notes only — a
+// player's own sort files are never read for this.
+const SHEETS=DATA.sheets||{}, BLOCKS=DATA.blocks||[], REGIONS=DATA.regions||{};
+const BLOCKS_BY_TRAIN={};
+BLOCKS.forEach((b,i)=>{ (BLOCKS_BY_TRAIN[b.rr+"|"+b.s]=BLOCKS_BY_TRAIN[b.rr+"|"+b.s]||[]).push(i); });
+const SYM_UID={};
+DATA.trains.forEach((t,i)=>{ const k=t.rr+"|"+t.sym.replace(/[^A-Za-z0-9]/g,"").toUpperCase().replace(/#+$/,""); if(!(k in SYM_UID)) SYM_UID[k]=i; });
+function symUid(rr,sym){ return SYM_UID[rr+"|"+String(sym).replace(/[^A-Za-z0-9]/g,"").toUpperCase().replace(/#+$/,"")]; }
+const SPEC_LABEL=["specific","by state / region","by railroad","catch-all"];
+function memberHtml(tok){
+  const i=tok.indexOf(":"), kind=i<0?tok:tok.slice(0,i), rest=i<0?"":tok.slice(i+1);
+  if(kind==="id") return `<button class="mem blk-mem-loc" data-loc="${esc(rest)}">${esc(locLabel(rest))}</button>`;
+  if(kind==="st") return `<span class="mem st">${esc(rest)}</span>`;
+  if(kind==="rr"){
+    const j=rest.indexOf(":"), mark=j<0?rest:rest.slice(0,j), tail=j<0?"":rest.slice(j+1);
+    if(mark.includes("@")){ const [m,at]=mark.split("@"); return `<span class="mem rr">${esc(m)} at <button class="blk-mem-loc" data-loc="${esc(at)}">${esc(locLabel(at))}</button></span>`; }
+    return `<span class="mem rr">${esc(mark)}${tail?" in "+esc(tail.replace(/\//g,", ")):" (all)"}</span>`;
+  }
+  if(kind==="region"){ const sts=REGIONS[rest]||""; const [rr,code]=rest.split(":"); return `<span class="mem st" title="${esc(sts.replace(/;/g,", "))}">${esc(rr)} region ${esc(String(code).replace(/_/g," "))}${sts?" · "+esc(sts.replace(/;/g,", ")):""}</span>`; }
+  if(kind==="all") return `<span class="mem rr">all ${esc(rest)} traffic</span>`;
+  if(kind==="not") return `<span class="mem not">except ${esc(rest.replace(/^region:/,"").replace(/:/g," "))}</span>`;
+  if(kind==="class") return `<span class="mem cls">${({im:"intermodal",auto:"autoracks",loaded:"loads only",empty:"empties only"})[rest]||esc(rest)}</span>`;
+  if(kind==="catchall") return `<span class="mem cls">everything else</span>`;
+  return `<span class="mem">${esc(tok)}</span>`;
+}
+function blockHtml(b, how){
+  const nx=b.nx?symUid(b.rr,b.nx):undefined;
+  let h=`<div class="blk"><div class="bhead"><b>${esc(b.n)}</b>`+
+    (b.sp!==null&&b.sp!==undefined?` <span class="spec s${b.sp}">${SPEC_LABEL[b.sp]}</span>`:"")+
+    (how?` <span class="dim">${esc(how)}</span>`:"")+
+    (b.nx?` <span class="dim">→ ${nx!==undefined?`<button class="jump" data-jump="${nx}">${esc(b.nx)}</button>`:esc(b.nx)}</span>`:"")+
+    `</div>`;
+  if(!b.m.length&&!b.u) h+=`<div class="bmem dim">named in the notes, not defined anywhere in this train</div>`;
+  // members grouped by the reference they came through
+  const groups=[]; const byVia={};
+  b.m.forEach(([tok,via])=>{ if(tok.startsWith("= ")) return; if(!(via in byVia)){ byVia[via]=[]; groups.push(via); } byVia[via].push(tok); });
+  groups.forEach(via=>{
+    h+=`<div class="bmem">`+(via?`<span class="via">= ${esc(via)}</span> `:"")+byVia[via].map(memberHtml).join(" ")+`</div>`;
+  });
+  if(b.u) h+=`<div class="bmem dim">not resolved: ${esc(b.u)}</div>`;
+  return h+`</div>`;
+}
+function trainBlocksHtml(t){
+  const idx=BLOCKS_BY_TRAIN[t.rr+"|"+t.s]; if(!idx) return "";
+  const byYard=[]; const seen={};
+  idx.forEach(i=>{ const b=BLOCKS[i]; const k=b.k+" "+b.y; if(!(k in seen)){ seen[k]=[]; byYard.push(k); } seen[k].push(i); });
+  return `<details class="blocks"><summary><h4>Blocks defined in these notes · ${idx.length}</h4></summary>`+
+    byYard.map(k=>`<div class="byard">Blocks ${esc(k)}</div>`+seen[k].map(i=>blockHtml(BLOCKS[i],"")).join("")).join("")+`</details>`;
+}
+function sortsPanel(L){
+  const el=document.createElement("div"); el.className="dpanel sorts";
+  const sh=SHEETS[L]||[];
+  let h=`<h4>Sort sheet <span class="dim">· ${esc(locLabel(L))} · from the rosters</span></h4>`+
+    `<div class="drow dim">Every train that lifts or builds a named block here, with each block spelled out the way a sort can say it. `+
+    `Read from the TSAR notes only — never from your own sort files. Blocks tagged <span class="spec s0">specific</span> should sit above `+
+    `<span class="spec s1">by state / region</span> and <span class="spec s2">by railroad</span> ones, and the <span class="spec s3">catch-all</span> last.</div>`;
+  sh.forEach(tr=>{
+    const t=tr.uid!==undefined&&tr.uid!==null?DATA.trains[tr.uid]:null;
+    h+=`<div class="strain"><span class="tag rr">${esc(tr.rr)}</span> `+
+      (t?`<button class="jump big" data-jump="${tr.uid}">${esc(t.fs)}</button> <span class="dim">${esc(locLabel(t.o))} → ${esc(locLabel(t.d))}</span>`:`<b>${esc(tr.s)}</b> <span class="dim">not in the current roster</span>`)+
+      `</div>`;
+    tr.b.forEach(([bi,how])=>{ h+=blockHtml(BLOCKS[bi],how); });
+  });
+  el.innerHTML=h;
+  el.querySelectorAll("[data-jump]").forEach(b=>{ b.onclick=()=>jumpTo(+b.dataset.jump); });
+  el.querySelectorAll(".blk-mem-loc").forEach(b=>{ b.onclick=()=>gotoLoc(b.dataset.loc); });
+  return el;
+}
+
 function detailsPanel(L){
   const el=document.createElement("div"); el.className="dpanel";
   const g=GEO[L], fam=FAM[L];
@@ -30560,7 +30757,9 @@ function buildBody(el,t){
   body.innerHTML=
     `<div class="dates">Effective ${esc(eff)} · Expires ${esc(exp)}</div>`+
     `<h4>Route · ${t.r.length} stop${t.r.length===1?"":"s"}</h4><div class="route">${nodes}</div>`+
-    `<h4>Instructions</h4><div class="instr">${instr}</div>`;
+    `<h4>Instructions</h4><div class="instr">${instr}</div>`+
+    trainBlocksHtml(t);
+  body.querySelectorAll(".blk-mem-loc").forEach(b=>{ b.onclick=e=>{e.stopPropagation(); gotoLoc(b.dataset.loc);}; });
 
   body.querySelectorAll("[data-jump]").forEach(b=>{
     b.onclick=e=>{e.stopPropagation(); jumpTo(+b.dataset.jump);};
@@ -31950,7 +32149,7 @@ function navFromHash(){
     const [k,v]=kv.split("=");
     if(k==="loc"&&KNOWN_LOC.has(v)) s.loc=v;
     else if(k==="m"&&["o","d","w"].includes(v)) s.locmode=v;
-    else if(k==="v"&&["sheet","details","myyard"].includes(v)) s.view=v;
+    else if(k==="v"&&["sheet","details","myyard","sorts"].includes(v)) s.view=v;
     else if(k==="sym"&&v) s.sym=decodeURIComponent(v);
     else if(k==="route"){ const q=v.split("-"); if(KNOWN_LOC.has(q[0])&&KNOWN_LOC.has(q[1])){ s.rf=q[0]; s.rt=q[1]; s.car=q[2]||"carload"; } }
   });
