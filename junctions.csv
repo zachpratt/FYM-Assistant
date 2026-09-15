@@ -1,0 +1,190 @@
+agreement,up_region,partner_region,junction,note
+UP-CP 2004,A,1,Chicago,
+UP-CP 2004,A,2,Chicago,
+UP-CP 2004,A,3,Chicago,
+UP-CP 2004,A,4,Chicago,
+UP-CP 2004,A,5,Chicago,
+UP-CP 2004,A,6,Chicago,
+UP-CP 2004,B,1,Chicago,
+UP-CP 2004,B,2,St. Paul,
+UP-CP 2004,B,3,St. Paul,
+UP-CP 2004,B,4,St. Paul,
+UP-CP 2004,B,5,St. Paul,
+UP-CP 2004,B,6,St. Paul,
+UP-CP 2004,C,1,Chicago,
+UP-CP 2004,C,2,St. Paul,
+UP-CP 2004,C,3,St. Paul,
+UP-CP 2004,C,4,St. Paul,
+UP-CP 2004,C,5,Eastport,
+UP-CP 2004,C,6,Eastport,
+UP-CP 2004,D,1,Chicago,
+UP-CP 2004,D,2,St. Paul,
+UP-CP 2004,D,3,St. Paul,
+UP-CP 2004,D,4,St. Paul,
+UP-CP 2004,D,5,Eastport,
+UP-CP 2004,D,6,New Westminster,
+UP-CP 2004,E,1,Chicago,
+UP-CP 2004,E,2,St. Paul,
+UP-CP 2004,E,3,St. Paul,
+UP-CP 2004,E,4,Eastport,
+UP-CP 2004,E,5,Eastport,
+UP-CP 2004,E,6,New Westminster,
+UP-CP 2004,F,1,Chicago,
+UP-CP 2004,F,2,St. Paul,
+UP-CP 2004,F,3,St. Paul,
+UP-CP 2004,F,4,Eastport,
+UP-CP 2004,F,5,Eastport,
+UP-CP 2004,F,6,Eastport,
+UP-CP 2004,G,1,Chicago,
+UP-CP 2004,G,2,St. Paul,
+UP-CP 2004,G,3,Eastport,
+UP-CP 2004,G,4,Eastport,
+UP-CP 2004,G,5,Eastport,
+UP-CP 2004,G,6,New Westminster,
+UP-CP 2004,H,1,Chicago,
+UP-CP 2004,H,2,St. Paul,
+UP-CP 2004,H,3,Eastport,
+UP-CP 2004,H,4,Eastport,
+UP-CP 2004,H,5,Eastport,
+UP-CP 2004,H,6,Eastport,
+UP-CP 2004,I,1,Chicago,
+UP-CP 2004,I,2,Eastport,
+UP-CP 2004,I,3,Eastport,
+UP-CP 2004,I,4,Eastport,
+UP-CP 2004,I,5,Eastport,
+UP-CP 2004,I,6,Eastport,
+UP-CP 2004,J,1,Chicago,
+UP-CP 2004,J,2,Eastport,
+UP-CP 2004,J,3,Eastport,
+UP-CP 2004,J,4,Eastport,
+UP-CP 2004,J,5,Eastport,
+UP-CP 2004,J,6,New Westminster,
+UP-CSX 2009,PW,A,Chicago,
+UP-CSX 2009,NPW,A,Chicago,
+UP-CSX 2009,SW,A,E. St. Louis,
+UP-CSX 2009,GC,A,E. St. Louis (via Salem),
+UP-CSX 2009,LAB,A,Chicago,
+UP-CSX 2009,Ozark,A,E. St. Louis (via Salem),
+UP-CSX 2009,PW,B,Chicago,
+UP-CSX 2009,NPW,B,E. St. Louis,
+UP-CSX 2009,SW,B,E. St. Louis,
+UP-CSX 2009,GC,B,New Orleans,
+UP-CSX 2009,LAB,B,New Orleans,
+UP-CSX 2009,Ozark,B,Memphis,
+UP-CSX 2009,PW,C,Chicago,
+UP-CSX 2009,NPW,C,E. St. Louis,
+UP-CSX 2009,SW,C,E. St. Louis,
+UP-CSX 2009,GC,C,Memphis,
+UP-CSX 2009,LAB,C,E. St. Louis,
+UP-CSX 2009,Ozark,C,Memphis,
+UP-CSX 2009,PW,D,Chicago,
+UP-CSX 2009,NPW,D,E. St. Louis,
+UP-CSX 2009,SW,D,E. St. Louis,
+UP-CSX 2009,GC,D,New Orleans,
+UP-CSX 2009,LAB,D,E. St. Louis,
+UP-CSX 2009,Ozark,D,Memphis,
+UP-CSX 2009,PW,E,Chicago,
+UP-CSX 2009,NPW,E,E. St. Louis,
+UP-CSX 2009,SW,E,E. St. Louis,
+UP-CSX 2009,GC,E,E. St. Louis,
+UP-CSX 2009,LAB,E,E. St. Louis,
+UP-CSX 2009,Ozark,E,E. St. Louis,
+NS-UP 2019,PW,A1,Chicago,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NPW,A1,Chicago,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LAB,A1,Chicago,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,SW,A1,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,KS,A1,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,OZ,A1,E. St. Louis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NTX,A1,E. St. Louis/Salem,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,GC,A1,E. St. Louis/Salem,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LI,A1,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,PW,A2,Chicago,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NPW,A2,Chicago,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LAB,A2,Chicago,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,SW,A2,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,KS,A2,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,OZ,A2,E. St. Louis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NTX,A2,E. St. Louis/Salem,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,GC,A2,E. St. Louis/Salem,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LI,A2,E. St. Louis/Salem,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,PW,A3,Chicago,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NPW,A3,Chicago,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LAB,A3,Chicago,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,SW,A3,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,KS,A3,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,OZ,A3,E. St. Louis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NTX,A3,E. St. Louis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,GC,A3,E. St. Louis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LI,A3,E. St. Louis/Salem,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,PW,B1,Chicago,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NPW,B1,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LAB,B1,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,SW,B1,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,KS,B1,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,OZ,B1,E. St. Louis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NTX,B1,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,GC,B1,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LI,B1,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,PW,B2,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NPW,B2,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LAB,B2,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,SW,B2,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,KS,B2,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,OZ,B2,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NTX,B2,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,GC,B2,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LI,B2,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,PW,B3,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NPW,B3,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LAB,B3,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,SW,B3,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,KS,B3,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,OZ,B3,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NTX,B3,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,GC,B3,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LI,B3,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,PW,C1,Chicago,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NPW,C1,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LAB,C1,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,SW,C1,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,KS,C1,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,OZ,C1,E. St. Louis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NTX,C1,E. St. Louis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,GC,C1,E. St. Louis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LI,C1,E. St. Louis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,PW,C2,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NPW,C2,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LAB,C2,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,SW,C2,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,KS,C2,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,OZ,C2,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NTX,C2,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,GC,C2,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LI,C2,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,PW,C3,Des Moines,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NPW,C3,Des Moines,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LAB,C3,Des Moines,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,SW,C3,Des Moines,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,KS,C3,Des Moines,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,OZ,C3,Des Moines,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NTX,C3,Des Moines,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,GC,C3,Des Moines,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LI,C3,Des Moines,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,PW,D1,Chicago,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NPW,D1,Kansas City,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LAB,D1,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,SW,D1,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,KS,D1,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,OZ,D1,E. St. Louis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NTX,D1,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,GC,D1,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LI,D1,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,PW,D2,Chicago,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NPW,D2,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LAB,D2,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,SW,D2,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,KS,D2,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,OZ,D2,E. St. Louis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,NTX,D2,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,GC,D2,Memphis,"merchandise traffic, excluding intermodal, automotive and coal"
+NS-UP 2019,LI,D2,New Orleans,"merchandise traffic, excluding intermodal, automotive and coal"

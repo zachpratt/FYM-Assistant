@@ -1,0 +1,48 @@
+agreement,side,region,states,anchors,confidence,source
+UP-CP 2004,CP,1,"ON;QC;NB;NS;NY;PA;NJ;VT;IL;WI;MI","Montreal, Toronto, Chicago (1/A), Wisconsin (1/B); Ontario east of Thunder Bay",medium,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,CP,2,"MN","eastern Minnesota (2/B), Twin Cities",medium,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,CP,3,"MB;ON;MN;ND","Manitoba, Thunder Bay westward, western Minnesota (3/B), North Dakota",medium,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,CP,4,"SK","Saskatchewan",high,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,CP,5,"AB","Alberta",high,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,CP,6,"BC","British Columbia, New Westminster",high,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,UP,A,"IL;IN;MO;AR;LA;TN","Chicago (1/A), St. Louis, Memphis, Louisiana",low,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,UP,B,"MN;WI;IA;NE;KS;OK;TX;MO","Minneapolis/St. Paul (1/B 2/B 3/B), Omaha, Kansas City, Texas",low,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,UP,C,"CO","Denver",medium,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,UP,D,"NM;TX","El Paso, west Texas",medium,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,UP,E,"AZ;CA","Arizona, southern California",medium,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,UP,F,"NV;UT","Nevada, Utah",medium,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,UP,G,"CA","northern California",medium,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,UP,H,"ID;UT","Idaho, northern Utah",low,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,UP,I,"WA;OR;ID","eastern Washington and Oregon, Eastport/Kingsgate",low,pdf-up-shortline-cp-routing.pdf p1
+UP-CP 2004,UP,J,"WA;OR","Pacific coast Washington and Oregon",low,pdf-up-shortline-cp-routing.pdf p1
+UP-CSX 2009,CSX,A,"NY;NJ;PA;MD;DE;DC;CT;MA;RI;VT;NH;ME;OH;MI;WV;QC;ON","Selkirk, Buffalo, New York, Philadelphia, Baltimore, Washington DC, Pittsburgh, Cumberland, Cleveland, Columbus, Detroit, Montreal",medium,pdf-up-shortline-csx-routing.pdf p1
+UP-CSX 2009,CSX,B,"GA;FL;AL;MS;SC","Atlanta, Waycross, Savannah, Jacksonville, Tampa, Miami, Mobile, Pensacola, Birmingham, Charleston",medium,pdf-up-shortline-csx-routing.pdf p1
+UP-CSX 2009,CSX,C,"VA;NC","Richmond, Norfolk, Hamlet, Wilmington",medium,pdf-up-shortline-csx-routing.pdf p1
+UP-CSX 2009,CSX,D,"TN;KY","Nashville; Kentucky south of the Ohio Valley",low,pdf-up-shortline-csx-routing.pdf p1
+UP-CSX 2009,CSX,E,"IN;OH;KY","Avon, Cincinnati, Louisville (Ohio Valley)",medium,pdf-up-shortline-csx-routing.pdf p1
+UP-CSX 2009,UP,PW,"MN;WI;IA;NE;SD;ND;IL;MO","Proviso West: Proviso, Minneapolis/St. Paul, Duluth, Des Moines, Omaha, North Platte",medium,pdf-up-shortline-csx-routing.pdf p1
+UP-CSX 2009,UP,NPW,"WA;OR;ID;MT;WY;UT;NV;CO;CA","North Platte West: Seattle, Portland, Hinkle, Pocatello, Salt Lake City, Cheyenne, Denver, Reno, Roseville, Oakland, Fresno, Las Vegas",medium,pdf-up-shortline-csx-routing.pdf p1
+UP-CSX 2009,UP,SW,"KS;OK;MO","Southwest: Topeka, Wichita, Kansas City, Tulsa, Oklahoma City",medium,pdf-up-shortline-csx-routing.pdf p1
+UP-CSX 2009,UP,GC,"TX;NM;AZ;LA","Gulf Coast: Houston, Dallas, Ft Worth, San Antonio, Laredo, Brownsville, El Paso, Phoenix, Tucson, Nogales, Amarillo, Lubbock, Livonia",medium,pdf-up-shortline-csx-routing.pdf p1
+UP-CSX 2009,UP,LAB,"CA","Los Angeles Basin: Los Angeles, Long Beach, Colton, Calexico",high,pdf-up-shortline-csx-routing.pdf p1
+UP-CSX 2009,UP,Ozark,"AR;OK","Arkansas and western Oklahoma: N. Little Rock, Pine Bluff, Texarkana (legend)",high,pdf-up-shortline-csx-routing.pdf p1
+NS-UP 2019,NS,A1,"NJ;DE;MD;DC;PA;VA","New York, Philadelphia, Baltimore, Washington DC, Norfolk; eastern Pennsylvania",low,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,NS,A2,"NY;VT;MA;CT;PA;OH","Mechanicville, Schenectady, Binghamton, Buffalo, Conway, Pittsburgh, Harrisburg, Columbus, Bellevue",low,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,NS,A3,"MI;OH;IN;IL","Detroit, Cleveland, Elkhart, Chicago (Landers), Proviso",medium,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,NS,B1,"GA;FL;SC","Macon, Savannah, Jacksonville, Charleston, Miami",medium,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,NS,B2,"TN;AL;KY","Sheffield, Chattanooga, Knoxville; northern Alabama",medium,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,NS,B3,"MS;AL;LA","Birmingham, New Orleans",medium,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,NS,C1,"IL;IN;KY;OH","Decatur, Streator, Salem, Louisville, Cincinnati, Danville",medium,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,NS,C2,"MO;KS","Kansas City",high,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,NS,C3,"IA","Des Moines",high,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,NS,D1,"NC;VA","Linwood, Charlotte, Roanoke, Danville",medium,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,NS,D2,"TN;VA","Kingsport, Knoxville (circled D2, east Tennessee)",low,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,UP,PW,"MN;WI;IA;NE;SD;ND;IL","Proviso West: Proviso, Streator, Minneapolis/St. Paul, Duluth, Milwaukee, Omaha, Sidney",medium,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,UP,NPW,"WA;OR;ID;MT;WY;UT;NV;CO;CA","North Platte West: North Platte, Cheyenne, Denver, Salt Lake City, Ogden, Pocatello, Hinkle, Portland, Seattle, Spokane, Reno, Roseville, Oakland, Fresno, Las Vegas",medium,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,UP,LAB,"CA","Los Angeles Basin: Los Angeles, Long Beach, West Colton, Calexico",high,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,UP,SW,"AZ;NM;TX;OK","Southwest: Phoenix, Tucson, Nogales, El Paso, Amarillo, Lubbock, Oklahoma City, Tulsa",medium,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,UP,KS,"KS;MO","Kansas: Topeka, Wichita, Kansas City",medium,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,UP,OZ,"AR;MO","Ozark: N. Little Rock, Pine Bluff, Memphis side, E. St. Louis side",low,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,UP,NTX,"TX","North Texas: Dallas, Ft. Worth, Texarkana",medium,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,UP,GC,"TX","Gulf Coast: Houston, San Antonio, Laredo, Eagle Pass, Brownsville",medium,pdf-up-shortline-ns-routing.pdf
+NS-UP 2019,UP,LI,"LA","Livonia",high,pdf-up-shortline-ns-routing.pdf

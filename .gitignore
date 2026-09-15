@@ -30,3 +30,7 @@ connections/
 # Screenshots of the game's railroad picker, used once to transcribe railroad_ids.csv.
 # Game UI, not ours to redistribute.
 Railroad_screenshots/
+
+# UP's published interline routing guides (region maps + junction tables),
+# transcribed into regions.csv / junctions.csv. The PDFs are UP's, not ours.
+routing_agreements/
