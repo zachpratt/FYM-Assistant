@@ -46,3 +46,7 @@ NS-UP 2019,UP,OZ,"AR;MO","Ozark: N. Little Rock, Pine Bluff, Memphis side, E. St
 NS-UP 2019,UP,NTX,"TX","North Texas: Dallas, Ft. Worth, Texarkana",medium,pdf-up-shortline-ns-routing.pdf
 NS-UP 2019,UP,GC,"TX","Gulf Coast: Houston, San Antonio, Laredo, Eagle Pass, Brownsville",medium,pdf-up-shortline-ns-routing.pdf
 NS-UP 2019,UP,LI,"LA","Livonia",high,pdf-up-shortline-ns-routing.pdf
+TSAR shorthand,CN,East_of_Thunder_Bay,ON;QC;NB;NS,"CN Canada east of Thunder Bay: Toronto, Montreal, Halifax (Ontario only east of Thunder Bay)",medium,roster phrasing
+TSAR shorthand,CN,Thunder_Bay_Westward,ON;MB;SK;AB;BC,"CN Canada from Thunder Bay west: Winnipeg, Saskatoon, Edmonton, Vancouver, Prince Rupert (Ontario only Thunder Bay and west)",medium,roster phrasing
+TSAR shorthand,CN,Eastern_US,MI;IN;OH;IL;KY;TN;MS;AL;LA,former GTW/IC/WC lines east and south of Chicago,low,roster phrasing
+TSAR shorthand,CN,US,WI;MN;IA;IL;MI;IN;OH;KY;TN;MS;AL;LA;ND,every CN line in the United States,medium,roster phrasing

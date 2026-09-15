@@ -1,0 +1,125 @@
+phrase,tokens,note
+Long Beach Pacific Container Terminal,id:2514 id:3093,PCT
+Long Beach Pier A,id:2517 id:3091,SSA Terminal A
+Long Beach ITF,id:2515 id:3094,ITS terminal
+Long Beach Hanjin,id:1149 id:3101,Hanjin operated Pier T
+Long Beach Toyota,id:3095 id:3096,
+Terminal Island ITCF,id:1146 id:3098,TICTF
+LA TITCF,id:1146 id:3098,TICTF
+LA TICTF,id:1146 id:3098,
+Dolores ICTF,id:1001,
+Dolores/ICTF,id:1001,
+ICTF,id:1001,
+TRAPAC,id:3104,
+East LA,id:1588,
+LATC,id:1203,
+LA Hobart,id:1007,
+LA Harbor,id:1103 id:1090,
+APM,id:1152,APM Terminal Pier 400
+APM Pier 400,id:1152,
+Pier 400,id:1152,
+Los Angeles Carson Siding North/South,id:3157 id:3156,
+Inland Empire,id:1102 id:1255 id:3723,San Bernardino / West Colton / Riverside
+BNSF LA Basin,rr:BNSF@1007 rr:BNSF@1102 rr:BNSF@1029,Hobart / San Bernardino / Barstow
+BNSF LA Basin/San Diego,rr:BNSF@1007 rr:BNSF@1102 rr:BNSF@1029 rr:BNSF@2146,
+Yard Center,id:1161,
+Logistics Park KC,id:2454,
+Logistics Park Chicago,id:1505,
+LPC,id:1505,Logistics Park Chicago
+Neff,id:1301,
+KC Neff,id:1301,
+Kansas City Argentine,id:1620,
+Kansas City 18th Street,id:1229 id:2046,
+Kansas City interchange,id:2194 id:2195,ASB Jct
+ASB Junction,id:2194 id:2195,
+SAIT,id:3118,San Antonio Intermodal Terminal
+San Antonio SAIT,id:3118,
+Denver Big Lift,id:2407,
+Oklahoma City,id:2200 id:3060,
+Houston Melendy,id:1372,Melendy is Englewood's east end (no map of its own)
+Houston Fairbanks,id:1372,Fairbanks is on the Englewood map (no map of its own)
+Houston Arco,id:3015,
+Houston Old City,id:1935,
+Port Aurthur,id:1241 id:1617 id:2217,typo
+Port Arthur UP/CPKC/Williams,id:1617 id:1241,
+Lake Charles LA,id:3277 id:3278,
+West Lake Charles LA,id:3282 id:3283 id:3284,
+Port of Lake Charles LA,id:3279 id:3280 id:3281,
+All Lake Charles/West Lake/West Lake Charles BNSF,id:3278 id:3281 id:3284,
+Westlake LA,id:1563 id:1987 id:2358,
+Westlake/Mossville LA,id:1563 id:1987 id:2358,
+Westlake/Mossville,id:1563 id:1987 id:2358,
+Mansfield LA,id:2395 id:2396,
+Tenaha TX,id:2393 id:2394,
+Tuscon,id:1477,typo
+Hunstville,id:1432,typo
+Fairmount MN,id:1660,typo
+Fairfiew MT,id:2335,typo
+Fairview MT,id:2335,
+Cincinnatti Gest,id:2048,typo
+Oxnard/Pt. Hueme,id:1303,typo
+Sargeant Bluff,id:2609,typo
+Coeur d'Alene,id:3460,store spells it Couer
+Jersey City Kearney,id:3294 id:3600,typo
+Port Superior,id:1575,Superior Lakefront
+Port of Superior,id:1575,
+Port of Bossier,id:2397,
+Sparks NV,id:1141 id:2338,
+Fernley,id:1131 id:2337,
+Fernley NV,id:1131 id:2337,
+Laurel,id:1894,MT
+Blue Springs,id:2877,
+National City,id:2146 id:3740,
+Tacoma Port Yard,id:1554,
+Midlothian,id:2031 id:2032 id:2364,
+Alliance,id:1356,NE unless stated
+Vancouver WA,id:1702 id:3056 id:1712 id:3059,
+Pacific Northwest,st:WA st:OR st:ID,
+Northern California,st:CA,shorthand; the state is all a sort can say
+St Louis area,id:1120 id:1212 id:1004,
+St. Louis local cars,id:1120,
+UP/BNSF St Louis,rr:UP@1120 rr:BNSF@1120,
+Fargo area,id:1585 id:1604,
+NS Northeast,region:NS:A1 region:NS:A2 region:NS:A3,shorthand per the NS-UP sheet
+Misc NS Northeast,region:NS:A1 region:NS:A2 region:NS:A3,
+misc NS northeast,region:NS:A1 region:NS:A2 region:NS:A3,
+CSX Northeast,region:CSX:A,shorthand per the UP-CSX sheet
+Misc CSX Northeast,region:CSX:A,
+Misc CSX Southeast,region:CSX:B,
+Misc NS Southeast,region:NS:B1 region:NS:B2 region:NS:B3,
+NS/CSX Southeast,region:NS:B1 region:NS:B2 region:NS:B3 region:CSX:B,
+UP Southeast LA,rr:UP:LA,Livonia
+Southeast LA UP,rr:UP:LA,
+CP in AB,rr:CPKC:AB,
+CPCK Region 1,region:CPKC:1,typo
+CPKC Canda Thunder Bay Westward,region:CPKC:3 region:CPKC:4 region:CPKC:5 region:CPKC:6,typo; CP regions 3-6 lie west of Thunder Bay
+CN Canada East of Thunder Bay,region:CN:East_of_Thunder_Bay,
+CN Canada East of Thunder Bay ON,region:CN:East_of_Thunder_Bay,
+CN Canada East of Thunder bay,region:CN:East_of_Thunder_Bay,
+CN Thunder Bay ON Westward,region:CN:Thunder_Bay_Westward,
+CN Canada Thunder Bay ON Westward,region:CN:Thunder_Bay_Westward,
+CN SK/MB/ON Thunder Bay westward,region:CN:Thunder_Bay_Westward,
+CN WI/MN/Canada Thunder Bay Westward,rr:CN:WI/MN region:CN:Thunder_Bay_Westward,
+CN Canada MB Eastward,rr:CN:MB region:CN:East_of_Thunder_Bay,
+CN Eastern US,region:CN:Eastern_US,
+CN US,region:CN:US,
+CN IL+Eastern US/Canada East of Thunder Bay,rr:CN:IL region:CN:Eastern_US region:CN:East_of_Thunder_Bay,
+CN IL/TN/MS/Eastern US/Canada East of Thunder Bay ON,rr:CN:IL/TN/MS region:CN:Eastern_US region:CN:East_of_Thunder_Bay,
+CN AL/MS/TN/MS/IL/Eastern US,rr:CN:AL/MS/TN/IL region:CN:Eastern_US,
+CN Eastern Canada and US,region:CN:East_of_Thunder_Bay region:CN:US,
+All CN except LA,all:CN not:CN:LA,
+All NS except Region B3,all:NS not:region:NS:B3,
+NS regions A1/A2/A3/B1/C1/D1/D2,region:NS:A1 region:NS:A2 region:NS:A3 region:NS:B1 region:NS:C1 region:NS:D1 region:NS:D2,
+DMVW. RRVW,rr:DMVW rr:RRVW,typo
+WY [No RCPE],st:WY not:RCPE,
+Western MT,st:MT,west of Billings; the state is all a sort can say
+Harrington Generating Station,,no map for it (Amarillo-area power plant); left empty on purpose
+Channelview Arco Ind Lead,id:3015,
+UTAH RR,rr:UTAH,
+Pittsburg SKOL,rr:SKOL:KS,Pittsburg KS has no map of its own
+Brodie,,a BNSF yard with no map in the game; left empty on purpose
+Columbus NS,id:1447 id:1639 id:1453,GA / IN / OH Watkins
+Global 2 IM from 36th Street,id:1595,
+Rochelle Global 3 manifest,id:1760,
+destinations in the North Platte block,ref:MSSNP:North_Platte,see that train
+Klamath Falls service area,id:4010,

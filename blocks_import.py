@@ -51,7 +51,7 @@ CLASS_HINT = [(re.compile(r'\b(autoracks?|autos?|automotive|multilevels?)\b', re
               (re.compile(r'\b(IM|intermodal|containers?|stacks?)\b'), 'class:im')]
 REF = re.compile(r'^(M[A-Z]{3,5}|[A-Z]-[A-Z]{6}\d?)\s+(.+)$')       # UP manifest symbol, or BNSF X-ABCDEF1
 RR_STATES = re.compile(r'^([A-Z]{2,5})\s+((?:[A-Z]{2}/)*[A-Z]{2})$')   # "BNSF TN/MS/AL", "UP LA"
-NOTE = re.compile(r'^(grouped by|terminating only|leftover|all traffic|traffic (for|to|from)|no connecting|as needed|see |per |if )', re.I)
+NOTE = re.compile(r"^(grouped by|terminating only|leftover|all traffic|traffic (for|to|from)|no connecting|as needed|see |per |if |int'l|53'|\d+ units|all outbound|loaded$|local$|(csx|ns|up|bnsf|cn|cpkc)( and (csx|ns|up|bnsf))? connections|same traffic)", re.I)
 REGION = re.compile(r'^(CPKC|CP|CSX|NS|BNSF|UP|CN)\s+Regions?\s+([A-Z0-9]+(?:/[A-Z0-9]+)*)$')
 
 
@@ -62,6 +62,13 @@ def norm(text):
     t = re.sub(r'\b(ft\.?|fort)\b', 'ft', t)
     t = re.sub(r'\b(st\.|saint)\b', 'st', t)
     t = re.sub(r'\bmt\.', 'mt', t)
+    t = re.sub(r'\bstreet\b', 'st', t)
+    t = re.sub(r'\bpt\.', 'pt', t)
+    t = re.sub(r'^kc\b', 'kansas city', t)
+    t = re.sub(r'^(s|so)\b', 'south', t)
+    t = re.sub(r'^(n|no)\b', 'north', t)
+    t = re.sub(r'^e\b', 'east', t)
+    t = re.sub(r'^w\b', 'west', t)
     t = re.sub(r"[.'\u2019]", '', t)
     return re.sub(r'\s+', ' ', t).strip()
 
@@ -81,13 +88,28 @@ def load_locations(path):
     return by
 
 
-def load_marks(path):
+def load_marks(path, game_ini=os.path.join('game_data', 'FYMLocoCars6.ini')):
+    """reporting marks: railroad_ids.csv plus the game's own [Railroads] table"""
     marks = set()
     if os.path.isfile(path):
         with open(path, newline='') as fh:
             for row in csv.DictReader(fh):
                 marks.add(row['mark'].strip().upper())
+    if os.path.isfile(game_ini):
+        for line in open(game_ini, encoding='utf-8', errors='replace'):
+            if line.startswith('Mark='):
+                marks.add(line[5:].strip().upper())
     return marks
+
+
+def load_aliases(path):
+    """norm(phrase) -> [tokens]; an empty token list means 'known, nothing a sort can say'"""
+    out = {}
+    if os.path.isfile(path):
+        with open(path, newline='') as fh:
+            for row in csv.DictReader(fh):
+                out[norm(row['phrase'])] = row['tokens'].split()
+    return out
 
 
 def load_regions(path):
@@ -109,8 +131,8 @@ def split_members(text):
 
 
 class Resolver:
-    def __init__(self, locs, marks, regions):
-        self.locs, self.marks, self.regions = locs, marks, regions
+    def __init__(self, locs, marks, regions, aliases):
+        self.locs, self.marks, self.regions, self.aliases = locs, marks, regions, aliases
         self.unresolved = {}
         self.words = [(k, set(k.split()), v) for k, v in locs.items()]
 
@@ -119,13 +141,27 @@ class Resolver:
         qualifier stripped, then a city prefix, then every word present."""
         key = norm(phrase)
         m = re.match(r'^(.*\S)\s+([A-Z]{2})$', phrase.strip())
+        if m and m.group(2) in CLASS1:
+            m = None
         if not state and m and m.group(2) in STATES and norm(m.group(1)) in self.locs:
             key, state = norm(m.group(1)), m.group(2)
         pick = lambda hits: [i for i, st in hits if not state or st == state] or ([i for i, st in hits] if not state else [])
+        m2 = re.match(r'^(.*\S)\s+([A-Z]{2,5}(?:/[A-Z]{2,5})+)$', phrase.strip())
+        if m2 and all(x in self.marks or x in CLASS1 for x in m2.group(2).split('/')):
+            ids = []
+            for road in m2.group(2).split('/'):
+                ids += self.place(f'{m2.group(1)} {road}', state)
+            if ids:
+                return ids
         cands = [key, re.sub(r'^all (.+?) yards?$', r'\1', key), re.sub(r' (up|bnsf|csx|ns|cn|cpkc|kcs|ptra)$', '', key)]
         for c in cands:
             if c in self.locs and pick(self.locs[c]):
                 return pick(self.locs[c])
+        if not state and m and m.group(2) in STATES:            # "Mansfield LA": prefix match within the state
+            k2, st2 = norm(m.group(1)), m.group(2)
+            hits = [x for k, hh in self.locs.items() if (k == k2 or k.startswith(k2 + ' ')) for x in hh if x[1] == st2]
+            if hits:
+                return [i for i, _ in hits][:12]
         pref = [x for k, hits in self.locs.items() if k.startswith(key + ' ') for x in hits]
         if pick(pref):
             return pick(pref)[:12]
@@ -142,12 +178,27 @@ class Resolver:
         hints = [tok for rx, tok in CLASS_HINT if rx.search(p)]
         if NOTE.match(p):                       # prose about the block, not a member
             return hints
-        p = re.sub(r'\s+(UP|BNSF|CSX|NS|CN|CPKC|KCS|PTRA)(/(UP|BNSF|CSX|NS|CN|CPKC|KCS|PTRA))+$', '', p)
+        p = re.sub(r'\s*-+>\s*[A-Za-z0-9-]+$', '', p)             # "Westfield ->ILBHO"
         p = re.sub(r'^(IM|intermodal|autos?|autoracks?|loaded autoracks?|loads?|empties)\s+for\s+', '', p, flags=re.I)
         p = re.sub(r'\s+(IM|intermodal|autoracks?|autos?)$', '', p, flags=re.I)
         if not p:
             return hints
-        out = self._resolve(p, up)
+        if norm(p) in self.aliases:
+            return self.aliases[norm(p)] + hints
+        if re.fullmatch(r'\d{4}', p):
+            return [f'id:{p}'] + hints
+        m = re.match(r'^(.*?)\s+(loaded|loads|empty|empties|manifest|manifest only|im only|only)$', p, re.I)
+        if m and m.group(1):
+            q = m.group(2).lower()
+            hints += ['class:loaded'] if q in ('loaded', 'loads') else ['class:empty'] if q in ('empty', 'empties') else []
+            p = m.group(1)
+            if norm(p) in self.aliases:
+                return self.aliases[norm(p)] + hints
+        m = re.match(r'^(.+?)\s+(service area|area)$', p, re.I)
+        if m:
+            p = m.group(1)
+        p = re.sub(r'\s+(UP|BNSF|CSX|NS|CN|CPKC|KCS|PTRA)(/(UP|BNSF|CSX|NS|CN|CPKC|KCS|PTRA))+$', '', p)
+        out = self._resolve(p, p.upper())
         return out + hints
 
     def _resolve(self, p, up):
@@ -269,7 +320,7 @@ def main():
     ap.add_argument('-o', '--out', default='blocks.csv')
     a = ap.parse_args()
     locs = load_locations('locations.csv')
-    res = Resolver(locs, load_marks('railroad_ids.csv'), load_regions('regions.csv'))
+    res = Resolver(locs, load_marks('railroad_ids.csv'), load_regions('regions.csv'), load_aliases('block_aliases.csv'))
     rows = []
     for p in sorted(glob.glob(os.path.join(a.folder, 'TSAR_*.ini'))):
         rr = os.path.basename(p)[5:-4].upper()
