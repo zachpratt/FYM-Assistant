@@ -225,6 +225,39 @@ be automated: verify the flow by fetching files from `game_data/` while
 serving the repo root and feeding a `Map` of `File`s to `loadGame()`, then
 have Zach click the real button once.
 
+## Block definitions (backend only so far)
+
+The UP and BNSF rosters write block tables in their notes ("Blocks leaving
+Des Moines: 1. North Little Rock (LA, AR, ..., NS Region B2) - No CSX";
+"Blocks created at Mason City: - Parsons (MDMNL Parsons)"); NS, CSX, CN and
+CPKC only name blocks in @@ verbs. **The TSARs are the truth; a player's
+sort files are their own shorthand and are never read or compared** (Zach,
+2026-09-15). The goal is to help players build accurate sorts.
+
+- `blocks_import.py` → `blocks.csv` (one row per table entry, members
+  resolved into sort tokens `id: st: rr:MARK[:ST/..] rr:MARK@id
+  region:RR:code ref:TRAIN:block all: not: class: catchall`, unresolved
+  phrases kept verbatim) and `block_moves.csv` (every "@@yard - pick up /
+  set out / create X block" verb, all six roads). Rerun after a TSAR update.
+- `block_aliases.csv`: phrases a sort can't see through (terminals inside a
+  map, nicknames, typos, regional shorthand), with a note per row. Grow it
+  from the "most frequent unresolved phrases" the importer prints.
+- `regions.csv` / `junctions.csv`: UP's published interline routing guides
+  (UP-CP 2004, UP-CSX 2009, NS-UP 2019; PDFs gitignored in
+  `routing_agreements/`) — the partner region codes the rosters cite, at
+  state level with a confidence column (Zach's ruling: state level is all a
+  sort can say), plus CN "Thunder Bay" shorthand rows. Junction tables are
+  exact.
+- `sort_sheet.py <id|name>`: a yard's sheet — every train that lifts,
+  adds or creates a block there, each block flattened (references followed
+  and shown as "via", regions expanded) and tagged specific / by state /
+  by railroad / catch-all. Mason City 2124 is the reference case.
+
+Known soft spots: a bare city in a block ("Arlington", "Denison") resolves
+to every state's namesake; hand-off references ("Overflow MITPS Parsons")
+resolve to the block another train hands to that symbol; 27% of entries
+still carry an unresolved phrase.
+
 ## Domain rules that look like bugs but aren't
 
 - **Symbols are verbatim by decision.** Displayed symbol = `[TypeInfo prefix] +

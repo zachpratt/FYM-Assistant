@@ -153,10 +153,22 @@ class Resolver:
                 ids += self.place(f'{m2.group(1)} {road}', state)
             if ids:
                 return ids
+        road = re.search(r' (up|bnsf|csx|ns|cn|cpkc|kcs|ptra)$', key)
         cands = [key, re.sub(r'^all (.+?) yards?$', r'\1', key), re.sub(r' (up|bnsf|csx|ns|cn|cpkc|kcs|ptra)$', '', key)]
-        for c in cands:
+        if key in self.locs and pick(self.locs[key]):
+            return pick(self.locs[key])
+        if road:                                   # "Springfield UP": the store's own "... UP, ST" names first
+            r = road.group(1)
+            hits = [x for k, hh in self.locs.items() if k.startswith(cands[2] + ' ') and re.search(r'\b' + r + r'\b', k) for x in hh]
+            if pick(hits):
+                return pick(hits)[:12]
+        for c in cands[1:]:
             if c in self.locs and pick(self.locs[c]):
                 return pick(self.locs[c])
+        for c in cands[1:]:
+            pref = [x for k, hh in self.locs.items() if k.startswith(c + ' ') for x in hh]
+            if pick(pref):
+                return pick(pref)[:12]
         if not state and m and m.group(2) in STATES:            # "Mansfield LA": prefix match within the state
             k2, st2 = norm(m.group(1)), m.group(2)
             hits = [x for k, hh in self.locs.items() if (k == k2 or k.startswith(k2 + ' ')) for x in hh if x[1] == st2]
@@ -204,6 +216,9 @@ class Resolver:
     def _resolve(self, p, up):
         m = REF.match(p)
         if m and m.group(2)[0].isupper():
+            return [f"ref:{m.group(1)}:{QUAL.sub('', m.group(2)).strip().replace(' ', '_')}"]
+        m = re.match(r'^overflow\s+(M[A-Z]{3,5})\s+(.+)$', p, re.I)
+        if m:
             return [f"ref:{m.group(1)}:{QUAL.sub('', m.group(2)).strip().replace(' ', '_')}"]
         if re.match(r'^all other\b', p, re.I) or re.match(r'^(overflow|everything else)\b', p, re.I):
             return ['catchall']
@@ -269,6 +284,31 @@ def train_fields(body):
     return f
 
 
+VERB = re.compile(r'\b(pick\s*up|picks\s*up|lift|add|set\s*out|setout|set\s*off|drop|create|build|make)\s+(.+?)\s+blocks?\b', re.I)
+
+
+def parse_moves(path, rr, moves):
+    """rows: railroad, symbol, yard_id, yard, verb, block — from "@@id Yard - Pick up X and Y blocks"."""
+    for sec, body in sections(path):
+        f = train_fields(body)
+        if 'T' not in f or '@@' not in f['T']:
+            continue
+        sym = f.get('S', '')
+        for seg in f['T'].split('~'):
+            m = re.match(r'^\s*@@(\d+)\s+([^-]+?)\s*-\s*(.*)$', seg.strip())
+            if not m:
+                continue
+            yid, yard, text = m.group(1), m.group(2).strip(), m.group(3)
+            for v in VERB.finditer(text):
+                verb = re.sub(r'\s+', ' ', v.group(1).lower())
+                verb = {'pickup': 'pick up', 'picks up': 'pick up', 'lift': 'pick up', 'setout': 'set out', 'set off': 'set out', 'drop': 'set out', 'build': 'create', 'make': 'create'}.get(verb, verb)
+                names = re.split(r',\s*|\s+and\s+|\s*&\s*|/', v.group(2))
+                for n in names:
+                    n = re.sub(r'^(the|all|any)\s+', '', n.strip(), flags=re.I).strip()
+                    if n and not re.match(r'^(all|any|no|remaining|other)$', n, re.I):
+                        moves.append([rr, sym, yid, yard, verb, n])
+
+
 def parse_roster(path, rr, res, locs_by_name, rows):
     prefix = {'UP': 'M', 'BNSF': ''}.get(rr, '')
     for sec, body in sections(path):
@@ -300,7 +340,7 @@ def parse_roster(path, rr, res, locs_by_name, rows):
                     yard = None                            # table ended
                 continue
             name, members, nxt, excl = m.group(1).strip(), m.group(2) or '', (m.group(3) or '').strip(), (m.group(4) or '').strip()
-            name = QUAL.sub('', name).strip()
+            name = QUAL.sub('', re.sub(r'^[-\s]+', '', name)).strip()
             toks = []
             if members.strip():
                 for ph in split_members(members):
@@ -309,7 +349,7 @@ def parse_roster(path, rr, res, locs_by_name, rows):
                 toks += res.resolve(name)
             if excl:
                 toks += [f'not:{x.strip()}' for x in excl.split('/') if x.strip()]
-            yid = '|'.join(res.place(yard)[:6])
+            yid = '|'.join(i for part in yard.split('/') for i in res.place(part.strip())[:6])
             unres = [t[1:] for t in toks if t.startswith('?')]
             rows.append([rr, sym, yard, kind, name, nxt, members, ' '.join(t for t in toks if not t.startswith('?')), yid, '; '.join(unres)])
 
@@ -321,12 +361,18 @@ def main():
     a = ap.parse_args()
     locs = load_locations('locations.csv')
     res = Resolver(locs, load_marks('railroad_ids.csv'), load_regions('regions.csv'), load_aliases('block_aliases.csv'))
-    rows = []
+    rows, moves = [], []
     for p in sorted(glob.glob(os.path.join(a.folder, 'TSAR_*.ini'))):
         rr = os.path.basename(p)[5:-4].upper()
         if rr in ('KCS', 'TUTORIAL'):
             continue
         parse_roster(p, rr, res, locs, rows)
+        parse_moves(p, rr, moves)
+    with open('block_moves.csv', 'w', newline='') as fh:
+        w = csv.writer(fh)
+        w.writerow(['railroad', 'symbol', 'yard_id', 'yard', 'verb', 'block'])
+        w.writerows(moves)
+    print(f'{len(moves):,} block moves (pick up / set out / create at a yard) -> block_moves.csv')
     with open(a.out, 'w', newline='') as fh:
         w = csv.writer(fh)
         w.writerow(['railroad', 'symbol', 'yard', 'kind', 'block', 'next_train', 'members', 'resolved', 'yard_ids', 'unresolved'])
