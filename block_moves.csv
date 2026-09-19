@@ -320,6 +320,7 @@ CN,41971-##,1970,Jackson North Yard,pick up,Memphis
 CN,44791-##,1761,Neenah,set out,Neenah
 CN,48871-##,1970,Jackson North Yard,set out,Jackson
 CN,48871-##,1970,Jackson North Yard,pick up,Mobile
+CN,48871-##,1970,Jackson North Yard,pick up,Mobile IM
 CN,43171-##,3456,Fulton,set out,Fulton
 CN,43171-##,2026,Effingham CN,set out,Effingham
 CN,43291-##,2026,Effingham CN,set out,Effingham
@@ -482,20 +483,15 @@ CN,34681-##,2388,Chicago Hawthorne Crossing,set out,Hawthorne
 CN,34041-##,3516,North Fond Du Lac Shops Yard,set out,Hawthorne
 CN,34041-##,3516,North Fond Du Lac Shops Yard,set out,Clearing
 CN,34681-##,2388,Chicago Hawthorne Crossing,set out,Hawthorne
-CN,19851-##,3440,Stevens Point,set out,Arcadia
-CN,19851-##,2474,Pokegama,set out,Duluth
-CN,19851-##,1610,Winnipeg Symington Yard,set out,Winnipeg
 CN,19851-##,1513,Edmonton McBain Intermodal,set out,McBain
+CN,19851-##,2474,Superior Pokegama Yard,set out,Duluth
+CN,19851-##,3440,Stevens Point,set out,Arcadia
+CN,18651-##,1646,Saskatoon Chappell Yard,set out,Saskatoon
 CN,18651-##,1610,Winnipeg Symington Yard,set out,Winnipeg
-CN,18651-##,1646,Saskatoon Chappell Yard,set out,Saskatoon
-CN,18651-##,1646,Saskatoon Chappell Yard,set out,Saskatoon
-CN,18651-##,1513,Edmonton McBain Intermodal,set out,McBain
-CN,19051-##,1646,Saskatoon Chappell Yard,set out,Saskatoon
-CN,19051-##,1513,Edmonton McBain Intermodal,set out,McBain
-CN,19251-##,3440,Stevens Point,set out,Arcadia
-CN,19251-##,2474,Pokegama,set out,Duluth
-CN,19251-##,1610,Winnipeg Symington Yard,set out,Winnipeg
 CN,19251-##,1513,Edmonton McBain Intermodal,set out,McBain
+CN,19251-##,1610,Winnipeg Symington Yard,set out,Winnipeg
+CN,19251-##,1096,Joliet CN,set out,Joliet
+CN,19251-##,1096,Joliet CN,pick up,Markham
 CN,19651-##,2026,Effingham CN,set out,Decatur
 CN,19651-##,2026,Effingham CN,set out,Indianapolis
 CN,19651-##,1096,Joliet,set out,Joliet
@@ -503,9 +499,10 @@ CN,19651-##,1096,Joliet,set out,Markham
 CN,19651-##,2474,Pokegama,set out,Duluth
 CN,19991-##,1513,Edmonton McBain/Bissell Yard,set out,Edmonton
 CN,11941-##,1513,Edmonton McBain/Bissell Yard,set out,Edmonton
-CN,12311-##,2222,Moncton,pick up,Montreal Auto
-CN,77251-##,1610,Winnipeg Symington Yard,set out,Winnipeg
+CN,19851-##,2474,Superior Pokegama Yard,set out,Duluth
+CN,19851-##,3440,Stevens Point,set out,Arcadia
 CN,77251-##,1510,Edmonton Walker Yard,pick up,Winnipeg
+CN,77251-##,1610,Winnipeg Symington Yard,set out,Winnipeg
 CN,47411-##,2245,Edmundston,set out,Edmundston
 CN,47411-##,2245,Edmundston,pick up,Moncton
 CN,47311-##,2245,Edmundston,set out,Edmundston
@@ -513,7 +510,6 @@ CN,47311-##,2245,Edmundston,pick up,Montreal
 CN,35791-##,3440,Stevens Point,set out,Blocks 2
 CN,35791-##,3440,Stevens Point,set out,3
 CN,35791-##,3440,Stevens Point,set out,Lift Winnipeg
-CN,27121-##,1408,Toronto Macmillan Yard,set out,Toronto Autos
 CN,27161-##,3628,Champaign,pick up,Effingham Autos
 CN,27161-##,3628,Champaign,pick up,UP Salem Autos
 CN,27161-##,2026,Effingham CN,set out,Effingham Autos
@@ -7494,7 +7490,7 @@ SHORTLINE,664-##,1665,Salem Bush Yard,set out,Bush
 SHORTLINE,664-##,1665,Salem Bush Yard,pick up,Vancouver
 SHORTLINE,BP4-##,1098,Chicago Argo,set out,Norpaul
 SHORTLINE,GP12-##,1396,Chicago Blue Island Yard,set out,Block 2 and
-SHORTLINE,BA11-##,1396,Chicago Blue Island Yard,set out,manifest
+SHORTLINE,BA10-##,1396,Chicago Blue Island Yard,set out,manifest
 SHORTLINE,LCL1-##,1946,Cecilia,set out,Cecilia
 SHORTLINE,LCL1-##,1945,Louisville Kosmosdale,set out,Kosmosdale
 SHORTLINE,EDRJ-##,3176,Eagle Bridge/Hoosick Jct,set out,BKRR
