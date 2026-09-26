@@ -138,6 +138,30 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 .ytrains .jump{font-family:var(--mono);font-size:12px}
 .ytrains{display:inline-flex;gap:8px;flex-wrap:wrap;align-items:baseline;margin-left:6px}
 .ydef{font-size:12px;color:var(--dim);margin:-2px 0 4px}
+/* ---- sort sheets ---- */
+.strain{margin:16px 0 4px;font-size:13px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.strain .jump.big{font-family:var(--mono);font-weight:700;font-size:14px}
+.blk{border-left:2px solid var(--line);padding:4px 0 4px 12px;margin:6px 0 6px 4px}
+.bhead{font-size:13px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.bmem{margin:4px 0 0;display:flex;gap:4px 6px;flex-wrap:wrap;align-items:center;font-size:12px}
+.via{color:var(--dim);font-style:italic;flex-basis:100%}
+.mem{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:2px 8px;font-size:12px;color:var(--ink)}
+button.mem{cursor:pointer;font:inherit}
+button.mem:hover,.mem .blk-mem-loc:hover{border-color:var(--accent)}
+.mem .blk-mem-loc{background:none;border:0;padding:0;font:inherit;color:var(--future);cursor:pointer}
+.mem.st{border-style:dashed}
+.mem.rr{color:var(--future)}
+.mem.not{color:var(--future);border-color:var(--future)}
+.mem.cls{font-style:italic;color:var(--dim)}
+.spec{font-size:10px;letter-spacing:.5px;text-transform:uppercase;border-radius:9px;padding:1px 7px;border:1px solid var(--line);color:var(--dim)}
+.spec.s0{border-color:var(--accent);color:var(--accent)}
+.spec.s3{border-style:dashed}
+details.blocks{margin-top:10px}
+details.blocks summary{cursor:pointer;list-style:none}
+details.blocks summary h4{display:inline}
+details.blocks summary::before{content:"▸ ";color:var(--dim)}
+details.blocks[open] summary::before{content:"▾ "}
+.byard{margin:8px 0 2px;font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
 .yrow.stale .ydwell{color:var(--future);font-weight:600}
 .lbadge{display:inline-block;width:20px;text-align:center;border-radius:4px;font-size:11px;font-weight:700;
   padding:1px 0;background:var(--chip);color:var(--muted)}
@@ -3282,7 +3306,99 @@ const DATA = {"gen":"2026-09-26",
 {"id":"4037","nm":"Abbeville, SC"},
 {"id":"4040","nm":"McAlester, OK"},
 {"id":"4041","nm":"Marble City, OK"},
-{"id":"4043","nm":"Surrency, GA"}
+{"id":"4043","nm":"Surrency, GA"},
+{"id":"1023","nm":"Ft. Worth Tower 55 BNSF, TX"},
+{"id":"2053","nm":"Jackson CN Intermodal, MS"},
+{"id":"2097","nm":"Detroit Livernois CSX Intermodal, MI"},
+{"id":"2290","nm":"Roseport CPKC, MN"},
+{"id":"2337","nm":"Fernley BNSF, NV"},
+{"id":"2338","nm":"Sparks BNSF, NV"},
+{"id":"2358","nm":"Westlake BNSF, LA"},
+{"id":"2361","nm":"Salt Lake City BNSF, UT"},
+{"id":"2362","nm":"Salt Lake City Centennial BNSF, UT"},
+{"id":"2364","nm":"Midlothian Railport UP, TX"},
+{"id":"2471","nm":"Duluth Rice's Point CN, MN"},
+{"id":"2473","nm":"Duluth Rice's Point UP, MN"},
+{"id":"2517","nm":"Long Beach Terminal A BNSF, CA"},
+{"id":"2621","nm":"North Little Rock Sherry Lead, AR"},
+{"id":"2738","nm":"Baltimore Dundalk Marine Terminal CSX, MD"},
+{"id":"2924","nm":"Seghers, OR"},
+{"id":"2937","nm":"New Orleans Southport Jct., LA"},
+{"id":"2938","nm":"New Orleans East Bridge Jct., LA"},
+{"id":"3008","nm":"Houston Basin Yard BNSF, TX"},
+{"id":"3009","nm":"Houston Basin Yard CPKC, TX"},
+{"id":"3011","nm":"Houston Glass Yard BNSF, TX"},
+{"id":"3012","nm":"Houston Glass Yard CPKC, TX"},
+{"id":"3017","nm":"Houston Market St. Yards BNSF, TX"},
+{"id":"3018","nm":"Houston Market St. Yards CPKC, TX"},
+{"id":"3051","nm":"Nekoosa UP, WI"},
+{"id":"3056","nm":"Vancouver UP, WA"},
+{"id":"3092","nm":"Long Beach Container Terminal UP, CA"},
+{"id":"3093","nm":"Long Beach PCT UP, CA"},
+{"id":"3094","nm":"Long Beach ITS Terminal UP, CA"},
+{"id":"3095","nm":"Long Beach Toyota BNSF, CA"},
+{"id":"3096","nm":"Long Beach Toyota UP, CA"},
+{"id":"3097","nm":"Terminal Island UP, CA"},
+{"id":"3098","nm":"LA TICTF UP, CA"},
+{"id":"3099","nm":"LA Global South UP, CA"},
+{"id":"3100","nm":"LA Pier 400 UP, CA"},
+{"id":"3101","nm":"Long Beach Pier T UP, CA"},
+{"id":"3103","nm":"Los Angeles West Basin UP, CA"},
+{"id":"3104","nm":"Los Angeles TriPac Container, CA"},
+{"id":"3105","nm":"Los Angeles Nissan BNSF, CA"},
+{"id":"3106","nm":"Los Angeles Nissan UP, CA"},
+{"id":"3231","nm":"Port Allen CN, LA"},
+{"id":"3270","nm":"Shakopee TCWR, MN"},
+{"id":"3271","nm":"St. Paul Western Avenue TCWR, MN"},
+{"id":"3272","nm":"Savage CPKC, MN"},
+{"id":"3273","nm":"Savage TCWR, MN"},
+{"id":"3274","nm":"South St. Paul TCWR, MN"},
+{"id":"3275","nm":"Portland Barnes Yard BNSF, OR"},
+{"id":"3276","nm":"Portland Rivergate Yard UP, OR"},
+{"id":"3278","nm":"Lake Charles BNSF, LA"},
+{"id":"3287","nm":"Tacoma Pierce Co. Terminal UP, WA"},
+{"id":"3288","nm":"Tacoma South Intermodal Terminal BNSF, WA"},
+{"id":"3289","nm":"Tacoma Washington United Terminal UP, WA"},
+{"id":"3340","nm":"Pine Bluff BNSF, AR"},
+{"id":"3343","nm":"Houston Pasadena CPKC, TX"},
+{"id":"3382","nm":"Memphis Harrison Yard BNSF, TN"},
+{"id":"3383","nm":"Memphis Harrison Yard CSX, TN"},
+{"id":"3384","nm":"Memphis Harrison Yard NS, TN"},
+{"id":"3385","nm":"Memphis Harrison Yard UP, TN"},
+{"id":"3400","nm":"Houston New South Yard UP, TX"},
+{"id":"3414","nm":"Portland Terminal 4 UP, OR"},
+{"id":"3419","nm":"Bismarck CPKC, ND"},
+{"id":"3420","nm":"North St. Louis Yard TRRA, MO"},
+{"id":"3424","nm":"North Little Rock BNSF, AR"},
+{"id":"3427","nm":"Memphis President's Island BNSF, TN"},
+{"id":"3428","nm":"Memphis President's Island CSX, TN"},
+{"id":"3429","nm":"Memphis President's Island NS, TN"},
+{"id":"3430","nm":"Memphis Presidents Island UP, TN"},
+{"id":"3431","nm":"South San Antonio BNSF, TX"},
+{"id":"3437","nm":"Glendale UP, AZ"},
+{"id":"3443","nm":"Kansas City Fairfax KCT, KS"},
+{"id":"3444","nm":"St. Paul Hoffman Yard TCWR, MN"},
+{"id":"3446","nm":"St. Paul Red Rock TCWR, MN"},
+{"id":"3481","nm":"Houston Vulcan Materials Hub, TX"},
+{"id":"3484","nm":"Davenport Nahant BNSF, IA"},
+{"id":"3485","nm":"Davenport Nahant IAIS, IA"},
+{"id":"3532","nm":"Ft. Worth North UP, TX"},
+{"id":"3537","nm":"West Hearne, TX"},
+{"id":"3555","nm":"Quincy NS, IL"},
+{"id":"3610","nm":"Alton CN, IL"},
+{"id":"3621","nm":"Springfield Yard UP, MO"},
+{"id":"3646","nm":"Spokane Erie St. Yard UP, WA"},
+{"id":"3693","nm":"Des Moines Glake Yard UP, IA"},
+{"id":"3694","nm":"Avon BNSF, IA"},
+{"id":"3695","nm":"Avon IAIS, IA"},
+{"id":"3696","nm":"Avon NS, IA"},
+{"id":"3772","nm":"Houston Bayport BNSF, TX"},
+{"id":"3778","nm":"Houston La Porte Strang Yard BNSF, TX"},
+{"id":"3784","nm":"Houston Englewood Yard BNSF, TX"},
+{"id":"3846","nm":"Salem Labish Siding BNSF, OR"},
+{"id":"3847","nm":"Salem Pringle Yard BNSF, OR"},
+{"id":"4019","nm":"South St. Paul Q Jct TCWR, MN"},
+{"id":"4039","nm":"Denver Market St UP, CO"}
 ],
 "ixp":{"AA":{"p":["CN","CSX","NS","IORY","WE"],"f":["CSX","NS"]},"AB":{"p":["WE"],"f":[]},"ABCX":{"p":["BNSF","CSX","NS"],"f":[]},"ABWR":{"p":["BNSF","CSX","NS"],"f":[]},"ACWR":{"p":["CSX","NS"],"f":[]},"AERC":{"p":["PNWR"],"f":[]},"AGR":{"p":["BNSF","CN","CPKC","CSX","NS"],"f":["BNSF"]},"AKMD":{"p":["BNSF","UP"],"f":[]},"ALS":{"p":["CSX","CPKC","NS","UP","TRRA"],"f":["UP"]},"AO":{"p":["CSX"],"f":[]},"APD":{"p":["CPKC","CSX"],"f":[]},"AR":{"p":["CSX","NS"],"f":[]},"ARC":{"p":["NS"],"f":[]},"ASRY":{"p":["CSX","NS"],"f":[]},"AVR":{"p":["CSX","NS","BPRR","WE"],"f":[]},"BB":{"p":["NS"],"f":[]},"BERX":{"p":["CSX","NS","CPKC","NECR","VTR"],"f":[]},"BHRR":{"p":["BNSF","CSX","NS"],"f":[]},"BHS":{"p":["NS","IHB"],"f":[]},"BJRY":{"p":["BNSF"],"f":[]},"BKRR":{"p":["BERX"],"f":[]},"BPRR":{"p":["CN","CPKC","CSX","NS","WE"],"f":[]},"BRC":{"p":["BNSF","CN","CPKC","CSX","NS","UP"],"f":[]},"BSVY":{"p":["UP"],"f":[]},"CA":{"p":["NS"],"f":[]},"CAGY":{"p":["CPKC","AGR","BNSF","NS","ABS","CSX"],"f":[]},"CBRL":{"p":["UP"],"f":[]},"CCET":{"p":["NS"],"f":[]},"CCH":{"p":["NS"],"f":[]},"CCT":{"p":["BNSF","UP"],"f":[]},"CEMR":{"p":["CN"],"f":[]},"CFE":{"p":["CSX","NS","IHB","IORY"],"f":[]},"CFNR":{"p":["UP"],"f":[]},"CGR":{"p":["CN","CSX","NS","AGR"],"f":[]},"CIC":{"p":["CN","UP","IAIS"],"f":[]},"CIND":{"p":["CSX","NS","IORY"],"f":[]},"CLC":{"p":["LVSW"],"f":[]},"CLNA":{"p":["CSX"],"f":[]},"CMPA":{"p":["CSX"],"f":[]},"COER":{"p":["BNSF","UP"],"f":[]},"CORP":{"p":["UP"],"f":[]},"CPR":{"p":["NS"],"f":[]},"CRL":{"p":["NS","BRC","IAIS","IHB"],"f":["IHB"]},"CRMI":{"p":["CSX","NS"],"f":[]},"CRNJ":{"p":["CSX","NS"],"f":[]},"CRSJ":{"p":["CSX","NS"],"f":[]},"CSI":{"p":["BNSF","UP"],"f":[]},"CSP":{"p":["CPKC"],"f":[]},"CSS":{"p":["CN","BRC","CSX","IHB"],"f":["BRC"]},"CTN":{"p":["CSX","NS"],"f":[]},"CTRW":{"p":["CPKC","CN"],"f":["CN"]},"CVR":{"p":["BNSF"],"f":[]},"CWRO":{"p":["CSX","NS","WE"],"f":[]},"CWRY":{"p":["CSX","NS"],"f":[]},"CWW":{"p":["UP","BNSF"],"f":["UP"]},"DAIR":{"p":["BNSF","CN","UP"],"f":[]},"DC":{"p":["CN","CSX","NS"],"f":[]},"DGNO":{"p":["BNSF","CPKC","UP"],"f":[]},"DL":{"p":["NS"],"f":[]},"DMVW":{"p":["BNSF","CPKC"],"f":["CPKC"]},"DREI":{"p":["CN","CSX","NS","UP"],"f":["CSX"]},"DRIR":{"p":["BNSF","UP"],"f":["UP"]},"DRR":{"p":["NJ"],"f":[]},"DT":{"p":["CN"],"f":[]},"EE":{"p":["BNSF"],"f":[]},"EIRR":{"p":["UP"],"f":[]},"ETL":{"p":["CN","CPKC"],"f":[]},"ESPN":{"p":["NS"],"f":[]},"ETRY":{"p":["CSX","NS"],"f":[]},"EVWR":{"p":["BNSF","CSX","NS","UP"],"f":[]},"FCEN":{"p":["CSX"],"f":[]},"FEC":{"p":["CSX","NS"],"f":[]},"FGLK":{"p":["CSX","NS","NYSW"],"f":[]},"FIMX":{"p":["NS"],"f":[]},"FMID":{"p":["CSX"],"f":[]},"FOXY":{"p":["CN"],"f":[]},"FVRR":{"p":["PAL"],"f":[]},"FWWR":{"p":["BNSF","CPKC","UP"],"f":["BNSF","UP"]},"GC":{"p":["CSX","NS"],"f":[]},"GDLK":{"p":["CN","CSX","NS"],"f":[]},"GFRR":{"p":["CSX","NS"],"f":[]},"GITM":{"p":["CSX","NS"],"f":[]},"GJR":{"p":["CPKC","CN"],"f":[]},"GLC":{"p":["AA","CN"],"f":["AA"]},"GOGR":{"p":["CN"],"f":[]},"GRW":{"p":["CN","CSX","NS","IHB","UP"],"f":[]},"GS":{"p":["NS"],"f":[]},"GTRA":{"p":["CPKC","AGR","BNSF","NS","ABS","CSX"],"f":[]},"GWWD":{"p":["CN"],"f":[]},"HAL":{"p":["NS"],"f":[]},"HCRY":{"p":["CPKC"],"f":[]},"HESR":{"p":["CN","CSX"],"f":[]},"IAIS":{"p":["BNSF","CN","CPKC","UP","IHB"],"f":[]},"IATR":{"p":["CPKC","UP"],"f":[]},"IHB":{"p":["BNSF","CN","CPKC","CSX","NS","UP"],"f":[]},"IMRR":{"p":["BNSF","CN","UP","IAIS","TZPR"],"f":[]},"IN":{"p":["NS"],"f":[]},"INRD":{"p":["CN","CSX","BRC"],"f":[]},"IORY":{"p":["CN","CSX","NS","CFE","CIND","WE"],"f":[]},"IR":{"p":["BNSF","CSX"],"f":["BNSF"]},"ISRR":{"p":["CSX"],"f":[]},"ITHR":{"p":["NS"],"f":[]},"JAIL":{"p":["CN","CSX","NS"],"f":["NS"]},"KAW":{"p":["BNSF","CPKC","NS","UP","KCTL"],"f":["BNSF"]},"KBSR":{"p":["CSX","CN","NS","UP"],"f":[]},"KJRY":{"p":["BNSF","CN","NS","UP"],"f":[]},"KNWA":{"p":["NS"],"f":[]},"KO":{"p":["BNSF","UP","SKOL"],"f":[]},"KRR":{"p":["BNSF","CPKC","UP"],"f":[]},"KXHR":{"p":["CSX","NS"],"f":["NS"]},"LAJ":{"p":["BNSF","UP"],"f":["BNSF"]},"LC":{"p":["CSX","NS"],"f":[]},"LDRR":{"p":["BNSF","UP"],"f":[]},"LIRC":{"p":["CSX","NS"],"f":["CSX"]},"LMIC":{"p":["NS","CSS"],"f":[]},"LMR":{"p":["CN"],"f":[]},"LRPA":{"p":["BNSF","UP"],"f":[]},"LRWN":{"p":["BNSF","UP"],"f":[]},"LRWY":{"p":["NS"],"f":[]},"LSRC":{"p":["CSX"],"f":[]},"LVSW":{"p":["BNSF","UP"],"f":[]},"MCER":{"p":["CSX","NECR"],"f":[]},"MDS":{"p":["CPKC","NS"],"f":[]},"MER":{"p":["TRRA"],"f":[]},"MET":{"p":["BNSF","UP"],"f":[]},"METX":{"p":["CRL"],"f":[]},"MGRI":{"p":["LIRC"],"f":[]},"MNA":{"p":["BNSF","CPKC","UP"],"f":["Springfield","cars","must","go","via","BNSF"]},"MNBR":{"p":["CPKC","CSX","NS"],"f":[]},"MNNR":{"p":["UP","BNSF","CN","CPKC"],"f":[]},"MPLI":{"p":["BNSF","CN","TCWR","CPKC","UP"],"f":[]},"MSRW":{"p":["BNSF"],"f":[]},"MSTR":{"p":["CSX"],"f":[]},"NBSR":{"p":["CN","CPKC","CSX"],"f":[]},"NCIR":{"p":["CSX","NS"],"f":[]},"NCRC":{"p":["BNSF","UP"],"f":["UP"]},"NDW":{"p":["CSX","NS"],"f":[]},"NECR":{"p":["CN","CPKC","CSX","PW","PAS"],"f":[]},"NLR":{"p":["BNSF"],"f":[]},"NOGC":{"p":["UP"],"f":[]},"NOPB":{"p":["BNSF","CN","CPKC","CSX","NS","UP"],"f":[]},"NPBL":{"p":["CSX","NS"],"f":[]},"NYA":{"p":["CSX","NS","PW"],"f":[]},"NYNJ":{"p":["CSNJ","NYA"],"f":[]},"NYOG":{"p":["CSX"],"f":[]},"NYSW":{"p":["CSX","NS"],"f":[]},"OHCR":{"p":["CSX","CUOH","NS","WE"],"f":[]},"OLB":{"p":["BNSF","UP"],"f":[]},"OPR":{"p":["UP"],"f":[]},"OTVR":{"p":["BNSF"],"f":[]},"OVR":{"p":["CPKC"],"f":[]},"OVRR":{"p":["CPKC"],"f":[]},"PAL":{"p":["BNSF","CN","CSX","NS"],"f":[]},"PHL":{"p":["BNSF","UP"],"f":[]},"PCHR":{"p":["CN","CPKC"],"f":[]},"PHRR":{"p":["TRRA","NS"],"f":[]},"PNWR":{"p":["BNSF","UP"],"f":[]},"POHC":{"p":["CSX","NS"],"f":[]},"POM":{"p":["CN","CPKC"],"f":[]},"PR":{"p":["CSX","NS"],"f":[]},"PSAP":{"p":["BNSF","UP"],"f":["Autoracks","go","via","UP"]},"PT":{"p":["UP","BNSF"],"f":[]},"PTRA":{"p":["BNSF","CPKC","UP"],"f":["BNSF","UP"]},"PTRC":{"p":["BNSF","UP"],"f":[]},"PVJR":{"p":["BNSF"],"f":[]},"PVRR":{"p":["CSX","NECR"],"f":[]},"PW":{"p":["CSX","NECR","PAS"],"f":[]},"RBMN":{"p":["NS"],"f":[]},"RCPE":{"p":["BNSF","CPKC","UP"],"f":["CPKC"]},"RFCC":{"p":["CSX","NS"],"f":["NS"]},"RJCK":{"p":["BNSF"],"f":[]},"RJCL":{"p":["CSX","NS"],"f":[]},"RJCM":{"p":["CSX"],"f":[]},"RJCW":{"p":["CSX","NS"],"f":["CSX","only","for","Greenville"]},"RNIR":{"p":["BNSF","UP"],"f":[]},"RPRC":{"p":["BNSF","UP"],"f":[]},"RRRR":{"p":["BNSF","UP"],"f":[]},"RRVW":{"p":["BNSF","CPKC"],"f":[]},"RSL":{"p":["NS","CSX","RJCL"],"f":[]},"RSOR":{"p":["CSX"],"f":[]},"RSR":{"p":["CSX","NS"],"f":[]},"RWRR":{"p":["BNSF","CN","UP"],"f":["BNSF"]},"SAC":{"p":["BNSF","UP"],"f":[]},"SAPT":{"p":["CSX","NS"],"f":[]},"SCIH":{"p":["NS","BRC"],"f":[]},"SCRF":{"p":["CSX"],"f":[]},"SCXF":{"p":["CSX","FEC"],"f":[]},"SDIY":{"p":["BNSF"],"f":[]},"SERA":{"p":["BNSF","UP"],"f":[]},"SGLR":{"p":["CSX"],"f":[]},"SJVR":{"p":["BNSF","UP"],"f":[]},"SKOL":{"p":["BNSF","CPKC","UP"],"f":[]},"SLR":{"p":["CN","CPKC","CSX"],"f":["CN"]},"SMV":{"p":["UP"],"f":[]},"SORA":{"p":["CN","CPKC"],"f":["CN"]},"SPP":{"p":["UP"],"f":[]},"SRRR":{"p":["BNSF","UP"],"f":[]},"SRY":{"p":["BNSF","CN","CPKC"],"f":[]},"SS":{"p":["BNSF","UP","SKOL"],"f":["BNSF"]},"STE":{"p":["BNSF","UP"],"f":[]},"STMA":{"p":["UP"],"f":[]},"SVHO":{"p":["CSX"],"f":[]},"SWP":{"p":["CSX","NS","WE"],"f":[]},"TASD":{"p":["CN","CSX","NS","AGR"],"f":[]},"TCB":{"p":["BNSF","UP"],"f":[]},"TCWR":{"p":["BNSF","CN","CPKC","UP"],"f":[]},"TMBL":{"p":["BNSF","UP"],"f":[]},"TNER":{"p":["UP"],"f":[]},"TPW":{"p":["BNSF","CN","CSX","IAIS","NS","UP"],"f":[]},"TRRA":{"p":["BNSF","CN","CPKC","CSX","NS","UP"],"f":[]},"TSRR":{"p":["CSX"],"f":[]},"TSU":{"p":["UP"],"f":[]},"TVRM":{"p":["CSX","NS"],"f":["NS"]},"TZPR":{"p":["BNSF","CN","CSX","UP","IAIS"],"f":[]},"URR":{"p":["CSX","NS","WE"],"f":[]},"USCX":{"p":["FEC"],"f":[]},"VR":{"p":["CSX","NS"],"f":[]},"VSOR":{"p":["CPKC"],"f":[]},"WE":{"p":["CN","CSX","NS"],"f":[]},"WSOR":{"p":["CN","CPKC","BNSF","UP","BRC"],"f":[]},"WSS":{"p":["CSX","NS"],"f":[]},"WTA":{"p":["BNSF","UP"],"f":[]},"WW":{"p":["CSX","NS"],"f":[]}},
 "ix":[
@@ -7550,7 +7666,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"LPKNBY6-##A","y":"Clovis","n":"Mariposa","k":"at","nx":"","sp":0,"m":[["id:1313",""]],"u":""},
 {"rr":"BNSF","s":"LPKNBY6-##A","y":"Clovis","n":"North Bay","k":"at","nx":"","sp":0,"m":[["id:1419",""]],"u":""},
 {"rr":"BNSF","s":"LACLPK6-##U","y":"Clovis","n":"Logistics Park Kansas City","k":"at","nx":"","sp":0,"m":[["id:2454",""]],"u":""},
-{"rr":"BNSF","s":"LACMEM8-##A","y":"Clovis","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""]],"u":""},
+{"rr":"BNSF","s":"LACMEM8-##A","y":"Clovis","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""]],"u":""},
 {"rr":"BNSF","s":"LACNYC1-##U","y":"Clovis","n":"Rutherford","k":"at","nx":"","sp":0,"m":[["id:1385",""]],"u":""},
 {"rr":"BNSF","s":"LACNYC1-##U","y":"Clovis","n":"Jersey City Croxton","k":"at","nx":"","sp":0,"m":[["id:1108",""]],"u":""},
 {"rr":"BNSF","s":"LACWSP1-##U","y":"Clovis","n":"Willow Springs","k":"at","nx":"","sp":0,"m":[["id:1410",""]],"u":""},
@@ -7605,20 +7721,20 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"LHTALT1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"LBJALT1-##L","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"LBJMEM1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
-{"rr":"BNSF","s":"LBJMEM1-##A","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["class:im",""]],"u":""},
+{"rr":"BNSF","s":"LBJMEM1-##A","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"LBJLPK1-##L","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"LBJLPK1-##L","y":"Clovis","n":"Logistics Park Kansas City","k":"at","nx":"","sp":0,"m":[["id:2454",""]],"u":""},
 {"rr":"BNSF","s":"LBEALT1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"LBEMEM1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
-{"rr":"BNSF","s":"LBEMEM1-##A","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["class:im",""]],"u":""},
+{"rr":"BNSF","s":"LBEMEM1-##A","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"LBTALT1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"LHGALT1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"LHGMEM1-##L","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
-{"rr":"BNSF","s":"LHGMEM1-##L","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["class:im",""]],"u":""},
+{"rr":"BNSF","s":"LHGMEM1-##L","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"LBTLPK1-##K","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"LBTLPK1-##K","y":"Clovis","n":"Logistics Park Kansas City","k":"at","nx":"","sp":0,"m":[["id:2454",""]],"u":""},
 {"rr":"BNSF","s":"LBTMEM1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
-{"rr":"BNSF","s":"LBTMEM1-##A","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["class:im",""]],"u":""},
+{"rr":"BNSF","s":"LBTMEM1-##A","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"LHWALT1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"LPCLHA1-##L","y":"Clovis","n":"LA Pier 400 BNSF","k":"at","nx":"","sp":0,"m":[["id:1152",""]],"u":""},
 {"rr":"BNSF","s":"MEMLBT1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":0,"m":[["id:2237",""]],"u":""},
@@ -7626,7 +7742,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"LHWLPK1-##L","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"LHWLPK1-##L","y":"Clovis","n":"Logistics Park Kansas City","k":"at","nx":"","sp":0,"m":[["id:2454",""]],"u":""},
 {"rr":"BNSF","s":"LHWMEM1-##L","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
-{"rr":"BNSF","s":"LHWMEM1-##L","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["class:im",""]],"u":""},
+{"rr":"BNSF","s":"LHWMEM1-##L","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"LHWNSA1-##L","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":0,"m":[["id:1040",""]],"u":""},
 {"rr":"BNSF","s":"LHWNSA1-##L","y":"Clovis","n":"Fort Madison","k":"at","nx":"","sp":2,"m":[],"u":"CSX; grouped by destination; no GA cars"},
 {"rr":"BNSF","s":"LHWSTL1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
@@ -7644,7 +7760,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"LBILPK1-##L","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"LBILPK1-##L","y":"Clovis","n":"Logistics Park Kansas City","k":"at","nx":"","sp":0,"m":[["id:2454",""]],"u":""},
 {"rr":"BNSF","s":"LBIMEM1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
-{"rr":"BNSF","s":"LBIMEM1-##A","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["class:im",""]],"u":""},
+{"rr":"BNSF","s":"LBIMEM1-##A","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"LBELPK1-##L","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"LBELPK1-##L","y":"Clovis","n":"Logistics Park Kansas City","k":"at","nx":"","sp":0,"m":[["id:2454",""]],"u":""},
 {"rr":"BNSF","s":"LBENSA1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":0,"m":[["id:1040",""]],"u":""},
@@ -7657,7 +7773,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"LHALPC1-##A","y":"Clovis","n":"Amarillo Zita","k":"at","nx":"","sp":0,"m":[["id:1443",""]],"u":""},
 {"rr":"BNSF","s":"LHALPC1-##A","y":"Clovis","n":"Logistics Park Chicago","k":"at","nx":"","sp":0,"m":[["id:1505",""]],"u":""},
 {"rr":"BNSF","s":"LHAMEM1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
-{"rr":"BNSF","s":"LHAMEM1-##A","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["class:im",""]],"u":""},
+{"rr":"BNSF","s":"LHAMEM1-##A","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"LHASTL1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"LHASTL1-##A","y":"Clovis","n":"St. Louis Lindenwood","k":"at","nx":"","sp":0,"m":[["id:1736",""]],"u":""},
 {"rr":"BNSF","s":"LHGLPC1-##K","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
@@ -7705,7 +7821,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"OIGLPK1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"OIGLPK1-##A","y":"Clovis","n":"Logistics Park Kansas City","k":"at","nx":"","sp":0,"m":[["id:2454",""]],"u":""},
 {"rr":"BNSF","s":"OIGMEM1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
-{"rr":"BNSF","s":"OIGMEM1-##A","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["class:im",""]],"u":""},
+{"rr":"BNSF","s":"OIGMEM1-##A","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"ALTLHA1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":0,"m":[["id:2237",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"ALTLHA1-##A","y":"Clovis","n":"LA Pier 400 BNSF IM","k":"at","nx":"","sp":0,"m":[["id:1152",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"ALTLHT1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":0,"m":[["id:2237",""],["class:im",""]],"u":""},
@@ -7728,7 +7844,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"BARLPK4-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"BARLPK4-##A","y":"Clovis","n":"Logistics Park Kansas City","k":"at","nx":"","sp":0,"m":[["id:2454",""]],"u":""},
 {"rr":"BNSF","s":"BARMEM1-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":""},
-{"rr":"BNSF","s":"BARMEM1-##A","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["class:im",""]],"u":""},
+{"rr":"BNSF","s":"BARMEM1-##A","y":"Clovis","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"AMALAC3-##A","y":"Clovis","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":"Los Angeles/Long Beach Ports and/or Oakland; grouped by destination"},
 {"rr":"BNSF","s":"AMALAC3-##A","y":"Clovis","n":"Los Angeles Hobart","k":"at","nx":"","sp":0,"m":[["id:1007",""]],"u":""},
 {"rr":"BNSF","s":"AMALAC3-##A","y":"Clovis","n":"Domestic Baretables","k":"at","nx":"","sp":0,"m":[["id:1007",""]],"u":""},
@@ -7788,14 +7904,14 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"UP","s":"DARE-##","y":"Longview","n":"Livonia","k":"added at","nx":"","sp":2,"m":[["?ref MNLLI Livonia",""]],"u":""},
 {"rr":"UP","s":"ITPS%-##","y":"Des Moines","n":"Ft Worth","k":"created at","nx":"","sp":0,"m":[["= MDMNL \"Ft Worth\" at Des Moines","ref"],["id:1795","MDMNL Ft Worth"],["id:1797","MDMNL Ft Worth"],["id:1846","MDMNL Ft Worth"],["id:1938","MDMNL Ft Worth"],["id:3748","MDMNL Ft Worth"],["id:1110","MDMNL Ft Worth"],["id:1918","MDMNL Ft Worth"],["id:1023","MDMNL Ft Worth"],["id:1847","MDMNL Ft Worth"],["id:1888","MDMNL Ft Worth"],["id:1904","MDMNL Ft Worth"],["id:3248","MDMNL Ft Worth"],["id:3249","MDMNL Ft Worth"],["id:3250","MDMNL Ft Worth"],["id:3251","MDMNL Ft Worth"],["id:3252","MDMNL Ft Worth"],["id:3532","MDMNL Ft Worth"],["id:3535","MDMNL Ft Worth"],["id:2037","MDMNL Ft Worth"],["id:2033","MDMNL Ft Worth"],["id:2553","MDMNL Ft Worth"],["id:2555","MDMNL Ft Worth"],["id:2554","MDMNL Ft Worth"],["id:3537","MDMNL Ft Worth"],["id:3534","MDMNL Ft Worth"],["id:1845","MDMNL Ft Worth"]],"u":""},
 {"rr":"UP","s":"ITPS%-##","y":"Des Moines","n":"Englewood","k":"created at","nx":"","sp":0,"m":[["= MDMNL \"Englewood\" at Des Moines","ref"],["id:2322","MDMNL Englewood"],["id:1372","MDMNL Englewood"],["id:3784","MDMNL Englewood"],["id:1460","MDMNL Englewood"],["id:1372","MDMNL Englewood"],["id:1372","MDMNL Englewood"],["id:1878","MDMNL Englewood"],["id:3729","MDMNL Englewood"],["id:2529","MDMNL Englewood"],["id:3334","MDMNL Englewood"],["id:3343","MDMNL Englewood"],["id:3351","MDMNL Englewood"],["id:2531","MDMNL Englewood"],["id:1375","MDMNL Englewood"],["id:1241","MDMNL Englewood"],["id:1617","MDMNL Englewood"],["id:2217","MDMNL Englewood"],["id:1563","MDMNL Englewood"],["id:1987","MDMNL Englewood"],["id:2358","MDMNL Englewood"],["id:3282","MDMNL Englewood"],["id:3283","MDMNL Englewood"],["id:3284","MDMNL Englewood"],["id:3277","MDMNL Englewood"],["id:3278","MDMNL Englewood"],["id:3279","MDMNL Englewood"],["id:3280","MDMNL Englewood"],["id:3281","MDMNL Englewood"],["rr:BNSF@1372","MDMNL Englewood"],["rr:BNSF@1374","MDMNL Englewood"],["rr:BNSF@1378","MDMNL Englewood"],["rr:BNSF@1383","MDMNL Englewood"],["rr:BNSF@1460","MDMNL Englewood"],["rr:BNSF@1812","MDMNL Englewood"]],"u":""},
-{"rr":"UP","s":"ITPS%-##","y":"Des Moines","n":"NLR","k":"created at","nx":"","sp":0,"m":[["= MDMNL \"North Little Rock\" at Des Moines","ref"],["st:LA","MDMNL North Little Rock"],["st:AR","MDMNL North Little Rock"],["id:1728","MDMNL North Little Rock"],["rr:UP@1165","MDMNL North Little Rock"],["rr:UP@1172","MDMNL North Little Rock"],["rr:UP@1435","MDMNL North Little Rock"],["rr:UP@1445","MDMNL North Little Rock"],["rr:UP@1446","MDMNL North Little Rock"],["rr:UP@1449","MDMNL North Little Rock"],["rr:BNSF:TN/MS/AL","MDMNL North Little Rock"],["region:NS:B2","MDMNL North Little Rock"],["rr:CN:TN/MS/AL","MDMNL North Little Rock"],["id:2394","MDMNL North Little Rock"],["id:2399","MDMNL North Little Rock"],["rr:DQE","MDMNL North Little Rock"],["not:CSX","MDMNL North Little Rock"]],"u":""},
+{"rr":"UP","s":"ITPS%-##","y":"Des Moines","n":"NLR","k":"created at","nx":"","sp":0,"m":[["= MDMNL \"North Little Rock\" at Des Moines","ref"],["st:LA","MDMNL North Little Rock"],["st:AR","MDMNL North Little Rock"],["id:1728","MDMNL North Little Rock"],["rr:UP@1165","MDMNL North Little Rock"],["rr:UP@1435","MDMNL North Little Rock"],["rr:UP@1445","MDMNL North Little Rock"],["rr:UP@1446","MDMNL North Little Rock"],["rr:UP@1449","MDMNL North Little Rock"],["rr:UP@1450","MDMNL North Little Rock"],["rr:BNSF:TN/MS/AL","MDMNL North Little Rock"],["region:NS:B2","MDMNL North Little Rock"],["rr:CN:TN/MS/AL","MDMNL North Little Rock"],["id:2394","MDMNL North Little Rock"],["id:2399","MDMNL North Little Rock"],["rr:DQE","MDMNL North Little Rock"],["not:CSX","MDMNL North Little Rock"]],"u":""},
 {"rr":"UP","s":"ITPS%-##","y":"Butler","n":"Parsons","k":"leaving","nx":"MITPS","sp":0,"m":[["id:2833",""],["id:1372",""],["id:1374",""],["id:1378",""],["id:1383",""],["id:1460",""],["id:1812",""],["id:1878",""],["id:1879",""],["id:1880",""],["id:1935",""],["id:1936",""],["id:1937",""],["id:1241",""],["id:1617",""],["id:2217",""],["id:2333",""],["id:1563",""],["id:1987",""],["id:2358",""],["id:1232",""],["st:OK",""],["st:AR",""],["rr:UP:LA",""],["rr:CN:TN/MS/AL/LA",""],["rr:CPKC:LA/TX/MS/AL",""],["not:CSX",""]],"u":"Coffeville; Waskom TX Tenaha TX"},
 {"rr":"UP","s":"ITPS%-##","y":"","n":"Fort Worth","k":"named","nx":"","sp":null,"m":[],"u":""},
 {"rr":"UP","s":"ITPS%-##","y":"","n":"and NLR","k":"named","nx":"","sp":null,"m":[],"u":""},
 {"rr":"UP","s":"DMDM-##","y":"Des Moines","n":"Marshalltown","k":"leaving","nx":"","sp":0,"m":[["id:1287",""],["id:3311",""],["id:1708",""],["rr:IMRR",""],["rr:TZPR",""],["id:2092",""],["id:2462",""],["st:IL",""],["id:1055",""],["id:1066",""],["id:1072",""],["id:1088",""],["id:1092",""],["id:1094",""],["id:1098",""],["id:1161",""],["id:1222",""],["id:1278",""],["id:1279",""],["id:1305",""],["region:CPKC:1",""],["rr:WSOR",""],["id:1753",""],["rr:CIC",""],["region:NS:A1",""],["region:NS:A2",""],["region:NS:A3",""],["region:NS:B1",""],["region:NS:C1",""],["region:NS:D1",""],["region:NS:D2",""]],"u":"CN East of Thunder Bay ON"},
 {"rr":"UP","s":"DMDM-##","y":"Des Moines","n":"Boone","k":"leaving","nx":"MBOBO","sp":1,"m":[["st:CA",""],["st:OR",""],["st:ID",""],["st:WA",""],["st:NV",""],["st:UT",""],["st:WY",""],["not:RCPE",""],["st:MT",""],["st:CO",""],["st:IA",""],["st:NE",""],["st:MN",""],["st:ND",""],["st:SD",""],["st:WI",""],["region:CPKC:2",""],["region:CPKC:3",""],["region:CPKC:4",""],["region:CPKC:5",""],["region:CPKC:6",""],["rr:CN:WI/MN",""],["region:CN:Thunder_Bay_Westward",""]],"u":""},
 {"rr":"UP","s":"DMDM-##","y":"Des Moines","n":"BRC","k":"leaving","nx":"MNPCH","sp":2,"m":[["all:CSX",""],["rr:BRC",""],["rr:CSS",""],["rr:CRL",""],["rr:BNSF@1055",""],["rr:BNSF@1066",""],["rr:BNSF@1072",""],["rr:BNSF@1088",""],["rr:BNSF@1092",""],["rr:BNSF@1094",""]],"u":""},
-{"rr":"UP","s":"DMNL%-##","y":"Des Moines","n":"North Little Rock","k":"leaving","nx":"","sp":0,"m":[["st:LA",""],["st:AR",""],["id:1728",""],["rr:UP@1165",""],["rr:UP@1172",""],["rr:UP@1435",""],["rr:UP@1445",""],["rr:UP@1446",""],["rr:UP@1449",""],["rr:BNSF:TN/MS/AL",""],["region:NS:B2",""],["rr:CN:TN/MS/AL",""],["id:2394",""],["id:2399",""],["rr:DQE",""],["not:CSX",""]],"u":""},
+{"rr":"UP","s":"DMNL%-##","y":"Des Moines","n":"North Little Rock","k":"leaving","nx":"","sp":0,"m":[["st:LA",""],["st:AR",""],["id:1728",""],["rr:UP@1165",""],["rr:UP@1435",""],["rr:UP@1445",""],["rr:UP@1446",""],["rr:UP@1449",""],["rr:UP@1450",""],["rr:BNSF:TN/MS/AL",""],["region:NS:B2",""],["rr:CN:TN/MS/AL",""],["id:2394",""],["id:2399",""],["rr:DQE",""],["not:CSX",""]],"u":""},
 {"rr":"UP","s":"DMNL%-##","y":"Des Moines","n":"Eagle Pass","k":"leaving","nx":"MNLEG","sp":0,"m":[["id:1608",""],["id:2447",""]],"u":""},
 {"rr":"UP","s":"DMNL%-##","y":"Des Moines","n":"Ft Worth","k":"leaving","nx":"","sp":0,"m":[["id:1795",""],["id:1797",""],["id:1846",""],["id:1938",""],["id:3748",""],["id:1110",""],["id:1918",""],["id:1023",""],["id:1847",""],["id:1888",""],["id:1904",""],["id:3248",""],["id:3249",""],["id:3250",""],["id:3251",""],["id:3252",""],["id:3532",""],["id:3535",""],["id:2037",""],["id:2033",""],["id:2553",""],["id:2555",""],["id:2554",""],["id:3537",""],["id:3534",""],["id:1845",""]],"u":""},
 {"rr":"UP","s":"DMNL%-##","y":"Des Moines","n":"Englewood","k":"leaving","nx":"","sp":0,"m":[["id:2322",""],["id:1372",""],["id:3784",""],["id:1460",""],["id:1372",""],["id:1372",""],["id:1878",""],["id:3729",""],["id:2529",""],["id:3334",""],["id:3343",""],["id:3351",""],["id:2531",""],["id:1375",""],["id:1241",""],["id:1617",""],["id:2217",""],["id:1563",""],["id:1987",""],["id:2358",""],["id:3282",""],["id:3283",""],["id:3284",""],["id:3277",""],["id:3278",""],["id:3279",""],["id:3280",""],["id:3281",""],["rr:BNSF@1372",""],["rr:BNSF@1374",""],["rr:BNSF@1378",""],["rr:BNSF@1383",""],["rr:BNSF@1460",""],["rr:BNSF@1812",""]],"u":""},
@@ -8184,7 +8300,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"NYCLAC6-##L3","y":"Belen","n":"Logistics Park KC","k":"at","nx":"","sp":0,"m":[["id:2454",""]],"u":""},
 {"rr":"BNSF","s":"BARNSA1-##A","y":"Belen","n":"Fort Madison","k":"at","nx":"","sp":0,"m":[["id:1455",""],["id:2097",""]],"u":"CSX destinations in order: Columbus Van Yard; Cleveland Collingwood"},
 {"rr":"BNSF","s":"BARNSA1-##A","y":"Belen","n":"Chicago Ashland","k":"at","nx":"","sp":0,"m":[["id:1385",""],["id:1108",""]],"u":""},
-{"rr":"BNSF","s":"BARCHI1-##A","y":"Belen","n":"Clovis","k":"at","nx":"","sp":0,"m":[["id:2454",""],["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:1356",""],["id:1358",""]],"u":""},
+{"rr":"BNSF","s":"BARCHI1-##A","y":"Belen","n":"Clovis","k":"at","nx":"","sp":0,"m":[["id:2454",""],["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""],["id:1356",""],["id:1358",""]],"u":""},
 {"rr":"BNSF","s":"BARCHI1-##A","y":"Belen","n":"Chicago Corwith","k":"at","nx":"","sp":0,"m":[["id:1072",""]],"u":""},
 {"rr":"BNSF","s":"ALTSBD5-##A","y":"Belen","n":"Clovis","k":"at","nx":"Glendale Z-CLOPHX","sp":0,"m":[["id:1040",""]],"u":""},
 {"rr":"BNSF","s":"ALTSBD5-##A","y":"Belen","n":"San Bernardino","k":"at","nx":"","sp":0,"m":[["id:1102",""]],"u":""},
@@ -8401,7 +8517,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"UP","s":"ASPR-##","y":"","n":"Global 2","k":"named","nx":"","sp":null,"m":[],"u":""},
 {"rr":"UP","s":"ASPR-##","y":"","n":"and Altoona","k":"named","nx":"","sp":null,"m":[],"u":""},
 {"rr":"BNSF","s":"LHGDEN1-##A","y":"LA Global South","n":"Clovis","k":"leaving","nx":"","sp":2,"m":[],"u":"destinations other than Denver"},
-{"rr":"BNSF","s":"LHGDEN1-##A","y":"LA Global South","n":"Denver","k":"leaving","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""]],"u":""},
+{"rr":"BNSF","s":"LHGDEN1-##A","y":"LA Global South","n":"Denver","k":"leaving","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:4039",""]],"u":""},
 {"rr":"UP","s":"MEME-##","y":"Memphis","n":"UP IM","k":"leaving","nx":"","sp":2,"m":[["rr:UP",""],["class:im",""]],"u":""},
 {"rr":"UP","s":"MEME-##","y":"Memphis","n":"UP Autos","k":"leaving","nx":"","sp":2,"m":[["rr:UP",""],["class:auto",""]],"u":""},
 {"rr":"UP","s":"RE51-##","y":"Hollywood","n":"Reisor","k":"leaving","nx":"","sp":2,"m":[],"u":""},
@@ -8488,7 +8604,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"NTWLAW1-##A","y":"St. Paul Dayton's Bluff Yard","n":"St. Paul Dayton's Bluff (CPKC interchange and Loaded Dayton's Bluff Autoracks) --> Y-DAM111.","k":"at","nx":"","sp":2,"m":[["class:auto",""]],"u":"St. Paul Dayton's Bluff (CPKC interchange and Loaded Dayton's Bluff Autoracks)"},
 {"rr":"BNSF","s":"NTWLAW1-##A","y":"St. Paul Dayton's Bluff Yard","n":"La Crosse","k":"at","nx":"","sp":0,"m":[["id:2380",""],["id:3054",""]],"u":""},
 {"rr":"BNSF","s":"NTWMEM1-##A","y":"St. Paul Dayton's Bluff Yard","n":"St. Paul Dayton's Bluff (CPKC interchange and Loaded Dayton's Bluff Autoracks) --> Y-DAM111.","k":"at","nx":"","sp":2,"m":[["class:auto",""]],"u":"St. Paul Dayton's Bluff (CPKC interchange and Loaded Dayton's Bluff Autoracks)"},
-{"rr":"BNSF","s":"NTWMEM1-##A","y":"St. Paul Dayton's Bluff Yard","n":"Memphis Manifest","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""]],"u":""},
+{"rr":"BNSF","s":"NTWMEM1-##A","y":"St. Paul Dayton's Bluff Yard","n":"Memphis Manifest","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""]],"u":""},
 {"rr":"BNSF","s":"NTWMEM1-##A","y":"St. Paul Dayton's Bluff Yard","n":"Empty Memphis Autoracks","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"PWR8912-##A","y":"Bridgeport","n":"Bridgeport","k":"at","nx":"","sp":0,"m":[["id:1184",""],["id:2005",""],["id:2560",""]],"u":""},
 {"rr":"BNSF","s":"PWR8912-##A","y":"Bridgeport","n":"Brush","k":"at","nx":"","sp":0,"m":[["id:3840",""],["id:3841",""]],"u":""},
@@ -8930,7 +9046,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"KCKTAC4-##A","y":"","n":"empty Autoracks from Omaha in","k":"named","nx":"","sp":null,"m":[],"u":""},
 {"rr":"BNSF","s":"LPCPTS4-##E","y":"","n":"Autoracks from Omaha in","k":"named","nx":"","sp":null,"m":[],"u":""},
 {"rr":"BNSF","s":"CHCDEN8-##A","y":"Lincoln Hobson Yard","n":"Omaha","k":"at","nx":"","sp":0,"m":[["id:2203",""]],"u":""},
-{"rr":"BNSF","s":"CHCDEN8-##A","y":"Lincoln Hobson Yard","n":"Denver","k":"at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""]],"u":""},
+{"rr":"BNSF","s":"CHCDEN8-##A","y":"Lincoln Hobson Yard","n":"Denver","k":"at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:4039",""]],"u":""},
 {"rr":"BNSF","s":"SPOKCK1-##A","y":"Lincoln Hobson Yard","n":"Lincoln","k":"at","nx":"","sp":0,"m":[["id:1292",""],["id:1293",""]],"u":""},
 {"rr":"BNSF","s":"SPOKCK1-##A","y":"Lincoln Hobson Yard","n":"Kansas City","k":"at","nx":"","sp":0,"m":[["id:1059",""],["id:1169",""],["id:1200",""],["id:1214",""],["id:1218",""],["id:1227",""],["id:1229",""],["id:1301",""],["id:1620",""],["id:1817",""],["id:1889",""],["id:2011",""]],"u":""},
 {"rr":"BNSF","s":"SPOKCK1-##A","y":"Lincoln Hobson Yard","n":"Kansas City Empty Autoracks","k":"at","nx":"","sp":2,"m":[],"u":""},
@@ -9121,9 +9237,9 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"PWR4833-##I1","y":"Eagle Butte Mine","n":"Block each mine as a block.","k":"at","nx":"","sp":2,"m":[],"u":"Block each mine as a block"},
 {"rr":"BNSF","s":"DENPVO1-##A","y":"Grand Junction","n":"Grand Junction","k":"at","nx":"","sp":0,"m":[["id:2939",""],["id:2941",""]],"u":""},
 {"rr":"BNSF","s":"PVODEN1-##A","y":"Grand Junction","n":"Grand Junction","k":"at","nx":"","sp":0,"m":[["id:2939",""],["id:2942",""],["id:2940",""],["id:2941",""]],"u":""},
-{"rr":"BNSF","s":"PVODEN1-##A","y":"Grand Junction","n":"Denver","k":"at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""]],"u":""},
+{"rr":"BNSF","s":"PVODEN1-##A","y":"Grand Junction","n":"Denver","k":"at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:4039",""]],"u":""},
 {"rr":"BNSF","s":"PVOLIN1-##A","y":"Grand Junction","n":"Grand Junction","k":"at","nx":"","sp":0,"m":[["id:2939",""],["id:2942",""],["id:2940",""],["id:2941",""]],"u":""},
-{"rr":"BNSF","s":"PVOLIN1-##A","y":"Grand Junction","n":"Denver","k":"at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""]],"u":""},
+{"rr":"BNSF","s":"PVOLIN1-##A","y":"Grand Junction","n":"Denver","k":"at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:4039",""]],"u":""},
 {"rr":"BNSF","s":"PVOLIN1-##A","y":"Grand Junction","n":"Lincoln","k":"at","nx":"","sp":0,"m":[["id:1292",""],["id:1293",""]],"u":""},
 {"rr":"BNSF","s":"PVOKCK1-##A","y":"Grand Junction","n":"Grand Junction","k":"at","nx":"","sp":0,"m":[["id:2939",""],["id:2942",""],["id:2940",""],["id:2941",""]],"u":""},
 {"rr":"BNSF","s":"PVOKCK1-##A","y":"Grand Junction","n":"Pueblo","k":"at","nx":"","sp":0,"m":[["id:3325",""],["id:3326",""],["id:2281",""],["id:2282",""],["id:1275",""],["id:3327",""],["id:3332",""],["id:3333",""]],"u":""},
@@ -9511,7 +9627,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"DENLIN1-##A","y":"Brush","n":"Brush","k":"at","nx":"","sp":0,"m":[["id:1184",""],["id:3840",""],["id:2090",""],["id:3841",""],["id:2074",""]],"u":""},
 {"rr":"BNSF","s":"DENLIN1-##A","y":"Brush","n":"Lincoln","k":"at","nx":"","sp":0,"m":[["id:1292",""],["id:1293",""]],"u":""},
 {"rr":"BNSF","s":"LINDEN1-##A","y":"Brush","n":"Brush","k":"at","nx":"","sp":0,"m":[["id:3840",""],["id:1184",""],["id:2090",""],["id:3841",""],["id:2074",""]],"u":""},
-{"rr":"BNSF","s":"LINDEN1-##A","y":"Brush","n":"Denver","k":"at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""]],"u":""},
+{"rr":"BNSF","s":"LINDEN1-##A","y":"Brush","n":"Denver","k":"at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:4039",""]],"u":""},
 {"rr":"NS","s":"272-##","y":"","n":"Suffolk APM","k":"named","nx":"","sp":null,"m":[],"u":""},
 {"rr":"NS","s":"272-##","y":"","n":"Norfolk International Terminals","k":"named","nx":"","sp":null,"m":[],"u":""},
 {"rr":"NS","s":"18M-##","y":"","n":"Portsmouth","k":"named","nx":"","sp":null,"m":[],"u":""},
@@ -9723,8 +9839,8 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"TACCHC1-##B1","y":"Tacoma","n":"La Crosse","k":"leaving","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"TACCHC1-##B1","y":"Tacoma","n":"Chicago Cicero","k":"leaving","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"TACCHC1-##M1","y":"Tacoma","n":"Chicago Cicero","k":"leaving","nx":"","sp":2,"m":[],"u":""},
-{"rr":"BNSF","s":"TACDEN1-##A1","y":"Tacoma","n":"Denver","k":"leaving","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""]],"u":""},
-{"rr":"BNSF","s":"TACDEN1-##A2","y":"Tacoma","n":"Denver","k":"leaving","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""]],"u":""},
+{"rr":"BNSF","s":"TACDEN1-##A1","y":"Tacoma","n":"Denver","k":"leaving","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:4039",""]],"u":""},
+{"rr":"BNSF","s":"TACDEN1-##A2","y":"Tacoma","n":"Denver","k":"leaving","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:4039",""]],"u":""},
 {"rr":"BNSF","s":"TACLPC1-##A1","y":"Tacoma","n":"Minot","k":"leaving","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"TACLPC1-##A1","y":"Tacoma","n":"St. Paul","k":"leaving","nx":"","sp":0,"m":[["id:1176",""],["id:1183",""],["id:1391",""],["id:1491",""],["id:1540",""],["id:1661",""],["id:3271",""],["id:3444",""],["id:3445",""],["id:3446",""]],"u":""},
 {"rr":"BNSF","s":"TACLPC1-##A1","y":"Tacoma","n":"LPC","k":"leaving","nx":"","sp":2,"m":[],"u":""},
@@ -10046,10 +10162,10 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"PTSBLU3-##A","y":"Pasco","n":"Hammond Gibson Empties","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"UP","s":"MQG4%-##","y":"Dupo","n":"NS Southeast","k":"added at","nx":"IG4CL","sp":0,"m":[["id:1244",""]],"u":""},
 {"rr":"UP","s":"MQG4%-##","y":"","n":"Global 4","k":"named","nx":"","sp":null,"m":[],"u":""},
-{"rr":"UP","s":"MQG4%-##","y":"Mesquite, grouped by destination in each block","n":"NS Northeast","k":"leaving","nx":"IG4AH","sp":0,"m":[["id:1476",""],["id:3558",""],["id:3559",""],["id:3561",""],["id:1108",""],["id:1447",""],["id:1639",""],["id:1453",""],["region:NS:A1",""],["region:NS:A2",""],["region:NS:A3",""]],"u":""},
+{"rr":"UP","s":"MQG4%-##","y":"Mesquite, grouped by destination in each block","n":"NS Northeast","k":"leaving","nx":"IG4AH","sp":0,"m":[["id:1476",""],["id:3559",""],["id:3561",""],["id:1108",""],["id:1447",""],["id:1639",""],["id:1453",""],["region:NS:A1",""],["region:NS:A2",""],["region:NS:A3",""]],"u":""},
 {"rr":"UP","s":"MQG4-##","y":"Dupo","n":"NS Southeast","k":"added at","nx":"IG3CL","sp":0,"m":[["id:1244",""]],"u":""},
 {"rr":"UP","s":"MQG4-##","y":"","n":"Global 4","k":"named","nx":"","sp":null,"m":[],"u":""},
-{"rr":"UP","s":"MQG4-##","y":"Mesquite, grouped by destination in each block","n":"NS Northeast","k":"leaving","nx":"IG4AH","sp":0,"m":[["id:1476",""],["id:3558",""],["id:3559",""],["id:3561",""],["id:1108",""],["id:1447",""],["id:1639",""],["id:1453",""],["region:NS:A1",""],["region:NS:A2",""],["region:NS:A3",""]],"u":""},
+{"rr":"UP","s":"MQG4-##","y":"Mesquite, grouped by destination in each block","n":"NS Northeast","k":"leaving","nx":"IG4AH","sp":0,"m":[["id:1476",""],["id:3559",""],["id:3561",""],["id:1108",""],["id:1447",""],["id:1639",""],["id:1453",""],["region:NS:A1",""],["region:NS:A2",""],["region:NS:A3",""]],"u":""},
 {"rr":"UP","s":"MNNP%-##","y":"Dupo","n":"ICTF","k":"created at","nx":"IKCLB/ZKCLB","sp":2,"m":[],"u":"Loaded wells for Dolores/ICTF"},
 {"rr":"UP","s":"MNNP-##","y":"Dupo","n":"ICTF","k":"created at","nx":"IKCLB/ZKCLB","sp":2,"m":[],"u":"Loaded 53' and 40' wells for Dolores/ICTF"},
 {"rr":"UP","s":"MNNP-##","y":"Dupo","n":"Long Beach IM","k":"created at","nx":"IKCLB/ZKCLB","sp":0,"m":[["class:im",""],["id:2516",""],["id:3092",""],["id:2514",""],["id:3093",""],["id:2517",""],["id:3091",""]],"u":"International containers"},
@@ -10234,7 +10350,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"UP","s":"G2SC%-##","y":"Global 2","n":"Oakland","k":"leaving","nx":"INPOA","sp":0,"m":[["id:3767",""]],"u":""},
 {"rr":"UP","s":"G2SC%-##","y":"Global 2","n":"ICTF Baretables","k":"leaving","nx":"ZDVLB","sp":2,"m":[],"u":"Unassigned 40' and 53' wells for distribution from Dolores/ICTF"},
 {"rr":"UP","s":"G2SC-##","y":"Global 2","n":"Salt Lake City","k":"leaving","nx":"","sp":0,"m":[["id:1009",""],["id:1325",""],["id:2361",""],["id:2362",""],["id:3755",""]],"u":""},
-{"rr":"UP","s":"G2SC-##","y":"Global 2","n":"Denver IM","k":"leaving","nx":"ZLBDV","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["class:im",""]],"u":""},
+{"rr":"UP","s":"G2SC-##","y":"Global 2","n":"Denver IM","k":"leaving","nx":"ZLBDV","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:4039",""],["class:im",""]],"u":""},
 {"rr":"UP","s":"G2SC-##","y":"Global 2","n":"Las Vegas IM","k":"leaving","nx":"ZDVLB","sp":0,"m":[["id:1400",""],["id:1492",""],["class:im",""]],"u":""},
 {"rr":"UP","s":"G2SC-##","y":"Global 2","n":"Overflow Lathrop","k":"leaving","nx":"INPOA","sp":3,"m":[["catchall",""]],"u":""},
 {"rr":"UP","s":"G2SC-##","y":"Global 2","n":"Oakland","k":"leaving","nx":"INPOA","sp":0,"m":[["id:3767",""]],"u":""},
@@ -10680,11 +10796,11 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"CLODEN1-##A","y":"Amarillo South Yard BNSF","n":"Denver Rennicks IM.","k":"at","nx":"","sp":0,"m":[["id:1981",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"CLODEN1-##A","y":"Amarillo South Yard BNSF","n":"Big Lift Autoracks","k":"at","nx":"","sp":0,"m":[["id:2407",""],["class:auto",""]],"u":""},
 {"rr":"BNSF","s":"CLODEN1-##A","y":"Amarillo South Yard BNSF","n":"Other Loaded Autoracks","k":"at","nx":"","sp":2,"m":[["class:auto",""],["class:loaded",""]],"u":"Other"},
-{"rr":"BNSF","s":"CLODEN1-##A","y":"Amarillo South Yard BNSF","n":"Denver IM","k":"at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["class:im",""]],"u":""},
+{"rr":"BNSF","s":"CLODEN1-##A","y":"Amarillo South Yard BNSF","n":"Denver IM","k":"at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:4039",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"CLODEN1-##A","y":"Amarillo South Yard BNSF","n":"Pueblo","k":"at","nx":"","sp":0,"m":[["id:3323",""],["id:3324",""],["id:3328",""],["id:3329",""]],"u":""},
 {"rr":"BNSF","s":"BARMEM1-##A","y":"Amarillo South Yard BNSF","n":"Amariilo","k":"at","nx":"","sp":2,"m":[],"u":"Amariilo"},
 {"rr":"BNSF","s":"BARMEM1-##A","y":"Amarillo South Yard BNSF","n":"Springfield","k":"at","nx":"","sp":0,"m":[["id:2104",""],["id:3924",""]],"u":""},
-{"rr":"BNSF","s":"BARMEM1-##A","y":"Amarillo South Yard BNSF","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""]],"u":""},
+{"rr":"BNSF","s":"BARMEM1-##A","y":"Amarillo South Yard BNSF","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""]],"u":""},
 {"rr":"BNSF","s":"BELKCK1-##A","y":"Amarillo South Yard BNSF","n":"Amarillo","k":"at","nx":"","sp":2,"m":[],"u":"Amarillo area; all yards between Amarillo and Kansas City; Louisiana and Texas"},
 {"rr":"BNSF","s":"BELKCK1-##A","y":"Amarillo South Yard BNSF","n":"Kansas City","k":"at","nx":"","sp":0,"m":[["id:1059",""],["id:1169",""],["id:1200",""],["id:1214",""],["id:1218",""],["id:1227",""],["id:1229",""],["id:1301",""],["id:1620",""],["id:1817",""],["id:1889",""],["id:2011",""]],"u":""},
 {"rr":"BNSF","s":"BELDEN1-##A","y":"Amarillo South Yard BNSF","n":"Loaded Autoracks","k":"at","nx":"","sp":2,"m":[["class:auto",""]],"u":"Loaded"},
@@ -10692,7 +10808,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"BELDEN1-##A","y":"Amarillo South Yard BNSF","n":"Pueblo Manifest","k":"at","nx":"","sp":0,"m":[["id:3323",""],["id:3324",""],["id:3328",""],["id:3329",""]],"u":""},
 {"rr":"BNSF","s":"BELDEN1-##A","y":"Amarillo South Yard BNSF","n":"Denver Manifest","k":"at","nx":"","sp":0,"m":[["id:1452",""],["id:2090",""],["id:1916",""]],"u":"Denver area yards; including Bridgeport; and Sidney"},
 {"rr":"BNSF","s":"BELDEN1-##A","y":"Amarillo South Yard BNSF","n":"Denver Connections","k":"at","nx":"","sp":2,"m":[],"u":"Denver Connections"},
-{"rr":"BNSF","s":"ALTBAR1-##A","y":"Amarillo South Yard","n":"Amarillo","k":"at","nx":"","sp":0,"m":[["id:2688",""],["id:1040",""],["id:3715",""],["id:3716",""],["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:1501",""]],"u":""},
+{"rr":"BNSF","s":"ALTBAR1-##A","y":"Amarillo South Yard","n":"Amarillo","k":"at","nx":"","sp":0,"m":[["id:2688",""],["id:1040",""],["id:3715",""],["id:3716",""],["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:4039",""],["id:1501",""]],"u":""},
 {"rr":"BNSF","s":"ALTBAR1-##A","y":"Amarillo South Yard","n":"Belen","k":"at","nx":"","sp":0,"m":[["id:1032",""],["id:1252",""],["id:1779",""],["id:1799",""],["id:2099",""],["id:3667",""],["id:1345",""],["id:1536",""],["id:1537",""],["id:1565",""],["id:2707",""]],"u":""},
 {"rr":"BNSF","s":"ALTBAR1-##A","y":"Amarillo South Yard","n":"Barstow","k":"at","nx":"","sp":0,"m":[["id:1029",""]],"u":""},
 {"rr":"BNSF","s":"GALBEL1-##A","y":"Amarillo South Yard","n":"Loaded Autoracks","k":"at","nx":"","sp":0,"m":[["id:1394",""],["id:1443",""],["id:1716",""],["id:2632",""],["id:2633",""],["id:3126",""],["id:3127",""],["id:3128",""],["id:3129",""],["id:1032",""],["id:1686",""]],"u":""},
@@ -10842,10 +10958,10 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"UP","s":"MTYC%-##","y":"","n":"and IHB","k":"named","nx":"","sp":null,"m":[],"u":""},
 {"rr":"UP","s":"YCMT%-##","y":"Yard Center","n":"Clinton","k":"leaving","nx":"","sp":0,"m":[["id:2462",""],["id:2092",""],["rr:IMRR",""],["rr:TZPR",""],["id:3659",""]],"u":""},
 {"rr":"UP","s":"YCMT%-##","y":"Globla 3","n":"G3 Marshalltown","k":"created at","nx":"","sp":1,"m":[["st:IA",""],["st:NE",""],["st:MN",""],["st:ND",""],["st:SD",""],["st:AZ",""],["st:NM",""],["st:KS",""],["st:TX",""],["st:OK",""],["region:CPKC:2",""],["region:CPKC:3",""],["region:CPKC:4",""],["region:CPKC:5",""],["region:CPKC:6",""],["rr:CN:WI/MN",""],["region:CN:Thunder_Bay_Westward",""]],"u":""},
-{"rr":"UP","s":"NSNP%-##","y":"Global 3, grouped by destination","n":"North Platte IM","k":"created at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["class:im",""],["id:1400",""],["id:1492",""],["class:im",""]],"u":""},
+{"rr":"UP","s":"NSNP%-##","y":"Global 3, grouped by destination","n":"North Platte IM","k":"created at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:4039",""],["class:im",""],["id:1400",""],["id:1492",""],["class:im",""]],"u":""},
 {"rr":"UP","s":"NSNP%-##","y":"","n":"North Platte","k":"named","nx":"","sp":null,"m":[],"u":""},
 {"rr":"UP","s":"NSNP%-##","y":"","n":"North Platte Autos","k":"named","nx":"","sp":null,"m":[],"u":""},
-{"rr":"UP","s":"PRNP%-##","y":"Global 3","n":"North Platte IM","k":"added at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["class:im",""],["id:1400",""],["id:1492",""],["class:im",""]],"u":""},
+{"rr":"UP","s":"PRNP%-##","y":"Global 3","n":"North Platte IM","k":"added at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:4039",""],["class:im",""],["id:1400",""],["id:1492",""],["class:im",""]],"u":""},
 {"rr":"UP","s":"PRNP%-##","y":"","n":"and North Platte Autos","k":"named","nx":"","sp":null,"m":[],"u":""},
 {"rr":"UP","s":"YCMT-##","y":"Yard Center","n":"Clinton","k":"leaving","nx":"","sp":0,"m":[["id:2462",""],["id:2092",""],["rr:IMRR",""],["rr:TZPR",""],["id:3659",""]],"u":""},
 {"rr":"UP","s":"YCMT-##","y":"Globla 3","n":"G3 Marshalltown","k":"created at","nx":"","sp":1,"m":[["st:IA",""],["st:NE",""],["st:MN",""],["st:ND",""],["st:SD",""],["st:AZ",""],["st:NM",""],["st:KS",""],["st:TX",""],["st:OK",""],["region:CPKC:2",""],["region:CPKC:3",""],["region:CPKC:4",""],["region:CPKC:5",""],["region:CPKC:6",""],["rr:CN:WI/MN",""],["region:CN:Thunder_Bay_Westward",""]],"u":""},
@@ -10863,7 +10979,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"UP","s":"PG04-##","y":"Global 3","n":"CIR","k":"leaving","nx":"","sp":2,"m":[],"u":"All industry traffic"},
 {"rr":"UP","s":"G3AH%-##","y":"Global 3","n":"Elkhart","k":"leaving","nx":"","sp":1,"m":[["region:NS:A1",""],["region:NS:A2",""],["region:NS:A3",""],["region:NS:B1",""],["region:NS:C1",""],["region:NS:D1",""],["region:NS:D2",""]],"u":""},
 {"rr":"UP","s":"PRAH%-##","y":"Global 3","n":"Elkhart","k":"leaving","nx":"","sp":1,"m":[["region:NS:A1",""],["region:NS:A2",""],["region:NS:A3",""],["region:NS:B1",""],["region:NS:C1",""],["region:NS:D1",""],["region:NS:D2",""]],"u":""},
-{"rr":"UP","s":"CHNP%-##","y":"Global 3","n":"North Platte IM","k":"created at","nx":"","sp":0,"m":[["= MPRNP \"North Platte IM\" at Global 3","ref"],["id:1718","MPRNP North Platte IM"],["id:1769","MPRNP North Platte IM"],["id:1770","MPRNP North Platte IM"],["id:1800","MPRNP North Platte IM"],["id:1976","MPRNP North Platte IM"],["id:1977","MPRNP North Platte IM"],["id:1978","MPRNP North Platte IM"],["id:1979","MPRNP North Platte IM"],["id:1980","MPRNP North Platte IM"],["id:1981","MPRNP North Platte IM"],["id:2407","MPRNP North Platte IM"],["class:im","MPRNP North Platte IM"],["id:1400","MPRNP North Platte IM"],["id:1492","MPRNP North Platte IM"],["class:im","MPRNP North Platte IM"],["class:im",""]],"u":""},
+{"rr":"UP","s":"CHNP%-##","y":"Global 3","n":"North Platte IM","k":"created at","nx":"","sp":0,"m":[["= MPRNP \"North Platte IM\" at Global 3","ref"],["id:1718","MPRNP North Platte IM"],["id:1769","MPRNP North Platte IM"],["id:1770","MPRNP North Platte IM"],["id:1800","MPRNP North Platte IM"],["id:1976","MPRNP North Platte IM"],["id:1977","MPRNP North Platte IM"],["id:1978","MPRNP North Platte IM"],["id:1979","MPRNP North Platte IM"],["id:1980","MPRNP North Platte IM"],["id:1981","MPRNP North Platte IM"],["id:2407","MPRNP North Platte IM"],["id:4039","MPRNP North Platte IM"],["class:im","MPRNP North Platte IM"],["id:1400","MPRNP North Platte IM"],["id:1492","MPRNP North Platte IM"],["class:im","MPRNP North Platte IM"],["class:im",""]],"u":""},
 {"rr":"UP","s":"G3G3%-##","y":"Global 3","n":"West Chicago","k":"leaving","nx":"","sp":2,"m":[],"u":""},
 {"rr":"UP","s":"G3G3-##","y":"Global 3","n":"West Chicago","k":"leaving","nx":"","sp":2,"m":[],"u":"West Chicago block from North Platte/Yard Center"},
 {"rr":"UP","s":"G3G3-##","y":"Global 3","n":"Proviso","k":"leaving","nx":"MBEBE","sp":0,"m":[["id:1406",""],["class:auto",""]],"u":"Proviso block from MBOCH"},
@@ -11377,7 +11493,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"GALSTL1-##A","y":"West Quincy","n":"West Quincy","k":"at","nx":"","sp":0,"m":[["id:1809",""],["id:3556",""],["id:3554",""],["id:3555",""],["id:2173",""]],"u":""},
 {"rr":"BNSF","s":"GALMEM1-##A","y":"West Quincy","n":"West Quincy","k":"at","nx":"","sp":0,"m":[["id:1809",""],["id:3556",""],["id:3554",""],["id:3555",""]],"u":""},
 {"rr":"BNSF","s":"GALMEM1-##A","y":"West Quincy","n":"St. Louis","k":"at","nx":"","sp":0,"m":[["id:1004",""],["id:1277",""],["id:1562",""],["id:1736",""],["id:2045",""],["id:2174",""],["id:2391",""],["id:3617",""]],"u":""},
-{"rr":"BNSF","s":"GALMEM1-##A","y":"West Quincy","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""]],"u":""},
+{"rr":"BNSF","s":"GALMEM1-##A","y":"West Quincy","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""]],"u":""},
 {"rr":"BNSF","s":"GALTUL1-##A","y":"West Quincy","n":"Tulsa Loaded Autoracks","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"GALTUL1-##A","y":"West Quincy","n":"West Quincy","k":"at","nx":"","sp":0,"m":[["id:1809",""]],"u":""},
 {"rr":"BNSF","s":"GALTUL1-##A","y":"West Quincy","n":"St. Louis","k":"at","nx":"","sp":2,"m":[],"u":"EVWR / PAL / COER"},
@@ -11482,7 +11598,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"UP","s":"NLCN-##","y":"North Little Rock","n":"Marion","k":"leaving","nx":"","sp":0,"m":[["id:1180",""],["id:1448",""],["id:1705",""],["class:auto",""],["class:im",""]],"u":"IM"},
 {"rr":"UP","s":"NLNV%-##","y":"North Little Rock","n":"CSX Nashville interchange","k":"leaving","nx":"","sp":2,"m":[],"u":"CSX Regions B/C/D including CSX Memphis"},
 {"rr":"UP","s":"NLNV%-##","y":"North Little Rock","n":"BNSF Memphis interchange","k":"leaving","nx":"LWT47","sp":0,"m":[["rr:BNSF:TN/MS/AL",""],["id:2021",""],["id:2022",""],["id:3424",""],["id:3341",""],["id:3342",""],["id:3340",""]],"u":"NLR area shortline traffic for BNSF"},
-{"rr":"UP","s":"NLNV%-##","y":"North Little Rock","n":"Memphis","k":"leaving","nx":"","sp":0,"m":[["id:1446",""],["id:1172",""]],"u":"Briark"},
+{"rr":"UP","s":"NLNV%-##","y":"North Little Rock","n":"Memphis","k":"leaving","nx":"","sp":0,"m":[["id:1446",""]],"u":"Leewood UP; Briark"},
 {"rr":"UP","s":"NLEW%-##","y":"North Little Rock","n":"Englewood","k":"leaving","nx":"","sp":3,"m":[["id:1372",""],["id:3784",""],["id:1460",""],["id:1372",""],["id:1372",""],["id:1878",""],["id:3729",""],["id:2529",""],["id:3334",""],["id:3343",""],["id:3351",""],["id:2531",""],["id:1375",""],["catchall",""],["id:2393",""],["rr:BNSF@1372",""],["rr:BNSF@1374",""],["rr:BNSF@1378",""],["rr:BNSF@1383",""],["rr:BNSF@1460",""],["rr:BNSF@1812",""],["id:2733",""]],"u":"Longvivew Eastman BNSF"},
 {"rr":"UP","s":"NLEW%-##","y":"North Little Rock","n":"Reisor","k":"leaving","nx":"","sp":0,"m":[["id:2399",""],["st:TX",""],["id:2393",""],["id:2394",""],["id:2398",""],["id:1282",""],["id:1401",""],["id:2397",""],["id:1153",""],["rr:CPKC:OK/LA/TX/MS/AL",""]],"u":""},
 {"rr":"UP","s":"NLSF%-##","y":"North Little Rock","n":"NS Sheffield","k":"leaving","nx":"","sp":2,"m":[],"u":"Manifest for NS Regions B1/B2/D1/D2; including NS Memphis"},
@@ -11503,7 +11619,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"UP","s":"NLCH-##","y":"North Little Rock","n":"Proviso","k":"leaving","nx":"","sp":3,"m":[["catchall",""],["rr:UP:IL/WI/MN",""],["region:CPKC:1",""],["region:CPKC:2",""],["region:CPKC:3",""],["region:CPKC:4",""],["region:CPKC:5",""],["region:CPKC:6",""],["rr:DMVW",""]],"u":""},
 {"rr":"UP","s":"NLNV-##","y":"North Little Rock","n":"CSX Nashville interchange","k":"leaving","nx":"","sp":2,"m":[],"u":"CSX Regions B/C/D including CSX Memphis"},
 {"rr":"UP","s":"NLNV-##","y":"North Little Rock","n":"BNSF Memphis interchange","k":"leaving","nx":"LWT47","sp":0,"m":[["rr:BNSF:TN/MS/AL",""],["id:2021",""],["id:2022",""]],"u":"NLR area shortline traffic for BNSF"},
-{"rr":"UP","s":"NLNV-##","y":"North Little Rock","n":"Memphis","k":"leaving","nx":"","sp":0,"m":[["id:1446",""],["id:1172",""]],"u":"Briark"},
+{"rr":"UP","s":"NLNV-##","y":"North Little Rock","n":"Memphis","k":"leaving","nx":"","sp":0,"m":[["id:1446",""]],"u":"Leewood UP; Briark"},
 {"rr":"UP","s":"NLSF-##","y":"North Little Rock","n":"NS Sheffield","k":"leaving","nx":"","sp":2,"m":[],"u":"Manifest for NS Regions B1/B2/D1/D2; including NS Memphis"},
 {"rr":"UP","s":"NLSF-##","y":"North Little Rock","n":"NS auto loads (Loaded Autoracks for destinations in the NS Sheffield","k":"leaving","nx":"","sp":2,"m":[["class:auto",""]],"u":"NS auto loads (Loaded Autoracks for destinations in the NS Sheffield"},
 {"rr":"UP","s":"NLSF-##","y":"North Little Rock","n":"NS auto empties","k":"leaving","nx":"","sp":2,"m":[["class:auto",""]],"u":"Empty Autoracks for destinations in the NS Sheffield block"},
@@ -11784,7 +11900,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"UP","s":"ITPS%-##","y":"Mason City","n":"Settegast","k":"created at","nx":"","sp":0,"m":[["rr:PTRA",""],["id:2322",""],["id:1374",""],["id:3010",""],["id:1383",""],["id:1378",""],["id:3013",""],["id:3014",""],["id:3015",""],["id:1935",""],["id:1982",""],["id:3778",""],["id:3779",""],["id:2484",""],["id:2050",""],["id:2557",""]],"u":""},
 {"rr":"UP","s":"SSDM-##","y":"Mason City","n":"Settegast","k":"created at","nx":"","sp":0,"m":[["rr:PTRA",""],["id:2322",""],["id:1374",""],["id:3010",""],["id:1383",""],["id:1378",""],["id:3013",""],["id:3014",""],["id:3015",""],["id:1935",""],["id:1982",""],["id:3778",""],["id:3779",""]],"u":""},
 {"rr":"UP","s":"SSDM-##","y":"Mason City","n":"Parsons","k":"created at","nx":"","sp":0,"m":[["= MDMNL \"Parsons\" at Des Moines","ref"],["id:2833","MDMNL Parsons"],["id:1231","MDMNL Parsons"],["id:2110","MDMNL Parsons"],["rr:BNSF:OK","MDMNL Parsons"],["id:2831","MDMNL Parsons"],["id:2832","MDMNL Parsons"],["id:2809","MDMNL Parsons"],["id:2482","MDMNL Parsons"],["rr:PTRA","MDMNL Parsons"],["id:1374","MDMNL Parsons"],["id:3010","MDMNL Parsons"],["id:1383","MDMNL Parsons"],["id:1378","MDMNL Parsons"],["id:3013","MDMNL Parsons"],["id:3014","MDMNL Parsons"],["id:3015","MDMNL Parsons"],["id:1935","MDMNL Parsons"],["id:1982","MDMNL Parsons"],["id:3778","MDMNL Parsons"],["id:3779","MDMNL Parsons"],["id:2557","MDMNL Parsons"],["id:2050","MDMNL Parsons"],["id:2484","MDMNL Parsons"],["id:1827","MDMNL Parsons"],["st:TX","MDMNL Parsons"],["id:1232","MDMNL Parsons"],["rr:KRR","MDMNL Parsons"]],"u":""},
-{"rr":"UP","s":"SSDM-##","y":"Mason City","n":"North Little Rock","k":"created at","nx":"","sp":0,"m":[["= MDMNL \"North Little Rock\" at Des Moines","ref"],["st:LA","MDMNL North Little Rock"],["st:AR","MDMNL North Little Rock"],["id:1728","MDMNL North Little Rock"],["rr:UP@1165","MDMNL North Little Rock"],["rr:UP@1172","MDMNL North Little Rock"],["rr:UP@1435","MDMNL North Little Rock"],["rr:UP@1445","MDMNL North Little Rock"],["rr:UP@1446","MDMNL North Little Rock"],["rr:UP@1449","MDMNL North Little Rock"],["rr:BNSF:TN/MS/AL","MDMNL North Little Rock"],["region:NS:B2","MDMNL North Little Rock"],["rr:CN:TN/MS/AL","MDMNL North Little Rock"],["id:2394","MDMNL North Little Rock"],["id:2399","MDMNL North Little Rock"],["rr:DQE","MDMNL North Little Rock"],["not:CSX","MDMNL North Little Rock"]],"u":""},
+{"rr":"UP","s":"SSDM-##","y":"Mason City","n":"North Little Rock","k":"created at","nx":"","sp":0,"m":[["= MDMNL \"North Little Rock\" at Des Moines","ref"],["st:LA","MDMNL North Little Rock"],["st:AR","MDMNL North Little Rock"],["id:1728","MDMNL North Little Rock"],["rr:UP@1165","MDMNL North Little Rock"],["rr:UP@1435","MDMNL North Little Rock"],["rr:UP@1445","MDMNL North Little Rock"],["rr:UP@1446","MDMNL North Little Rock"],["rr:UP@1449","MDMNL North Little Rock"],["rr:UP@1450","MDMNL North Little Rock"],["rr:BNSF:TN/MS/AL","MDMNL North Little Rock"],["region:NS:B2","MDMNL North Little Rock"],["rr:CN:TN/MS/AL","MDMNL North Little Rock"],["id:2394","MDMNL North Little Rock"],["id:2399","MDMNL North Little Rock"],["rr:DQE","MDMNL North Little Rock"],["not:CSX","MDMNL North Little Rock"]],"u":""},
 {"rr":"UP","s":"SSDM-##","y":"Mason City","n":"Ft Worth","k":"created at","nx":"","sp":0,"m":[["= MDMNL \"Ft Worth\" at Des Moines","ref"],["id:1795","MDMNL Ft Worth"],["id:1797","MDMNL Ft Worth"],["id:1846","MDMNL Ft Worth"],["id:1938","MDMNL Ft Worth"],["id:3748","MDMNL Ft Worth"],["id:1110","MDMNL Ft Worth"],["id:1918","MDMNL Ft Worth"],["id:1023","MDMNL Ft Worth"],["id:1847","MDMNL Ft Worth"],["id:1888","MDMNL Ft Worth"],["id:1904","MDMNL Ft Worth"],["id:3248","MDMNL Ft Worth"],["id:3249","MDMNL Ft Worth"],["id:3250","MDMNL Ft Worth"],["id:3251","MDMNL Ft Worth"],["id:3252","MDMNL Ft Worth"],["id:3532","MDMNL Ft Worth"],["id:3535","MDMNL Ft Worth"],["id:2037","MDMNL Ft Worth"],["id:2033","MDMNL Ft Worth"],["id:2553","MDMNL Ft Worth"],["id:2555","MDMNL Ft Worth"],["id:2554","MDMNL Ft Worth"],["id:3537","MDMNL Ft Worth"],["id:3534","MDMNL Ft Worth"],["id:1845","MDMNL Ft Worth"]],"u":""},
 {"rr":"UP","s":"SSDM-##","y":"Mason City","n":"Eagle Pass","k":"created at","nx":"","sp":0,"m":[["id:1608",""],["id:2447",""]],"u":""},
 {"rr":"UP","s":"SSDM-##","y":"Mason City","n":"BRC","k":"created at","nx":"","sp":2,"m":[["= MDMDM \"BRC\" at Des Moines","ref"],["all:CSX","MDMDM BRC"],["rr:BRC","MDMDM BRC"],["rr:CSS","MDMDM BRC"],["rr:CRL","MDMDM BRC"],["rr:BNSF@1055","MDMDM BRC"],["rr:BNSF@1066","MDMDM BRC"],["rr:BNSF@1072","MDMDM BRC"],["rr:BNSF@1088","MDMDM BRC"],["rr:BNSF@1092","MDMDM BRC"],["rr:BNSF@1094","MDMDM BRC"]],"u":""},
@@ -12187,7 +12303,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"AMALAU1-##A","y":"Denver Big Lift","n":"Big Lift Autoracks","k":"at","nx":"","sp":0,"m":[["id:2407",""],["class:auto",""]],"u":""},
 {"rr":"BNSF","s":"AMALAU1-##A","y":"Denver Big Lift","n":"Laurel Autoracks","k":"at","nx":"","sp":0,"m":[["id:1894",""],["class:auto",""]],"u":""},
 {"rr":"BNSF","s":"AMALAU1-##A","y":"Denver Big Lift","n":"Laurel Manifest","k":"at","nx":"","sp":0,"m":[["id:1894",""]],"u":""},
-{"rr":"BNSF","s":"AMALAU1-##A","y":"Denver Big Lift","n":"Denver Manifest","k":"at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""]],"u":""},
+{"rr":"BNSF","s":"AMALAU1-##A","y":"Denver Big Lift","n":"Denver Manifest","k":"at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:4039",""]],"u":""},
 {"rr":"BNSF","s":"ALTPTL1-##A","y":"Denver Big Lift","n":"Big Lift Loaded Autoracks","k":"at","nx":"","sp":0,"m":[["id:2407",""],["class:auto",""],["class:loaded",""]],"u":""},
 {"rr":"BNSF","s":"ALTPTL1-##A","y":"Denver Big Lift","n":"Laurel Loaded Autoracks","k":"at","nx":"","sp":0,"m":[["id:1894",""],["class:auto",""],["class:loaded",""]],"u":""},
 {"rr":"BNSF","s":"ALTPTL1-##A","y":"Denver Big Lift","n":"Spokane Yardley Loaded Autoracks","k":"at","nx":"","sp":0,"m":[["id:1742",""],["class:auto",""],["class:loaded",""]],"u":""},
@@ -12410,7 +12526,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"UP","s":"PSHO%-##","y":"Parsons","n":"Brazos","k":"leaving","nx":"MFWEW","sp":0,"m":[["= MNPEW \"Englewood\" at NP","ref"],["id:1982","MNPEW Englewood"],["id:3778","MNPEW Englewood"],["id:3779","MNPEW Englewood"],["id:1372","MNPEW Englewood"],["id:3784","MNPEW Englewood"],["id:1460","MNPEW Englewood"],["id:1372","MNPEW Englewood"],["id:1372","MNPEW Englewood"],["id:1878","MNPEW Englewood"],["id:3729","MNPEW Englewood"],["id:2529","MNPEW Englewood"],["id:3334","MNPEW Englewood"],["id:3343","MNPEW Englewood"],["id:3351","MNPEW Englewood"],["id:2531","MNPEW Englewood"],["id:1375","MNPEW Englewood"],["id:1241","MNPEW Englewood"],["id:1617","MNPEW Englewood"],["id:2217","MNPEW Englewood"],["id:1563","MNPEW Englewood"],["id:1987","MNPEW Englewood"],["id:2358","MNPEW Englewood"],["id:3282","MNPEW Englewood"],["id:3283","MNPEW Englewood"],["id:3284","MNPEW Englewood"],["id:3279","MNPEW Englewood"],["id:3280","MNPEW Englewood"],["id:3281","MNPEW Englewood"],["id:3277","MNPEW Englewood"],["id:3278","MNPEW Englewood"],["rr:BNSF@1372","MNPEW Englewood"],["rr:BNSF@1374","MNPEW Englewood"],["rr:BNSF@1378","MNPEW Englewood"],["rr:BNSF@1383","MNPEW Englewood"],["rr:BNSF@1460","MNPEW Englewood"],["rr:BNSF@1812","MNPEW Englewood"],["id:2393","MNPEW Englewood"],["id:2733","MNPEW Englewood"],["id:2735","MNPEW Englewood"]],"u":""},
 {"rr":"UP","s":"PSHO%-##","y":"Parsons","n":"Muskogee","k":"leaving","nx":"","sp":0,"m":[["st:OK",""],["id:1232",""],["rr:KRR",""],["id:1827",""]],"u":""},
 {"rr":"UP","s":"PSHO%-##","y":"Parsons","n":"Ft Worth","k":"leaving","nx":"MPTDN","sp":0,"m":[["id:1795",""],["id:1797",""],["id:1846",""],["id:1938",""],["id:3748",""],["id:2630",""],["id:3029",""],["id:1023",""],["id:1847",""],["id:1888",""],["id:1904",""],["id:3248",""],["id:3249",""],["id:3250",""],["id:3251",""],["id:3252",""],["id:3532",""],["id:3535",""],["id:1608",""],["id:2482",""],["id:2239",""],["id:2242",""],["id:3118",""],["id:3119",""],["id:3432",""],["id:1845",""],["id:2037",""],["rr:TCB",""]],"u":""},
-{"rr":"UP","s":"PSNL%-##","y":"Parsons","n":"North Little Rock","k":"leaving","nx":"","sp":0,"m":[["st:LA",""],["st:AR",""],["rr:DQE",""],["st:AR",""],["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2399",""],["id:2394",""],["rr:CPKC:LA/MS/AL",""],["id:2484",""],["id:2050",""],["id:2557",""],["all:CN",""],["rr:BNSF:TN/MS/AL",""],["all:NS",""],["not:region:NS:B3",""],["all:CSX",""]],"u":""},
+{"rr":"UP","s":"PSNL%-##","y":"Parsons","n":"North Little Rock","k":"leaving","nx":"","sp":0,"m":[["st:LA",""],["st:AR",""],["rr:DQE",""],["st:AR",""],["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""],["id:2399",""],["id:2394",""],["rr:CPKC:LA/MS/AL",""],["id:2484",""],["id:2050",""],["id:2557",""],["all:CN",""],["rr:BNSF:TN/MS/AL",""],["all:NS",""],["not:region:NS:B3",""],["all:CSX",""]],"u":""},
 {"rr":"UP","s":"PSEW-##","y":"Parsons","n":"Englewood","k":"leaving","nx":"","sp":0,"m":[["id:1372",""],["id:3784",""]],"u":"BNSF Longivew/Tenaha service areas; any Houston locations served by both Settegast and Englewood"},
 {"rr":"UP","s":"PSEW-##","y":"Parsons","n":"Settegast","k":"leaving","nx":"","sp":0,"m":[["id:3480",""]],"u":""},
 {"rr":"UP","s":"PSEW-##","y":"Parsons","n":"Muskogee","k":"leaving","nx":"","sp":0,"m":[["id:1231",""],["id:2110",""],["id:2831",""],["id:2832",""],["rr:BNSF@2184",""],["rr:BNSF@3038",""],["rr:BNSF@3039",""]],"u":"and Denison service areas; OKC; Gainesville service areas"},
@@ -12454,8 +12570,8 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"STLLIN4-##A","y":"Springfield Yard","n":"Lincoln","k":"at","nx":"","sp":0,"m":[["id:1292",""],["id:1293",""]],"u":""},
 {"rr":"BNSF","s":"ATGLAC9-##A","y":"Springfield Yard BNSF","n":"Clovis","k":"at","nx":"","sp":0,"m":[["id:1685",""]],"u":""},
 {"rr":"BNSF","s":"ATGLAC9-##A","y":"Springfield Yard BNSF","n":"Los Angeles Hobart","k":"at","nx":"","sp":0,"m":[["id:1007",""]],"u":""},
-{"rr":"BNSF","s":"CLOMEM1-##A","y":"Springfield Yard","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["class:im",""]],"u":""},
-{"rr":"BNSF","s":"CLOMEM1-##A","y":"Springfield Yard BNSF","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["class:im",""]],"u":""},
+{"rr":"BNSF","s":"CLOMEM1-##A","y":"Springfield Yard","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""],["class:im",""]],"u":""},
+{"rr":"BNSF","s":"CLOMEM1-##A","y":"Springfield Yard BNSF","n":"Memphis IM","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"CLOSTL1-##A","y":"Springfield Yard","n":"Lindenwood IM","k":"at","nx":"","sp":0,"m":[["id:1736",""],["class:im",""]],"u":""},
 {"rr":"BNSF","s":"BIRSBD1-##A","y":"Springfield Yard","n":"Clovis","k":"at","nx":"","sp":2,"m":[],"u":"all non-San Bernardino; grouped by destination"},
 {"rr":"BNSF","s":"BIRSBD1-##A","y":"Springfield Yard","n":"San Bernardino","k":"at","nx":"","sp":0,"m":[["id:1102",""]],"u":""},
@@ -12477,15 +12593,15 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"SBDBIR1-##A","y":"Springfield Yard BNSF","n":"Birmingham Empty Autoracks","k":"at","nx":"","sp":0,"m":[["id:1211",""],["id:1333",""],["id:1720",""],["id:1727",""],["id:1786",""],["id:1787",""],["id:1805",""],["id:1806",""],["id:2305",""],["id:2423",""],["id:3195",""],["id:4008",""],["class:auto",""],["class:empty",""]],"u":""},
 {"rr":"BNSF","s":"SBDBIR1-##A","y":"Springfield Yard BNSF","n":"Blue Springs Empty Autoracks","k":"at","nx":"","sp":0,"m":[["id:2877",""],["class:auto",""],["class:empty",""]],"u":""},
 {"rr":"BNSF","s":"KCKMEM1-##A","y":"Springfield Yard","n":"Springfield","k":"at","nx":"","sp":0,"m":[["id:2104",""],["id:3924",""]],"u":""},
-{"rr":"BNSF","s":"KCKMEM1-##A","y":"Springfield Yard","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""]],"u":""},
+{"rr":"BNSF","s":"KCKMEM1-##A","y":"Springfield Yard","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""]],"u":""},
 {"rr":"BNSF","s":"KCKMEM1-##A","y":"Springfield Yard","n":"Empty Autoracks","k":"at","nx":"","sp":2,"m":[],"u":"connections over Memphis; grouped by destination"},
 {"rr":"BNSF","s":"KCKBIR1-##A","y":"Springfield Yard","n":"Springfield Manifest","k":"at","nx":"","sp":0,"m":[["id:2104",""],["id:3924",""]],"u":""},
-{"rr":"BNSF","s":"KCKBIR1-##A","y":"Springfield Yard","n":"Memphis Manifest","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""]],"u":""},
+{"rr":"BNSF","s":"KCKBIR1-##A","y":"Springfield Yard","n":"Memphis Manifest","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""]],"u":""},
 {"rr":"BNSF","s":"KCKBIR1-##A","y":"Springfield Yard","n":"Birmingham Manifest and Empty Autoracks","k":"at","nx":"","sp":2,"m":[["class:auto",""],["class:empty",""]],"u":"Birmingham Manifest and"},
 {"rr":"BNSF","s":"TULMEM1-##A","y":"Springfield Yard BNSF","n":"Springfield Loaded Autoracks","k":"at","nx":"","sp":0,"m":[["id:2104",""],["id:3924",""],["class:auto",""],["class:loaded",""]],"u":""},
-{"rr":"BNSF","s":"TULMEM1-##A","y":"Springfield Yard BNSF","n":"Memphis Loaded Autoracks","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["class:auto",""],["class:loaded",""]],"u":""},
+{"rr":"BNSF","s":"TULMEM1-##A","y":"Springfield Yard BNSF","n":"Memphis Loaded Autoracks","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""],["class:auto",""],["class:loaded",""]],"u":""},
 {"rr":"BNSF","s":"TULMEM1-##A","y":"Springfield Yard BNSF","n":"Springfield Manifest","k":"at","nx":"","sp":0,"m":[["id:2104",""],["id:3924",""]],"u":""},
-{"rr":"BNSF","s":"TULMEM1-##A","y":"Springfield Yard BNSF","n":"Memphis Manifest","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""]],"u":""},
+{"rr":"BNSF","s":"TULMEM1-##A","y":"Springfield Yard BNSF","n":"Memphis Manifest","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""]],"u":""},
 {"rr":"BNSF","s":"TULMEM1-##A","y":"Springfield Yard BNSF","n":"Empty Autoracks","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"TULSTL1-##A","y":"Springfield Yard","n":"Springfield","k":"at","nx":"","sp":0,"m":[["id:2104",""],["id:3924",""]],"u":""},
 {"rr":"BNSF","s":"TULSTL1-##A","y":"Springfield Yard","n":"St. Louis","k":"at","nx":"","sp":0,"m":[["id:1004",""],["id:1277",""],["id:1562",""],["id:1736",""],["id:2045",""],["id:2174",""],["id:2391",""],["id:3617",""]],"u":""},
@@ -12507,13 +12623,13 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"BIRMEM1-##A","y":"Tupelo BNSF","n":"Loaded Autoracks","k":"at","nx":"","sp":2,"m":[["class:auto",""]],"u":"Loaded"},
 {"rr":"BNSF","s":"BIRMEM1-##A","y":"Tupelo BNSF","n":"Amory","k":"at","nx":"","sp":0,"m":[["id:3703",""],["id:3704",""],["id:1883",""]],"u":""},
 {"rr":"BNSF","s":"BIRMEM1-##A","y":"Tupelo BNSF","n":"Tupelo","k":"at","nx":"","sp":2,"m":[["class:auto",""]],"u":"CPKC interchange and empty Autoracks for Blue Springs"},
-{"rr":"BNSF","s":"BIRMEM1-##A","y":"Tupelo BNSF","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""]],"u":""},
+{"rr":"BNSF","s":"BIRMEM1-##A","y":"Tupelo BNSF","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""]],"u":""},
 {"rr":"BNSF","s":"AMOMEM1-##A","y":"Tupelo BNSF","n":"Tupelo","k":"at","nx":"","sp":0,"m":[["id:2484",""]],"u":""},
-{"rr":"BNSF","s":"AMOMEM1-##A","y":"Tupelo BNSF","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""]],"u":""},
+{"rr":"BNSF","s":"AMOMEM1-##A","y":"Tupelo BNSF","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""]],"u":""},
 {"rr":"BNSF","s":"BIRKCK1-##A","y":"Blue Springs","n":"Kansas City Argentine Loads","k":"at","nx":"","sp":0,"m":[["id:1620",""],["class:loaded",""]],"u":""},
 {"rr":"BNSF","s":"BIRKCK1-##A","y":"Blue Springs","n":"Kansas City Connection Loads (grouped by destination).","k":"at","nx":"","sp":2,"m":[],"u":"Kansas City Connection Loads (grouped by destination)"},
 {"rr":"BNSF","s":"BIRKCK1-##A","y":"Blue Springs","n":"Loaded Autoracks","k":"at","nx":"","sp":2,"m":[],"u":""},
-{"rr":"BNSF","s":"BIRKCK1-##A","y":"Blue Springs","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""]],"u":""},
+{"rr":"BNSF","s":"BIRKCK1-##A","y":"Blue Springs","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""]],"u":""},
 {"rr":"BNSF","s":"BIRKCK1-##A","y":"Blue Springs","n":"Springfield","k":"at","nx":"","sp":2,"m":[["rr:MNA",""]],"u":""},
 {"rr":"BNSF","s":"BIRKCK1-##A","y":"Blue Springs","n":"Argentine","k":"at","nx":"","sp":0,"m":[["id:1620",""]],"u":""},
 {"rr":"BNSF","s":"BIRKCK1-##A","y":"","n":"Kansas City Loads per","k":"named","nx":"","sp":null,"m":[],"u":""},
@@ -12522,7 +12638,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"BIRLPC1-##A","y":"Blue Springs","n":"Hammond Gibson Connections","k":"at","nx":"T-LPCIHB","sp":2,"m":[["class:empty",""]],"u":"Loads and"},
 {"rr":"BNSF","s":"BIRLPC1-##A","y":"","n":"Loads per","k":"named","nx":"","sp":null,"m":[],"u":""},
 {"rr":"BNSF","s":"BIRTUL1-##A","y":"Blue Springs","n":"Loaded Autoracks","k":"at","nx":"","sp":2,"m":[],"u":""},
-{"rr":"BNSF","s":"BIRTUL1-##A","y":"Blue Springs","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""]],"u":""},
+{"rr":"BNSF","s":"BIRTUL1-##A","y":"Blue Springs","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""]],"u":""},
 {"rr":"BNSF","s":"BIRTUL1-##A","y":"Blue Springs","n":"Springfield","k":"at","nx":"","sp":0,"m":[["id:2104",""],["id:3924",""]],"u":""},
 {"rr":"BNSF","s":"BIRTUL1-##A","y":"Blue Springs","n":"Tulsa","k":"at","nx":"","sp":0,"m":[["id:2184",""],["id:3038",""],["id:3039",""]],"u":""},
 {"rr":"BNSF","s":"BIRTUL1-##A","y":"","n":"Autoracks in","k":"named","nx":"","sp":null,"m":[],"u":""},
@@ -12541,7 +12657,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"MEMAMO1-##A","y":"Blue Springs","n":"Blue Springs Empty Autoracks","k":"at","nx":"","sp":0,"m":[["id:2877",""],["class:auto",""],["class:empty",""]],"u":""},
 {"rr":"BNSF","s":"SPMBIR4-##A","y":"Blue Springs","n":"Birmingham","k":"at","nx":"","sp":0,"m":[["id:1211",""],["id:1333",""],["id:1720",""],["id:1727",""],["id:1786",""],["id:1787",""],["id:1805",""],["id:1806",""],["id:2305",""],["id:2423",""],["id:3195",""],["id:4008",""]],"u":""},
 {"rr":"BNSF","s":"SPMBIR4-##A","y":"Blue Springs","n":"Blue Springs Autoracks","k":"at","nx":"","sp":0,"m":[["id:2877",""],["class:auto",""]],"u":""},
-{"rr":"BNSF","s":"TULBIR1-##A","y":"Blue Springs","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1172",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""]],"u":""},
+{"rr":"BNSF","s":"TULBIR1-##A","y":"Blue Springs","n":"Memphis","k":"at","nx":"","sp":0,"m":[["id:1165",""],["id:1435",""],["id:1445",""],["id:1446",""],["id:1449",""],["id:1450",""],["id:1921",""],["id:1923",""],["id:1983",""],["id:2076",""],["id:2915",""],["id:2916",""]],"u":""},
 {"rr":"BNSF","s":"TULBIR1-##A","y":"Blue Springs","n":"Birmingham","k":"at","nx":"","sp":0,"m":[["id:1211",""],["id:1333",""],["id:1720",""],["id:1727",""],["id:1786",""],["id:1787",""],["id:1805",""],["id:1806",""],["id:2305",""],["id:2423",""],["id:3195",""],["id:4008",""]],"u":""},
 {"rr":"BNSF","s":"TULBIR1-##A","y":"Blue Springs","n":"Empty Autoracks","k":"at","nx":"","sp":2,"m":[],"u":""},
 {"rr":"BNSF","s":"TULBIR1-##A","y":"Blue Springs","n":"Blue Springs Empty Autoracks","k":"at","nx":"","sp":0,"m":[["id:2877",""],["class:auto",""],["class:empty",""]],"u":""},
@@ -13220,7 +13336,7 @@ const DATA = {"gen":"2026-09-26",
 {"rr":"BNSF","s":"STODEN1-##A","y":"Elko UP","n":"Sparks","k":"at","nx":"","sp":2,"m":[],"u":"Fernley; UP switches all"},
 {"rr":"BNSF","s":"STODEN1-##A","y":"Elko UP","n":"Elko UP","k":"at","nx":"","sp":2,"m":[],"u":"UP switches Elko BNSF"},
 {"rr":"BNSF","s":"STODEN1-##A","y":"Elko UP","n":"Roper","k":"at","nx":"","sp":2,"m":[],"u":"Grand Junction --> H-PVOGJC1; Ogden"},
-{"rr":"BNSF","s":"STODEN1-##A","y":"Elko UP","n":"Denver","k":"at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""]],"u":""},
+{"rr":"BNSF","s":"STODEN1-##A","y":"Elko UP","n":"Denver","k":"at","nx":"","sp":0,"m":[["id:1718",""],["id:1769",""],["id:1770",""],["id:1800",""],["id:1976",""],["id:1977",""],["id:1978",""],["id:1979",""],["id:1980",""],["id:1981",""],["id:2407",""],["id:4039",""]],"u":""},
 {"rr":"BNSF","s":"PVORRB1-##A","y":"Elko UP","n":"Elko UP","k":"at","nx":"","sp":2,"m":[],"u":"Elko BNSF switched by UP"},
 {"rr":"BNSF","s":"PVORRB1-##A","y":"Elko UP","n":"Sparks","k":"at","nx":"","sp":2,"m":[],"u":"Fernley; all switched by UP"},
 {"rr":"BNSF","s":"PVORRB1-##A","y":"Elko UP","n":"Riverbank","k":"at","nx":"","sp":0,"m":[["id:1021",""],["id:1201",""],["id:2321",""],["id:1013",""],["id:1015",""],["id:1133",""],["id:1984",""]],"u":"Southern California"},
@@ -13364,7 +13480,6 @@ const DATA = {"gen":"2026-09-26",
 "1163":[{"rr":"BNSF","s":"LHGDEN1-##A","uid":228,"b":[[1166,"leaving here"],[1167,"leaving here"]]}],
 "1165":[{"rr":"UP","s":"MEME-##","uid":14256,"b":[[1168,"leaving here"],[1169,"leaving here"]]},{"rr":"UP","s":"RE51-##","uid":14411,"b":[[1170,"leaving here"]]}],
 "1169":[{"rr":"UP","s":"KCLB%-##","uid":14243,"b":[[594,"leaving here"],[595,"leaving here"],[596,"leaving here"],[597,"leaving here"],[598,"leaving here"],[599,"leaving here"],[600,"leaving here"]]},{"rr":"UP","s":"KCLB-##","uid":14266,"b":[[601,"leaving here"],[602,"leaving here"],[603,"leaving here"],[604,"leaving here"],[605,"leaving here"],[606,"leaving here"],[607,"leaving here"]]}],
-"1172":[{"rr":"UP","s":"MEME-##","uid":14256,"b":[[1168,"leaving here"],[1169,"leaving here"]]}],
 "1173":[{"rr":"NS","s":"18M-##","uid":8694,"b":[[1171,"pick up here"]]},{"rr":"NS","s":"11Z-##","uid":10928,"b":[[1172,"pick up here"],[1173,"pick up here"],[1174,"pick up here"],[1175,"pick up here"]]},{"rr":"NS","s":"12Z-##","uid":8742,"b":[[1176,"pick up here"],[1177,"pick up here"]]},{"rr":"NS","s":"15T-##","uid":10915,"b":[[1178,"pick up here"]]},{"rr":"NS","s":"19W-##","uid":11112,"b":[[1179,"pick up here"]]},{"rr":"NS","s":"11E-##","uid":9012,"b":[[1180,"pick up here"]]},{"rr":"NS","s":"18W-##","uid":11110,"b":[[1181,"pick up here"],[1182,"pick up here"]]}],
 "1176":[{"rr":"BNSF","s":"STPSEA1-##A1","uid":337,"b":[[1183,"leaving here"],[1184,"leaving here"]]},{"rr":"BNSF","s":"STPSEA1-##K1","uid":338,"b":[[1185,"leaving here"],[1186,"leaving here"]]},{"rr":"BNSF","s":"STPSEP1-##A1","uid":339,"b":[[1187,"leaving here"]]},{"rr":"BNSF","s":"STPSEP1-##K1","uid":340,"b":[[1188,"leaving here"]]},{"rr":"BNSF","s":"STPTAC1-##A1","uid":342,"b":[[1189,"leaving here"]]},{"rr":"BNSF","s":"STPTAC1-##K1","uid":343,"b":[[1190,"leaving here"]]},{"rr":"BNSF","s":"STPTAC1-##A5","uid":344,"b":[[1191,"leaving here"],[1192,"leaving here"]]},{"rr":"BNSF","s":"STPTAC1-##K2","uid":345,"b":[[1193,"leaving here"],[1194,"leaving here"]]},{"rr":"BNSF","s":"STPTAC1-##M1","uid":346,"b":[[1195,"leaving here"]]},{"rr":"UP","s":"SP31R-##","uid":15550,"b":[[1196,"leaving here"],[1197,"leaving here"]]}],
 "1177":[{"rr":"NS","s":"K95-##","uid":9271,"b":[[1198,"pick up here"]]}],
@@ -13482,6 +13597,7 @@ const DATA = {"gen":"2026-09-26",
 "1447":[{"rr":"NS","s":"377-##","uid":8725,"b":[[2249,"pick up here"]]},{"rr":"NS","s":"379-##","uid":8809,"b":[[2250,"pick up here"]]},{"rr":"NS","s":"378-##","uid":10914,"b":[[2251,"pick up here"]]}],
 "1448":[{"rr":"UP","s":"MEME-##","uid":14256,"b":[[1212,"leaving here"],[2252,"pick up here"]]},{"rr":"UP","s":"NVNL%-##","uid":14726,"b":[[2245,"pick up here; defined at Sargent Yard"]]},{"rr":"UP","s":"NLCN%-##","uid":14977,"b":[[1215,"created at here"],[2253,"pick up here; defined at North Little Rock"],[2254,"pick up here"]]},{"rr":"UP","s":"CNNL%-##","uid":14988,"b":[[1216,"added at here"]]},{"rr":"UP","s":"NLCN-##","uid":15057,"b":[[1217,"created at here"],[1218,"created at here"],[2255,"pick up here; defined at North Little Rock"],[2256,"pick up here"]]},{"rr":"UP","s":"NLNV%-##","uid":15059,"b":[[2257,"pick up here; defined at Marion, with IM grouped by destination"],[2258,"pick up here"],[2259,"pick up here"],[2260,"pick up here"]]},{"rr":"UP","s":"CNNL-##","uid":15117,"b":[[1219,"added at here"],[1220,"added at here"]]},{"rr":"UP","s":"NLSF%-##","uid":15118,"b":[[2261,"pick up here"]]},{"rr":"UP","s":"NLNV-##","uid":15202,"b":[[2262,"pick up here"],[2263,"pick up here"]]},{"rr":"UP","s":"NLSF-##","uid":15228,"b":[[2264,"pick up here"]]},{"rr":"UP","s":"MNSI-##","uid":14252,"b":[[661,"leaving here"],[1205,"leaving here"],[1206,"leaving here"],[1207,"leaving here"],[1208,"leaving here"],[1209,"leaving here"],[1210,"leaving here"],[1211,"leaving here"]]},{"rr":"UP","s":"SG54-##","uid":14342,"b":[[1213,"leaving here"],[1214,"leaving here"]]},{"rr":"UP","s":"MNLA-##","uid":15772,"b":[[1221,"leaving here"],[1222,"leaving here"]]}],
 "1449":[{"rr":"CSX","s":"M531-##","uid":6207,"b":[[2265,"pick up here"]]},{"rr":"CSX","s":"M533-##","uid":6150,"b":[[2266,"pick up here"]]},{"rr":"CSX","s":"M530-##","uid":6264,"b":[[2267,"pick up here"]]},{"rr":"CSX","s":"I125-##","uid":8352,"b":[[2268,"pick up here"],[2269,"pick up here"],[2270,"pick up here"]]},{"rr":"UP","s":"MEME-##","uid":14256,"b":[[1168,"leaving here"],[1169,"leaving here"]]}],
+"1450":[{"rr":"UP","s":"MEME-##","uid":14256,"b":[[1168,"leaving here"],[1169,"leaving here"]]}],
 "1452":[{"rr":"BNSF","s":"ALNDEN1-##A","uid":3402,"b":[[2271,"at here"],[2272,"at here"]]},{"rr":"BNSF","s":"DENALN1-##A","uid":3418,"b":[[2273,"at here"]]},{"rr":"BNSF","s":"DENLIN1-##A","uid":3489,"b":[[2274,"at here"],[2275,"at here"]]},{"rr":"BNSF","s":"LINDEN1-##A","uid":3729,"b":[[2276,"at here"],[2277,"at here"]]}],
 "1453":[{"rr":"NS","s":"272-##","uid":8533,"b":[[2278,"pick up here"],[2279,"pick up here"]]},{"rr":"NS","s":"18M-##","uid":8694,"b":[[2280,"pick up here"]]},{"rr":"NS","s":"170-##","uid":8727,"b":[[2281,"pick up here"],[906,"pick up here"],[2282,"pick up here"]]},{"rr":"NS","s":"171-##","uid":8729,"b":[[2283,"pick up here"],[907,"pick up here"]]},{"rr":"NS","s":"117-##","uid":8764,"b":[[2284,"pick up here"]]},{"rr":"NS","s":"116-##","uid":8763,"b":[[2285,"pick up here"]]},{"rr":"NS","s":"239-##","uid":8591,"b":[[2286,"pick up here"]]},{"rr":"NS","s":"270-##","uid":8545,"b":[[2287,"pick up here"]]},{"rr":"NS","s":"138-##","uid":10751,"b":[[2288,"pick up here"]]},{"rr":"NS","s":"139-##","uid":8771,"b":[[2289,"pick up here"],[2290,"pick up here"]]}],
 "1454":[{"rr":"NS","s":"267-##","uid":8525,"b":[[2291,"pick up here"]]},{"rr":"NS","s":"257-##","uid":8549,"b":[[2292,"pick up here"],[2293,"pick up here"]]},{"rr":"NS","s":"358-##","uid":8736,"b":[[2294,"pick up here"],[2295,"pick up here"]]},{"rr":"NS","s":"359-##","uid":8778,"b":[[1224,"pick up here"]]},{"rr":"NS","s":"337-##","uid":8816,"b":[[2296,"pick up here"]]},{"rr":"NS","s":"338-##","uid":8817,"b":[[2297,"pick up here"]]},{"rr":"NS","s":"B37-##","uid":9791,"b":[[2298,"pick up here"]]},{"rr":"NS","s":"B38-##","uid":9792,"b":[[2299,"pick up here"]]},{"rr":"NS","s":"22X-##","uid":10799,"b":[[2033,"pick up here"]]},{"rr":"NS","s":"28B-##","uid":10812,"b":[[2300,"pick up here"]]},{"rr":"NS","s":"29P-##","uid":10774,"b":[[2301,"pick up here"]]},{"rr":"NS","s":"28X-##","uid":10797,"b":[[2302,"pick up here"]]},{"rr":"NS","s":"334-##","uid":8766,"b":[[2303,"pick up here"]]},{"rr":"NS","s":"10N-##","uid":8695,"b":[[1225,"pick up here"]]}],
@@ -30392,6 +30508,7 @@ function render(reset=true){
   if(rstate.res){ renderRoutes(); return; }
   // the inventory view only exists for a yard whose .wag we can read
   if(state.view==="myyard" && !(state.loc && GAME.visited.has(state.loc))) state.view="cards";
+  if(state.view==="sorts" && !(state.loc && SHEETS[state.loc])) state.view="cards";
   const base=filteredBase();
   if(reset) syncTypes(base);
   const list = state.type ? base.filter(t=>t.ty===state.type) : base;
@@ -30422,6 +30539,7 @@ function render(reset=true){
       `</span>`+
       `<span class="seg" id="viewseg">`+
         [["cards","Cards"],["sheet",NARROW.matches?"Sheet":"Yard sheet"],["details","Details"]]
+          .concat(SHEETS[L]?[["sorts","Sorts"]]:[])
           .concat(GAME.visited.has(L)?[["myyard",GAME.my.has(L)?"My yard":"Visited yard"]]:[])
           .map(([v,lb])=>`<button data-v="${v}"${v===state.view?' class="on"':''}>${lb}</button>`).join("")+
       `</span>`+
@@ -30448,6 +30566,12 @@ function render(reset=true){
     document.getElementById("favstar").onclick=()=>toggleFav(L);
   } else locbar.className="locbar";
 
+  // sorts view: what the rosters say this yard should be sorting
+  if(state.loc && state.view==="sorts"){
+    wrap.innerHTML="";
+    wrap.appendChild(sortsPanel(state.loc));
+    return;
+  }
   // details view: facts about the place instead of a train list
   if(state.loc && state.view==="details"){
     wrap.innerHTML="";
@@ -30573,6 +30697,78 @@ function compass(a,b){
   return ["N","NE","E","SE","S","SW","W","NW"][Math.round(deg/45)%8];
 }
 
+// ---- sort sheets: what the rosters say a yard should be sorting ----
+// DATA.sheets[yard] = [{rr, s, uid, b:[[block index, how], ...]}], DATA.blocks =
+// the definitions (members as [token, via]), DATA.regions = "RR:code" -> states.
+// Built by blocks_import.py / sort_sheet.py from the TSAR notes only — a
+// player's own sort files are never read for this.
+const SHEETS=DATA.sheets||{}, BLOCKS=DATA.blocks||[], REGIONS=DATA.regions||{};
+const BLOCKS_BY_TRAIN={};
+BLOCKS.forEach((b,i)=>{ (BLOCKS_BY_TRAIN[b.rr+"|"+b.s]=BLOCKS_BY_TRAIN[b.rr+"|"+b.s]||[]).push(i); });
+const SYM_UID={};
+DATA.trains.forEach((t,i)=>{ const k=t.rr+"|"+t.sym.replace(/[^A-Za-z0-9]/g,"").toUpperCase().replace(/#+$/,""); if(!(k in SYM_UID)) SYM_UID[k]=i; });
+function symUid(rr,sym){ return SYM_UID[rr+"|"+String(sym).replace(/[^A-Za-z0-9]/g,"").toUpperCase().replace(/#+$/,"")]; }
+const SPEC_LABEL=["specific","by state / region","by railroad","catch-all"];
+function memberHtml(tok){
+  const i=tok.indexOf(":"), kind=i<0?tok:tok.slice(0,i), rest=i<0?"":tok.slice(i+1);
+  if(kind==="id") return `<button class="mem blk-mem-loc" data-loc="${esc(rest)}">${esc(locLabel(rest))}</button>`;
+  if(kind==="st") return `<span class="mem st">${esc(rest)}</span>`;
+  if(kind==="rr"){
+    const j=rest.indexOf(":"), mark=j<0?rest:rest.slice(0,j), tail=j<0?"":rest.slice(j+1);
+    if(mark.includes("@")){ const [m,at]=mark.split("@"); return `<span class="mem rr">${esc(m)} at <button class="blk-mem-loc" data-loc="${esc(at)}">${esc(locLabel(at))}</button></span>`; }
+    return `<span class="mem rr">${esc(mark)}${tail?" in "+esc(tail.replace(/\//g,", ")):" (all)"}</span>`;
+  }
+  if(kind==="region"){ const sts=REGIONS[rest]||""; const [rr,code]=rest.split(":"); return `<span class="mem st" title="${esc(sts.replace(/;/g,", "))}">${esc(rr)} region ${esc(String(code).replace(/_/g," "))}${sts?" · "+esc(sts.replace(/;/g,", ")):""}</span>`; }
+  if(kind==="all") return `<span class="mem rr">all ${esc(rest)} traffic</span>`;
+  if(kind==="not") return `<span class="mem not">except ${esc(rest.replace(/^region:/,"").replace(/:/g," "))}</span>`;
+  if(kind==="class") return `<span class="mem cls">${({im:"intermodal",auto:"autoracks",loaded:"loads only",empty:"empties only"})[rest]||esc(rest)}</span>`;
+  if(kind==="catchall") return `<span class="mem cls">everything else</span>`;
+  return `<span class="mem">${esc(tok)}</span>`;
+}
+function blockHtml(b, how){
+  const nx=b.nx?symUid(b.rr,b.nx):undefined;
+  let h=`<div class="blk"><div class="bhead"><b>${esc(b.n)}</b>`+
+    (b.sp!==null&&b.sp!==undefined?` <span class="spec s${b.sp}">${SPEC_LABEL[b.sp]}</span>`:"")+
+    (how?` <span class="dim">${esc(how)}</span>`:"")+
+    (b.nx?` <span class="dim">→ ${nx!==undefined?`<button class="jump" data-jump="${nx}">${esc(b.nx)}</button>`:esc(b.nx)}</span>`:"")+
+    `</div>`;
+  if(!b.m.length&&!b.u) h+=`<div class="bmem dim">named in the notes, not defined anywhere in this train</div>`;
+  // members grouped by the reference they came through
+  const groups=[]; const byVia={};
+  b.m.forEach(([tok,via])=>{ if(tok.startsWith("= ")) return; if(!(via in byVia)){ byVia[via]=[]; groups.push(via); } byVia[via].push(tok); });
+  groups.forEach(via=>{
+    h+=`<div class="bmem">`+(via?`<span class="via">= ${esc(via)}</span> `:"")+byVia[via].map(memberHtml).join(" ")+`</div>`;
+  });
+  if(b.u) h+=`<div class="bmem dim">not resolved: ${esc(b.u)}</div>`;
+  return h+`</div>`;
+}
+function trainBlocksHtml(t){
+  const idx=BLOCKS_BY_TRAIN[t.rr+"|"+t.s]; if(!idx) return "";
+  const byYard=[]; const seen={};
+  idx.forEach(i=>{ const b=BLOCKS[i]; const k=b.k+" "+b.y; if(!(k in seen)){ seen[k]=[]; byYard.push(k); } seen[k].push(i); });
+  return `<details class="blocks"><summary><h4>Blocks defined in these notes · ${idx.length}</h4></summary>`+
+    byYard.map(k=>`<div class="byard">Blocks ${esc(k)}</div>`+seen[k].map(i=>blockHtml(BLOCKS[i],"")).join("")).join("")+`</details>`;
+}
+function sortsPanel(L){
+  const el=document.createElement("div"); el.className="dpanel sorts";
+  const sh=SHEETS[L]||[];
+  let h=`<h4>Sort sheet <span class="dim">· ${esc(locLabel(L))} · from the rosters</span></h4>`+
+    `<div class="drow dim">Every train that lifts or builds a named block here, with each block spelled out the way a sort can say it. `+
+    `Read from the TSAR notes only — never from your own sort files. Blocks tagged <span class="spec s0">specific</span> should sit above `+
+    `<span class="spec s1">by state / region</span> and <span class="spec s2">by railroad</span> ones, and the <span class="spec s3">catch-all</span> last.</div>`;
+  sh.forEach(tr=>{
+    const t=tr.uid!==undefined&&tr.uid!==null?DATA.trains[tr.uid]:null;
+    h+=`<div class="strain"><span class="tag rr">${esc(tr.rr)}</span> `+
+      (t?`<button class="jump big" data-jump="${tr.uid}">${esc(t.fs)}</button> <span class="dim">${esc(locLabel(t.o))} → ${esc(locLabel(t.d))}</span>`:`<b>${esc(tr.s)}</b> <span class="dim">not in the current roster</span>`)+
+      `</div>`;
+    tr.b.forEach(([bi,how])=>{ h+=blockHtml(BLOCKS[bi],how); });
+  });
+  el.innerHTML=h;
+  el.querySelectorAll("[data-jump]").forEach(b=>{ b.onclick=()=>jumpTo(+b.dataset.jump); });
+  el.querySelectorAll(".blk-mem-loc").forEach(b=>{ b.onclick=()=>gotoLoc(b.dataset.loc); });
+  return el;
+}
+
 function detailsPanel(L){
   const el=document.createElement("div"); el.className="dpanel";
   const g=GEO[L], fam=FAM[L];
@@ -30687,7 +30883,9 @@ function buildBody(el,t){
   body.innerHTML=
     `<div class="dates">Effective ${esc(eff)} · Expires ${esc(exp)}</div>`+
     `<h4>Route · ${t.r.length} stop${t.r.length===1?"":"s"}</h4><div class="route">${nodes}</div>`+
-    `<h4>Instructions</h4><div class="instr">${instr}</div>`;
+    `<h4>Instructions</h4><div class="instr">${instr}</div>`+
+    trainBlocksHtml(t);
+  body.querySelectorAll(".blk-mem-loc").forEach(b=>{ b.onclick=e=>{e.stopPropagation(); gotoLoc(b.dataset.loc);}; });
 
   body.querySelectorAll("[data-jump]").forEach(b=>{
     b.onclick=e=>{e.stopPropagation(); jumpTo(+b.dataset.jump);};
@@ -32077,7 +32275,7 @@ function navFromHash(){
     const [k,v]=kv.split("=");
     if(k==="loc"&&KNOWN_LOC.has(v)) s.loc=v;
     else if(k==="m"&&["o","d","w"].includes(v)) s.locmode=v;
-    else if(k==="v"&&["sheet","details","myyard"].includes(v)) s.view=v;
+    else if(k==="v"&&["sheet","details","myyard","sorts"].includes(v)) s.view=v;
     else if(k==="sym"&&v) s.sym=decodeURIComponent(v);
     else if(k==="route"){ const q=v.split("-"); if(KNOWN_LOC.has(q[0])&&KNOWN_LOC.has(q[1])){ s.rf=q[0]; s.rt=q[1]; s.car=q[2]||"carload"; } }
   });
