@@ -3749,6 +3749,7 @@ UP,DNPT-##,Denison,leaving,Muskogee,,"Muskogee UP, Pryor, Coffeyville UP/SKOL, P
 UP,DNPT-##,Denison,leaving,Tulsa,LVA74,OK,st:OK,2841,
 UP,DNPT-##,Denison,leaving,BNSF,LVA74,"Muskogee BNSF, BNSF OK",id:2110 rr:BNSF:OK,2841,
 UP,PTDN-##,Muskogee,leaving,Denison,,"KRR, TX, NM, AZ, LA Basin",rr:KRR st:TX st:NM st:AZ,1231|2110,LA Basin
+UP,PTDN-##,Muskogee,leaving,McAlester,,AOK,rr:AOK,1231|2110,
 UP,EWNL%-##,Englewood,leaving,Englewood - NLR: 0.8,,,,1372|3784,Englewood - NLR: 0.8
 UP,EWNL%-##,Englewood,leaving,Little Rock,,"DQE, AR, MO, MNA, Welcome UP MN, Fairmont MN, TRRA, CSX Region C, NS Regions B2/D2, CN IL/TN/MS/Eastern US/Canada East of Thunder Bay ON, BNSF TN/MS/AL, IA, SD, RCPE",rr:DQE st:AR st:MO rr:MNA id:2186 id:1660 rr:TRRA region:CSX:C region:NS:B2 region:NS:D2 rr:CN:IL/TN/MS region:CN:Eastern_US region:CN:East_of_Thunder_Bay rr:BNSF:TN/MS/AL st:IA st:SD rr:RCPE,1372|3784,
 UP,EWFW-##,Englewood,leaving,Spring,,Spring/Westfield,id:2531 id:1375,1372|3784,

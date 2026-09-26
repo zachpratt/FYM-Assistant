@@ -1501,6 +1501,25 @@ CSX,I187-##,1261,Fairburn,pick up,Charlotte IM
 CSX,I187-##,1909,Monroe,pick up,Charlottle IM
 CSX,I147-##,2047,Northwest Ohio ICTF,set out,Hammond Auto
 CSX,I147-##,2888,Pottersburg,pick up,Hammond Auto
+CSX,I157-##,1625,Syracuse DeWitt Yard,set out,Rose Lake
+CSX,I157-##,1625,Syracuse DeWitt Yard,set out,59th St
+CSX,I157-##,1625,Syracuse DeWitt Yard,set out,CN Montreal
+CSX,I157-##,1625,Syracuse DeWitt Yard,set out,CN Toronto
+CSX,I157-##,1625,Syracuse DeWitt Yard,set out,Buffalo IM
+CSX,I157-##,1625,Syracuse DeWitt Yard,pick up,City of Industry IM
+CSX,I157-##,1860,Buffalo Seneca Yard,set out,Buffalo
+CSX,I157-##,1860,Buffalo Seneca Yard,pick up,Bedford Park
+CSX,I157-##,1860,Buffalo Seneca Yard,pick up,City of Industry IM
+CSX,I157-##,2047,Northwest Ohio ICTF,set out,Intermodal Except Bedford Park
+CSX,I157-##,2047,Northwest Ohio ICTF,set out,Pick Up Bedford Park
+CSX,I157-##,2047,Northwest Ohio ICTF,set out,Fairburn IM
+CSX,I117-##,2164,Baltimore Bay View CSX Yard,set out,CN Toronto IM
+CSX,I117-##,2164,Baltimore Bay View CSX Yard,set out,CN Montreal IM
+CSX,I117-##,2164,Baltimore Bay View CSX Yard,set out,Buffalo IM
+CSX,I117-##,2164,Baltimore Bay View CSX Yard,pick up,Bedford Park IM
+CSX,I117-##,2047,Northwest Ohio ICTF,set out,Detroit
+CSX,I117-##,2047,Northwest Ohio ICTF,set out,Cincinnati IM
+CSX,I117-##,2047,Northwest Ohio ICTF,pick up,Bedford Park IM
 CSX,L644-##,1185,Cayce CSX,set out,Dixiana Eastman
 CSX,M214-##,1482,Lordstown CSX,set out,Lordstown Auto
 CSX,M214-##,1922,Cumberland,pick up,Baltimore Curtis Bay
@@ -2348,6 +2367,13 @@ CSX,M317-##,2189,New Martinsville Brooklyn Jct. Yard,set out,Moundsville
 CSX,M317-##,2189,New Martinsville Brooklyn Jct. Yard,set out,Brooklyn Jct
 CSX,M317-##,2189,New Martinsville Brooklyn Jct. Yard,pick up,Russell
 CSX,M317-##,2189,New Martinsville Brooklyn Jct. Yard,pick up,Cincinnati
+CSX,M358-##,2949,Garrett,pick up,Chicago CN
+CSX,M564-##,2949,Garrett,set out,Chicago CN
+CSX,M647-##,1534,Lafayette CSX Yard,pick up,Avon
+CSX,M647-##,1534,Lafayette CSX Yard,pick up,Nashville
+CSX,M647-##,1611,Avon,set out,Avon
+CSX,M647-##,1611,Avon,set out,Nashville
+CSX,M647-##,1611,Avon,pick up,Waycross
 CSX,B158-##,1028,Willard,set out,Willard
 CSX,L123-##,2164,Baltimore Bay View CSX Yard,set out,Dundalk Autos
 CSX,L123-##,2164,Baltimore Bay View CSX Yard,set out,Bay View
@@ -2530,6 +2556,11 @@ CSX,I019-##,1002,W. Springfield,pick up,Buffalo
 CSX,I019-##,1002,W. Springfield,pick up,Syracuse IM
 CSX,I018-##,1456,Connellsville,set out,Jessup Auto
 CSX,I018-##,1456,Connellsville,set out,Jessup Auto
+CSX,I018-##,2047,Northwest Ohio ICTF,pick up,Baltimore
+CSX,I018-##,2047,Northwest Ohio ICTF,pick up,Philadelphia IM
+CSX,I018-##,1456,Connellsville,set out,Jessup Auto
+CSX,I018-##,2164,Baltimore Bay View CSX Yard,set out,Baltimore IM
+CSX,I018-##,2164,Baltimore Bay View CSX Yard,pick up,Philadelphia IM
 CSX,Y322-##,1157,Richmond South Yard,set out,NS interchange
 CSX,Y322-##,1157,Richmond South Yard,set out,South Yard
 CSX,Y322-##,1157,Richmond South Yard,pick up,Acca
@@ -2695,6 +2726,16 @@ CSX,I009-##,1109,Jersey City N Bergen Intermodal Terminal,pick up,Bedford Park I
 CSX,I010-##,1625,Syracuse,set out,Worcester IM
 CSX,I010-##,1625,Syracuse,pick up,North Bergen IM
 CSX,I010-##,1109,Jersey City N Bergen Yard CSX,set out,N Bergen IM
+CSX,I032-##,2164,Baltimore Bay View CSX Yard,set out,Baltimore
+CSX,I032-##,2164,Baltimore Bay View CSX Yard,set out,Philadelphia IM
+CSX,I032-##,2164,Baltimore Bay View CSX Yard,pick up,CN Toronto
+CSX,I032-##,2164,Baltimore Bay View CSX Yard,pick up,CN Montreal IM
+CSX,I032-##,3294,Jersey City South Kearny Intermodal Terminal,set out,CN Toronto
+CSX,I032-##,3294,Jersey City South Kearny Intermodal Terminal,set out,CN Montreal IM
+CSX,I031-##,3294,Jersey City South Kearny Intermodal Terminal,pick up,Philadelphia IM
+CSX,I031-##,2164,Baltimore Bay View CSX Yard,set out,Philadelphia IM
+CSX,I031-##,2164,Baltimore Bay View CSX Yard,pick up,Jacksonville
+CSX,I031-##,2164,Baltimore Bay View CSX Yard,pick up,FEC Miami IM
 CSX,M364-##,2307,Crestline,pick up,Cleveland
 CSX,M364-##,1811,Cleveland Collinwood Yard,set out,Cleveland
 CSX,M364-##,1811,Cleveland Collinwood Yard,pick up,Selkirk
@@ -3963,6 +4004,13 @@ CSX,M429-##,1764,Walbridge,pick up,Clearing Manifest
 CSX,M429-##,1490,New Boston,set out,New Boston Auto
 CSX,M352-##,2949,Garrett,set out,Garrett
 CSX,M352-##,2949,Garrett,pick up,Chicago Clearing
+CSX,M502-##,1087,Terre Haute Baker Yard,set out,Terre Haute
+CSX,M502-##,1087,Terre Haute Baker Yard,pick up,Chicago Clearing
+CSX,M502-##,1611,Avon,pick up,Lafayette
+CSX,M502-##,1611,Avon,pick up,Lafayette NS
+CSX,M502-##,1534,Lafayette CSX Yard,set out,Lafayette
+CSX,M502-##,1534,Lafayette CSX Yard,set out,Lafayette NS
+CSX,M509-##,3809,Lima Robb Ave. Yard CSX,pick up,Cincinnati
 CSX,I161-##,1543,Buffalo Frontier Yard,set out,CN Toronto
 CSX,I115-##,2047,Northwest Ohio ICTF,set out,IM
 CSX,I136-##,2047,North Baltimore IM Terminal,set out,Intermodal except for Suffolk VA
@@ -4126,6 +4174,8 @@ CSX,I178-##,1679,Jacksonville Duval Yard,set out,Mexico
 CSX,I178-##,1679,Jacksonville Duval Yard,set out,CPKC Laredo
 CSX,I178-##,1679,Jacksonville Duval Yard,set out,BNSF Los Angeles
 CSX,I178-##,1679,Jacksonville Duval Yard,set out,UP LATC IM
+CSX,I158-##,1860,Buffalo Seneca Yard,pick up,Philadelphia IM
+CSX,I158-##,1625,Syracuse DeWitt Yard,set out,IM
 CSX,M216-##,1482,Lordstown CSX,set out,Lordstown
 CSX,M216-##,1922,Cumberland,set out,Curtis Bay
 CSX,M202-##,2108,Montgomery,set out,Montgomery
@@ -5031,6 +5081,41 @@ NS,279-##,1277,St. Louis Luther Yard,set out,Voltz Auto
 NS,279-##,1277,St. Louis Luther Yard,set out,KC Manifest
 NS,279-##,1205,Voltz,set out,Voltz IM
 NS,279-##,1205,Voltz,set out,Auto
+NS,259-##,1887,Decatur Brush/East Yard,set out,St Louis IM
+NS,259-##,3393,Moberly,set out,BN KC Empty IM
+NS,259-##,3393,Moberly,pick up,Kansas City
+NS,259-##,1205,Voltz,set out,Voltz
+NS,278-##,1462,Louisville Appliance Park,set out,Appliance Park IM
+NS,278-##,1462,Louisville Appliance Park,set out,Pick Up Suffolk APM
+NS,278-##,1462,Louisville Appliance Park,set out,Colehour
+NS,278-##,1462,Louisville Appliance Park,set out,Norfolk International IM
+NS,278-##,1268,Shelbyville,pick up,Poe Auto
+NS,278-##,1132,Georgetown Delaplain Yard,pick up,Colehour IM
+NS,278-##,3526,Sharonville,set out,Colehour IM
+NS,278-##,3526,Sharonville,pick up,Suffolk APM
+NS,278-##,3526,Sharonville,pick up,Norfolk International IM
+NS,278-##,1525,Crewe,set out,Suffolk APM IM
+NS,278-##,2255,Petersburg Poe Auto Terminal,set out,Poe Auto
+NS,279-##,1525,Crewe,pick up,Sharonville
+NS,279-##,1525,Crewe,pick up,Appliance Park
+NS,279-##,1525,Crewe,pick up,Voltz
+NS,279-##,1525,Crewe,pick up,St Louis
+NS,279-##,1525,Crewe,pick up,Decatur IM
+NS,279-##,3526,Sharonville,set out,Sharonville IM
+NS,279-##,3526,Sharonville,pick up,Appliance Park IM
+NS,279-##,1132,Georgetown Delaplain Yard,pick up,St Louis
+NS,279-##,1132,Georgetown Delaplain Yard,pick up,UP KC Auto
+NS,279-##,1462,Louisville Appliance Park,set out,Appliance Park IM
+NS,279-##,1462,Louisville Appliance Park,pick up,Voltz IM
+NS,287-##,1082,Atlanta Inman Yard,set out,LATC IM
+NS,287-##,1082,Atlanta Inman Yard,set out,Pick Up Huntsville
+NS,287-##,1082,Atlanta Inman Yard,set out,ITCF UP
+NS,287-##,1082,Atlanta Inman Yard,set out,Rossville IM
+NS,287-##,3785,Greenbrier,set out,Huntsville IM
+NS,287-##,3785,Greenbrier,set out,Pick Up ITCF UP
+NS,287-##,3785,Greenbrier,set out,Memphis UP
+NS,287-##,3785,Greenbrier,set out,Rossville IM
+NS,287-##,3075,Rossville,set out,Rossville IM
 NS,332-##,1882,Toledo Evans Yard,set out,Toledo Evans Yard
 NS,350-##,1137,East Durham NS,set out,Durham
 NS,350-##,1137,East Durham NS,pick up,Selma
@@ -5679,6 +5764,77 @@ NS,308-##,1277,St. Louis Luther Yard,pick up,GCT Bayonne IM
 NS,308-##,1277,St. Louis Luther Yard,pick up,Decatur Manifest
 NS,308-##,1342,Granite City Smith Yard,pick up,Decatur
 NS,308-##,1342,Granite City Smith Yard,pick up,Conway
+NS,122-##,2048,Cincinnati Gest St. Yard,set out,Cincinnati
+NS,122-##,2048,Cincinnati Gest St. Yard,pick up,Decatur
+NS,122-##,2048,Cincinnati Gest St. Yard,pick up,Frankfort
+NS,122-##,3676,Frankfort NS,set out,Frankfort
+NS,122-##,3676,Frankfort NS,pick up,Decatur
+NS,122-##,1532,Lafayette South Yard,pick up,Decatur Manifest
+NS,172-##,1056,Danville,pick up,Georgetown
+NS,172-##,1132,Georgetown Delaplain Yard,set out,Georgetown
+NS,172-##,1132,Georgetown Delaplain Yard,pick up,Detroit Autos
+NS,172-##,1132,Georgetown Delaplain Yard,pick up,Frames
+NS,172-##,1132,Georgetown Delaplain Yard,pick up,Detroit CP Auto
+NS,172-##,1380,Fort Wayne Piqua Yard,set out,Fort Wayne
+NS,172-##,1380,Fort Wayne Piqua Yard,pick up,Detroit
+NS,170-##,1056,Danville,set out,Danville
+NS,170-##,1056,Danville,set out,Cincinnati
+NS,170-##,1056,Danville,set out,Decatur
+NS,170-##,1453,Columbus Watkins Yard,set out,Columbus
+NS,170-##,1453,Columbus Watkins Yard,pick up,Canton
+NS,170-##,1453,Columbus Watkins Yard,pick up,Conway
+NS,170-##,3869,Canton Yard,set out,Canton
+NS,170-##,3869,Canton Yard,pick up,Conway
+NS,177-##,2048,Cincinnati Gest St. Yard,pick up,Chattanooga
+NS,197-##,1455,Cincinnati Queensgate Yard,set out,Cincinnati
+NS,197-##,1455,Cincinnati Queensgate Yard,pick up,Georgetown IM
+NS,197-##,1132,Georgetown Delaplain Yard,set out,Georgetown IM
+NS,197-##,1056,Danville,set out,Danville
+NS,197-##,1056,Danville,pick up,Chattanooga
+NS,10R-##,1963,Burns Harbor,pick up,Elkhart
+NS,10R-##,1963,Burns Harbor,pick up,Bellevue
+NS,18M-##,1386,Portsmouth,pick up,Bluefield
+NS,18M-##,1386,Portsmouth,pick up,Williamson
+NS,18M-##,1386,Portsmouth,pick up,Portlock
+NS,18M-##,2088,Williamson,set out,Williamson
+NS,18M-##,2088,Williamson,pick up,Roanoke
+NS,18M-##,2500,Bluefield,set out,Bluefield
+NS,18M-##,1173,Roanoke North Yard,set out,Roanoke
+NS,18M-##,1298,Lynchburg,set out,Lynchburg
+NS,18M-##,1298,Lynchburg,pick up,Crewe
+NS,309-##,1342,Granite City Smith Yard,set out,Granite City
+NS,309-##,1277,St. Louis Luther Yard,set out,St Louis
+NS,309-##,1277,St. Louis Luther Yard,pick up,Wentzville
+NS,309-##,1277,St. Louis Luther Yard,pick up,Mexico
+NS,309-##,1277,St. Louis Luther Yard,pick up,Moberly
+NS,309-##,1277,St. Louis Luther Yard,pick up,Kansas City
+NS,309-##,1277,St. Louis Luther Yard,pick up,BNSF Autos
+NS,309-##,1277,St. Louis Luther Yard,pick up,BNSF KC
+NS,309-##,1277,St. Louis Luther Yard,pick up,BNSF IM
+NS,309-##,1276,Wentzville,set out,Wentzville
+NS,309-##,1552,Mexico NS,set out,Mexico
+NS,303-##,1091,Fostoria Blair Yard,pick up,Fort Wayne
+NS,303-##,1091,Fostoria Blair Yard,pick up,Elkhart
+NS,303-##,1379,Fort Wayne East Yard,set out,Fort Wayne
+NS,303-##,1379,Fort Wayne East Yard,pick up,Elkhart
+NS,303-##,1379,Fort Wayne East Yard,pick up,Elkhart Auto
+NS,380-##,1279,Chicago Hegewisch,pick up,Bellevue Auto
+NS,12R-##,2946,Rock Hill,set out,Rock Hill
+NS,12R-##,2946,Rock Hill,pick up,Charlotte
+NS,12R-##,1274,Charlotte NS,set out,Charlotte
+NS,12R-##,1147,Linwood Spencer Yard,set out,Bellevue
+NS,12R-##,1147,Linwood Spencer Yard,set out,Linwood
+NS,12R-##,1147,Linwood Spencer Yard,pick up,Enola
+NS,33G-##,1963,Burns Harbor,set out,Burns Harbor
+NS,33G-##,1963,Burns Harbor,set out,Kankakee
+NS,376-##,1462,Louisville Appliance Park,set out,Appliance Park
+NS,376-##,1132,Georgetown Delaplain Yard,set out,Bellevue
+NS,376-##,1132,Georgetown Delaplain Yard,set out,Detroit
+NS,376-##,1132,Georgetown Delaplain Yard,set out,Georgetown
+NS,376-##,1132,Georgetown Delaplain Yard,pick up,Cincinnati
+NS,376-##,2048,Cincinnati Gest St. Yard,set out,Elkhart
+NS,376-##,2048,Cincinnati Gest St. Yard,set out,Cincinnati
+NS,376-##,3526,Sharonville,pick up,Louisville
 NS,394-##,1912,Macon Brosnan Yard,pick up,Brunswick
 NS,394-##,1912,Macon Brosnan Yard,pick up,Rosser
 NS,11N-##,1064,Allentown,pick up,Conway Auto
@@ -5732,6 +5888,21 @@ NS,18E-##,1276,Wentzville,pick up,UP KC
 NS,18E-##,1276,Wentzville,pick up,UP KC Auto
 NS,18E-##,3393,Moberly,pick up,UP KC
 NS,18E-##,1205,Voltz,pick up,UP KC Auto
+NS,18E-##,1268,Shelbyville,set out,Shelbyville Autos
+NS,18E-##,1268,Shelbyville,set out,Pick Up St Louis
+NS,18E-##,1268,Shelbyville,set out,UP KC Auto
+NS,18E-##,1277,St. Louis Luther Yard,set out,St Louis Auto
+NS,18E-##,1277,St. Louis Luther Yard,pick up,UP KC
+NS,18E-##,1277,St. Louis Luther Yard,pick up,UP KC Auto
+NS,18E-##,1276,Wentzville,pick up,UP KC
+NS,18E-##,1276,Wentzville,pick up,UP KC Auto
+NS,18E-##,3393,Moberly,pick up,UP KC
+NS,18E-##,1205,Voltz,pick up,UP KC Auto
+NS,19E-##,1268,Shelbyville,set out,Shelbyville
+NS,394-##,1259,East Point Industry Yard,set out,East Point Auto
+NS,394-##,1912,Macon Brosnan Yard,set out,Macon
+NS,394-##,1912,Macon Brosnan Yard,pick up,Brunswick
+NS,394-##,1912,Macon Brosnan Yard,pick up,Rosser
 NS,K99-##,1177,Manassas,set out,Manassas
 NS,K38-##,2331,Conshohocken,set out,Conshohocken
 NS,K95-##,1177,Manassas,pick up,Lynchburg
@@ -6134,6 +6305,50 @@ NS,139-##,1453,Columbus Watkins Yard,pick up,Sharonville
 NS,340-##,2348,McCalla,pick up,Birmingham Manifest
 NS,340-##,2348,McCalla,pick up,Birmingham Autos
 NS,340-##,2348,McCalla,pick up,Croxton Auto
+NS,15N-##,1525,Crewe,set out,Crewe
+NS,15N-##,1525,Crewe,set out,CWRY
+NS,15N-##,1525,Crewe,pick up,Corwith BNSF IM
+NS,15N-##,1525,Crewe,pick up,Harrisburg IM
+NS,15N-##,1525,Crewe,pick up,Virginia Inland Port IM
+NS,15N-##,1525,Crewe,pick up,Enola Manifest
+NS,15N-##,1525,Crewe,pick up,Elizabeth Marine IM
+NS,15N-##,1298,Lynchburg,pick up,Enola
+NS,15N-##,1298,Lynchburg,pick up,Hagerstown
+NS,15N-##,1297,Hagerstown Vardo Yard,set out,Hagerstown
+NS,15N-##,1801,Virginia Inland Port,set out,VIP IM
+NS,15N-##,1476,Harrisburg,set out,Intermodal
+NS,14N-##,1476,Harrisburg,pick up,Suffolk APM
+NS,14N-##,1476,Harrisburg,pick up,Portlock
+NS,14N-##,1476,Harrisburg,pick up,Norfolk Inland IM
+NS,14N-##,1297,Hagerstown Vardo Yard,set out,Hagerstown
+NS,14N-##,1297,Hagerstown Vardo Yard,pick up,Linwood
+NS,14N-##,1297,Hagerstown Vardo Yard,pick up,Crewe
+NS,14N-##,1801,Virginia Inland Port,pick up,Suffolk APM
+NS,14N-##,1801,Virginia Inland Port,pick up,Norfolk International Terminals IM
+NS,14N-##,1298,Lynchburg,set out,Linwood
+NS,14N-##,1298,Lynchburg,pick up,Crewe Manifest
+NS,14N-##,1525,Crewe,set out,Crewe Manifest
+NS,14N-##,1525,Crewe,set out,Suffolk APM IM
+NS,14N-##,1525,Crewe,pick up,Portlock
+NS,223-##,1205,Voltz,pick up,Jacksonville
+NS,223-##,1205,Voltz,pick up,Austell IM
+NS,223-##,3393,Moberly,set out,Moberly
+NS,223-##,1276,Wentzville,set out,Wentzville Auto
+NS,223-##,1276,Wentzville,pick up,East Point Auto
+NS,223-##,1277,St. Louis Luther Yard,set out,St Louis
+NS,223-##,1277,St. Louis Luther Yard,pick up,FEC IM
+NS,223-##,1277,St. Louis Luther Yard,pick up,Jacksonville IM
+NS,223-##,1277,St. Louis Luther Yard,pick up,Austell IM
+NS,223-##,1277,St. Louis Luther Yard,pick up,Atlanta IM
+NS,223-##,1277,St. Louis Luther Yard,pick up,Jacksonville Westlake Auto
+NS,223-##,1026,Louisville Youngtown Yard,pick up,Shelbyville
+NS,223-##,1268,Shelbyville,pick up,East Point
+NS,223-##,1268,Shelbyville,pick up,FEC
+NS,223-##,1268,Shelbyville,pick up,Commerce Jacksonville Westlake
+NS,223-##,1268,Shelbyville,pick up,Jacksonville Auto
+NS,223-##,1244,Austell,set out,Austell
+NS,223-##,1244,Austell,set out,Atlanta IM
+NS,223-##,1244,Austell,pick up,East Point Auto
 NS,219-##,1276,Wentzville,pick up,St Louis
 NS,219-##,1277,St. Louis Luther Yard,pick up,Jacksonville IM
 NS,219-##,1277,St. Louis Luther Yard,pick up,Atlanta IM
@@ -6252,6 +6467,15 @@ NS,224-##,1462,Louisville Appliance Park,pick up,Voltz IM
 NS,224-##,1026,Louisville Youngtown Yard,pick up,Voltz Auto Parts
 NS,29A-##,1244,Austell,set out,Austell IM
 NS,29A-##,1244,Austell,set out,East Point Auto
+NS,224-##,1244,Austell,pick up,Appliance Park
+NS,224-##,1244,Austell,pick up,Voltz
+NS,224-##,1244,Austell,pick up,St Louis IM
+NS,224-##,1462,Louisville Appliance Park,set out,Appliance Park IM
+NS,224-##,1462,Louisville Appliance Park,pick up,BNSF KC
+NS,224-##,1462,Louisville Appliance Park,pick up,Voltz IM
+NS,224-##,1026,Louisville Youngtown Yard,pick up,Voltz Auto Parts
+NS,224-##,1205,Voltz,set out,Voltz IM
+NS,224-##,1205,Voltz,set out,Auto
 NS,24X-##,1140,Greensboro Pomona Yard,set out,Greensboro
 NS,24X-##,1140,Greensboro Pomona Yard,pick up,Croxton IM
 NS,20X-##,1476,Harrisburg,set out,Harrisburg
@@ -6513,6 +6737,17 @@ NS,22M-##,1436,Pittsburgh Pitcairn Yard,pick up,GCT Bayonne
 NS,22M-##,1385,Rutherford Yard,set out,Elizabeth Marine
 NS,22M-##,1385,Rutherford Yard,set out,GCT Bayonne
 NS,22M-##,3498,King of Prussia Abrams Yard,set out,Philadelphia Auto
+NS,29F-##,2048,Cincinnati Gest St. Yard,set out,Cincinnati IM
+NS,29F-##,2048,Cincinnati Gest St. Yard,pick up,FEC
+NS,29F-##,2048,Cincinnati Gest St. Yard,pick up,Atlanta Classification IM
+NS,29F-##,2048,Cincinnati Gest St. Yard,pick up,Jacksonville IM
+NS,29F-##,1082,Atlanta Inman Yard,set out,FEC
+NS,29F-##,1082,Atlanta Inman Yard,set out,Atlanta UPS
+NS,29F-##,1082,Atlanta Inman Yard,set out,Atlanta Classification IM
+NS,29F-##,1082,Atlanta Inman Yard,set out,Pick Up FEC UPS
+NS,29F-##,1082,Atlanta Inman Yard,set out,Jacksonville UPS
+NS,29F-##,1082,Atlanta Inman Yard,set out,Jacksonville
+NS,29F-##,1082,Atlanta Inman Yard,set out,and Jacksonville Fort Pierce IM
 NS,32N-##,1887,Decatur NS Yard,set out,Bellevue
 NS,32N-##,1887,Decatur NS Yard,pick up,Conway
 NS,32N-##,1535,Lafayette East Yard,pick up,Conway
@@ -7083,6 +7318,28 @@ NS,143-##,1056,Danville,set out,Birmingham (179)
 NS,143-##,1056,Danville,set out,Chattanooga (197)
 NS,38N-##,1535,Lafayette East Yard,pick up,Bellevue
 NS,38N-##,1647,Bellevue Moorman Yard,set out,Bellevue
+NS,130-##,3839,Picayune,set out,Picayune
+NS,130-##,1680,Meridian NS Yard,set out,Meridian
+NS,130-##,1680,Meridian NS Yard,pick up,Chattanooga
+NS,178-##,1132,Georgetown Delaplain Yard,pick up,Bellevue
+NS,178-##,1043,Chattanooga Debutts Yard,set out,Chattanooga
+NS,178-##,1043,Chattanooga Debutts Yard,pick up,Bellevue Manifest
+NS,178-##,1043,Chattanooga Debutts Yard,pick up,Auto
+NS,10K-##,1064,Allentown,set out,Allentown
+NS,10K-##,1064,Allentown,set out,Croxton
+NS,10K-##,1064,Allentown,pick up,Oak Island
+NS,38N-##,1887,Decatur Brush/East Yard,set out,Detroit
+NS,38N-##,1887,Decatur Brush/East Yard,set out,Decatur
+NS,38N-##,1887,Decatur Brush/East Yard,set out,Elkhart
+NS,38N-##,1887,Decatur Brush/East Yard,pick up,Conway
+NS,38N-##,1887,Decatur Brush/East Yard,pick up,Bellevue
+NS,38N-##,1647,Bellevue Moorman Yard,set out,Bellevue
+NS,36N-##,1887,Decatur Brush/East Yard,pick up,Fort Wayne
+NS,36N-##,1535,Lafayette East Yard,pick up,Fort Wayne
+NS,36N-##,1379,Fort Wayne East Yard,set out,Fort Wayne
+NS,36N-##,1379,Fort Wayne East Yard,pick up,Conway
+NS,174-##,2048,Cincinnati Gest St. Yard,set out,Cincinnati
+NS,174-##,2048,Cincinnati Gest St. Yard,pick up,Elkhart
 NS,121-##,1697,Detroit Livernois Yard,set out,CSX
 NS,121-##,1384,Detroit Oakwood Yard,set out,Oakwood
 NS,121-##,1384,Detroit Oakwood Yard,set out,Pick Up Decatur
@@ -7423,6 +7680,9 @@ NS,189-##,1379,Fort Wayne East Yard,set out,Fort Wayne
 NS,189-##,1132,Georgetown Delaplain Yard,set out,Georgetown
 NS,189-##,1132,Georgetown Delaplain Yard,set out,Louisville
 NS,189-##,1808,Emory Gap,set out,Chattanooga
+NS,148-##,1887,Decatur NS Yard,set out,Lafayette Empties
+NS,148-##,1887,Decatur NS Yard,set out,Pick Up Bellevue
+NS,148-##,1535,Lafayette East Yard,pick up,Bellevue
 SHORTLINE,772-##,1996,Spencer,set out,Medina
 SHORTLINE,237-##,1996,Spencer,pick up,CSX
 SHORTLINE,261-##,3373,Canton Gambrinus Yard,set out,Canton
@@ -8118,6 +8378,7 @@ UP,SSNP%-##,2261,Grand Island,add,LA Basin IM
 UP,EGBZB-##,2241,South San Antonio Yard,set out,San Antonio Boxcars
 UP,EGBZB-##,2241,South San Antonio Yard,set out,Livonia Boxcars
 UP,EGBZB-##,2241,South San Antonio Yard,add,ALS
+UP,PTDN-##,4040,McAlester,set out,McAlester
 UP,EWFW-##,2531,Spring,set out,Spring
 UP,EWFW-##,2531,Spring,pick up,Ft Worth
 UP,EWFW-##,3545,Brazos Yard,pick up,Ft Worth
