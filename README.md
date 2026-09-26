@@ -58,10 +58,11 @@ GitHub Pages republishes from `docs/` on `main` within about a minute.
    `FYM_GAME_DIR` on a machine where it lives elsewhere.
 2. `make tables` (`map_tables.py`): if any map file (`yards/*.yrd`, `*.his`)
    changed since the last import, regenerate `mims.csv` (`mim_import.py`) and
-   the derived rows of `geo.csv` (`his_import.py`). Then name any location id
-   that `FYMMyMaps.ini` or `mims.csv` knows but `locations.csv` does not, from
-   the game's own revision notes (`MapRNotes.rtf`). An id the notes do not name
-   is printed and left for a hand row, so the strict build stops on it. Then
+   the derived rows of `geo.csv` (`his_import.py`). Then apply the game's own
+   revision notes to `locations.csv`: the dated lines in `FYMHeader.ini` (new,
+   remade and replacement ids, which may reuse a closed id) and, for older
+   releases, `MapRNotes.rtf`. An id neither names is printed and left for a
+   hand row, so the strict build stops on it. Then
    `blocks_import.py` re-reads the block tables in the rosters.
 3. `make check`: the build with `--strict`, which exits non-zero if anything
    about the input was unrecognised.
@@ -101,7 +102,8 @@ Each row carries a `source`, and higher sources win:
 
 - `manual`: hand-entered, never overwritten by anything.
 - `map`: the game's own names, from the in-game map-ID screen (ids 1001–4009)
-  and from `MapRNotes.rtf` for everything newer, added by `make update`.
+  and from the game's revision notes (`FYMHeader.ini`, `MapRNotes.rtf`) for
+  everything newer, applied by `make update`.
 - `scraped`: taken from instruction text; replaced by either of the above.
 
 To rename a stop yourself, edit its row and set the source to `manual`:

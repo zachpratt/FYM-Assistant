@@ -170,7 +170,7 @@ id,name,source
 1169,"Kansas City Mill Street Yard, KS",map
 1170,"West Decker Mine, MT",map
 1171,"McLeansboro, IL",map
-1172,"Memphis Leewood UP Yard, TN",map
+1172,"Waldron, AR",map
 1173,"Roanoke North Yard, VA",map
 1174,"Windsor CPKC, ON",map
 1175,"Winston-Salem North Winston Yard, NC",map
@@ -247,7 +247,7 @@ id,name,source
 1246,"Doctortown CSX, GA",map
 1247,"Pleasant Prairie UP, WI",map
 1248,"Gentry Flint Creek Power Plant, AR",map
-1249,"Shady Pt., OK",map
+1249,"River Valley Power Station, OK",map
 1250,"Heavener, OK",map
 1251,"Texarkana, TX",map
 1252,"Gallup, NM",map
@@ -556,7 +556,7 @@ id,name,source
 1555,"Tacoma Hylebos, WA",map
 1556,"Alliance, TX",map
 1557,"Palatka Pecan Yard, FL",map
-1558,"Newark Airport, NJ",map
+1558,"Metuchen, NJ",map
 1559,"Mattawamkeag, ME",map
 1560,"New Haven, CT",map
 1561,"New York City Oak Point Yard, NY",map
@@ -2555,7 +2555,7 @@ id,name,source
 3555,"Quincy NS, IL",map
 3556,"Hannibal, MO",map
 3557,"Chesapeake Gilmerton, VA",map
-3558,"Norfolk Little Creek Yard, VA",map
+3558,"Wilburton, OK",map
 3559,"Norfolk Industrial Park, VA",map
 3560,"Elizabeth City, NC",map
 3561,"Norfolk International Terminals, VA",map
@@ -3035,3 +3035,9 @@ id,name,source
 4035,"Benwood, WV",map
 4036,"Laurens, SC",map
 4037,"Abbeville, SC",map
+4038,"Commerce City UP, CO",map
+4039,"Denver Market St UP, CO",map
+4040,"McAlester, OK",map
+4041,"Marble City, OK",map
+4042,"New Brunswick, NJ",map
+4043,"Surrency, GA",map

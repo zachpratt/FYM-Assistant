@@ -48,7 +48,7 @@ mother_id,member_id,kind,zone_px2,source
 1449,1165,yard,2121524,derived
 1651,1168,vid,5876,derived
 1070,1170,yard,162500,derived
-1449,1172,yard,1412950,derived
+1250,1172,vid,7430,derived
 1540,1176,yard,265669,derived
 1822,1179,yard,7872900,derived
 1220,1180,yard,6561365,derived
@@ -83,6 +83,7 @@ mother_id,member_id,kind,zone_px2,source
 1154,1243,vid,30000,derived
 1225,1246,yard,4140099,derived
 3262,1248,yard,132086,derived
+1250,1249,ref,80909,derived
 1729,1251,yard,3618839,derived
 1470,1253,vid,5500,derived
 1016,1254,vid,50,derived
@@ -265,6 +266,7 @@ mother_id,member_id,kind,zone_px2,source
 1829,1849,yard,2227488,derived
 1271,1852,yard,437086,derived
 1616,1854,ref,1489253,derived
+1408,1864,ref,8362,derived
 1393,1875,yard,5772000,derived
 1881,1882,yard,10560507,derived
 3702,1883,vid,12017,derived
@@ -298,7 +300,7 @@ mother_id,member_id,kind,zone_px2,source
 1966,1968,yard,769547,derived
 1970,1971,vid,5964,derived
 1342,1974,yard,4071669,derived
-1915,1976,yard,1495267,derived
+1915,1976,yard,1638133,derived
 1915,1977,yard,2453066,derived
 1915,1978,yard,3187273,derived
 1915,1979,yard,2259372,derived
@@ -1400,7 +1402,8 @@ mother_id,member_id,kind,zone_px2,source
 1542,3230,yard,4100358,derived
 1678,3231,yard,906664,derived
 1678,3232,yard,906664,derived
-1864,3233,yard,1034554,derived
+1408,3233,yard,8300509,derived
+1864,3233,ref,1034554,derived
 1864,3234,vid,5488,derived
 1864,3235,vid,3052,derived
 1368,3236,yard,212514,derived
@@ -1692,7 +1695,7 @@ mother_id,member_id,kind,zone_px2,source
 1901,3555,yard,7665737,derived
 1901,3556,vid,5000,derived
 1861,3557,vid,6058,derived
-1861,3558,vid,5299,derived
+1250,3558,yard,68059,derived
 1861,3559,vid,5479,derived
 1861,3560,vid,5808,derived
 1861,3561,yard,2786356,derived
@@ -2129,3 +2132,8 @@ mother_id,member_id,kind,zone_px2,source
 4028,4032,vid,14210,derived
 1819,4036,vid,11328,derived
 1819,4037,vid,13919,derived
+1915,4038,yard,141119,derived
+1915,4039,yard,279428,derived
+1250,4040,yard,2971216,derived
+1250,4041,yard,123687,derived
+1558,4042,vid,12223,derived

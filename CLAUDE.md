@@ -28,10 +28,13 @@ The update loop: `make update` (game_sync.py rsyncs the game folder into
 `game_data/` and commits a snapshot in game_data's own private git repo;
 map_tables.py reruns mim_import.py + his_import.py only if a `.yrd`/`.his`
 changed since the mirror commit stamped in `game_data/.git/map_tables_head`,
-then names any id in FYMMyMaps.ini or mims.csv that locations.csv lacks from
-the game's own revision notes `MapRNotes.rtf` (source=map; an id the notes
-do not name is printed and left for a hand row, so strict still stops on
-it); then a strict build) → read the printed blocks (what the sync changed,
+then names ids from the game's own revision notes — the dated lines in
+`FYMHeader.ini` ("23 September, Remade: … New vIDs: 4042 New Brunswick NJ.",
+applied first: new/remade/replacement ids become source=map rows and replace
+non-manual rows, since the game REUSES closed ids — 1172 was Memphis Leewood
+UP one week and Waldron AR the next; closed ids keep their row) and
+`MapRNotes.rtf` (older releases, up to 4037); an id neither names is printed
+and left for a hand row, so strict still stops on it; then a strict build) → read the printed blocks (what the sync changed,
 map tables, new names, roster diff vs previous build, format-check
 anomalies) → `git add -A` → commit → push. `git -C game_data
 log --stat` / `diff` is the history of the game folder itself. The roster diff

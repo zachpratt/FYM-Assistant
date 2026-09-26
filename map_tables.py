@@ -28,6 +28,7 @@ import sys
 MIMS = 'mims.csv'
 LOCS = 'locations.csv'
 NOTES = 'MapRNotes.rtf'
+HEADER = 'FYMHeader.ini'      # the game's Message= line carries the newest revision notes
 STAMP = os.path.join('.git', 'map_tables_head')
 
 
@@ -120,7 +121,62 @@ def names_from_notes(dest):
     return names
 
 
+HEAD_ITEM = re.compile(r'(\d{4}) ([A-Za-z][A-Za-z0-9 .&\'/-]*?) ([A-Z]{2})(?= \(|,|\.|$)')
+HEAD_GROUP = re.compile(r'(New vIDs|New childIDs|New yards|New maps|New|Remade|Replacement|Renamed|Closed)\s*:\s*([^.]*)\.', re.I)
+
+
+def names_from_header(dest):
+    """{id: (name, closed)} from FYMHeader.ini's Message line, e.g.
+    "18 September, New vIDs: 4038 Commerce City UP CO, ... Closed: 1172 Memphis
+    Leewood Yard UP TN." Later mentions win (an id closed one week may be
+    reused the next); "(was Newark Airport NJ)" is skipped."""
+    p = os.path.join(dest, HEADER)
+    if not os.path.isfile(p):
+        return {}
+    out = {}
+    for line in open(p, encoding='utf-8', errors='replace'):
+        # revision lines are dated: "23 September, Remade: 1235 Rosser GA, ..."
+        if not re.match(r'^\d{1,2} [A-Z][a-z]+,', line):
+            continue
+        text = re.sub(r'\([^)]*\)', '', line)
+        for group, body in HEAD_GROUP.findall(text):
+            closed = group.lower() == 'closed'
+            for i, name, st in HEAD_ITEM.findall(body.strip()):
+                out[i] = (f'{name.strip()}, {st}', closed)
+    return out
+
+
+def apply_header(dest):
+    """New / remade / replacement ids from the header become source=map rows,
+    replacing any non-manual row (ids get reused: 1172 was Memphis Leewood
+    one week and Waldron AR the next). Closed ids keep their row."""
+    hdr = names_from_header(dest)
+    if not hdr:
+        return
+    rows = list(csv.reader(open(LOCS, newline='')))
+    by = {r[0]: n for n, r in enumerate(rows) if r and r[0].isdigit()}
+    changed = []
+    for i, (name, closed) in hdr.items():
+        if closed:
+            continue
+        if i in by:
+            r = rows[by[i]]
+            src = r[2].strip().lower() if len(r) > 2 else 'manual'
+            if src == 'manual' or r[1] == name:
+                continue
+            changed.append(f'{i} {r[1]} -> {name}')
+            rows[by[i]] = [i, name, 'map']
+        else:
+            changed.append(f'{i} {name}')
+            rows.append([i, name, 'map'])
+    if changed:
+        with open(LOCS, 'w', newline='') as fh:
+            csv.writer(fh).writerows(rows)
+        print(f'  locations: {len(changed)} id(s) named from {HEADER}: ' + '; '.join(changed))
+
+
 def name_new(dest):
+    apply_header(dest)
     missing = sorted(wanted_ids(dest) - known_locations(), key=int)
     if not missing:
         print('  locations: every id in FYMMyMaps.ini and mims.csv is named')
@@ -136,7 +192,7 @@ def name_new(dest):
         print(f'  locations: named {len(named)} new id(s) from {NOTES}: '
               + ', '.join(f'{i} {n}' for i, n in named))
     if unnamed:
-        print(f'  locations: {len(unnamed)} id(s) with no name in {NOTES} — '
+        print(f'  locations: {len(unnamed)} id(s) with no name in {HEADER} or {NOTES} — '
               f'add them to {LOCS} by hand (strict build will fail): ' + ', '.join(unnamed))
 
 
