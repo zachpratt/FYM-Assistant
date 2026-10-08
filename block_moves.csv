@@ -346,8 +346,6 @@ CN,40341-##,1596,Melville,set out,Melville
 CN,40441-##,1646,Saskatoon Chappell Yard,set out,Saskatoon
 CN,40441-##,1596,Melville,set out,Melville
 CN,40251-##,1646,Saskatoon Chappell Yard,set out,Saskatoon
-CN,50161-##,1731,Battle Creek CN Yard,pick up,Flint
-CN,50161-##,1731,Battle Creek CN Yard,pick up,Flat Rock
 CN,53361-##,1734,Detroit Moterm,set out,Detroit IM
 CN,53361-##,1734,Detroit Moterm,set out,Lift Outbounds in
 CN,57681-##,3048,Wisconsin Rapids CN,set out,outbound traffic from Taylor
@@ -358,7 +356,9 @@ CN,55531-##,1864,Hamilton CN Yard,set out,Hamilton
 CN,57191-##,2894,Fort Dodge CN,set out,Fort Dodge
 CN,57191-##,2894,Fort Dodge CN,pick up,Tara
 CN,57191-##,2894,Fort Dodge CN,pick up,Sioux City
-CN,58361-##,1763,Toledo Lang Yard,set out,Flat Rock
+CN,58361-##,1763,Toledo Lang Yard,set out,Lang
+CN,58361-##,1763,Toledo Lang Yard,pick up,Sarnia
+CN,58361-##,1763,Toledo Lang Yard,pick up,Toronto
 CN,57791-##,2895,Tara CN,set out,Tara
 CN,57791-##,2895,Tara CN,pick up,Fort Dodge
 CN,57391-##,2897,Knierim,set out,Knierim
@@ -370,9 +370,7 @@ CN,56891-##,2894,Fort Dodge CN,pick up,Waterloo
 CN,58781-##,1761,Neenah,set out,Neenah
 CN,58881-##,1761,Neenah,set out,Neenah
 CN,51631-##,3874,Oshawa CN,set out,Oshawa
-CN,50061-##,2215,Lansing Snow Yard,pick up,Flint
-CN,50061-##,2215,Lansing Snow Yard,pick up,Flat Rock
-CN,50061-##,1725,Durand,pick up,Flint
+CN,50061-##,2215,Lansing Snow Yard,set out,Lansing
 CN,50861-##,1734,Detroit Moterm,set out,Moterm IM
 CN,35651-##,1646,Saskatoon Chappell Yard,set out,Saskatoon
 CN,35651-##,1646,Saskatoon Chappell Yard,pick up,Winnipeg
@@ -2469,11 +2467,9 @@ CSX,L457-##,3482,Marion CSX,set out,Marion Auto
 CSX,L457-##,3482,Marion CSX,pick up,Columbus
 CSX,L321-##,1975,Clinton Warwick Yard,set out,Warwick
 CSX,L322-##,1975,Clinton Warwick Yard,pick up,Willard
-CSX,L619-##,1136,Apex,pick up,Florence
 CSX,L619-##,1187,Aberdeen CSX,set out,Aberdeen
 CSX,L619-##,1187,Aberdeen CSX,pick up,Hamlet
 CSX,L620-##,1187,Aberdeen,set out,ACWR
-CSX,L620-##,1136,Apex,set out,Apex
 CSX,L802-##,1840,Cartersville,pick up,Nashville
 CSX,L819-##,1834,Chattanooga Wauhatchie CSX,set out,Chattanooga Wauhatchie
 CSX,L819-##,1834,Chattanooga Wauhatchie CSX,pick up,Atlanta
@@ -6349,6 +6345,10 @@ NS,223-##,1268,Shelbyville,pick up,Jacksonville Auto
 NS,223-##,1244,Austell,set out,Austell
 NS,223-##,1244,Austell,set out,Atlanta IM
 NS,223-##,1244,Austell,pick up,East Point Auto
+NS,242-##,2774,Columbia Andrews Yard,set out,Columbia
+NS,242-##,2774,Columbia Andrews Yard,pick up,Charleston
+NS,243-##,1136,Spartanburg Hayne Yard,pick up,Atlanta
+NS,243-##,1136,Spartanburg Hayne Yard,pick up,Chattanooga
 NS,219-##,1276,Wentzville,pick up,St Louis
 NS,219-##,1277,St. Louis Luther Yard,pick up,Jacksonville IM
 NS,219-##,1277,St. Louis Luther Yard,pick up,Atlanta IM
@@ -7340,6 +7340,14 @@ NS,36N-##,1379,Fort Wayne East Yard,set out,Fort Wayne
 NS,36N-##,1379,Fort Wayne East Yard,pick up,Conway
 NS,174-##,2048,Cincinnati Gest St. Yard,set out,Cincinnati
 NS,174-##,2048,Cincinnati Gest St. Yard,pick up,Elkhart
+NS,153-##,1274,Charlotte NS,pick up,Birmingham
+NS,153-##,1929,Doraville Yard,set out,Doraville
+NS,153-##,1929,Doraville Yard,pick up,Birmingham
+NS,154-##,1929,Doraville Yard,set out,Doraville
+NS,154-##,1929,Doraville Yard,set out,Pick up Linwood
+NS,154-##,1929,Doraville Yard,set out,Spartanburg
+NS,154-##,1136,Spartanburg Hayne Yard,set out,Spartanburg
+NS,154-##,1274,Charlotte NS,set out,Charlotte
 NS,121-##,1697,Detroit Livernois Yard,set out,CSX
 NS,121-##,1384,Detroit Oakwood Yard,set out,Oakwood
 NS,121-##,1384,Detroit Oakwood Yard,set out,Pick Up Decatur

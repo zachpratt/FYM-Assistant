@@ -2842,7 +2842,7 @@ UP,LBMN-##,"ICTF, grouped by destination in each block",leaving,CSX Southeast IM
 UP,LBMN-##,"ICTF, grouped by destination in each block",leaving,Dupo IM,ZMNNP,Dupo,id:1578,,
 UP,SJ58-##,Neff,leaving,Jefferson City,,"Jefferson City, Lees Summit, Algoa",id:1323 id:3354 id:3355,,
 UP,UM49-##,Arden,leaving,Valley,,Las Vegas Valley,id:1492,3955,
-UP,UM49-##,Arden,leaving,Apex,,Apex,id:1136 id:2705 id:3062,3955,
+UP,UM49-##,Arden,leaving,Apex,,Apex,id:2705 id:3062,3955,
 UP,IS44R-##,Fife,leaving,Tacoma,,"Tacoma Yard 5, Tacoma BNSF",id:2626 id:1503 id:2710 id:2711 id:2712 id:3288,,
 UP,KK10-##,Phoenix UP Yard,leaving,Phoenix Union Station UP,,,id:1536,1537,
 UP,KK10-##,Phoenix UP Yard,leaving,BNSF,,"BNSF AZ, Glendale UP",rr:BNSF:AZ id:3437,1537,
@@ -2863,7 +2863,7 @@ UP,RF84-##,Goshen,leaving,Fresno,,all outbound traffic,,1651,
 UP,RJ49-##,Ozol yard,leaving,Pittsburg,,Pittsburg UP traffic,,,Pittsburg UP traffic
 UP,RJ49-##,Ozol yard,leaving,BNSF,,"Pittsburg BNSF, North Bay",id:1420 id:1419,,
 UP,RF80-##,Goshen,leaving,Fresno,,all outbound UP traffic,,1651,
-UP,UM49-##,Apex,leaving,Arden,,all outbound traffic,,1136|2705|3062,
+UP,UM49-##,Apex,leaving,Arden,,all outbound traffic,,2705|3062,
 UP,KK10-##,Phoenix Union Station UP,leaving,Phoenix,,All outbound traffic form Union Station UP,,1536,
 UP,KK10-##,Phoenix Union Station UP,leaving,"UP (UP AZ, All outbound traffic from Glendale UP) - ALL OTHERS STAY ON BNSF",,,,1536,"UP (UP AZ, All outbound traffic from Glendale UP) - ALL OTHERS STAY ON BNSF"
 UP,OF66-##,Guadalupe,leaving,Gemco,,All outbound traffic,,1035,
@@ -3228,6 +3228,7 @@ UP,DMDM-##,Des Moines,leaving,BRC,MNPCH,"All CSX, BRC, CSS, CRL, BNSF Chicago ar
 UP,NYGJ%-##,North Yard,leaving,Grand Junction,,"Grand Junction, Potash UT, Glenwood Springs, Montrose, Somerset",id:1332 id:2782 id:2942 id:2940 id:1162,,
 UP,SAEW-##,South San Antonio,leaving,Englewood,,"Houston Sinco, Houston Englewood, Houston Eureka, Houston Melendy, Houston Fairbanks, Houston Galena, Houston Pasadena, Houston Deer Park, Spring, Westfield, Hearne, Port Aurthur, Westlake/Mossville LA, BNSF Houston, AZ, overflow CA",id:2322 id:1372 id:3784 id:1460 id:1372 id:1372 id:1878 id:3729 id:2529 id:3334 id:3343 id:3351 id:2531 id:1375 id:2033 id:1241 id:1617 id:2217 id:1563 id:1987 id:2358 rr:BNSF@1372 rr:BNSF@1374 rr:BNSF@1378 rr:BNSF@1383 rr:BNSF@1460 rr:BNSF@1812 st:AZ catchall,2241|2490|3431,
 UP,SAEW-##,South San Antonio,leaving,Spring/Westfield Autos,,from connecting trains,,2241|2490|3431,from connecting trains
+UP,WCEC-##,West Colton,leaving,El Centro,,El Centro service area,id:1581,1255,
 UP,ECWC-##,El Centro,leaving,West Colton,,All outbound traffic,,1581,
 UP,FWNL-##,Davidson,leaving,North Little Rock,,"AR, DQE, CSX Region C, NS Regions B1/B2/D1/D2, Iuka MS, BNSF TN/MS/AL, CN IL/TN/MS/Eastern US/Canada East of Thunder Bay, CSX/NS/FEC Southeast Autos",st:AR rr:DQE region:CSX:C region:NS:B1 region:NS:B2 region:NS:D1 region:NS:D2 id:2835 rr:BNSF:TN/MS/AL class:auto,2973,CN IL/TN/MS/Eastern US/Canada East of Thunder Bay; CSX/NS/FEC Southeast
 UP,RVEU%-##,Roseville,leaving,Eugene,,"Eugene UP, overflow Portland, overflow MRVPT Lake Yard, overflow MRVHK Albina",id:1024 id:1548 id:3919 id:3920 id:3921 catchall ref:MRVPT:Lake_Yard ref:MRVHK:Albina,3503,
@@ -3637,7 +3638,7 @@ UP,PDFI-##,Albina Yard,leaving,Kent Autos,MKTKT,Loaded Autoracks for Kent Auto F
 UP,PDFI-##,Albina Yard,leaving,Seattle,LIS48,Seattle,id:1481 id:1538 id:1803 id:2008,1302,
 UP,BKBK-##,Bakersfield,leaving,Roseville,MFRRV,"Northern California, OR, ID, WA, BC, AB, SK, WY, CO, UT, Sparks/Fernley/North Reno NV, Tenaha BNSF",st:CA st:OR st:ID st:WA st:BC st:AB st:SK st:WY not:RCPE st:CO st:UT id:1141 id:2338 id:1131 id:2337 id:2213 id:2393,1013|1015|1133|1984,
 UP,BKBK-##,Bakersfield,leaving,North Platte,,"NE, IA, ND, SD, MN, WI, IL, MO, AR, KS, All CSX, All NS, CN MB/ON/QC/NF/NS, CPKC Regions 1/2/3, BNSF TN/MS/AL, Tenaha UP",st:NE st:IA st:ND st:SD st:MN st:WI st:IL st:MO st:AR st:KS all:CSX all:NS region:CPKC:1 region:CPKC:2 region:CPKC:3 rr:BNSF:TN/MS/AL id:2394,1013|1015|1133|1984,CN MB/ON/QC/NF/NS
-UP,BKBK-##,Bakersfield,leaving,West Colton,,"Southern CA, Las Vegas/Henderson/Apex, NM, AZ, El Paso, Amarillo",id:1400 id:1492 id:1402 id:3408 id:1136 id:2705 id:3062 st:NM st:AZ id:1779 id:1799 id:2099 id:1394 id:1443 id:1716 id:2632 id:2633 id:3126 id:3127 id:3128 id:3129,1013|1015|1133|1984,Southern CA
+UP,BKBK-##,Bakersfield,leaving,West Colton,,"Southern CA, Las Vegas/Henderson/Apex, NM, AZ, El Paso, Amarillo",id:1400 id:1492 id:1402 id:3408 id:2705 id:3062 st:NM st:AZ id:1779 id:1799 id:2099 id:1394 id:1443 id:1716 id:2632 id:2633 id:3126 id:3127 id:3128 id:3129,1013|1015|1133|1984,Southern CA
 UP,BKBK-##,Bakersfield,leaving,Fresno,,All other traffic for sorting at Fresno,catchall,1013|1015|1133|1984,
 UP,WCRVC-##,West Colton,leaving,Roseville,,Overflow MWCRV,catchall,1255,
 UP,GRPC-##,Green River,leaving,Pocatello,,ID,st:ID,1393,

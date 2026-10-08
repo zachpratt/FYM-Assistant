@@ -134,7 +134,7 @@ id,name,source
 1133,"Bakersfield Oildale, CA",map
 1134,"Cedar Rapids ADM Plant, IA",map
 1135,"Belen, NM",map
-1136,"Apex, NC",map
+1136,"Spartanburg Hayne Yard, SC",map
 1137,"East Durham NS, NC",map
 1138,"Milan, MI",map
 1139,"Taylor, BC",map
@@ -223,7 +223,7 @@ id,name,source
 1222,"Chicago 97th Street Yard, IL",map
 1223,"Port of Charleston CSX, SC",map
 1224,"Atlanta Howells Transfer Yard, GA",map
-1225,"Jesup, GA",map
+1225,"Inman, SC",map
 1226,"Savannah Port Wentworth, GA",map
 1227,"Kansas City Knoche Yard CPKC, MO",map
 1228,"Spring Hill, KS",map
@@ -2258,7 +2258,7 @@ id,name,source
 3257,"Gorman, TX",map
 3258,"Nitro, WV",map
 3259,"Madison/Dawson, MN",map
-3260,"Moncure, NC",map
+3260,"Blacksburg, SC",map
 3261,"Aberdeen ACWR, NC",map
 3262,"Watts, OK",map
 3263,"Siloam Springs, AR",map
@@ -3041,3 +3041,5 @@ id,name,source
 4041,"Marble City, OK",map
 4042,"New Brunswick, NJ",map
 4043,"Surrency, GA",map
+4046,Calipatria,scraped
+4050,"Union, SC",map
