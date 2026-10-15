@@ -45,6 +45,7 @@ mother_id,member_id,kind,zone_px2,source
 1524,1157,yard,1176182,derived
 1332,1162,yard,5400000,derived
 1389,1163,yard,252750,derived
+1166,1164,ref,5925579,derived
 1449,1165,yard,2121524,derived
 1651,1168,vid,5876,derived
 1070,1170,yard,162500,derived
@@ -73,6 +74,7 @@ mother_id,member_id,kind,zone_px2,source
 2336,1219,yard,2921000,derived
 2809,1221,yard,2524266,derived
 1055,1222,yard,12161857,derived
+1136,1225,ref,6122,derived
 1919,1226,yard,8320390,derived
 1200,1228,vid,5500,derived
 1225,1234,yard,190265,derived
@@ -218,7 +220,7 @@ mother_id,member_id,kind,zone_px2,source
 2801,1707,yard,1564402,derived
 1341,1708,yard,2258771,derived
 1076,1710,ref,9861,derived
-2005,1714,yard,9017908,derived
+2005,1714,yard,9192852,derived
 1750,1715,yard,12961651,derived
 2801,1717,yard,891264,derived
 1915,1718,yard,4053499,derived
@@ -296,6 +298,7 @@ mother_id,member_id,kind,zone_px2,source
 3697,1958,yard,2287792,derived
 1963,1961,yard,1388409,derived
 1963,1962,yard,8013074,derived
+1136,1965,ref,11366449,derived
 1966,1967,yard,4532135,derived
 1966,1968,yard,769547,derived
 1970,1971,vid,5964,derived
@@ -581,7 +584,7 @@ mother_id,member_id,kind,zone_px2,source
 1167,2359,vid,47957,derived
 1167,2360,yard,311311,derived
 1009,2361,yard,1457824,derived
-1325,2362,yard,3737086,derived
+1325,2362,yard,473159,derived
 1592,2363,yard,6578175,derived
 2032,2364,yard,15722000,derived
 1592,2365,vid,10705,derived
@@ -1129,9 +1132,9 @@ mother_id,member_id,kind,zone_px2,source
 1332,2940,vid,5500,derived
 1332,2941,vid,5000,derived
 1332,2942,vid,6000,derived
-1454,2943,yard,754901,derived
-1454,2944,vid,27809,derived
-1454,2945,vid,8384,derived
+1454,2943,yard,947449,derived
+1454,2944,vid,10834,derived
+1454,2945,vid,8682,derived
 1483,2946,vid,39945,derived
 1483,2947,vid,16562,derived
 1483,2948,yard,71667,derived
@@ -1427,7 +1430,7 @@ mother_id,member_id,kind,zone_px2,source
 3254,3257,vid,13000,derived
 1791,3258,vid,5116,derived
 1667,3259,vid,7150,derived
-1136,3260,yard,4630937,derived
+1136,3260,vid,4273,derived
 1187,3261,vid,28950,derived
 3262,3263,yard,3454915,derived
 3262,3264,vid,4483,derived
@@ -1798,7 +1801,6 @@ mother_id,member_id,kind,zone_px2,source
 3661,3664,vid,5994,derived
 3661,3665,vid,8545,derived
 3661,3666,vid,13162,derived
-1779,3667,vid,5500,derived
 1135,3668,vid,5250,derived
 1135,3669,vid,7500,derived
 1729,3670,vid,7044,derived
@@ -1878,7 +1880,7 @@ mother_id,member_id,kind,zone_px2,source
 3482,3752,vid,6300,derived
 3482,3753,vid,9560,derived
 3482,3754,vid,12435,derived
-1009,3755,vid,8681,derived
+1325,3755,yard,6384938,derived
 1677,3756,vid,19218,derived
 1677,3757,yard,435729,derived
 1495,3758,vid,6293,derived
@@ -2137,7 +2139,10 @@ mother_id,member_id,kind,zone_px2,source
 1250,4040,yard,2971216,derived
 1250,4041,yard,123687,derived
 1558,4042,vid,12223,derived
+1916,4044,yard,6639556,derived
 1581,4045,yard,1222334,derived
 1581,4046,yard,2321790,derived
 1581,4047,vid,14159,derived
 1581,4048,vid,5324,derived
+1325,4049,yard,259078,derived
+1136,4050,vid,4484,derived

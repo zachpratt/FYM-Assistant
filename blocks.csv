@@ -2482,7 +2482,7 @@ UP,G4AH-##,"Global 4, grouped by destination within each block",leaving,NS North
 UP,G3SK%-##,"Global 3, with IM grouped by destination",leaving,CSX IM,,"Kearny NJ, Louisville Osborne, Detroit Livernois CSX, Springfield MA, Worchester, Northwest Ohio IM OH, Columbus OH, Chambersburg PA Misc Northeast CSX, Southeast CSX",id:2097 id:2104 class:im id:1453 id:1684 id:2049 id:2158 id:2433 id:2435,,Kearny NJ; Louisville Osborne; Worchester; Northwest Ohio IM OH; Chambersburg PA Misc Northeast CSX; Southeast CSX
 UP,G3SK%-##,"Global 3, with IM grouped by destination",leaving,CSX reefer traffic for NJ,,,,,CSX reefer traffic for NJ
 UP,G3SK%-##,"Global 3, with IM grouped by destination",leaving,Selkirk manifest,,,id:1111 id:3218 id:3918,,
-UP,MNDU%-##,"Marion, grouped by destination in each block",leaving,North Platte IM,ZDUNP,"Lathrop, Oakland, Salt Lake City, Seattle, Tacoma, Portland T6, Portland Brooklyn, Council Bluffs",id:1857 id:1566 id:2237 id:1009 id:1325 id:2361 id:2362 id:3755 id:1481 id:1538 id:1803 id:2008 id:1502 id:1503 id:1554 id:1555 id:2626 id:2710 id:2711 id:2712 id:2714 id:3286 id:3287 id:3288 id:1866 id:1107 id:1115 id:1767 id:1768 id:2583 id:2584 id:3064,,Portland T6
+UP,MNDU%-##,"Marion, grouped by destination in each block",leaving,North Platte IM,ZDUNP,"Lathrop, Oakland, Salt Lake City, Seattle, Tacoma, Portland T6, Portland Brooklyn, Council Bluffs",id:1857 id:1566 id:2237 id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 id:1481 id:1538 id:1803 id:2008 id:1502 id:1503 id:1554 id:1555 id:2626 id:2710 id:2711 id:2712 id:2714 id:3286 id:3287 id:3288 id:1866 id:1107 id:1115 id:1767 id:1768 id:2583 id:2584 id:3064,,Portland T6
 UP,MNDU%-##,"Marion, grouped by destination in each block",leaving,KC Neff Baretables,ZDUNP,,,,KC Neff Baretables
 UP,MNDU%-##,"Marion, grouped by destination in each block",leaving,Dupo,,"Dupo IM, Avon IM->MDUIN",id:1578 class:im id:1611 id:3733 class:im,,
 UP,G4SI%-##,"Global 4, grouped by destination within each block",leaving,City of Industry,ISILB3,,id:1095,,
@@ -2516,7 +2516,7 @@ UP,TUAS%-##,Tuscon,leaving,Council Bluffs,MHNCB,"OLB, NE, IA, MN, WI, CPKC SK, N
 UP,TUAS%-##,Santa Teresa,created at,KC Neff IM,,Kansas City Neff IM,id:1301 class:im,1403,
 UP,TUAS%-##,Herington,created at,KS ALS,,"All CSX, St Louis, ALS, TRRA, MER, Chicago UP, WSOR, CPKC Region 1, CN IL/Eastern US, CN Canada East of Thunder Bay ON, BNSF IL",all:CSX id:1004 id:1277 id:1562 id:1736 id:2045 id:2174 id:2391 id:3617 rr:ALS rr:TRRA rr:MER id:2038 rr:WSOR region:CPKC:1 region:CN:East_of_Thunder_Bay rr:BNSF:IL,3170,CN IL/Eastern US
 UP,G4SE-##,"Global 4, grouped by destination within each block",leaving,Council Bluffs,,"Council Bluffs IM ->MCHCB, Twin Cities TCIT IM->MNPAL",id:1107 id:1115 id:1767 id:1768 id:2583 id:2584 id:3064 class:im class:im,,Twin Cities TCIT
-UP,G4SE-##,"Global 4, grouped by destination within each block",leaving,North Platte,,"Portland Brooklyn ->ZG2BR, Oakland UP, Salt Lake ->INPOA, Denver ->MNPDV",id:1866 id:1566 id:1009 id:1325 id:2361 id:2362 id:3755 id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039,,
+UP,G4SE-##,"Global 4, grouped by destination within each block",leaving,North Platte,,"Portland Brooklyn ->ZG2BR, Oakland UP, Salt Lake ->INPOA, Denver ->MNPDV",id:1866 id:1566 id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039,,
 UP,G4SE-##,"Global 4, grouped by destination within each block",leaving,Pocatello IM,,,id:1843 class:im,,
 UP,G4SE-##,"Global 4, grouped by destination within each block",leaving,Wallula UP IM,MHKSK,,id:1495 class:im,,
 UP,G4SE-##,"Global 4, grouped by destination within each block",leaving,Portland Terminal 6 UP,MHKPD/MHKEU,,id:2140,,
@@ -2647,7 +2647,7 @@ UP,DUMN%-##,"Dupo, grouped by destination in each block",leaving,Terminal Island
 UP,DUMN%-##,"Dupo, grouped by destination in each block",leaving,Long Beach IM,IMNLB,"Long Beach ITS, Long Beach Container Terminal, Long Beach PCT, Long Beach Pier A",id:2515 id:3094 id:2516 id:3092 id:2514 id:3093 id:2517 id:3091,,
 UP,DUMN%-##,"Dupo, grouped by destination in each block",leaving,LA Harbor IM,IMNLB,"TRAPAC [TriPac], West Basin",id:3104 id:3102 id:3103,,
 UP,DUMN%-##,"Dupo, grouped by destination in each block",leaving,Dolores ICTF baretables,IMNLB,,,,Dolores ICTF baretables
-UP,NPOA%-##,"North Platte, grouped by destination in each block",leaving,Salt Lake City IM,,,id:1009 id:1325 id:2361 id:2362 id:3755 class:im,,
+UP,NPOA%-##,"North Platte, grouped by destination in each block",leaving,Salt Lake City IM,,,id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 class:im,,
 UP,NPOA%-##,"North Platte, grouped by destination in each block",leaving,CA IM,,"LATC, LA TITCF, LA Pier 400, LA Global South, Long Beach Pier T, Long Beach ITS, Long Beach Container Terminal, Long Beach PCT, Long Beach Terminal A, Los Angeles TRAPAC [TriPac], Los Angeles West Basin",id:1203 id:1146 id:3098 id:1152 id:3100 id:1163 id:3099 id:1149 id:3101 id:2515 id:3094 id:2516 id:3092 id:2514 id:3093 id:2517 id:3091 id:3102 id:3103,,Los Angeles TRAPAC [TriPac]
 UP,NPOA%-##,"North Platte, grouped by destination in each block",leaving,Oakland IM,,"Oakland, Lathrop ->IOANP, Sparks IM ->IOANP",id:1566 id:2237 id:1857 id:1141 id:2338 class:im,,
 UP,NPOA%-##,"North Platte, grouped by destination in each block",leaving,Oakland Reefers,,Refridgerated cars for Oakland UP,,,Refridgerated cars for Oakland UP
@@ -2696,7 +2696,7 @@ UP,LBG4-##,Global 3,created at,Houston IM,,"Houston Settegast, Houston Barbour's
 UP,G4SE-##,"Global 4, grouped by destination within each block",leaving,Seattle,,"Seattle Argo, Seattle Harbor Island ->YSE21R",id:1481 id:1538,,
 UP,G4SE-##,"Global 4, grouped by destination within each block",leaving,Tacoma IM,,"Tacoma Washington United , Tacoma Container Terminal",id:2711 id:3289 id:2712,,
 UP,G4SE-##,"Global 4, grouped by destination within each block",leaving,Wallula UP IM,MHKSK,,id:1495 class:im,,
-UP,G4SE-##,"Global 4, grouped by destination within each block",leaving,North Platte,,"Portland Brooklyn ->ZG2BR, Oakland UP, Salt Lake ->INPOA, Denver ->MNPDV",id:1866 id:1566 id:1009 id:1325 id:2361 id:2362 id:3755 id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039,,
+UP,G4SE-##,"Global 4, grouped by destination within each block",leaving,North Platte,,"Portland Brooklyn ->ZG2BR, Oakland UP, Salt Lake ->INPOA, Denver ->MNPDV",id:1866 id:1566 id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039,,
 UP,G4SE-##,"Global 4, grouped by destination within each block",leaving,Pocatello IM,,,id:1843 class:im,,
 UP,G4SE-##,"Global 4, grouped by destination within each block",leaving,NS Ashland,IG3AH,"Bethlehem, Norfolk, Jersey City Croxton, Columbus NS, Harrisburg, misc NS northeast IM",id:1346 id:3559 id:3561 id:1108 id:1447 id:1639 id:1453 id:1476 region:NS:A1 region:NS:A2 region:NS:A3 class:im,,
 UP,G4SE-##,"Global 4, grouped by destination within each block",leaving,NS Calumet,IG3CL,"Cincinnatti Gest, Cleveland Maple Heights",id:2048 id:1451,,
@@ -2750,7 +2750,7 @@ UP,LTLB-##,"Lathrop, with cars grouped by destination",leaving,Dolores ICTF,,,id
 UP,OANP-##,"Oakland, grouped by destination in each block",leaving,Lathrop,,Lathrop IM,id:1857 class:im,,
 UP,OANP-##,"Oakland, grouped by destination in each block",leaving,"Houston (Houston Settegast IM, Houston Barbour's Cut UP IM) ->ILTLB from Oakland,",ITAG4 from SCIT,,class:im,,"Houston (Houston Settegast IM, Houston Barbour's Cut UP IM) ->ILTLB from Oakland,"
 UP,OANP-##,"Oakland, grouped by destination in each block",leaving,Sparks,,"Empty 53' wells for Sparks, max 20",,,Empty 53' wells for Sparks; max 20
-UP,OANP-##,"Oakland, grouped by destination in each block",leaving,SCIT,,"Salt Lake IM, Denver IM",id:1009 id:1325 id:2361 id:2362 id:3755 class:im id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039 class:im,,
+UP,OANP-##,"Oakland, grouped by destination in each block",leaving,SCIT,,"Salt Lake IM, Denver IM",id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 class:im id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039 class:im,,
 UP,OANP-##,"Oakland, grouped by destination in each block",leaving,Global 2 IM,ZSCG2,,id:1595 class:im,,
 UP,OANP-##,"Oakland, grouped by destination in each block",leaving,Twin Cities TICT,MNPAL,,,,Twin Cities TICT
 UP,OANP-##,"Oakland, grouped by destination in each block",leaving,Global 4 IM,ITAG4/MNPCH,,id:2183 class:im,,
@@ -2822,7 +2822,7 @@ UP,KCLB-##,Kansas City,leaving,ICTF,,"40/53' wells with international containers
 UP,KCLB-##,Kansas City,leaving,ICTF Baretables,,empty wells for ICTF,,1059|1169|1200|1214|1218|1227,empty wells for ICTF
 UP,NPOA-##,"North Platte, grouped by destination in each block",leaving,Rodeo empty tank cars,YOA88,,,,Rodeo empty tank cars
 UP,NPOA-##,"North Platte, grouped by destination in each block",leaving,Oakland Reefers,,Loaded/Empty Refridgerated cars for Oakland UP,,,Loaded/Empty Refridgerated cars for Oakland UP
-UP,NPOA-##,"North Platte, grouped by destination in each block",leaving,Salt Lake City IM,,,id:1009 id:1325 id:2361 id:2362 id:3755 class:im,,
+UP,NPOA-##,"North Platte, grouped by destination in each block",leaving,Salt Lake City IM,,,id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 class:im,,
 UP,NPOA-##,"North Platte, grouped by destination in each block",leaving,Denver IM,ZLBDV,,id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039 class:im,,
 UP,NPOA-##,"North Platte, grouped by destination in each block",leaving,CA IM,,"LATC, LA TITCF, LA Pier 400, LA Global South, Long Beach Pier T, Long Beach ITS, Long Beach Container Terminal, Long Beach PCT, 5. Long Beach Terminal A, Los Angeles TRAPAC [TriPac], Los Angeles West Basin. Includes all connecting IM from ICBOA, MCBNP, and MVPSS",id:1203 id:1146 id:3098 id:1152 id:3100 id:1163 id:3099 id:1149 id:3101 id:2515 id:3094 id:2516 id:3092 id:2514 id:3093 class:im,,5. Long Beach Terminal A; Los Angeles TRAPAC [TriPac]; Los Angeles West Basin. Includes all connecting IM from ICBOA; MCBNP; and MVPSS
 UP,NPOA-##,"North Platte, grouped by destination in each block",leaving,Oakland IM,,"Oakland, Lathrop ->IOANP, Sparks IM ->IOANP",id:1566 id:2237 id:1857 id:1141 id:2338 class:im,,
@@ -3144,7 +3144,7 @@ UP,PDOG%-##,Albina,leaving,Hinkle,,Overflow MRVHK Albina Hinkle,ref:MRVHK:Albina
 UP,PDOG%-##,Albina,leaving,CPKC Interchange,MHKET,Overflow MRVHK CPKC Interchange,ref:MRVHK:CPKC_Interchange,1302,
 UP,PDOG%-##,Albina,leaving,Green River,MHKGR,Overflow MRVHK Green River,ref:MRVHK:Green_River,1302,
 UP,PDOG%-##,Albina,leaving,Ogden,,"UT, overflow CA/NV",st:UT catchall,1302,
-UP,PDOG%-##,Albina,leaving,Roper Yard,,"Salt Lake City, UTAH RR",id:1009 id:1325 id:2361 id:2362 id:3755 rr:UTAH,1302,
+UP,PDOG%-##,Albina,leaving,Roper Yard,,"Salt Lake City, UTAH RR",id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 rr:UTAH,1302,
 UP,SEPD%-##,Argo,leaving,North Platte,,MPDNP North Platte blocks,ref:MPDNP:North_Platte,,
 UP,SEPD%-##,Argo,leaving,Roseville,,MPDRV Roseville block,ref:MPDRV:Roseville,,
 UP,SEPD%-##,Argo,leaving,Albina,,All other destinations for sorting at Albina yard,catchall,,
@@ -3282,7 +3282,7 @@ UP,WCOG%-##,Las Vegas Arden yard,created at,Global 2 IM,ZSCG2,,id:1595 class:im,
 UP,WCOG%-##,Las Vegas Arden yard,created at,Pocatello,MOGPD,Southern ID,,1400,Southern ID
 UP,WCOG%-##,Las Vegas Arden yard,created at,I-5 Corridor,MOGPD,Overflow MNPWC I-5 Corridor,ref:MNPWC:I-5_Corridor,1400,
 UP,HOAS%-##,"Houston, with IM grouped by destination",leaving,Dupo IM,,"Dupo IM, Marion IM ->IDUMN, Global 4 ->IDUG4",id:1578 class:im id:1180 class:im id:2183,,
-UP,HOAS%-##,"Houston, with IM grouped by destination",leaving,North Platte IM,ZDUNP,"Denver IM, Salt Lake City IM, Oakland IM, Seattle IM, Tacoma IM, 18th Street IM",id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039 class:im id:1009 id:1325 id:2361 id:2362 id:3755 class:im id:3767 class:im id:1481 id:1538 id:1803 id:2008 class:im id:1502 id:1503 id:1554 id:1555 id:2626 id:2710 id:2711 id:2712 id:2714 id:3286 id:3287 id:3288 class:im id:1229 id:2046 class:im,,
+UP,HOAS%-##,"Houston, with IM grouped by destination",leaving,North Platte IM,ZDUNP,"Denver IM, Salt Lake City IM, Oakland IM, Seattle IM, Tacoma IM, 18th Street IM",id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039 class:im id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 class:im id:3767 class:im id:1481 id:1538 id:1803 id:2008 class:im id:1502 id:1503 id:1554 id:1555 id:2626 id:2710 id:2711 id:2712 id:2714 id:3286 id:3287 id:3288 class:im id:1229 id:2046 class:im,,
 UP,HOAS%-##,"Houston, with IM grouped by destination",leaving,ALS,,"St. Louis local cars, ALS, MER, IL, Janesville UP, Aderson UP, Evansville WI, Southern WSOR",id:1120 rr:ALS rr:MER st:IL id:2816 id:2821,,Aderson UP; Southern WSOR
 UP,EGAS%-##,Eagle Pass,leaving,ALS,,"St. Louis local UP/BNSF/CSX/CN, ALS, MER, TRRA, Villa Grove, Dupo, DREI, Salem, Mt Vernon, Chicago, CPKC Region 1, NS Regions A1/A2/A3/C1, CSX Regions A/E",rr:ALS rr:MER rr:TRRA id:2811 id:1578 rr:DREI id:1892 id:3002 id:3003 id:3004 id:1055 id:1066 id:1072 id:1088 id:1092 id:1094 id:1098 id:1161 id:1222 id:1278 id:1279 id:1305 region:CPKC:1 region:NS:A1 region:NS:A2 region:NS:A3 region:NS:C1 region:CSX:A region:CSX:E,1608,St. Louis local
 UP,NLPB%-##,North Little Rock,leaving,Pine Bluff,,"Pine Bluff, McGehee, Dierks Yard, Longview, Texarkana, overflow Englewood/Livonia, overflow MNLEW Reisor",id:1081 id:3340 id:2843 id:1044 id:2208 id:2733 id:2734 id:2735 id:3154 id:3645 id:3725 id:1729 catchall ref:MNLEW:Reisor,1920|2621|3424,Dierks Yard
@@ -3327,7 +3327,7 @@ UP,FWSA%-##,Ft Worth,leaving,East Yard,,"San Antonio Kirby, Spruce 2 Calaveras, 
 UP,MTMT-OLD-##,Marshalltown,leaving,Beverly,,"Cedar Rapids, CIC, overflow MNPCH Clinton/Elkhart/BRC",id:1134 id:1753 rr:CIC ref:MNPCH:Clinton/Elkhart/BRC,1287,
 UP,MTMT-OLD-##,Marshalltown,leaving,Proviso,MCLPR,"IL, CPKC Region 1, CN IL+Eastern US/Canada East of Thunder Bay",st:IL region:CPKC:1 rr:CN:IL region:CN:Eastern_US region:CN:East_of_Thunder_Bay,1287,
 UP,HOAS-##,"Houston, with IM grouped by destination",leaving,Dupo IM,,"Dupo IM, Marion IM ->IDUMN, Global 4 ->ZMQG4",id:1578 class:im id:1180 class:im id:2183,,
-UP,HOAS-##,"Houston, with IM grouped by destination",leaving,North Platte IM,ZDUNP,"Denver IM, Salt Lake City IM, Oakland IM, Seattle IM, Tacoma IM",id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039 class:im id:1009 id:1325 id:2361 id:2362 id:3755 class:im id:3767 class:im id:1481 id:1538 id:1803 id:2008 class:im id:1502 id:1503 id:1554 id:1555 id:2626 id:2710 id:2711 id:2712 id:2714 id:3286 id:3287 id:3288 class:im,,
+UP,HOAS-##,"Houston, with IM grouped by destination",leaving,North Platte IM,ZDUNP,"Denver IM, Salt Lake City IM, Oakland IM, Seattle IM, Tacoma IM",id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039 class:im id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 class:im id:3767 class:im id:1481 id:1538 id:1803 id:2008 class:im id:1502 id:1503 id:1554 id:1555 id:2626 id:2710 id:2711 id:2712 id:2714 id:3286 id:3287 id:3288 class:im,,
 UP,HOAS-##,"Houston, with IM grouped by destination",leaving,ALS,,"St. Louis local cars, ALS, MER, IL, TRRA, TPW, Janesville UP, Chicago UP/BNSF, BRC, IHB, CSS, IMRR, DREI, Villa Grove, Royal, Tuscola UP,Shelbyville IL, Evansville WI, WSOR, NS Regions A1/A2/A3/C1, CSX Regions A/E, CPCK Region 1",id:1120 rr:ALS rr:MER st:IL rr:TRRA rr:TPW id:2816 id:1055 id:1066 id:1072 id:1088 id:1092 id:1094 id:1098 id:1161 id:1222 id:1278 id:1279 id:1305 rr:BRC rr:IHB rr:CSS rr:IMRR rr:DREI id:2811 id:2813 id:2810 id:2812 id:2821 rr:WSOR region:NS:A1 region:NS:A2 region:NS:A3 region:NS:C1 region:CSX:A region:CSX:E region:CPKC:1,,
 UP,HNWT-##,Herington,leaving,Wichita,,"Wichita UP/BNSF/SKOL, KO",id:2825 id:2824 id:2826 rr:KO,3170,
 UP,HNWT-##,Herington,leaving,Ft Worth,,"Dallas/Ft Worth, Arlington, Grand Prarie, San Antonio, Gardendale, Port Laredo, Eagle Pass, Mexico Laredo UP, TXGN, Halsted, Spruce 2 Calveras Plant",id:1795 id:1797 id:1846 id:1938 id:3748 id:1023 id:1847 id:1888 id:1904 id:3248 id:3249 id:3250 id:3251 id:3252 id:3532 id:3535 id:1110 id:1918 id:2239 id:2242 id:3118 id:3119 id:3432 id:2481 id:1285 id:1608 id:2482 rr:TXGN id:2485,3170,Grand Prarie; Spruce 2 Calveras Plant
@@ -3485,7 +3485,7 @@ UP,PBDI%-##,Pine Bluff,leaving,Mira Loma Autos,IDILB,Loaded autoracks for Mira L
 UP,PBDI%-##,Reisor,added at,LA Ft Worth,MDAFW,"Dallas, Ft Worth, Arlington, Ennis, Hearne, Mesquite, CA, NM, AZ, El Paso, Amarillo",id:1795 id:1797 id:1846 id:1938 id:3748 id:1023 id:1847 id:1888 id:1904 id:3248 id:3249 id:3250 id:3251 id:3252 id:3532 id:3535 id:1110 id:1918 id:2037 id:2033 id:1845 st:CA st:NM st:AZ id:1779 id:1799 id:2099 id:1394 id:1443 id:1716 id:2632 id:2633 id:3126 id:3127 id:3128 id:3129,2398,
 UP,PBDI%-##,Reisor,added at,Arlington Empty Autos,MDAFW,Empty autoracks for Arlington,class:auto,2398,Empty autoracks for Arlington
 UP,PBDI%-##,Longview,added at,TX FT worth,MDAFW,"TX, CA, NM, AZ",st:TX st:CA st:NM st:AZ,1044|2208|2733|2734|2735|3154,
-UP,OGRO%-##,Ogden yard,leaving,Roper,,"Salt Lake City yards, UCRY, UTAH RR, MROMI manifest blocks",id:1009 id:1325 id:2361 id:2362 id:3755 rr:UCRY rr:UTAH,1842|2168,MROMI manifest blocks
+UP,OGRO%-##,Ogden yard,leaving,Roper,,"Salt Lake City yards, UCRY, UTAH RR, MROMI manifest blocks",id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 rr:UCRY rr:UTAH,1842|2168,MROMI manifest blocks
 UP,OGRO%-##,Ogden yard,leaving,North Platte,MRONP,Overflow MRVGR North Platte,ref:MRVGR:North_Platte,1842|2168,
 UP,OGRO%-##,Ogden yard,leaving,North Platte Loaded Autos,MRONP,Overflow MRVGR North Platte Loaded Autos,ref:MRVGR:North_Platte class:auto class:loaded,1842|2168,
 UP,OGRO%-##,Ogden yard,leaving,Tesla Autos,MROMI,Empty autoracks for Milplitas,class:auto,1842|2168,Empty autoracks for Milplitas
@@ -3726,7 +3726,7 @@ UP,SSNP%-##,South St Paul,leaving,Boone,,"IA, NE, Rochelle Global 3, Rochelle BN
 UP,SSNP%-##,South St Paul,leaving,Sioux City,MCHCB,"Sioux City, Sergeant Bluffs, RRVW, EE, DAIR, BNSF SD",id:1351 id:2610 id:2611 id:2612 id:2613 rr:RRVW rr:EE rr:DAIR rr:BNSF:SD,1658|3274|4018|4019,Sergeant Bluffs
 UP,SSNP%-##,Grand Island,created at,Seattle IM,MNPAL,"Pocatello, Portland Terminal 6 UP, Tacoma Washington United , Tacoma Container Terminal, Seattle Argo, Seattle Harbor Island",id:1843 id:2140 id:2711 id:3289 id:2712 id:1481 id:1538,2261,
 UP,SSNP%-##,Grand Island,created at,LA Basin IM,MNPAL,"Dolores/ICTF, Long Beach, Terminal Island, LA Harbor",id:1001 id:1014 id:1149 id:2514 id:2515 id:2516 id:2517 id:3090 id:3091 id:3092 id:3093 id:3094 id:3095 id:1389 id:3097 id:1103 id:1090,2261,
-UP,OGHP%-##,Ogden yard,leaving,Roper,,"Salt Lake City yards, UTAH RR, overflow Roseville",id:1009 id:1325 id:2361 id:2362 id:3755 rr:UTAH catchall,1842|2168,
+UP,OGHP%-##,Ogden yard,leaving,Roper,,"Salt Lake City yards, UTAH RR, overflow Roseville",id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 rr:UTAH catchall,1842|2168,
 UP,OGHP%-##,Ogden yard,leaving,BNSF,,Salt Lake City BNSF,id:2361,1842|2168,
 UP,OGHP%-##,Ogden yard,leaving,North Platte,MRONP,Overflow MRVGR North Platte,ref:MRVGR:North_Platte,1842|2168,
 UP,EGBZC%-##,Eagle Pass,leaving,Brazos,,"All outbound manifest, less-than-trainload MEGBZC Brazos autoracks",class:auto,1608,less-than-trainload MEGBZC Brazos
@@ -4122,7 +4122,7 @@ UP,NPSS%-##,South St Paul,created at,SSP Butler,,"UP WI, WSOR, IL, CPKC Region 1
 UP,PVOG%-##,Roper,leaving,Albina,MOGPD,MOGPD Albina block,ref:MOGPD:Albina,1009,
 UP,PVOG%-##,Roper,leaving,I-5 Corridor,MOGPD,"CN BC/AB/SK, CPKC BC, BNSF WA/ID/MT West of Billings",rr:CN:BC/AB/SK rr:CPKC:BC rr:BNSF:WA/ID/MT,1009,
 UP,PVOG%-##,Roper,leaving,Ogden,,Misc traffic for sorting at Ogden not on any other outbound train/block from UP MIMs,,1009,Misc traffic for sorting at Ogden not on any other outbound train/block from UP MIMs
-UP,OGPV%-##,Ogden yard,leaving,Roper,,"Salt Lake City yards, UTAH RR",id:1009 id:1325 id:2361 id:2362 id:3755 rr:UTAH,1842|2168,
+UP,OGPV%-##,Ogden yard,leaving,Roper,,"Salt Lake City yards, UTAH RR",id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 rr:UTAH,1842|2168,
 UP,OGPV%-##,Ogden yard,leaving,BNSF,,Salt Lake City BNSF,id:2361,1842|2168,
 UP,OGPV%-##,Ogden yard,leaving,North Platte,MRONP,Overflow MRVGR North Platte,ref:MRVGR:North_Platte,1842|2168,
 UP,NYNP-##,North Yard,leaving,Cheyenne,,"Cheyenne, BNSF WY, Billings MT, Fairfiew MT, Dore ND",id:1874 id:2844 rr:BNSF:WY id:1893 id:2335 id:2230,,
@@ -4202,7 +4202,7 @@ UP,YROG%-##,Las Vegas Arden yard,created at,Global 2 IM,ZSCG2,,id:1595 class:im,
 UP,YROG%-##,Las Vegas Arden yard,created at,North Platte,,"NE, IA, ND, SD, WI, MN, IL, KS, MO, CSX Region A, NS Regions A1/A2/A3/C1/C2/C3, CPKC Regions 1/2/3, DMVW, RRVW, RCPE, DAIR, CPKC IL/MO/KS, CSX Region A",st:NE st:IA st:ND st:SD st:WI st:MN st:IL st:KS st:MO region:CSX:A region:NS:A1 region:NS:A2 region:NS:A3 region:NS:C1 region:NS:C2 region:NS:C3 region:CPKC:1 region:CPKC:2 region:CPKC:3 rr:DMVW rr:RRVW rr:RCPE rr:DAIR rr:CPKC:IL/MO/KS region:CSX:A,1400,
 UP,YROG%-##,Las Vegas Arden yard,created at,I-5 Corridor,MOGPD,Overflow MNPWC I-5 Corridor,ref:MNPWC:I-5_Corridor,1400,
 UP,NPRO%-##,North Platte,leaving,Roper Autos,,"Loaded autoracks for Salt Lake Roper, empty autoracks for Milpitas, overflow loaded autos for Milpitas",id:1009 class:auto class:auto catchall class:auto,1683,empty autoracks for Milpitas
-UP,NPRO%-##,North Platte,leaving,Roper,,"Salt Lake City, UTAH RR, UCRY, Milpitas manifest",id:1009 id:1325 id:2361 id:2362 id:3755 rr:UTAH rr:UCRY id:1213,1683,
+UP,NPRO%-##,North Platte,leaving,Roper,,"Salt Lake City, UTAH RR, UCRY, Milpitas manifest",id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 rr:UTAH rr:UCRY id:1213,1683,
 UP,NPRO%-##,North Platte,leaving,Elko,MROMI,"Elko, Battle Mountain, Osino, Winnemucca, Colado, Empire",id:3791 id:3792 id:3794 id:3795 id:3793 id:3796 id:3797 id:3798,1683,
 UP,NPRO%-##,North Platte,leaving,Sparks,MROMI,"Sparks, Fernley, North Reno",id:1141 id:2338 id:1131 id:2337 id:2213,1683,
 UP,ROMI-##,Roper yard,leaving,Milpitas Autos,,Loaded autoracks for Milpitas,id:1213 class:auto,1009,
@@ -4218,7 +4218,7 @@ UP,RVGR-##,Roseville,leaving,Green River,,"WY, CO, Billings/Fairview MT, Dore ND
 UP,RVGR-##,Roseville,leaving,North Platte Loaded Autos,MBFNPS,Overflow MRVNP North Platte Loaded Autos,ref:MRVNP:North_Platte class:auto class:loaded,3503,
 UP,RVGR-##,Roseville,leaving,North Platte,MBFNPS,Overflow MRVNP North Platte,ref:MRVNP:North_Platte,3503,
 UP,BCHO-##,"Barbour's Cut, grouped by destination",leaving,Dupo IM,MHOAS,"IM for Dupo, Marion, Global 4",id:1578 class:im id:1180 id:2183,,
-UP,BCHO-##,"Barbour's Cut, grouped by destination",leaving,North Platte IM,MHOAS,"IM for Denver, Salt Lake City, Oakland, Seattle, Tacoma",id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039 class:im id:1009 id:1325 id:2361 id:2362 id:3755 id:3767 id:1481 id:1538 id:1803 id:2008 id:1502 id:1503 id:1554 id:1555 id:2626 id:2710 id:2711 id:2712 id:2714 id:3286 id:3287 id:3288,,
+UP,BCHO-##,"Barbour's Cut, grouped by destination",leaving,North Platte IM,MHOAS,"IM for Denver, Salt Lake City, Oakland, Seattle, Tacoma",id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039 class:im id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 id:3767 id:1481 id:1538 id:1803 id:2008 id:1502 id:1503 id:1554 id:1555 id:2626 id:2710 id:2711 id:2712 id:2714 id:3286 id:3287 id:3288,,
 UP,BCHO-##,"Barbour's Cut, grouped by destination",leaving,San Antonio IM,IHOSA,"San Antonio SAIT, Port Laredo, Dallas Intermodal Terminal, Tucson",id:3118 id:1285 id:1938 id:1477,,
 UP,BCHO-##,"Barbour's Cut, grouped by destination",leaving,Terminal Island IM,IHOSA,"Terminal Island ITCF, Long Beach Hanjin, APM, Pier 400, Global South",id:1146 id:3098 id:1149 id:3101 id:1152 id:1152 id:1163 id:3099,,
 UP,BCHO-##,"Barbour's Cut, grouped by destination",leaving,Long Beach IM,IHOSA,"Long Beach ITF, Long Beach Pacific Container Terminal, Long Beach Pier A",id:2515 id:3094 id:2514 id:3093 id:2517 id:3091,,
@@ -4524,14 +4524,14 @@ UP,NLEW-##,North Little Rock,leaving,Reisor,,"Waskom, TX, Tenaha TX, Reisor, Hol
 UP,NLEW-##,Reisor,created at,RE Englewood,,"Houston, Port Arthur",id:1372 id:1374 id:1378 id:1383 id:1460 id:1812 id:1878 id:1879 id:1880 id:1935 id:1936 id:1937 id:1241 id:1617 id:2217 id:2333,2398,
 UP,GRRV%-##,Green River,leaving,Roseville,,CA,st:CA,1393,
 UP,GRRV%-##,Green River,leaving,Ogden,,"UT, NV",st:UT st:NV,1393,
-UP,GRRV%-##,Green River,leaving,Roper Yard,,Salt Lake City,id:1009 id:1325 id:2361 id:2362 id:3755,1393,
+UP,GRRV%-##,Green River,leaving,Roper Yard,,Salt Lake City,id:1009 id:1325 id:2361 id:2362 id:3755 id:4049,1393,
 UP,GRRV%-##,Green River,leaving,West Colton,,MNPWC West Colton,ref:MNPWC:West_Colton,1393,
 UP,GRRV%-##,Green River,leaving,Elko,,"Elko, Battle Mountain, Osino, Winnemucca, Colado, Empire, Fernley -> MNPRV, Sparks -> MNPRV, North Reno -> MNPRV",id:3791 id:3792 id:3794 id:3795 id:3793 id:3796 id:3797 id:3798 id:1131 id:2337 id:1141 id:2338 id:2213,1393,
 UP,GRRV%-##,Green River,leaving,NV Roseville,,"CA, OR, BC, CN AB/SK, overflow Ogden traffic",st:CA st:OR st:BC rr:CN:AB/SK catchall,1393,
-UP,OGPV-##,Ogden yard,leaving,Roper,,"Salt Lake City yards, UTAH RR, extra North Platte -> MRONP, extra Green River -> MRONP",id:1009 id:1325 id:2361 id:2362 id:3755 rr:UTAH,1842|2168,extra North Platte; extra Green River
+UP,OGPV-##,Ogden yard,leaving,Roper,,"Salt Lake City yards, UTAH RR, extra North Platte -> MRONP, extra Green River -> MRONP",id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 rr:UTAH,1842|2168,extra North Platte; extra Green River
 UP,OGPV-##,Ogden yard,leaving,BNSF,,Salt Lake City BNSF,id:2361,1842|2168,
 UP,NPRO-##,North Platte,leaving,Roper Autos,,Loaded autoracks for Salt Lake Roper,id:1009 class:auto,1683,
-UP,NPRO-##,North Platte,leaving,Roper,,"Salt Lake City, UTAH RR, UCRY, overflow Ogden manifest",id:1009 id:1325 id:2361 id:2362 id:3755 rr:UTAH rr:UCRY catchall,1683,
+UP,NPRO-##,North Platte,leaving,Roper,,"Salt Lake City, UTAH RR, UCRY, overflow Ogden manifest",id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 rr:UTAH rr:UCRY catchall,1683,
 UP,SAFW-##,South San Antonio,leaving,Milpitas Autos,MFWEP,Loaded autoracks for Milpitas,id:1213 class:auto,2241|2490|3431,
 UP,SAFW-##,South San Antonio,leaving,Ft Worth,,"Dallas/Arlington/Ft Worth, Grand Prairie, Denison, Mesquite, Ennis, Longview, El Paso, Amarillo, AZ, NM, OK, KS, Kanasas City MO, St Joseph, Jefferson City MO, MNA, CPKC MO/IL/KS, overflow MSANP, overflow CA",id:1795 id:1797 id:1846 id:1938 id:3748 id:2630 id:3029 id:1023 id:1847 id:1888 id:1904 id:3248 id:3249 id:3250 id:3251 id:3252 id:3532 id:3535 id:2755 id:1232 id:1845 id:2037 id:1044 id:2208 id:2733 id:2734 id:2735 id:3154 id:3645 id:3725 id:1779 id:1799 id:2099 id:1394 id:1443 id:1716 id:2632 id:2633 id:3126 id:3127 id:3128 id:3129 st:AZ st:NM st:OK st:KS id:1310 id:2109 id:1323 rr:MNA rr:CPKC:MO/IL/KS catchall catchall,2241|2490|3431,Kanasas City MO
 UP,SAFW-##,South San Antonio,leaving,Peach Yard,,Peach Yard block as-is from MLDDI,,2241|2490|3431,Peach Yard block as-is from MLDDI
@@ -4824,7 +4824,7 @@ UP,NYGR-##,Denver North Yard,leaving,Elko,MGRRV,Elko and Sparks service areas,,1
 UP,GRRV-##,Green River,leaving,Roseville,,CA,st:CA,1393,
 UP,GRRV-##,Green River,leaving,Elko,,Elko and Sparks service areas,,1393,Elko and Sparks service areas
 UP,GRRV-##,Green River,leaving,Ogden,,"UT, NV",st:UT st:NV,1393,
-UP,GRRV-##,Green River,leaving,Roper Yard,,Salt Lake City,id:1009 id:1325 id:2361 id:2362 id:3755,1393,
+UP,GRRV-##,Green River,leaving,Roper Yard,,Salt Lake City,id:1009 id:1325 id:2361 id:2362 id:3755 id:4049,1393,
 UP,GRRV-##,Green River,leaving,West Colton,,MNPWC West Colton,ref:MNPWC:West_Colton,1393,
 UP,GRRV-##,Green River,leaving,NV Roseville,,"CA, OR, BC, CN AB/SK, CPKC regions 4 and 5, overflow Ogden traffic",st:CA st:OR st:BC rr:CN:AB/SK catchall,1393,CPKC regions 4 and 5
 UP,FWHN-##,Davidson,leaving,Topeka,,"Topeka, Kansa City, North Platte service areas, CPKC IA, NS Region C2",id:4002 rr:CPKC:IA region:NS:C2,2973,Kansa City; North Platte service areas
@@ -5032,7 +5032,7 @@ UP,LB91-##,Long Beach UP,leaving,Long Beach,PHL YP009/YP020,Long Beach PHL,id:10
 UP,LB91-##,Long Beach UP,leaving,Compton,PHL YP024,Compton manifest for PHL swiching,,3090,Compton manifest for PHL swiching
 UP,LB91-##,Los Angeles Harbor,leaving,UP,,UP outbounds from PHL jobs,,1103,UP outbounds from PHL jobs
 UP,LB91-##,LA Harbor,leaving,Long Beach UP,,UP outbounds from PHL jobs,,,UP outbounds from PHL jobs
-UP,OI18-##,"Long Beach, grouped by destination in each block",leaving,ICTF IM,,"IM for Denver, Salt Lake City, Houston, New Orleans Avondale, Port Laredo, Santa Teresa, KC Neff, Dallas Intermodal Terminal, Global 4, NS Northeast, CSX Northeast, Shell Rock, Council Bluffs, Marion, Dupo, NS Southeast, CSX Southeast, Avon, FEC, ICTF baretables",id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039 class:im id:1009 id:1325 id:2361 id:2362 id:3755 id:1372 id:1374 id:1378 id:1383 id:1460 id:1812 id:1878 id:1879 id:1880 id:1935 id:1936 id:1937 id:1423 id:1285 id:1403 id:1301 id:1938 id:2183 region:NS:A1 region:NS:A2 region:NS:A3 region:CSX:A id:2077 id:1107 id:1115 id:1767 id:1768 id:2583 id:2584 id:3064 id:1180 id:1578 rr:NS@2686 rr:CSX@2686 id:2723 id:3694 id:3695 id:3696 rr:FEC,,ICTF baretables
+UP,OI18-##,"Long Beach, grouped by destination in each block",leaving,ICTF IM,,"IM for Denver, Salt Lake City, Houston, New Orleans Avondale, Port Laredo, Santa Teresa, KC Neff, Dallas Intermodal Terminal, Global 4, NS Northeast, CSX Northeast, Shell Rock, Council Bluffs, Marion, Dupo, NS Southeast, CSX Southeast, Avon, FEC, ICTF baretables",id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039 class:im id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 id:1372 id:1374 id:1378 id:1383 id:1460 id:1812 id:1878 id:1879 id:1880 id:1935 id:1936 id:1937 id:1423 id:1285 id:1403 id:1301 id:1938 id:2183 region:NS:A1 region:NS:A2 region:NS:A3 region:CSX:A id:2077 id:1107 id:1115 id:1767 id:1768 id:2583 id:2584 id:3064 id:1180 id:1578 rr:NS@2686 rr:CSX@2686 id:2723 id:3694 id:3695 id:3696 rr:FEC,,ICTF baretables
 UP,OI18-##,"Long Beach, grouped by destination in each block",leaving,ICTF Autos,,"Autoracks for Mesquite, Shreveport Reisor, Rolla",id:1845 class:auto id:2398 id:1917,,
 UP,OI17-##,"ICTF, grouped by destination in each block",leaving,Terminal Island,,"Terminal Island ITCF, Long Beach Hanjin, APM Pier 400, Global South, Barstow 53' BNSF baretables",id:1146 id:3098 id:1149 id:3101 id:1152 id:1163 id:3099,,Barstow 53' BNSF baretables
 UP,OI17-##,"ICTF, grouped by destination in each block",leaving,Long Beach,,"Long Beach ITF, Long Beach Container Terminal, Long Beach Pacific Container Terminal, Long Beach Pier A, Hobart 53' BNSF baretables, unassigned 40' BNSF baretables to load for BNSF trains",id:2515 id:3094 id:2516 id:3092 id:2514 id:3093 id:2517 id:3091,,Hobart 53' BNSF baretables; unassigned 40' BNSF baretables to load for BNSF trains
@@ -5153,7 +5153,7 @@ UP,DV72-##,North Yard,leaving,Denver Post (Denver Belt Line siding 14) - max 8 c
 UP,DV72-##,North Yard,leaving,Metro Water Recovery (Denver Belt Line siding 16) - max 6 cars,,,,,Metro Water Recovery (Denver Belt Line siding 16) - max 6 cars
 UP,DV72-##,Belt Line,leaving,Denver,,all outbound manifest/home shop coal cars,,1718|2253,
 UP,KS99-##,18th Street,leaving,KCIT,,Kansas City 18th Street IM,id:1229 id:2046 class:im,1229|2046,
-UP,KS99-##,"Neff, with IM grouped by destination",leaving,North Platte IM,ZMNNP,"loaded IM for Oakland, Lathrop, Portland Brooklyn, Salt Lake City, Seattle, Tacoma",class:im id:1857 id:1866 id:1009 id:1325 id:2361 id:2362 id:3755 id:1481 id:1538 id:1803 id:2008 id:1502 id:1503 id:1554 id:1555 id:2626 id:2710 id:2711 id:2712 id:2714 id:3286 id:3287 id:3288,,loaded IM for Oakland
+UP,KS99-##,"Neff, with IM grouped by destination",leaving,North Platte IM,ZMNNP,"loaded IM for Oakland, Lathrop, Portland Brooklyn, Salt Lake City, Seattle, Tacoma",class:im id:1857 id:1866 id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 id:1481 id:1538 id:1803 id:2008 id:1502 id:1503 id:1554 id:1555 id:2626 id:2710 id:2711 id:2712 id:2714 id:3286 id:3287 id:3288,,loaded IM for Oakland
 UP,KS99-##,"Neff, with IM grouped by destination",leaving,City of Industry IM,IKCLB,53' wells,,,
 UP,KS99-##,"Neff, with IM grouped by destination",leaving,Terminal Island IM,IKCLB,"40/53' wells with international containers for LA TICTF, LA Pier 400, LA Global South, Long Beach Pier T",class:im id:1152 id:3100 id:1163 id:3099 id:1149 id:3101,,40/53' wells with international containers for LA TICTF
 UP,KS99-##,"Neff, with IM grouped by destination",leaving,Long Beach IM,IKCLB,"40/53' wells with international containers for Long Beach ITS, Long Beach PCT, Long Beach Terminal A",class:im id:2514 id:3093 id:2517 id:3091,,40/53' wells with international containers for Long Beach ITS
@@ -5171,7 +5171,7 @@ UP,MQLA-##,"Mesquite, grouped by destination in each block",leaving,East LA,,,id
 UP,MQLA-##,"Mesquite, grouped by destination in each block",leaving,LATC,ILALA,"LATC, Lathrop, Portland Brooklyn",id:1203 id:1857 id:1866,,
 UP,LBDV%-##,ICTF,leaving,Rolla Autos,LDI06,,id:1917 class:auto,,
 UP,LBDV%-##,ICTF,leaving,Denver,,,id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039,,
-UP,LBDV%-##,ICTF,leaving,Salt Lake City,,,id:1009 id:1325 id:2361 id:2362 id:3755,,
+UP,LBDV%-##,ICTF,leaving,Salt Lake City,,,id:1009 id:1325 id:2361 id:2362 id:3755 id:4049,,
 UP,LBDV%-##,ICTF,leaving,Sparks IM,INPOA,,id:1141 id:2338 class:im,,
 UP,LCLT-##,LATC,leaving,Lathrop,,,id:1857,,
 UP,LCLT-##,LATC,leaving,Oakland IM,ZG2OAB,,id:3767 class:im,,
@@ -5224,7 +5224,7 @@ UP,LAMN-##,East LA,leaving,Nashville IM,,,id:2859 class:im,,
 UP,LAMN-##,East LA,leaving,Overflow ZLAAI,,,catchall,,
 UP,G2OAB%-##,Global 2,leaving,Lathrop IM,,Overflow ZG2LT Lathrop,catchall,1595,
 UP,G2OAB%-##,Global 2,leaving,Sparks IM,,,id:1141 id:2338 class:im,1595,
-UP,DVLB%-##,"Denver, grouped by destination in each block",leaving,Salt Lake,,"Salt Lake, Oakland -> IOANP, Barbour's Cut UP ->IOANP",id:1009 id:1325 id:2361 id:2362 id:3755 id:3767 id:1812,,
+UP,DVLB%-##,"Denver, grouped by destination in each block",leaving,Salt Lake,,"Salt Lake, Oakland -> IOANP, Barbour's Cut UP ->IOANP",id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 id:3767 id:1812,,
 UP,DVLB%-##,"Denver, grouped by destination in each block",leaving,LATC,LOG44,"LATC, East LA IM",id:1203 id:1588 class:im,,
 UP,DVLB%-##,"Denver, grouped by destination in each block",leaving,Terminal Island,,"Terminal Island ITCF, Long Beach Hanjin, APM, Pier 400, Global South",id:1146 id:3098 id:1149 id:3101 id:1152 id:1152 id:1163 id:3099,,
 UP,DVLB%-##,"Denver, grouped by destination in each block",leaving,Long Beach,,"Long Beach ITF, Long Beach Pacific Container Terminal, Long Beach Pier A",id:2515 id:3094 id:2514 id:3093 id:2517 id:3091,,
@@ -5245,7 +5245,7 @@ UP,LAAI-##,"East LA, grouped by destination",leaving,Baltimore NS,,,id:1417 id:1
 UP,DUNP%-##,"Dupo, grouped by destination within each block",leaving,KS 18th Street IM,,,class:im,,KS 18th Street
 UP,DUNP%-##,"Dupo, grouped by destination within each block",leaving,Council Bluffs IM,MNLCB,,id:1107 id:1115 id:1767 id:1768 id:2583 id:2584 id:3064 class:im,,
 UP,DUNP%-##,"Dupo, grouped by destination within each block",leaving,Seattle,IG4SE,"Seattle, TACSIM, Washington United, Portland Terminal 6, other Pacific Northwest IM",id:1481 id:1538 id:1803 id:2008 id:2714 id:2711 id:3289 id:1877 id:2140 class:im,,other Pacific Northwest
-UP,DUNP%-##,"Dupo, grouped by destination within each block",leaving,Oakland,INPOA,"Oakland, Lathrop, Salt Lake",id:1566 id:2237 id:1857 id:1009 id:1325 id:2361 id:2362 id:3755,,
+UP,DUNP%-##,"Dupo, grouped by destination within each block",leaving,Oakland,INPOA,"Oakland, Lathrop, Salt Lake",id:1566 id:2237 id:1857 id:1009 id:1325 id:2361 id:2362 id:3755 id:4049,,
 UP,DUNP%-##,"Dupo, grouped by destination within each block",leaving,Denver,MNPDV,Denver,id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039,,
 UP,DUNP%-##,"Dupo, grouped by destination within each block",leaving,Portland,ZG2BR,Portland Brooklin,,,Portland Brooklin
 UP,YCEG%-##,"Yard Center, with IM grouped by destination",leaving,Salem Manifest,,"Salem, EVWR, Mt Vernon UP, Mt Vernon NS, COER",id:1892 rr:EVWR id:3002 id:3003 rr:COER,,
@@ -5276,13 +5276,13 @@ UP,LAMN2-##,East LA,leaving,NS Southeast,,Overflow ZLAAI,catchall,,
 UP,LCG2%-##,"LATC, grouped by destination in each block",leaving,CSX Northeast,IG3SK,"Jersey City Kearney, W Springfield, NW Ohio ICTF, Worcester, Chambersburg, misc CSX northeast",id:3294 id:3600 id:1002 id:1006 id:1870 id:1674 region:CSX:A,,NW Ohio ICTF
 UP,LCG2%-##,"LATC, grouped by destination in each block",leaving,NS Northeast,IG3AH,"Harrisburg, Morrisville, Jersey City Croxton, Cincinnati Gest, misc NS northeast",id:1476 id:1911 id:1108 id:2048 region:NS:A1 region:NS:A2 region:NS:A3,,
 UP,LCG2%-##,"LATC, grouped by destination in each block",leaving,Global 2 IM,,,id:1595 class:im,,
-UP,G2SC%-##,Global 2,leaving,Salt Lake City,,,id:1009 id:1325 id:2361 id:2362 id:3755,1595,
+UP,G2SC%-##,Global 2,leaving,Salt Lake City,,,id:1009 id:1325 id:2361 id:2362 id:3755 id:4049,1595,
 UP,G2SC%-##,Global 2,leaving,Las Vegas IM,ZDVLB,,id:1400 id:1492 class:im,1595,
 UP,G2SC%-##,Global 2,leaving,Overflow Lathrop,INPOA,,catchall,1595,
 UP,G2SC%-##,Global 2,leaving,Oakland,INPOA,,id:3767,1595,
 UP,G2SC%-##,Global 2,leaving,ICTF Baretables,ZDVLB,Unassigned 40' and 53' wells for distribution from Dolores/ICTF,,1595,Unassigned 40' and 53' wells for distribution from Dolores/ICTF
 UP,PBHO-##,"Pine Bluff, grouped by destination",leaving,Houston IM,,"Houston Settegast, Houston Barbour's Cut UP",id:3480 id:1812,,
-UP,G2SC-##,Global 2,leaving,Salt Lake City,,,id:1009 id:1325 id:2361 id:2362 id:3755,1595,
+UP,G2SC-##,Global 2,leaving,Salt Lake City,,,id:1009 id:1325 id:2361 id:2362 id:3755 id:4049,1595,
 UP,G2SC-##,Global 2,leaving,Denver IM,ZLBDV,,id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039 class:im,1595,
 UP,G2SC-##,Global 2,leaving,Las Vegas IM,ZDVLB,,id:1400 id:1492 class:im,1595,
 UP,G2SC-##,Global 2,leaving,Overflow Lathrop,INPOA,,catchall,1595,
@@ -5348,14 +5348,14 @@ UP,MQG4-##,"Mesquite, grouped by destination in each block",leaving,North Platte
 UP,MQG4-##,"Mesquite, grouped by destination in each block",leaving,Marion IM,INPMN,,id:1180 id:1448 id:1705 class:im,,
 UP,MQG4-##,Dupo,added at,NS Southeast,IG3CL,Austell,id:1244,1578,
 UP,MNNP%-##,"Marion, grouped by destination within each block",leaving,Seattle,IG4SE,"Seattle, TACSIM, Washington United, Portland Terminal 6, other Pacific Northwest IM",id:1481 id:1538 id:1803 id:2008 id:2714 id:2711 id:3289 id:1877 id:2140 class:im,,other Pacific Northwest
-UP,MNNP%-##,"Marion, grouped by destination within each block",leaving,Oakland,INPOA,"Oakland, Lathrop [53' only], Salt Lake",id:1566 id:2237 id:1857 id:1009 id:1325 id:2361 id:2362 id:3755,,
+UP,MNNP%-##,"Marion, grouped by destination within each block",leaving,Oakland,INPOA,"Oakland, Lathrop [53' only], Salt Lake",id:1566 id:2237 id:1857 id:1009 id:1325 id:2361 id:2362 id:3755 id:4049,,
 UP,MNNP%-##,"Marion, grouped by destination within each block",leaving,Denver,MNPDV,Denver,id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039,,
 UP,MNNP%-##,"Marion, grouped by destination within each block",leaving,Portland,ZG2BR,Portland Brooklin,,,Portland Brooklin
 UP,MNNP%-##,"Marion, grouped by destination within each block",leaving,KCIT,,"18th Street UP, Council Bluffs ->YKS87R",id:1229 id:1107 id:1115 id:1767 id:1768 id:2583 id:2584 id:3064,,
 UP,MNNP%-##,"Marion, grouped by destination within each block",leaving,Dupo IM,,"Dupo, Avon ->MCHAS",id:1578 id:1611 id:3733,,
 UP,MNNP%-##,Dupo,created at,ICTF,IKCLB/ZKCLB,Loaded wells for Dolores/ICTF,,1578,Loaded wells for Dolores/ICTF
 UP,IEG2-##,Inland Empire IT,leaving,Global 2,,53' Containers for Global 2,,,
-UP,DVSC-##,"Denver, grouped by destination in each block",leaving,Salt Lake,,"Salt Lake, Oakland -> INPOA",id:1009 id:1325 id:2361 id:2362 id:3755 id:3767,,
+UP,DVSC-##,"Denver, grouped by destination in each block",leaving,Salt Lake,,"Salt Lake, Oakland -> INPOA",id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 id:3767,,
 UP,DVSC-##,"Denver, grouped by destination in each block",leaving,Houston IM,,"Houston Settegast, Barbour's Cut UP ->IOANP",id:3480 id:1812,,
 UP,DVSC-##,"Denver, grouped by destination in each block",leaving,Terminal Island,ZSCLB,"Terminal Island ITCF, Long Beach Hanjin, APM, Pier 400, Global South",id:1146 id:3098 id:1149 id:3101 id:1152 id:1152 id:1163 id:3099,,
 UP,DVSC-##,"Denver, grouped by destination in each block",leaving,Long Beach,ZSCLB,"Long Beach ITF, Long Beach Pacific Container Terminal, Long Beach Pier A",id:2515 id:3094 id:2514 id:3093 id:2517 id:3091,,
@@ -5363,7 +5363,7 @@ UP,DVSC-##,"Denver, grouped by destination in each block",leaving,LA Harbor,ZSCL
 UP,DVSC-##,"Denver, grouped by destination in each block",leaving,Dolores ICTF,ZSCLB,,id:1001,,
 UP,LBDV-##,ICTF,leaving,Rolla Autos,LDI06,,id:1917 class:auto,,
 UP,LBDV-##,ICTF,leaving,Denver,,,id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039,,
-UP,LBDV-##,ICTF,leaving,Salt Lake City,,"Salt Lake City, Sparks IM -> INPOA",id:1009 id:1325 id:2361 id:2362 id:3755 id:1141 id:2338 class:im,,
+UP,LBDV-##,ICTF,leaving,Salt Lake City,,"Salt Lake City, Sparks IM -> INPOA",id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 id:1141 id:2338 class:im,,
 UP,LBDV-##,ICTF,leaving,North Platte IM,,"Council Bluffs IM, Shell Rock IM, Twin Cities IT IM",id:1107 id:1115 id:1767 id:1768 id:2583 id:2584 id:3064 class:im id:2077 class:im class:im,,Twin Cities IT
 UP,EGSA%-##,"Eagle Pass, with IM grouped by destination yard in each block",leaving,SAIT IM,,"Lathrop, Dolores/ICTF, misc UP California destinations",id:1857 id:1001,,misc UP California destinations
 UP,EGSA%-##,"Eagle Pass, with IM grouped by destination yard in each block",leaving,Marion IM,,"Marion, Dupo, Charlotte Pinoca, Misc CSX Southeast IM",id:1180 id:1578 id:1907 region:CSX:B class:im,,
@@ -5387,7 +5387,7 @@ UP,BRG2-##,"Brooklyn, grouped by destination within each block",leaving,Dupo,INP
 UP,BRG2-##,"Brooklyn, grouped by destination within each block",leaving,Council Bluffs,ITAG3/MNPVP,,id:1107 id:1115 id:1767 id:1768 id:2583 id:2584 id:3064,,
 UP,MNNP-##,"Marion, grouped by destination within each block",leaving,North Platte Autos,,"Loaded autoracks for CO, UT, NV, WA, OR, Northern California",st:CO class:auto st:UT st:NV st:WA st:OR st:CA,,
 UP,MNNP-##,"Marion, grouped by destination within each block",leaving,Seattle,IG4SE,"Seattle, TACSIM, Washington United, Portland Terminal 6, other Pacific Northwest IM",id:1481 id:1538 id:1803 id:2008 id:2714 id:2711 id:3289 id:1877 id:2140 class:im,,other Pacific Northwest
-UP,MNNP-##,"Marion, grouped by destination within each block",leaving,Oakland,INPOA,"Oakland, Lathrop [53' and spines only], Salt Lake",id:1566 id:2237 id:1857 id:1009 id:1325 id:2361 id:2362 id:3755,,
+UP,MNNP-##,"Marion, grouped by destination within each block",leaving,Oakland,INPOA,"Oakland, Lathrop [53' and spines only], Salt Lake",id:1566 id:2237 id:1857 id:1009 id:1325 id:2361 id:2362 id:3755 id:4049,,
 UP,MNNP-##,"Marion, grouped by destination within each block",leaving,Denver,MNPDV,Denver,id:1718 id:1769 id:1770 id:1800 id:1976 id:1977 id:1978 id:1979 id:1980 id:1981 id:2407 id:4039,,
 UP,MNNP-##,"Marion, grouped by destination within each block",leaving,Portland,ZG2BR,Portland Brooklin,,,Portland Brooklin
 UP,MNNP-##,"Marion, grouped by destination within each block",leaving,KCIT,,"18th Street UP, Council Bluffs ->YKS87R",id:1229 id:1107 id:1115 id:1767 id:1768 id:2583 id:2584 id:3064,,

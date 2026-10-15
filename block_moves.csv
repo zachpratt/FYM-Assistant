@@ -5112,6 +5112,16 @@ NS,287-##,3785,Greenbrier,set out,Pick Up ITCF UP
 NS,287-##,3785,Greenbrier,set out,Memphis UP
 NS,287-##,3785,Greenbrier,set out,Rossville IM
 NS,287-##,3075,Rossville,set out,Rossville IM
+NS,286-##,3785,Greenbrier,set out,Huntsville IM
+NS,287-##,3785,Greenbrier,pick up,Huntsville IM
+NS,284-##,3785,Greenbrier,set out,Huntsville Auto
+NS,284-##,3785,Greenbrier,set out,IM
+NS,284-##,3785,Greenbrier,pick up,Savannah
+NS,284-##,3785,Greenbrier,pick up,Charleston IM
+NS,285-##,3785,Greenbrier,set out,Huntsville IM
+NS,285-##,3785,Greenbrier,set out,Pick Up ITCF UP
+NS,285-##,3785,Greenbrier,set out,Memphis UP
+NS,285-##,3785,Greenbrier,set out,Rossville IM
 NS,332-##,1882,Toledo Evans Yard,set out,Toledo Evans Yard
 NS,350-##,1137,East Durham NS,set out,Durham
 NS,350-##,1137,East Durham NS,pick up,Selma
@@ -5782,8 +5792,8 @@ NS,170-##,1453,Columbus Watkins Yard,pick up,Conway
 NS,170-##,3869,Canton Yard,set out,Canton
 NS,170-##,3869,Canton Yard,pick up,Conway
 NS,177-##,2048,Cincinnati Gest St. Yard,pick up,Chattanooga
-NS,197-##,1455,Cincinnati Queensgate Yard,set out,Cincinnati
-NS,197-##,1455,Cincinnati Queensgate Yard,pick up,Georgetown IM
+NS,197-##,2048,Cincinnati Gest St. Yard,set out,Cincinnati
+NS,197-##,2048,Cincinnati Gest St. Yard,pick up,Georgetown IM
 NS,197-##,1132,Georgetown Delaplain Yard,set out,Georgetown IM
 NS,197-##,1056,Danville,set out,Danville
 NS,197-##,1056,Danville,pick up,Chattanooga
@@ -6349,6 +6359,25 @@ NS,242-##,2774,Columbia Andrews Yard,set out,Columbia
 NS,242-##,2774,Columbia Andrews Yard,pick up,Charleston
 NS,243-##,1136,Spartanburg Hayne Yard,pick up,Atlanta
 NS,243-##,1136,Spartanburg Hayne Yard,pick up,Chattanooga
+NS,223-##,1205,Voltz,pick up,Jacksonville
+NS,223-##,1205,Voltz,pick up,Austell IM
+NS,223-##,3393,Moberly,set out,Moberly
+NS,223-##,1276,Wentzville,set out,Wentzville Auto
+NS,223-##,1276,Wentzville,pick up,East Point Auto
+NS,223-##,1277,St. Louis Luther Yard,set out,St Louis
+NS,223-##,1277,St. Louis Luther Yard,pick up,FEC IM
+NS,223-##,1277,St. Louis Luther Yard,pick up,Jacksonville IM
+NS,223-##,1277,St. Louis Luther Yard,pick up,Austell IM
+NS,223-##,1277,St. Louis Luther Yard,pick up,Atlanta IM
+NS,223-##,1277,St. Louis Luther Yard,pick up,Jacksonville Westlake Auto
+NS,223-##,1026,Louisville Youngtown Yard,pick up,Shelbyville
+NS,223-##,1268,Shelbyville,pick up,East Point
+NS,223-##,1268,Shelbyville,pick up,FEC
+NS,223-##,1268,Shelbyville,pick up,Commerce Jacksonville Westlake
+NS,223-##,1268,Shelbyville,pick up,Jacksonville Auto
+NS,223-##,1244,Austell,set out,Austell
+NS,223-##,1244,Austell,set out,East Point Auto
+NS,223-##,1244,Austell,pick up,Atlanta IM
 NS,219-##,1276,Wentzville,pick up,St Louis
 NS,219-##,1277,St. Louis Luther Yard,pick up,Jacksonville IM
 NS,219-##,1277,St. Louis Luther Yard,pick up,Atlanta IM
@@ -6476,6 +6505,9 @@ NS,224-##,1462,Louisville Appliance Park,pick up,Voltz IM
 NS,224-##,1026,Louisville Youngtown Yard,pick up,Voltz Auto Parts
 NS,224-##,1205,Voltz,set out,Voltz IM
 NS,224-##,1205,Voltz,set out,Auto
+NS,29A-##,1244,Austell,set out,Austell IM
+NS,29A-##,1244,Austell,set out,Atlanta Classification IM
+NS,29A-##,1244,Austell,pick up,East Point Auto
 NS,24X-##,1140,Greensboro Pomona Yard,set out,Greensboro
 NS,24X-##,1140,Greensboro Pomona Yard,pick up,Croxton IM
 NS,20X-##,1476,Harrisburg,set out,Harrisburg
@@ -6748,6 +6780,26 @@ NS,29F-##,1082,Atlanta Inman Yard,set out,Pick Up FEC UPS
 NS,29F-##,1082,Atlanta Inman Yard,set out,Jacksonville UPS
 NS,29F-##,1082,Atlanta Inman Yard,set out,Jacksonville
 NS,29F-##,1082,Atlanta Inman Yard,set out,and Jacksonville Fort Pierce IM
+NS,203-##,1385,Rutherford Yard,set out,St Louis
+NS,203-##,1385,Rutherford Yard,set out,Voltz
+NS,203-##,1385,Rutherford Yard,set out,Rutherford IM
+NS,203-##,1385,Rutherford Yard,set out,Pick Up Rossville
+NS,203-##,1385,Rutherford Yard,set out,Atlanta
+NS,203-##,1385,Rutherford Yard,set out,FEC
+NS,203-##,1385,Rutherford Yard,set out,Jacksonville
+NS,203-##,1385,Rutherford Yard,set out,Wylie
+NS,203-##,1385,Rutherford Yard,set out,Austell
+NS,203-##,1385,Rutherford Yard,set out,Atlanta IM
+NS,204-##,1082,Atlanta Inman Yard,pick up,Croxton
+NS,204-##,1082,Atlanta Inman Yard,pick up,Rutherford
+NS,204-##,1082,Atlanta Inman Yard,pick up,Morrisville IM
+NS,24X-##,1385,Rutherford Yard,set out,Rutherford IM
+NS,24X-##,1140,Greensboro Pomona Yard,set out,Greensboro
+NS,24X-##,1140,Greensboro Pomona Yard,pick up,Croxton IM
+NS,25A-##,1140,Greensboro Pomona Yard,set out,Greensboro an Charlotte IM
+NS,25A-##,1140,Greensboro Pomona Yard,pick up,Atlanta IM
+NS,25A-##,1385,Rutherford Yard,pick up,Atlanta
+NS,25A-##,1385,Rutherford Yard,pick up,Jacksonville IM
 NS,32N-##,1887,Decatur NS Yard,set out,Bellevue
 NS,32N-##,1887,Decatur NS Yard,pick up,Conway
 NS,32N-##,1535,Lafayette East Yard,pick up,Conway
@@ -7348,6 +7400,28 @@ NS,154-##,1929,Doraville Yard,set out,Pick up Linwood
 NS,154-##,1929,Doraville Yard,set out,Spartanburg
 NS,154-##,1136,Spartanburg Hayne Yard,set out,Spartanburg
 NS,154-##,1274,Charlotte NS,set out,Charlotte
+NS,35N-##,1535,Lafayette East Yard,set out,Lafayette
+NS,35N-##,1887,Decatur NS Yard,set out,ALS Gateway (121)
+NS,35N-##,1887,Decatur NS Yard,set out,UP KC (115)
+NS,35N-##,1887,Decatur NS Yard,pick up,Granite City
+NS,35N-##,1887,Decatur NS Yard,pick up,Madison
+NS,35N-##,1342,Granite City Smith Yard,set out,Granite City
+NS,118-##,1386,Portsmouth,pick up,Linwood
+NS,118-##,1140,Greensboro Pomona Yard,set out,Selma (350)
+NS,118-##,1140,Greensboro Pomona Yard,set out,Greensboro
+NS,119-##,2946,Rock Hill,set out,Rock Hill
+NS,119-##,2946,Rock Hill,pick up,Charlotte
+NS,119-##,1274,Charlotte NS,set out,Charlotte
+NS,119-##,1274,Charlotte NS,pick up,Bellevue
+NS,119-##,1147,Linwood Spencer Yard,set out,Linwood
+NS,119-##,1147,Linwood Spencer Yard,set out,Enola
+NS,119-##,1147,Linwood Spencer Yard,pick up,Bellevue
+NS,119-##,1140,Greensboro Pomona Yard,pick up,Bellevue
+NS,127-##,1320,Radford,set out,Radford
+NS,127-##,1320,Radford,pick up,Chattanooga
+NS,127-##,2904,Knoxville Sevier Yard,set out,Knoxville
+NS,127-##,2904,Knoxville Sevier Yard,pick up,Chattanooga
+NS,127-##,2904,Knoxville Sevier Yard,pick up,Pine Bluff
 NS,121-##,1697,Detroit Livernois Yard,set out,CSX
 NS,121-##,1384,Detroit Oakwood Yard,set out,Oakwood
 NS,121-##,1384,Detroit Oakwood Yard,set out,Pick Up Decatur
