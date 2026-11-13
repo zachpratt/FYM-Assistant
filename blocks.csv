@@ -2682,6 +2682,7 @@ UP,DISI-##,"Dallas Intermodal Terminal, grouped by destination in each block",le
 UP,DISI-##,"Dallas Intermodal Terminal, grouped by destination in each block",leaving,"Dolores ICTF, Dolores Baretables",,,,,"Dolores ICTF, Dolores Baretables"
 UP,DISI-##,"Dallas Intermodal Terminal, grouped by destination in each block",leaving,LATC,ZSALB,"East LA, LATC",id:1588 id:1203,,
 UP,DISI-##,"Dallas Intermodal Terminal, grouped by destination in each block",leaving,Tuscon IM,MHNPX,,id:1477 class:im,,
+UP,DISI-##,"Dallas Intermodal Terminal, grouped by destination in each block",leaving,Calipatria IM,ISICA,,id:4046 class:im,,
 UP,DISI-##,"Dallas Intermodal Terminal, grouped by destination in each block",leaving,Santa Teresa Baretables,,Empty wells billed to Santa Teresa,,,Empty wells billed to Santa Teresa
 UP,NPMN-##,"North Platte, grouped by destination in each block",leaving,KCIT IM,YKS99,18th Street IM,id:1229 id:2046 class:im,,
 UP,NPMN-##,"North Platte, grouped by destination in each block",leaving,Dupo IM,,,id:1578 class:im,,
@@ -2840,6 +2841,8 @@ UP,LBMN-##,"ICTF, grouped by destination in each block",leaving,Marion IM,,Mario
 UP,LBMN-##,"ICTF, grouped by destination in each block",leaving,NS Southeast IM,IMNME,"Hunstville, Charleston NS, Charlotte IMF, Miami FEC, Austell, Misc NS Southeast",id:1432 id:1838 id:1052 id:1077 id:1244 region:NS:B1 region:NS:B2 region:NS:B3,,
 UP,LBMN-##,"ICTF, grouped by destination in each block",leaving,CSX Southeast IM,IMEME,"Winter Haven, Charlotte Pinoca, Jacksonville Duval, Fairburn, North Charleston Bennett, Misc CSX Southeast",id:1519 id:1907 id:1679 id:1261 id:1208 region:CSX:B,,
 UP,LBMN-##,"ICTF, grouped by destination in each block",leaving,Dupo IM,ZMNNP,Dupo,id:1578,,
+UP,SICA-##,Santa Teresa,leaving,Calipatria IM,,,id:4046 class:im,1403,
+UP,CALB-##,Calipatria,leaving,On-Dock IM,,Outbound loaded IM all set for a single terminal,class:im,4046,Outbound loaded IM all set for a single terminal
 UP,SJ58-##,Neff,leaving,Jefferson City,,"Jefferson City, Lees Summit, Algoa",id:1323 id:3354 id:3355,,
 UP,UM49-##,Arden,leaving,Valley,,Las Vegas Valley,id:1492,3955,
 UP,UM49-##,Arden,leaving,Apex,,Apex,id:2705 id:3062,3955,
@@ -3042,11 +3045,11 @@ UP,IA43-##,Albany,leaving,Millersburg,,As-is Millersburg block from inbound LIA4
 UP,IA43-##,Millersburg,leaving,Salem,,"Salem UP, CA, AZ, El Paso",id:1820 id:1821 st:CA st:AZ id:1779 id:1799 id:2099,1822,
 UP,IL50-##,Albina Yard,leaving,Port of Vancouver UP,,,id:3059,1302,
 UP,IL50-##,Albina Yard,leaving,BNSF,,"Vancouver UP, Albany OE, AERC, McMinnville, Willamina, Albany PNWR, Toledo",id:3056 id:1179 rr:AERC id:2002 id:3860 id:2132,1302,Albany PNWR
-UP,YROG-##,Yermo,leaving,Arden,,"Las Vegas, Apex, Henderson",id:1400 id:1492 id:2705 id:1402,,
-UP,YROG-##,Yermo,leaving,Ogden,,"CO, WY, UT, Loaded cars for Billings MT/Fairview MT/Dore ND, [From Arden only: Milpitas autos, overflow North Platte]",st:CO st:WY not:RCPE st:UT class:auto catchall,,Loaded cars for Billings MT/Fairview MT/Dore ND; [From Arden only: Milpitas
-UP,YROG-##,Yermo,leaving,Pocatello,MOGPD,MOGPD Pocatello block,ref:MOGPD:Pocatello,,
-UP,YROG-##,Las Vegas Arden yard,created at,Global 2 IM,ZSCG2,,id:1595 class:im,1400,
-UP,YROG-##,Las Vegas Arden yard,created at,I-5 Corridor,MOGPD,Overflow MNPWC I-5 Corridor,ref:MNPWC:I-5_Corridor,1400,
+UP,YROG%-##,Yermo,leaving,Arden,,"Las Vegas, Apex, Henderson",id:1400 id:1492 id:2705 id:1402,,
+UP,YROG%-##,Yermo,leaving,Ogden,,"CO, WY, UT, Loaded cars for Billings MT/Fairview MT/Dore ND, [From Arden only: Milpitas autos, overflow North Platte]",st:CO st:WY not:RCPE st:UT class:auto catchall,,Loaded cars for Billings MT/Fairview MT/Dore ND; [From Arden only: Milpitas
+UP,YROG%-##,Yermo,leaving,Pocatello,MOGPD,MOGPD Pocatello block,ref:MOGPD:Pocatello,,
+UP,YROG%-##,Las Vegas Arden yard,created at,Global 2 IM,ZSCG2,,id:1595 class:im,1400,
+UP,YROG%-##,Las Vegas Arden yard,created at,I-5 Corridor,MOGPD,Overflow MNPWC I-5 Corridor,ref:MNPWC:I-5_Corridor,1400,
 UP,CHAL-##,Clearing,leaving,Proviso,,"UP Chicago, Belvidere, Anderson UP, Janesville UP, Marshalltown, Eddyville, Tama, Cedar Rapids, CIC, AR, LA, TX, overflow Yard Center, overflow MCHNP, overflow MCHCB",rr:UP@1055 rr:UP@1066 rr:UP@1072 rr:UP@1088 rr:UP@1092 rr:UP@1094 id:1316 id:2558 id:2819 id:2816 id:1287 id:1708 id:3311 id:1134 id:1753 rr:CIC st:AR st:LA st:TX catchall catchall catchall,1473,
 UP,CHAL-##,Clearing,leaving,Butler,,"Milwaukee, Sheboygan, Edgewater Generating Station, Wisconsin Rapids UP, Nekoosa UP, Pleasant Prarie UP",id:1681 id:2420 id:2421 id:2422 id:3049 id:3051,1473,Pleasant Prarie UP
 UP,CHAL-##,Clearing,leaving,Altoona,,"UP MN, RCPE, MNNR, TCWR, Port Superior UP, [From Proviso]: BNSF MN/ND, overflow North Platte, overflow IA/NE",rr:UP:MN rr:RCPE rr:MNNR rr:TCWR catchall catchall,1473,Port Superior UP; [From Proviso]: BNSF MN/ND
@@ -4195,12 +4198,6 @@ UP,EWSR-##,Englewood,leaving,Strang,,"Houston La Porte Strang UP, Houston Barbou
 UP,GMGM%-##,Oxnard,leaving,West Colton,MCICI,All return traffic not in Montclair block,,,All return traffic not in Montclair block
 UP,GMGM%-##,Oxnard,leaving,Montclair,,hyper-local traffic for LA basin,,,hyper-local traffic for LA basin
 UP,GMGM%-##,City of Industry,leaving,Gemco,,"Oxnard/Pt. Hueneme, Guadalupe, White Hills, Santa Maria",id:1303 id:1035 id:1784 id:1785,1095,
-UP,YROG%-##,Yermo,leaving,Arden,,"Las Vegas, Apex, Henderson",id:1400 id:1492 id:2705 id:1402,,
-UP,YROG%-##,Yermo,leaving,Ogden,,"CO, WY, UT, ID, Loaded cars for Billings MT/Fairview MT/Dore ND, [From Mojave only: NE, IA, ND, SD, WI, MN, IL, KS, MO, CSX Region A, NS Regions A1/A2/A3/C1/C2/C3, CPKC Regions 1/2/3, DMVW, RRVW, RCPE, DAIR, CPKC IL/MO/KS, CSX Region A], [From Arden only: Milpitas autos]",st:CO st:WY not:RCPE st:UT st:ID st:IA st:ND st:SD st:WI st:MN st:IL st:KS st:MO region:CSX:A region:NS:A1 region:NS:A2 region:NS:A3 region:NS:C1 region:NS:C2 region:NS:C3 region:CPKC:1 region:CPKC:2 region:CPKC:3 rr:DMVW rr:RRVW rr:RCPE rr:DAIR rr:CPKC:IL/MO/KS class:auto,,Loaded cars for Billings MT/Fairview MT/Dore ND; [From Mojave only: NE; CSX Region A]; [From Arden only: Milpitas autos]
-UP,YROG%-##,Yermo,leaving,Pocatello,MOGPD,MOGPD Pocatello block,ref:MOGPD:Pocatello,,
-UP,YROG%-##,Las Vegas Arden yard,created at,Global 2 IM,ZSCG2,,id:1595 class:im,1400,
-UP,YROG%-##,Las Vegas Arden yard,created at,North Platte,,"NE, IA, ND, SD, WI, MN, IL, KS, MO, CSX Region A, NS Regions A1/A2/A3/C1/C2/C3, CPKC Regions 1/2/3, DMVW, RRVW, RCPE, DAIR, CPKC IL/MO/KS, CSX Region A",st:NE st:IA st:ND st:SD st:WI st:MN st:IL st:KS st:MO region:CSX:A region:NS:A1 region:NS:A2 region:NS:A3 region:NS:C1 region:NS:C2 region:NS:C3 region:CPKC:1 region:CPKC:2 region:CPKC:3 rr:DMVW rr:RRVW rr:RCPE rr:DAIR rr:CPKC:IL/MO/KS region:CSX:A,1400,
-UP,YROG%-##,Las Vegas Arden yard,created at,I-5 Corridor,MOGPD,Overflow MNPWC I-5 Corridor,ref:MNPWC:I-5_Corridor,1400,
 UP,NPRO%-##,North Platte,leaving,Roper Autos,,"Loaded autoracks for Salt Lake Roper, empty autoracks for Milpitas, overflow loaded autos for Milpitas",id:1009 class:auto class:auto catchall class:auto,1683,empty autoracks for Milpitas
 UP,NPRO%-##,North Platte,leaving,Roper,,"Salt Lake City, UTAH RR, UCRY, Milpitas manifest",id:1009 id:1325 id:2361 id:2362 id:3755 id:4049 rr:UTAH rr:UCRY id:1213,1683,
 UP,NPRO%-##,North Platte,leaving,Elko,MROMI,"Elko, Battle Mountain, Osino, Winnemucca, Colado, Empire",id:3791 id:3792 id:3794 id:3795 id:3793 id:3796 id:3797 id:3798,1683,
@@ -4496,11 +4493,11 @@ UP,FWDA-##,Davidson,leaving,ALS,MARAS,"St. Louis local cars, KBSR, TPW, IMRR, TZ
 UP,FWDA-##,Davidson,leaving,Dallas,,"Dallas, Dallas Intermodal, Shreveport LA, Mansfield, LA, CPKC OK/MS/AL/LA, Waskom, Tenaha, Longview, Texarkana, Port of Caddo-Bossier, Mansfield LA,  overflow Mexico Laredo/Eagle Pass UP",id:1795 id:1797 id:1846 id:1938 id:3748 id:1795 id:1797 id:1846 id:1938 id:3748 id:1153 id:1282 id:1401 id:2398 id:2395 id:2396 st:LA rr:CPKC:OK/MS/AL/LA id:2399 id:2393 id:2394 id:1044 id:2733 id:2734 id:2735 id:3154 id:1251 id:2397 id:2395 id:2396 ref:Mexico:Laredo/Eagle_Pass_UP,2973,
 UP,FWDA-##,Davidson,leaving,DGNO,,"All DGNO traffic,  CPKC Dallas",rr:CPKC@1795 rr:CPKC@1797 rr:CPKC@1846 rr:CPKC@1938 rr:CPKC@3748,2973,All DGNO traffic
 UP,FWDA-##,Davidson,leaving,Ennis,MENEN,Overflow MFWEW Ennis,ref:MFWEW:Ennis,2973,
-UP,YROG%-##,Yermo,leaving,Arden,,"Las Vegas, Apex, Henderson",id:1400 id:1492 id:2705 id:1402,,
-UP,YROG%-##,Yermo,leaving,Ogden,,"CO, WY, UT, Loaded cars for Billings MT/Fairview MT/Dore ND, [From Arden only: Milpitas autos, overflow North Platte]",st:CO st:WY not:RCPE st:UT class:auto catchall,,Loaded cars for Billings MT/Fairview MT/Dore ND; [From Arden only: Milpitas
-UP,YROG%-##,Yermo,leaving,Pocatello,MOGPD,MOGPD Pocatello block,ref:MOGPD:Pocatello,,
-UP,YROG%-##,Las Vegas Arden yard,created at,Global 2 IM,ZSCG2,,id:1595 class:im,1400,
-UP,YROG%-##,Las Vegas Arden yard,created at,I-5 Corridor,MOGPD,Overflow MNPWC I-5 Corridor,ref:MNPWC:I-5_Corridor,1400,
+UP,YROG-##,Yermo,leaving,Ogden,,"CO, WY, UT, Loaded cars for Billings MT/Fairview MT/Dore ND, [From Arden only: Milpitas autos, overflow North Platte]",st:CO st:WY not:RCPE st:UT class:auto catchall,,Loaded cars for Billings MT/Fairview MT/Dore ND; [From Arden only: Milpitas
+UP,YROG-##,Yermo,leaving,Pocatello,MOGPD,MOGPD Pocatello block,ref:MOGPD:Pocatello,,
+UP,YROG-##,Yermo,leaving,Arden,,"Las Vegas, Apex, Henderson",id:1400 id:1492 id:2705 id:1402,,
+UP,YROG-##,Las Vegas Arden yard,created at,Global 2 IM,ZSCG2,,id:1595 class:im,1400,
+UP,YROG-##,Las Vegas Arden yard,created at,I-5 Corridor,MOGPD,Overflow MNPWC I-5 Corridor,ref:MNPWC:I-5_Corridor,1400,
 UP,PVOG-##,Roper,leaving,Albina,MOGPD,MOGPD Albina block,ref:MOGPD:Albina,1009,
 UP,PVOG-##,Roper,leaving,I-5 Corridor,MOGPD,"CN BC/AB/SK, CPKC BC, BNSF WA/ID/MT West of Billings",rr:CN:BC/AB/SK rr:CPKC:BC rr:BNSF:WA/ID/MT,1009,
 UP,PVOG-##,Roper,leaving,Ogden,,Misc traffic for sorting at Ogden not on any other outbound train/block from UP MIMs,,1009,Misc traffic for sorting at Ogden not on any other outbound train/block from UP MIMs
@@ -4720,7 +4717,7 @@ UP,LALA-##,Montclair,created at,San Antonio,,MWCSA San Antonio,ref:MWCSA:San_Ant
 UP,MNMX-##,"Marion, with IM grouped by destination in each block",leaving,Westfield Autos,,Loaded autoracks for Westfield,id:1375 class:auto,,
 UP,MNMX-##,"Marion, with IM grouped by destination in each block",leaving,SAIT IM,,"SAIT, Port Laredo IM, Houston Barbour's Cut, Houston Settegast, [Marion IM from DIT]",id:3118 id:1285 class:im id:1812 id:2528 id:3780 id:3480 class:im,,[Marion IM from DIT]
 UP,MNMX-##,"Marion, with IM grouped by destination in each block",leaving,Eagle Pass IM,,IM for Mexico Eagle Pass Interchange UP,id:2447 class:im,,
-UP,MNMX-##,"Marion, with IM grouped by destination in each block",leaving,DIT,,"IM for Dallas Intermodal Terminal, LATC -> IDISI, Mesquite Autos ->IMQMQ",id:1938 class:im id:1203 id:1845 class:auto,,
+UP,MNMX-##,"Marion, with IM grouped by destination in each block",leaving,DIT,,"IM for Dallas Intermodal Terminal, LATC -> IDISI, Calipatria IM -> IDISI, Mesquite Autos ->IMQMQ",id:1938 class:im id:1203 id:4046 class:im id:1845 class:auto,,
 UP,MNMX-##,"Marion, with IM grouped by destination in each block",leaving,KCSM,,Autos/manifest for Mexico Laredo Interchange UP ONLY,class:auto,,Autos/manifest for Mexico Laredo Interchange UP
 UP,MNMX-##,"Marion, with IM grouped by destination in each block",leaving,NLR,,Overflow MSFNL NLR block,ref:MSFNL:NLR,,
 UP,MNMX-##,DIT,created at,KCSM Autos,,Autoracks for Mexico Laredo Interchange UP,id:2482 class:auto,,
@@ -5110,9 +5107,9 @@ UP,LX90-##,Long Beach,leaving,Terminal Island,,Loose intermodal and repaired bar
 UP,LX90-##,Long Beach,leaving,LA Harbor baretables,,Loose intermodal and repaired baretables from MRVLB,class:im,1014|1149|2514|2515|2516|2517,Loose intermodal and repaired baretables from MRVLB
 UP,LX90-##,LA Harbor,leaving,Home Shop,MLBWC,IM cars billed for UP home shop repair from both BNSF and UP MIMs - Cars for e.g. Spokane Yardley transfer to Watson via PHL,class:im,,IM cars billed for UP home shop repair from both BNSF and UP MIMs - Cars for e.g. Spokane Yardley transfer to Watson via PHL
 UP,LX90-##,LA Harbor,leaving,East LA,LOG44,"Mesquite IM, Midlothian autos, City of Industry baretables",id:1845 class:im id:2031 id:2032 id:2364 class:auto,,City of Industry baretables
-UP,OI17-##,"ICTF, grouped by destination in each block",leaving,Terminal Island,LOG44/PHL YP008,"Terminal Island ITCF, Long Beach Hanjin, APM Pier 400, Global South, Barstow 53' BNSF baretables",id:1146 id:3098 id:1149 id:3101 id:1152 id:1163 id:3099,,Barstow 53' BNSF baretables
-UP,OI17-##,"ICTF, grouped by destination in each block",leaving,Long Beach,PHL YP001,"Long Beach ITF, Long Beach Container Terminal, Long Beach Pacific Container Terminal, Long Beach Pier A, Hobart 53' BNSF baretables, unassigned 40' BNSF baretables to load for BNSF trains",id:2515 id:3094 id:2516 id:3092 id:2514 id:3093 id:2517 id:3091,,Hobart 53' BNSF baretables; unassigned 40' BNSF baretables to load for BNSF trains
-UP,OI17-##,"ICTF, grouped by destination in each block",leaving,LA Harbor,PHL YP004,"TRAPAC, West Basin, stray autos",id:3104 id:3102 id:3103 class:auto,,stray
+UP,OI17-##,"ICTF, grouped by destination in each block",leaving,Terminal Island,PHL YP008 for return,"Terminal Island ITCF, Long Beach Hanjin, APM Pier 400, LA Global South",id:1146 id:3098 id:1149 id:3101 id:1152 id:1163 id:3099,,
+UP,OI17-##,"ICTF, grouped by destination in each block",leaving,Long Beach,PHL YP001/LOG 44 for return,"Long Beach ITS, Long Beach Container Terminal, Long Beach PCT, Long Beach Terminal A",id:2515 id:3094 id:2516 id:3092 id:2514 id:3093 id:2517 id:3091,,
+UP,OI17-##,"ICTF, grouped by destination in each block",leaving,LA Harbor,PHL YP004 for return,"Tripac, West Basin",id:3104 id:3102 id:3103,,
 UP,HO91-##,Settegast,leaving,Englewood,,All outbound cars not covered by trains from Settegast,,3480,
 UP,HO91-##,Settegast,leaving,BNSF,M-EGWHOU,All outbound traffic from BNSF industries reciprocal switched by UP,,3480,
 UP,EW64A%-##,Englewood,leaving,Settegast,,"traffic for MHOAS, MHOLI, MHOSS, Houston locals serviced by Settegast, overflow Strang, overflow Houston Pasadena/Deer Park",catchall catchall,1372|3784,MHOLI; MHOSS; Houston locals serviced by Settegast

@@ -5,7 +5,8 @@ Two jobs, both cheap and idempotent:
 
   1. If any map file (yards/*.yrd or yards/*.his) changed in the mirror since
      the last time this ran, regenerate mims.csv (mim_import.py) and geo.csv
-     (his_import.py). "Since last time" is the mirror commit recorded in
+     (his_import.py), and print what the new MIM table changed (print_mims_diff:
+     members gained or dropped, an id moved to another mother, yard<->vid). "Since last time" is the mirror commit recorded in
      game_data/.git/map_tables_head — inside the nested repo's .git so neither
      rsync nor either git repo sees it; when it is missing the imports simply
      run (a third of a second over all 924 maps).
@@ -196,6 +197,77 @@ def name_new(dest):
               f'add them to {LOCS} by hand (strict build will fail): ' + ', '.join(unnamed))
 
 
+DIFF_CAP = 25
+
+
+def read_mims():
+    """{(mother, member): kind} from mims.csv, or None if there is no table yet."""
+    if not os.path.isfile(MIMS):
+        return None
+    out = {}
+    with open(MIMS, newline='') as fh:
+        for row in csv.reader(fh):
+            if len(row) >= 3 and row[0].strip().isdigit():
+                out[(row[0].strip(), row[1].strip())] = row[2].strip()
+    return out
+
+
+def location_names():
+    names = {}
+    with open(LOCS, newline='') as fh:
+        for row in csv.reader(fh):
+            if row and row[0].strip().isdigit() and len(row) > 1:
+                names[row[0].strip()] = row[1]
+    return names
+
+
+def owners(mims):
+    """{member: mother} over membership rows only ('ref' is a neighbouring
+    map's cross-reference, not ownership)."""
+    return {m: mo for (mo, m), kind in mims.items() if kind != 'ref'}
+
+
+def print_mims_diff(before, after):
+    """What the regenerated table changed. mim_import.py rewrites mims.csv
+    wholesale and its one-line summary can be identical across a real change
+    (an id moving to another mother, a zone crossing YARD_MIN_PX2), so the
+    diff is printed here rather than left to `git diff`."""
+    if before is None:
+        print(f'    {MIMS}: created, {len(after)} row(s)')
+        return
+    if before == after:
+        print(f'    {MIMS}: unchanged')
+        return
+    name = location_names()
+    def lbl(i):
+        return f'{i} {name[i]}' if i in name else f'{i} (unnamed)'
+    ob, nb = owners(before), owners(after)
+    added, gone, moved, rekind = [], [], [], []
+    for m in sorted(set(ob) | set(nb), key=int):
+        o, n = ob.get(m), nb.get(m)
+        if o is None:
+            added.append(f'+ {lbl(m)}: {after[(n, m)]} on {lbl(n)}')
+        elif n is None:
+            gone.append(f'- {lbl(m)}: was {before[(o, m)]} on {lbl(o)}')
+        elif o != n:
+            moved.append(f'! {lbl(m)}: {lbl(o)} -> {lbl(n)} ({after[(n, m)]})')
+        elif before[(o, m)] != after[(n, m)]:
+            rekind.append(f'~ {lbl(m)} on {lbl(n)}: '
+                          f'{before[(o, m)]} -> {after[(n, m)]}')
+    ref_add = sum(1 for k, v in after.items() if v == 'ref' and k not in before)
+    ref_del = sum(1 for k, v in before.items() if v == 'ref' and k not in after)
+    counts = [f'{len(added)} new member(s)', f'{len(gone)} dropped',
+              f'{len(moved)} moved map', f'{len(rekind)} kind change(s)']
+    if ref_add or ref_del:
+        counts.append(f'{ref_add} ref(s) added, {ref_del} removed')
+    print(f'    {MIMS} diff: ' + ', '.join(counts))
+    lines = moved + rekind + added + gone        # ownership first: the quiet one
+    for line in lines[:DIFF_CAP]:
+        print(f'      {line}')
+    if len(lines) > DIFF_CAP:
+        print(f'      … and {len(lines) - DIFF_CAP} more (git diff {MIMS})')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--dest', default='game_data', help='the mirror (default: game_data)')
@@ -206,7 +278,9 @@ def main():
     changed, why = maps_changed(a.dest, a.force)
     if changed:
         print(f'  map tables: regenerating ({why})')
+        before = read_mims()
         run_import('mim_import.py')
+        print_mims_diff(before, read_mims())
         run_import('his_import.py')
         stamp(a.dest)
     else:

@@ -1893,6 +1893,32 @@ CSX,M225-##,1764,Walbridge,pick up,New Boston
 CSX,M225-##,1764,Walbridge,pick up,Wayne Auto
 CSX,M225-##,1490,New Boston,set out,New Boston Auto
 CSX,M225-##,3832,Wayne CSX,set out,Wayne Auto
+CSX,M224-##,1490,New Boston,pick up,Twin Oaks
+CSX,M224-##,1490,New Boston,pick up,Jessup
+CSX,M224-##,1490,New Boston,pick up,Selkirk
+CSX,M224-##,1490,New Boston,pick up,Cincinnati
+CSX,M224-##,1490,New Boston,pick up,FL
+CSX,M224-##,1490,New Boston,pick up,Walbridge Auto
+CSX,M224-##,1764,Walbridge,set out,Auto
+CSX,M224-##,1764,Walbridge,pick up,Lordstown
+CSX,M224-##,1764,Walbridge,pick up,Jessup
+CSX,M224-##,1764,Walbridge,pick up,Twin Oaks Auto
+CSX,M224-##,1028,Willard,pick up,Lordstown Auto
+CSX,M224-##,1078,New Castle CSX,set out,Lordstown
+CSX,M224-##,1078,New Castle CSX,set out,Twin Oaks Auto
+CSX,M224-##,1922,Cumberland,pick up,Jessup Auto
+CSX,M224-##,1485,Jessup,set out,Jessup Autos
+CSX,M224-##,1485,Jessup,set out,Pick Up Baltimore Autos
+CSX,M224-##,1485,Jessup,set out,Baltimore Bay View
+CSX,M225-##,1078,New Castle CSX,set out,Pottersburg Autos (M331)
+CSX,M225-##,1078,New Castle CSX,set out,Pick Up New Boston
+CSX,M225-##,1078,New Castle CSX,set out,Wayne
+CSX,M225-##,1078,New Castle CSX,set out,Walbridge Auto
+CSX,M225-##,1764,Walbridge,set out,Walbridge
+CSX,M225-##,1764,Walbridge,pick up,New Boston
+CSX,M225-##,1764,Walbridge,pick up,Wayne Auto
+CSX,M225-##,1490,New Boston,set out,New Boston Auto
+CSX,M225-##,3832,Wayne CSX,set out,Wayne Auto
 CSX,M441-##,2034,Jacksonville Moncrief Yard,pick up,Tampa Autorack
 CSX,M647-##,1087,Terre Haute Baker Yard,set out,INRD
 CSX,M647-##,1159,Evansville Howell Yard,pick up,Waycross
@@ -2372,6 +2398,15 @@ CSX,M647-##,1534,Lafayette CSX Yard,pick up,Nashville
 CSX,M647-##,1611,Avon,set out,Avon
 CSX,M647-##,1611,Avon,set out,Nashville
 CSX,M647-##,1611,Avon,pick up,Waycross
+CSX,M331-##,2219,McKeesport Demmler Yard,set out,Demmler
+CSX,M331-##,2219,McKeesport Demmler Yard,pick up,Avon
+CSX,M331-##,1078,New Castle CSX,pick up,Avon
+CSX,M331-##,1078,New Castle CSX,pick up,Pottersburg Autos
+CSX,M331-##,2307,Crestline,pick up,Avon
+CSX,M331-##,2888,Pottersburg,set out,Pottersburg Auto
+CSX,M429-##,1028,Willard,pick up,Walbridge
+CSX,M429-##,1028,Willard,pick up,Detroit
+CSX,M429-##,1028,Willard,pick up,Lansing
 CSX,B158-##,1028,Willard,set out,Willard
 CSX,L123-##,2164,Baltimore Bay View CSX Yard,set out,Dundalk Autos
 CSX,L123-##,2164,Baltimore Bay View CSX Yard,set out,Bay View
@@ -2516,6 +2551,22 @@ CSX,L340-##,1028,Willard,set out,Lordstown
 CSX,L340-##,1028,Willard,set out,Willard
 CSX,L147-##,4034,Moundsville,set out,Moundsville
 CSX,L147-##,4034,Moundsville,pick up,Brooklyn Jct
+CSX,L312-##,1975,Clinton Warwick Yard,set out,Warwick
+CSX,L312-##,1078,New Castle CSX,set out,New Castle
+CSX,L312-##,1078,New Castle CSX,pick up,Cumberland
+CSX,L312-##,1078,New Castle CSX,pick up,Demmler
+CSX,L312-##,2219,McKeesport Demmler Yard,set out,Demmler
+CSX,L312-##,2219,McKeesport Demmler Yard,pick up,Cumberland
+CSX,L312-##,1456,Connellsville,pick up,Cumberland
+CSX,L313-##,1456,Connellsville,set out,Connellsville
+CSX,L313-##,1456,Connellsville,set out,Wheeling
+CSX,L313-##,1456,Connellsville,set out,Lake Erie
+CSX,L313-##,2219,McKeesport Demmler Yard,pick up,Willard
+CSX,L313-##,2219,McKeesport Demmler Yard,pick up,New Castle
+CSX,L313-##,1078,New Castle CSX,set out,New Castle
+CSX,L313-##,1078,New Castle CSX,pick up,Willard Manifest
+CSX,L313-##,1975,Clinton Warwick Yard,pick up,Willard
+CSX,L302-##,1739,Plymouth North Yard,set out,LSRC
 CSX,I037-##,3144,Dillon,set out,Dillon
 CSX,I037-##,1208,Charleston Bennett Yard,set out,Charleston
 CSX,I037-##,1208,Charleston Bennett Yard,pick up,Savannah IM Classification
@@ -2555,6 +2606,18 @@ CSX,I018-##,1456,Connellsville,set out,Jessup Auto
 CSX,I018-##,2047,Northwest Ohio ICTF,pick up,Baltimore
 CSX,I018-##,2047,Northwest Ohio ICTF,pick up,Philadelphia IM
 CSX,I018-##,1456,Connellsville,set out,Jessup Auto
+CSX,I018-##,2164,Baltimore Bay View CSX Yard,set out,Baltimore IM
+CSX,I018-##,2164,Baltimore Bay View CSX Yard,pick up,Philadelphia IM
+CSX,I072-##,2047,Northwest Ohio ICTF,set out,IM
+CSX,I072-##,2047,Northwest Ohio ICTF,pick up,Kearny
+CSX,I072-##,2047,Northwest Ohio ICTF,pick up,Springfield
+CSX,I072-##,2047,Northwest Ohio ICTF,pick up,Syracuse IM
+CSX,I072-##,1625,Syracuse DeWitt Yard,set out,IM
+CSX,I072-##,1625,Syracuse DeWitt Yard,pick up,Kearny IM
+CSX,I073-##,2047,Northwest Ohio ICTF,set out,IM
+CSX,I018-##,2047,Northwest Ohio ICTF,pick up,Baltimore
+CSX,I018-##,2047,Northwest Ohio ICTF,pick up,Philadelphia IM
+CSX,I018-##,1922,Cumberland,set out,Jessup Auto
 CSX,I018-##,2164,Baltimore Bay View CSX Yard,set out,Baltimore IM
 CSX,I018-##,2164,Baltimore Bay View CSX Yard,pick up,Philadelphia IM
 CSX,Y322-##,1157,Richmond South Yard,set out,NS interchange
@@ -2601,6 +2664,10 @@ CSX,M332-##,1456,Connellsville,set out,Intermodal
 CSX,M332-##,1456,Connellsville,pick up,Cumberland
 CSX,M345-##,1120,E. St. Louis Rose Lake Yard,set out,Rose Lake
 CSX,M345-##,1120,E. St. Louis Rose Lake Yard,pick up,Madison TRRA
+CSX,M332-##,1078,New Castle CSX,set out,New Castle
+CSX,M332-##,2219,McKeesport Demmler Yard,set out,Demmler
+CSX,M683-##,1120,E. St. Louis Rose Lake Yard,set out,Rose Lake
+CSX,M683-##,1120,E. St. Louis Rose Lake Yard,pick up,Madison TRRA
 CSX,M209-##,1764,Walbridge,pick up,Louisville
 CSX,M209-##,1764,Walbridge,pick up,FL Auto
 CSX,M209-##,2188,Louisville Osborne Yard,set out,Louisville
@@ -4007,6 +4074,34 @@ CSX,M502-##,1611,Avon,pick up,Lafayette NS
 CSX,M502-##,1534,Lafayette CSX Yard,set out,Lafayette
 CSX,M502-##,1534,Lafayette CSX Yard,set out,Lafayette NS
 CSX,M509-##,3809,Lima Robb Ave. Yard CSX,pick up,Cincinnati
+CSX,M370-##,1028,Willard,set out,Willard
+CSX,M370-##,1028,Willard,set out,Columbus
+CSX,M428-##,1739,Plymouth North Yard,pick up,Walbridge
+CSX,M428-##,1739,Plymouth North Yard,pick up,Hammond
+CSX,M428-##,1739,Plymouth North Yard,pick up,Selkirk
+CSX,M428-##,1739,Plymouth North Yard,pick up,Cincinnati
+CSX,M428-##,1739,Plymouth North Yard,pick up,FL Auto
+CSX,M428-##,1764,Walbridge,set out,Auto
+CSX,M428-##,1764,Walbridge,pick up,Willard Manifest
+CSX,M428-##,1028,Willard,set out,Willard
+CSX,M627-##,1625,Syracuse DeWitt Yard,set out,Syracuse
+CSX,M627-##,1625,Syracuse DeWitt Yard,pick up,Buffalo
+CSX,M627-##,1775,Rochester Goodman St. Yard,set out,Jordan Trash
+CSX,M561-##,1775,Rochester Goodman St. Yard,pick up,Pittsburgh Salt
+CSX,M561-##,1543,Buffalo Frontier Yard,pick up,Cincinnati
+CSX,M561-##,1811,Cleveland Collinwood Yard,pick up,Cincinnati
+CSX,M561-##,1028,Willard,set out,Willard
+CSX,M561-##,1028,Willard,set out,IHB
+CSX,M561-##,1028,Willard,set out,Pittsburgh Salt
+CSX,M363-##,1775,Rochester Goodman St. Yard,pick up,Cleveland
+CSX,M363-##,1543,Buffalo Frontier Yard,pick up,Cleveland
+CSX,M363-##,1543,Buffalo Frontier Yard,pick up,Avon
+CSX,M363-##,1924,West Ashtabula,pick up,Cleveland Manifest
+CSX,M363-##,1811,Cleveland Collinwood Yard,set out,Cleveland
+CSX,M363-##,1811,Cleveland Collinwood Yard,pick up,Crestline
+CSX,M363-##,1811,Cleveland Collinwood Yard,pick up,Avon
+CSX,M363-##,2307,Crestline,set out,Crestline
+CSX,M363-##,2307,Crestline,pick up,Avon
 CSX,I161-##,1543,Buffalo Frontier Yard,set out,CN Toronto
 CSX,I115-##,2047,Northwest Ohio ICTF,set out,IM
 CSX,I136-##,2047,North Baltimore IM Terminal,set out,Intermodal except for Suffolk VA
@@ -4069,6 +4164,8 @@ CSX,I135-##,1456,Connellsville,set out,CPKC Intermodal
 CSX,I135-##,2047,Northwest Ohio ICTF,set out,IM
 CSX,I142-##,2047,Northwest Ohio ICTF,set out,IM
 CSX,I143-##,1679,Jacksonville Duval Yard,set out,Duval IM
+CSX,I151-##,1811,Cleveland Collinwood Yard,set out,IM
+CSX,I151-##,1924,West Ashtabula,set out,CPKC IM
 CSX,I125-##,1449,Memphis Leewood CSX Yard,pick up,Nashville
 CSX,I125-##,1449,Memphis Leewood CSX Yard,pick up,Savannah IM
 CSX,I125-##,1865,Nashville Radnor Yard,set out,Nashville IM
@@ -4172,6 +4269,19 @@ CSX,I178-##,1679,Jacksonville Duval Yard,set out,BNSF Los Angeles
 CSX,I178-##,1679,Jacksonville Duval Yard,set out,UP LATC IM
 CSX,I158-##,1860,Buffalo Seneca Yard,pick up,Philadelphia IM
 CSX,I158-##,1625,Syracuse DeWitt Yard,set out,IM
+CSX,I165-##,1924,West Ashtabula,pick up,Westbound CPKC IM
+CSX,I150-##,1811,Cleveland Collinwood Yard,set out,Cleveland IM
+CSX,I150-##,1811,Cleveland Collinwood Yard,pick up,Detroit IM
+CSX,I150-##,1733,Detroit Oak Yard,set out,Detroit Oak IM
+CSX,I161-##,1543,Buffalo Frontier Yard,set out,CN Buffalo IM
+CSX,I161-##,1860,Buffalo Seneca Yard,set out,Buffalo IM
+CSX,I135-##,2219,McKeesport Demmler Yard,set out,Rose Lake IM
+CSX,I135-##,2047,Northwest Ohio ICTF,set out,IM
+CSX,I136-##,2047,North Baltimore IM Terminal,set out,Intermodal except for Suffolk VA
+CSX,I136-##,2047,North Baltimore IM Terminal,set out,Pick Up Suffolk
+CSX,I116-##,2047,Northwest Ohio ICTF,set out,Intermodal Except Chambersburg
+CSX,I116-##,2047,Northwest Ohio ICTF,set out,Pick Up Chambersburg IM
+CSX,I116-##,1078,New Castle CSX,pick up,Chambersburg IM
 CSX,M216-##,1482,Lordstown CSX,set out,Lordstown
 CSX,M216-##,1922,Cumberland,set out,Curtis Bay
 CSX,M202-##,2108,Montgomery,set out,Montgomery
@@ -4446,6 +4556,14 @@ CSX,M202-##,3482,Marion CSX,pick up,Selkirk Auto
 CSX,M277-##,1485,Jessup,pick up,Pottersburg
 CSX,M277-##,1485,Jessup,pick up,Louisville Auto
 CSX,M277-##,1456,Connellsville,set out,Pottersburg Auto
+CSX,M277-##,1078,New Castle CSX,pick up,Louisville Auto
+CSX,M277-##,3482,Marion CSX,pick up,Louisville Auto
+CSX,M277-##,2888,Pottersburg,pick up,Louisville Auto
+CSX,M277-##,1455,Cincinnati Queensgate Yard,set out,Cincinnati Auto
+CSX,M277-##,2585,Louisville O'Bannon Yard,set out,O'Bannon Auto
+CSX,M277-##,1485,Jessup,pick up,Pottersburg
+CSX,M277-##,1485,Jessup,pick up,Louisville Auto
+CSX,M277-##,1078,New Castle CSX,set out,Pottersburg Auto
 CSX,M277-##,1078,New Castle CSX,pick up,Louisville Auto
 CSX,M277-##,3482,Marion CSX,pick up,Louisville Auto
 CSX,M277-##,2888,Pottersburg,pick up,Louisville Auto
@@ -5841,6 +5959,17 @@ NS,376-##,1132,Georgetown Delaplain Yard,pick up,Cincinnati
 NS,376-##,2048,Cincinnati Gest St. Yard,set out,Elkhart
 NS,376-##,2048,Cincinnati Gest St. Yard,set out,Cincinnati
 NS,376-##,3526,Sharonville,pick up,Louisville
+NS,35N-##,1887,Decatur NS Yard,set out,ALS Gateway (121)
+NS,35N-##,1887,Decatur NS Yard,set out,UP KC (115)
+NS,35N-##,1887,Decatur NS Yard,pick up,Granite City
+NS,35N-##,1887,Decatur NS Yard,pick up,Madison
+NS,35N-##,1342,Granite City Smith Yard,set out,Granite City
+NS,38N-##,1887,Decatur Brush/East Yard,set out,Detroit
+NS,38N-##,1887,Decatur Brush/East Yard,set out,Decatur
+NS,38N-##,1887,Decatur Brush/East Yard,pick up,Conway
+NS,38N-##,1887,Decatur Brush/East Yard,pick up,Bellevue
+NS,177-##,2048,Cincinnati Gest St. Yard,set out,Cincinnati
+NS,177-##,2048,Cincinnati Gest St. Yard,pick up,Chattanooga
 NS,394-##,1912,Macon Brosnan Yard,pick up,Brunswick
 NS,394-##,1912,Macon Brosnan Yard,pick up,Rosser
 NS,11N-##,1064,Allentown,pick up,Conway Auto
@@ -7317,11 +7446,6 @@ NS,10K-##,1064,Allentown,pick up,Oak Island
 NS,10K-##,1347,Newark Oak Island Yard,set out,Oak Island
 NS,167-##,1026,Louisville Youngtown Yard,set out,Louisville
 NS,167-##,1026,Louisville Youngtown Yard,pick up,Chattanooga
-NS,35N-##,1887,Decatur NS Yard,set out,ALS Gateway (121)
-NS,35N-##,1887,Decatur NS Yard,set out,UP KC (115)
-NS,35N-##,1887,Decatur NS Yard,pick up,Granite City
-NS,35N-##,1887,Decatur NS Yard,pick up,Madison
-NS,35N-##,1342,Granite City Smith Yard,set out,Granite City
 NS,38N-##,1535,Lafayette East Yard,pick up,Bellevue
 NS,38N-##,1647,Bellevue Moorman Yard,set out,Bellevue
 NS,32A-##,1475,Reading Spring St. Yard,set out,Reading
@@ -7422,6 +7546,7 @@ NS,127-##,1320,Radford,pick up,Chattanooga
 NS,127-##,2904,Knoxville Sevier Yard,set out,Knoxville
 NS,127-##,2904,Knoxville Sevier Yard,pick up,Chattanooga
 NS,127-##,2904,Knoxville Sevier Yard,pick up,Pine Bluff
+NS,143-##,1056,Danville,set out,Birmingham
 NS,121-##,1697,Detroit Livernois Yard,set out,CSX
 NS,121-##,1384,Detroit Oakwood Yard,set out,Oakwood
 NS,121-##,1384,Detroit Oakwood Yard,set out,Pick Up Decatur
@@ -8114,11 +8239,11 @@ UP,IA43-##,1823,Albany,pick up,PNWR Millersburg
 UP,IA43-##,1822,Millersburg,set out,both Millersburg
 UP,IA43-##,1822,Millersburg,pick up,Salem
 UP,IL50-##,1702,Vancouver BNSF,set out,BNSF
-UP,YROG-##,1400,Las Vegas Arden Yard,set out,Arden
-UP,YROG-##,1400,Las Vegas Arden Yard,create,Global 2 IM
-UP,YROG-##,1400,Las Vegas Arden Yard,create,I-5 Corridor
-UP,YROG-##,3786,Milford,pick up,manifest
-UP,YROG-##,1325,Salt Lake City Centennial Park,set out,Global 2 IM
+UP,YROG%-##,1400,Las Vegas Arden Yard,set out,Arden
+UP,YROG%-##,1400,Las Vegas Arden Yard,create,Global 2 IM
+UP,YROG%-##,1400,Las Vegas Arden Yard,create,I-5 Corridor
+UP,YROG%-##,3786,Milford,pick up,manifest
+UP,YROG%-##,1325,Salt Lake City Centennial Park,set out,Global 2 IM
 UP,CHAL-##,1595,Chicago Proviso Yard,set out,Proviso
 UP,CHAL-##,1595,Chicago Proviso Yard,pick up,Butler
 UP,CHAL-##,1595,Chicago Proviso Yard,pick up,Butler WSOR
@@ -8739,12 +8864,6 @@ UP,NPCH%-##,1595,Chicago Proviso Yard,pick up,BRC
 UP,GMGM%-##,1095,City of Industry,set out,West Colton
 UP,GMGM%-##,1095,City of Industry,set out,Montclair
 UP,GMGM%-##,1095,City of Industry,pick up,Gemco
-UP,YROG%-##,1400,Las Vegas Arden Yard,set out,Arden
-UP,YROG%-##,1400,Las Vegas Arden Yard,create,Global 2 IM
-UP,YROG%-##,1400,Las Vegas Arden Yard,create,North Platte
-UP,YROG%-##,1400,Las Vegas Arden Yard,create,and I-5 Corridor
-UP,YROG%-##,3786,Milford,pick up,manifest
-UP,YROG%-##,1325,Salt Lake City Centennial Park,set out,Global 2 IM
 UP,ROMI-##,3791,Elko UP,set out,Elko
 UP,ROMI-##,3791,Elko UP,add,Roseville
 UP,ROMI-##,1141,Sparks UP,set out,Sparks
@@ -8962,11 +9081,11 @@ UP,ENEN%-##,1846,Dallas Miller Yard,set out,manifest
 UP,ENEN%-##,1846,Dallas Miller Yard,set out,pick up Ennis
 UP,FWDA-##,1918,Arlington Garrett Yard,set out,Arlington
 UP,FWDA-##,1918,Arlington Garrett Yard,set out,ALS
-UP,YROG%-##,1400,Las Vegas Arden Yard,set out,Arden
-UP,YROG%-##,1400,Las Vegas Arden Yard,create,Global 2 IM
-UP,YROG%-##,1400,Las Vegas Arden Yard,create,I-5 Corridor
-UP,YROG%-##,3786,Milford,pick up,manifest
-UP,YROG%-##,1325,Salt Lake City Centennial Park,set out,Global 2 IM
+UP,YROG-##,1400,Las Vegas Arden Yard,set out,Arden
+UP,YROG-##,1400,Las Vegas Arden Yard,create,Global 2 IM
+UP,YROG-##,1400,Las Vegas Arden Yard,create,I-5 Corridor
+UP,YROG-##,3786,Milford,pick up,manifest
+UP,YROG-##,1325,Salt Lake City Centennial Park,set out,Global 2 IM
 UP,DARE%-##,1044,Longview UP,set out,Longview
 UP,DARE%-##,1044,Longview UP,pick up,Reisor
 UP,DARE%-##,1044,Longview UP,pick up,Livonia
